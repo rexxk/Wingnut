@@ -1,12 +1,15 @@
-
-
 #include <iostream>
 
+#include "Core/Entry.h"
+#include "Wingnut.h"
 
-int main()
+
+
+Wingnut::Application* CreateApplication()
 {
-	std::cout << "Wingnut v0.1\n";
+	Wingnut::ApplicationProperties applicationProps;
 
-	
-	return 0;
+	LOG_WARN("Application: {0}", applicationProps.Title);
+
+	return new Wingnut::Application(applicationProps);
 }

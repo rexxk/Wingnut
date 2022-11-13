@@ -2,8 +2,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="src\wingnut_pch.h" />
+    <ClInclude Include="src\Core\Entry.h" />
+    <ClInclude Include="src\Core\Application.h" />
+    <ClInclude Include="src\Wingnut.h" />
+    <ClInclude Include="src\Core\Log.h" />
+    <ClInclude Include="src\Core\Base.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\wingnut_pch.cpp" />
+    <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\Log.cpp" />
   </ItemGroup>
 </Project>
