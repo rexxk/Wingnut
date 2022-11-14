@@ -1,7 +1,6 @@
-#include <iostream>
 
-#include "Core/Entry.h"
 #include "Wingnut.h"
+#include "Core/Entry.h"
 
 
 

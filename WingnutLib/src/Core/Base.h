@@ -24,7 +24,7 @@ namespace Wingnut
 	}
 
 	template<typename T, typename ... Args>
-	Ref<T> CreateScope(Args ... args)
+	Scope<T> CreateScope(Args ... args)
 	{
 		return std::make_unique<T>(std::forward<Args>(args));
 	}
