@@ -65,12 +65,14 @@ namespace Wingnut
 		RECT rect = { 0 };
 		GetClientRect((HWND)m_WindowHandle, &rect);
 
-		rect.right = rect.left + m_Properties.Width;
-		rect.bottom = rect.top + m_Properties.Height;
+		rect.left = 0;
+		rect.top = 0;
+		rect.right = m_Properties.Width;
+		rect.bottom = m_Properties.Height;
 
 		AdjustWindowRectEx(&rect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_OVERLAPPEDWINDOW);
 
-		SetWindowPos((HWND)m_WindowHandle, 0, 0, 0, m_Properties.Width, m_Properties.Height, SWP_NOMOVE);
+		SetWindowPos((HWND)m_WindowHandle, 0, 0, 0, rect.right - rect.left, rect.bottom - rect.top, SWP_NOMOVE);
 
 
 		ShowWindow((HWND)m_WindowHandle, SW_SHOW);
@@ -92,6 +94,12 @@ namespace Wingnut
 	{
 		switch (msg)
 		{
+		case WM_SIZE:
+		{
+			LOG_CORE_TRACE("Window size: {},{}", LOWORD(lParam), HIWORD(lParam));
+			break;
+		}
+
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
