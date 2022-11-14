@@ -9,6 +9,7 @@
     <ClInclude Include="src\Core\Base.h" />
     <ClInclude Include="src\Core\Layer.h" />
     <ClInclude Include="src\Core\LayerStack.h" />
+    <ClInclude Include="src\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\wingnut_pch.cpp" />
@@ -16,5 +17,6 @@
     <ClCompile Include="src\Core\Log.cpp" />
     <ClCompile Include="src\Core\Layer.cpp" />
     <ClCompile Include="src\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Core\Window.cpp" />
   </ItemGroup>
 </Project>

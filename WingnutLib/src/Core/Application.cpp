@@ -16,6 +16,14 @@ namespace Wingnut
 
 		s_Instance = this;
 
+
+		WindowProperties windowProps;
+		windowProps.Width = 1280;
+		windowProps.Height = 720;
+		windowProps.Title = properties.Title;
+
+		m_MainWindow = Window::Create(windowProps);
+
 	}
 
 
@@ -28,6 +36,8 @@ namespace Wingnut
 
 		while (m_Running)
 		{
+			m_MainWindow->HandleMessages();
+
 
 			for (Ref<Layer> layer : m_LayerStack)
 			{
@@ -37,13 +47,18 @@ namespace Wingnut
 			}
 
 
-			m_Running = false;
 		}
 
 
 
 	}
 
+
+	void Application::Terminate()
+	{
+		LOG_CORE_TRACE("Terminating program");
+		m_Running = false;
+	}
 
 	void Application::AttachLayer(Ref<Layer> layer)
 	{

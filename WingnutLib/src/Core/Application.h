@@ -2,6 +2,7 @@
 
 
 #include "LayerStack.h"
+#include "Window.h"
 
 
 namespace Wingnut
@@ -27,6 +28,9 @@ namespace Wingnut
 		void DetachOverlay(Ref<Layer> overlay);
 
 
+		void Terminate();
+
+
 		static Application& Get() { return *s_Instance; }
 
 
@@ -35,6 +39,8 @@ namespace Wingnut
 		bool m_Running = false;
 
 		LayerStack m_LayerStack;
+
+		Ref<Window> m_MainWindow = nullptr;
 
 
 		inline static Application* s_Instance = nullptr;
