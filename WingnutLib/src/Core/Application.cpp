@@ -1,6 +1,8 @@
 #include "wingnut_pch.h"
 #include "Application.h"
 
+#include "Event/EventUtils.h"
+#include "Event/WindowEvents.h"
 
 
 namespace Wingnut
@@ -16,6 +18,26 @@ namespace Wingnut
 
 		s_Instance = this;
 
+		m_EventBroker = CreateRef<EventBroker>();
+		m_EventQueue = CreateRef<EventQueue>();
+
+
+		SubscribeToEvent<WindowClosedEvent>([&](WindowClosedEvent& event)
+			{
+				LOG_CORE_TRACE("Window closed event received in Application");
+
+				m_Running = false;
+
+				return false;
+			});
+
+		SubscribeToEvent<WindowResizedEvent>([=](WindowResizedEvent& event)
+			{
+				LOG_CORE_TRACE("Window resized: {},{}", event.Width(), event.Height());
+
+				return false;
+			});
+
 
 		WindowProperties windowProps;
 		windowProps.Width = 1280;
@@ -23,6 +45,7 @@ namespace Wingnut
 		windowProps.Title = properties.Title;
 
 		m_MainWindow = Window::Create(windowProps);
+
 
 	}
 
@@ -37,7 +60,7 @@ namespace Wingnut
 		while (m_Running)
 		{
 			m_MainWindow->HandleMessages();
-
+			m_EventQueue->Process();
 
 			for (Ref<Layer> layer : m_LayerStack)
 			{

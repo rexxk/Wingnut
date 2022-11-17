@@ -5,6 +5,8 @@
 #include <Windows.h>
 
 #include "Application.h"
+#include "Event/EventUtils.h"
+#include "Event/WindowEvents.h"
 
 
 namespace Wingnut
@@ -96,14 +98,20 @@ namespace Wingnut
 		{
 		case WM_SIZE:
 		{
-			LOG_CORE_TRACE("Window size: {},{}", LOWORD(lParam), HIWORD(lParam));
+			Ref<WindowResizedEvent> event = CreateRef<WindowResizedEvent>((uint32_t)LOWORD(lParam), (uint32_t)HIWORD(lParam));
+//			AddEventToQueue(event);
+			ExecuteEvent(event);
+
 			break;
 		}
 
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
-			Application::Get().Terminate();
+//			Application::Get().Terminate();
+
+			Ref<WindowClosedEvent> event = CreateRef<WindowClosedEvent>();
+			AddEventToQueue(event);
 
 			return 0;
 		}
