@@ -2,6 +2,7 @@
 #include "VulkanRenderer.h"
 
 #include "VulkanDevice.h"
+#include "VulkanSurface.h"
 
 
 namespace Wingnut
@@ -11,11 +12,11 @@ namespace Wingnut
 
 
 
-	VulkanRenderer::VulkanRenderer()
+	VulkanRenderer::VulkanRenderer(void* windowHandle)
 	{
 		s_VulkanData.API = RendererAPI::Vulkan;
 
-		Create();
+		Create(windowHandle);
 	}
 
 	VulkanRenderer::~VulkanRenderer()
@@ -24,6 +25,11 @@ namespace Wingnut
 		if (s_VulkanData.Device != nullptr)
 		{
 			s_VulkanData.Device->Release();
+		}
+
+		if (s_VulkanData.Surface != nullptr)
+		{
+			s_VulkanData.Surface->Release();
 		}
 
 		if (m_Instance != nullptr)
@@ -44,13 +50,14 @@ namespace Wingnut
 	// Vulkan instance creation and setup
 	//
 
-	void VulkanRenderer::Create()
+	void VulkanRenderer::Create(void* windowHandle)
 	{
 		LOG_CORE_TRACE("[Renderer] Creating Vulkan renderer");
 
 		if (!CreateInstance()) return;
 
-		s_VulkanData.Device = CreateRef<VulkanDevice>();
+		s_VulkanData.Surface = CreateRef<VulkanSurface>(m_Instance, windowHandle);
+		s_VulkanData.Device = CreateRef<VulkanDevice>(m_Instance);
 
 
 	}

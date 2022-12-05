@@ -108,8 +108,10 @@
     <ClInclude Include="src\Event\WindowEvents.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanDevice.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanRenderer.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanSurface.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Renderer\RendererDevice.h" />
+    <ClInclude Include="src\Renderer\RendererSurface.h" />
     <ClInclude Include="src\Wingnut.h" />
     <ClInclude Include="src\wingnut_pch.h" />
   </ItemGroup>
@@ -124,6 +126,7 @@
     <ClCompile Include="src\Event\EventUtils.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanDevice.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanRenderer.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanSurface.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Renderer\RendererDevice.cpp" />
     <ClCompile Include="src\wingnut_pch.cpp">

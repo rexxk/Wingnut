@@ -51,6 +51,8 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanRenderer.h" />
     <ClInclude Include="src\Renderer\RendererDevice.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanDevice.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanSurface.h" />
+    <ClInclude Include="src\Renderer\RendererSurface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -82,5 +84,6 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanRenderer.cpp" />
     <ClCompile Include="src\Renderer\RendererDevice.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanDevice.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanSurface.cpp" />
   </ItemGroup>
 </Project>

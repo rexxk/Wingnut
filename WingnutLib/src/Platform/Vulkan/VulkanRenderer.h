@@ -11,14 +11,14 @@ namespace Wingnut
 	class VulkanRenderer : public Renderer
 	{
 	public:
-		VulkanRenderer();
+		VulkanRenderer(void* windowHandle);
 		virtual ~VulkanRenderer();
 
 		virtual RendererData& GetRendererData() override;
 
 
 	private:
-		void Create();
+		void Create(void* windowHandle);
 
 		bool CreateInstance();
 

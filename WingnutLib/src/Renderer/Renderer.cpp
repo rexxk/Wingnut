@@ -8,11 +8,11 @@ namespace Wingnut
 {
 
 
-	Ref<Renderer> Renderer::Create(RendererAPI api)
+	Ref<Renderer> Renderer::Create(RendererAPI api, void* windowHandle)
 	{
 		switch (api)
 		{
-			case RendererAPI::Vulkan: return CreateRef<VulkanRenderer>();
+			case RendererAPI::Vulkan: return CreateRef<VulkanRenderer>(windowHandle);
 		}
 
 		LOG_CORE_TRACE("[Renderer] No renderer API defined");

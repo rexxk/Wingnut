@@ -2,6 +2,7 @@
 
 
 #include "RendererDevice.h"
+#include "RendererSurface.h"
 
 
 namespace Wingnut
@@ -17,6 +18,7 @@ namespace Wingnut
 	struct RendererData
 	{
 		Ref<RendererDevice> Device;
+		Ref<RendererSurface> Surface;
 
 		RendererAPI API;
 	};
@@ -26,7 +28,7 @@ namespace Wingnut
 	class Renderer
 	{
 	public:
-		static Ref<Renderer> Create(RendererAPI api);
+		static Ref<Renderer> Create(RendererAPI api, void* windowHandle);
 
 		virtual RendererData& GetRendererData() = 0;
 

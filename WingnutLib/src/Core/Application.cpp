@@ -46,7 +46,7 @@ namespace Wingnut
 
 		m_MainWindow = Window::Create(windowProps);
 
-		m_Renderer = Renderer::Create(RendererAPI::Vulkan);
+		m_Renderer = Renderer::Create(RendererAPI::Vulkan, m_MainWindow->WindowHandle());
 
 	}
 
