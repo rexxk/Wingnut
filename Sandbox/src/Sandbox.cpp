@@ -1,7 +1,22 @@
-#include <iostream>
 
-#include "Core/Entry.h"
 #include "Wingnut.h"
+#include "Core/Entry.h"
+
+#include "MainLayer.h"
+
+
+
+class SandboxApplication : public Wingnut::Application
+{
+public:
+	SandboxApplication(const Wingnut::ApplicationProperties& applicationProperties)
+		: Application(applicationProperties)
+	{
+		AttachLayer(CreateRef<MainLayer>("mainLayer"));
+	}
+
+};
+
 
 
 
@@ -11,5 +26,5 @@ Scope<Wingnut::Application> CreateApplication()
 
 	LOG_WARN("Application: {0}", applicationProps.Title);
 
-	return CreateScope<Wingnut::Application>(applicationProps);
+	return CreateScope<SandboxApplication>(applicationProps);
 }

@@ -7,10 +7,24 @@
     <ClInclude Include="src\Wingnut.h" />
     <ClInclude Include="src\Core\Log.h" />
     <ClInclude Include="src\Core\Base.h" />
+    <ClInclude Include="src\Core\Layer.h" />
+    <ClInclude Include="src\Core\LayerStack.h" />
+    <ClInclude Include="src\Core\Window.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\EventQueue.h" />
+    <ClInclude Include="src\Event\EventBroker.h" />
+    <ClInclude Include="src\Event\WindowEvents.h" />
+    <ClInclude Include="src\Event\EventUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\wingnut_pch.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Log.cpp" />
+    <ClCompile Include="src\Core\Layer.cpp" />
+    <ClCompile Include="src\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Core\Window.cpp" />
+    <ClCompile Include="src\Event\EventQueue.cpp" />
+    <ClCompile Include="src\Event\EventBroker.cpp" />
+    <ClCompile Include="src\Event\EventUtils.cpp" />
   </ItemGroup>
 </Project>
