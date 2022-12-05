@@ -7,6 +7,8 @@
 #include "LayerStack.h"
 #include "Window.h"
 
+#include "Renderer/Renderer.h"
+
 
 namespace Wingnut
 {
@@ -37,6 +39,7 @@ namespace Wingnut
 		Ref<EventQueue> GetEventQueue() { return m_EventQueue; }
 		Ref<EventBroker> GetEventBroker() { return m_EventBroker; }
 
+		Ref<Renderer> GetRenderer() { return m_Renderer; }
 
 		static Application& Get() { return *s_Instance; }
 
@@ -52,6 +55,7 @@ namespace Wingnut
 		Ref<EventBroker> m_EventBroker = nullptr;
 		Ref<EventQueue> m_EventQueue = nullptr;
 
+		Ref<Renderer> m_Renderer = nullptr;
 
 		inline static Application* s_Instance = nullptr;
 
