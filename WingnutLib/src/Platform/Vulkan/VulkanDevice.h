@@ -10,6 +10,8 @@ namespace Wingnut
 
 	struct VulkanQueueProperty
 	{
+		uint32_t Index = 0;
+
 		uint32_t Count = 0;
 		uint32_t UsedQueues = 0;
 

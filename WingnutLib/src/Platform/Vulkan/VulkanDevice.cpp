@@ -82,8 +82,6 @@ namespace Wingnut
 
 		float priorities[] = { 1.0f };
 
-		uint32_t index = 0;
-
 		// TODO: Lazyness here too, first device property selected.
 		for (auto& queueFamilyProperty : m_DeviceProperties[0].QueueFamilyProperties)
 		{
@@ -91,7 +89,7 @@ namespace Wingnut
 			{
 				VkDeviceQueueCreateInfo queueCreateInfo = {};
 				queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-				queueCreateInfo.queueFamilyIndex = index++;
+				queueCreateInfo.queueFamilyIndex = queueFamilyProperty.Index;
 				queueCreateInfo.queueCount = 1;
 
 				queueCreateInfo.pQueuePriorities = priorities;
@@ -167,11 +165,13 @@ namespace Wingnut
 		LOG_CORE_TRACE(" - {} queue families", queueFamilyPropertyCount);
 
 		bool haveGraphicsQueue = false;
+		uint32_t queueIndex = 0;
 
 		for (auto& queueFamilyProperty : queueFamilyProperties)
 		{
 			VulkanQueueProperty queueProperties;
 			queueProperties.Count = queueFamilyProperty.queueCount;
+			queueProperties.Index = queueIndex++;
 
 			if (queueFamilyProperty.queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			{
