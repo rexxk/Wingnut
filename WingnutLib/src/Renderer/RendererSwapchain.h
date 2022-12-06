@@ -2,17 +2,15 @@
 
 
 
-
 namespace Wingnut
 {
 
 
-	class RendererSurface
+	class RendererSwapchain
 	{
 	public:
 		virtual void Release() = 0;
 
-		virtual void* GetSurface() = 0;
 	};
 
 

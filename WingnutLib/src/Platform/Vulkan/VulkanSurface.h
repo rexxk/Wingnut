@@ -18,7 +18,7 @@ namespace Wingnut
 
 		virtual void Release() override;
 
-		VkSurfaceKHR GetSurface() { return m_Surface; }
+		virtual void* GetSurface() override { return m_Surface; }
 
 
 	private:

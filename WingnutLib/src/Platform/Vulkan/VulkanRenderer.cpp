@@ -3,6 +3,7 @@
 
 #include "VulkanDevice.h"
 #include "VulkanSurface.h"
+#include "VulkanSwapchain.h"
 
 
 namespace Wingnut
@@ -21,6 +22,10 @@ namespace Wingnut
 
 	VulkanRenderer::~VulkanRenderer()
 	{
+		if (s_VulkanData.Swapchain != nullptr)
+		{
+			s_VulkanData.Swapchain->Release();
+		}
 
 		if (s_VulkanData.Device != nullptr)
 		{
@@ -57,9 +62,10 @@ namespace Wingnut
 		if (!CreateInstance()) return;
 
 		s_VulkanData.Surface = CreateRef<VulkanSurface>(m_Instance, windowHandle);
-		s_VulkanData.Device = CreateRef<VulkanDevice>(m_Instance);
+		s_VulkanData.Device = CreateRef<VulkanDevice>(m_Instance, s_VulkanData.Surface->GetSurface());
 
-
+		s_VulkanData.Swapchain = CreateRef<VulkanSwapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface());
+		
 	}
 
 	bool VulkanRenderer::CreateInstance()

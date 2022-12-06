@@ -25,23 +25,27 @@ namespace Wingnut
 		std::string DeviceName = "";
 
 		VkPhysicalDeviceLimits Limits;
+		VkSurfaceCapabilitiesKHR SurfaceCapabilities;
+
+		VkSurfaceFormatKHR SurfaceFormat;
 
 		std::vector<VulkanQueueProperty> QueueFamilyProperties;
-
 	};
 
 
 	class VulkanDevice : public RendererDevice
 	{
 	public:
-		VulkanDevice(VkInstance instance);
+		VulkanDevice(VkInstance instance, void* surface);
 		virtual ~VulkanDevice();
 
 		virtual void Release() override;
 
+		// TODO: Another lazy assumption
+		void* GetDeviceProperties() { return &m_DeviceProperties[0]; }
 
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
-		VkDevice GetDevice() { return m_Device; }
+		virtual void* GetDevice() override { return m_Device; }
 
 	private:
 		void Create(VkInstance instance);
@@ -49,13 +53,17 @@ namespace Wingnut
 		bool CreateLogicalDevice();
 
 		VulkanPhysicalDeviceProperties GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice);
+		VkSurfaceCapabilitiesKHR GetSurfaceCapabilities(VkPhysicalDevice physicalDevice);
+		VkSurfaceFormatKHR GetSurfaceFormat(VkPhysicalDevice physicalDevice);
 
 		std::vector<std::string> FindDeviceLayers();
 		std::vector<std::string> FindDeviceExtensions();
 
+
 	private:
 		VkPhysicalDevice m_PhysicalDevice = nullptr;
 		VkDevice m_Device = nullptr;
+		VkSurfaceKHR m_Surface = nullptr;
 
 		std::vector<VulkanPhysicalDeviceProperties> m_DeviceProperties;
 	};

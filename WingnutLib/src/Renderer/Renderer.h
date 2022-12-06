@@ -3,6 +3,7 @@
 
 #include "RendererDevice.h"
 #include "RendererSurface.h"
+#include "RendererSwapchain.h"
 
 
 namespace Wingnut
@@ -19,6 +20,7 @@ namespace Wingnut
 	{
 		Ref<RendererDevice> Device;
 		Ref<RendererSurface> Surface;
+		Ref<RendererSwapchain> Swapchain;
 
 		RendererAPI API;
 	};

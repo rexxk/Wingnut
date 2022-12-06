@@ -7,7 +7,8 @@ namespace Wingnut
 {
 
 
-	VulkanDevice::VulkanDevice(VkInstance instance)
+	VulkanDevice::VulkanDevice(VkInstance instance, void* surface)
+		: m_Surface((VkSurfaceKHR)surface)
 	{
 		Create(instance);
 	}
@@ -129,8 +130,13 @@ namespace Wingnut
 		createInfo.ppEnabledExtensionNames = deviceExtensionsPointers.data();
 		createInfo.enabledExtensionCount = (uint32_t)deviceExtensionsPointers.size();
 
-		vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device);
+		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS)
+		{
+			LOG_CORE_ERROR("[Renderer] Failed to create Vulkan device");
+			return false;
+		}
 
+		LOG_CORE_TRACE("[Renderer] Vulkan device created");
 
 		return true;
 	}
@@ -198,9 +204,38 @@ namespace Wingnut
 			return VulkanPhysicalDeviceProperties();
 		}
 
+		physicalDeviceProperties.SurfaceCapabilities = GetSurfaceCapabilities(physicalDevice);
+		physicalDeviceProperties.SurfaceFormat = GetSurfaceFormat(physicalDevice);
+
 		return physicalDeviceProperties;
 	}
 
+	VkSurfaceCapabilitiesKHR VulkanDevice::GetSurfaceCapabilities(VkPhysicalDevice physicalDevice)
+	{
+		VkSurfaceCapabilitiesKHR surfaceCapabilities;
+
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, m_Surface, &surfaceCapabilities);
+
+		return surfaceCapabilities;
+	}
+
+	VkSurfaceFormatKHR VulkanDevice::GetSurfaceFormat(VkPhysicalDevice physicalDevice)
+	{
+		uint32_t surfaceFormatCount = 0;
+		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_Surface, &surfaceFormatCount, nullptr);
+		std::vector<VkSurfaceFormatKHR> surfaceFormats(surfaceFormatCount);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_Surface, &surfaceFormatCount, surfaceFormats.data());
+
+		for (auto& format : surfaceFormats)
+		{
+			if (format.format == VK_FORMAT_B8G8R8A8_UNORM && format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+			{
+				return format;
+			}
+		}
+
+		return VkSurfaceFormatKHR();
+	}
 
 	//////////////////////////////
 	// Logical device functions
