@@ -37,23 +37,22 @@ namespace Wingnut
 		VkSwapchainCreateInfoKHR createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 
-		createInfo.surface = surface;
-		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-		createInfo.preTransform = deviceProperties.SurfaceCapabilities.currentTransform;
-
-		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-
 		createInfo.oldSwapchain = nullptr;
 
-		createInfo.presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+		createInfo.surface = surface;
 
-		createInfo.imageExtent = deviceProperties.SurfaceCapabilities.currentExtent;
+		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+		createInfo.presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
 
 		createInfo.imageArrayLayers = 1;
 		createInfo.minImageCount = 2;
 
+		createInfo.imageExtent = deviceProperties.SurfaceCapabilities.currentExtent;
 		createInfo.imageFormat = deviceProperties.SurfaceFormat.format;
 		createInfo.imageColorSpace = deviceProperties.SurfaceFormat.colorSpace;
+		createInfo.preTransform = deviceProperties.SurfaceCapabilities.currentTransform;
 
 		if (vkCreateSwapchainKHR((VkDevice)m_Device->GetDevice(), &createInfo, nullptr, &m_Swapchain) != VK_SUCCESS)
 		{
@@ -61,7 +60,11 @@ namespace Wingnut
 			return;
 		}
 
-		
+		uint32_t imageCount = 0;
+		vkGetSwapchainImagesKHR((VkDevice)m_Device->GetDevice(), m_Swapchain, &imageCount, nullptr);
+		m_SwapchainImages.resize(imageCount);
+		vkGetSwapchainImagesKHR((VkDevice)m_Device->GetDevice(), m_Swapchain, &imageCount, m_SwapchainImages.data());
+
 
 		LOG_CORE_TRACE("[Renderer] Created Vulkan swapchain");
 	}

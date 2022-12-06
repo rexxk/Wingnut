@@ -25,6 +25,9 @@ namespace Wingnut
 		VkSwapchainKHR m_Swapchain = nullptr;
 
 		Ref<RendererDevice> m_Device = nullptr;
+
+
+		std::vector<VkImage> m_SwapchainImages;
 	};
 
 
