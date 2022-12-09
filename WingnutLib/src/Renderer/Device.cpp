@@ -1,5 +1,5 @@
 #include "wingnut_pch.h"
-#include "VulkanDevice.h"
+#include "Device.h"
 
 
 
@@ -7,18 +7,18 @@ namespace Wingnut
 {
 
 
-	VulkanDevice::VulkanDevice(VkInstance instance, void* surface)
+	Device::Device(VkInstance instance, void* surface)
 		: m_Surface((VkSurfaceKHR)surface)
 	{
 		Create(instance);
 	}
 
-	VulkanDevice::~VulkanDevice()
+	Device::~Device()
 	{
 		Release();
 	}
 
-	void VulkanDevice::Release()
+	void Device::Release()
 	{
 		if (m_Device)
 		{
@@ -32,7 +32,7 @@ namespace Wingnut
 		}
 	}
 
-	void VulkanDevice::Create(VkInstance instance)
+	void Device::Create(VkInstance instance)
 	{
 		LOG_CORE_TRACE("[Renderer] Finding Vulkan device");
 
@@ -40,7 +40,7 @@ namespace Wingnut
 		CreateLogicalDevice();
 	}
 
-	bool VulkanDevice::CreatePhysicalDevice(VkInstance instance)
+	bool Device::CreatePhysicalDevice(VkInstance instance)
 	{
 		uint32_t physicalDeviceCount = 0;
 		vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr);
@@ -50,12 +50,12 @@ namespace Wingnut
 		LOG_CORE_TRACE("[Renderer] Found {} physical device(s)", physicalDeviceCount);
 
 
-		std::vector<VulkanPhysicalDeviceProperties> physicalDeviceProperties;
+		std::vector<PhysicalDeviceProperties> physicalDeviceProperties;
 
 		// Find best device
 		for (auto& physicalDevice : physicalDevices)
 		{
-			VulkanPhysicalDeviceProperties deviceProps = GetPhysicalDeviceProperties(physicalDevice);
+			PhysicalDeviceProperties deviceProps = GetPhysicalDeviceProperties(physicalDevice);
 
 			if (deviceProps.DeviceName != "")
 			{
@@ -76,7 +76,7 @@ namespace Wingnut
 		return true;
 	}
 
-	bool VulkanDevice::CreateLogicalDevice()
+	bool Device::CreateLogicalDevice()
 	{
 
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -145,9 +145,9 @@ namespace Wingnut
 	//////////////////////////////
 	// Physical device functions
 
-	VulkanPhysicalDeviceProperties VulkanDevice::GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice)
+	PhysicalDeviceProperties Device::GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice)
 	{
-		VulkanPhysicalDeviceProperties physicalDeviceProperties;
+		PhysicalDeviceProperties physicalDeviceProperties;
 
 		VkPhysicalDeviceProperties deviceProperties;
 		vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
@@ -155,7 +155,7 @@ namespace Wingnut
 		if (deviceProperties.deviceType != VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 		{
 			LOG_CORE_TRACE("[Renderer] Vulkan device type is not discrete GPU - skipping");
-			return VulkanPhysicalDeviceProperties();
+			return PhysicalDeviceProperties();
 		}
 
 		physicalDeviceProperties.DeviceName = deviceProperties.deviceName;
@@ -175,7 +175,7 @@ namespace Wingnut
 
 		for (auto& queueFamilyProperty : queueFamilyProperties)
 		{
-			VulkanQueueProperty queueProperties;
+			QueueProperty queueProperties;
 			queueProperties.Count = queueFamilyProperty.queueCount;
 			queueProperties.Index = queueIndex++;
 
@@ -201,7 +201,7 @@ namespace Wingnut
 		if (!haveGraphicsQueue)
 		{
 			LOG_CORE_ERROR("[Renderer] Vulkan device does not have a graphics queue");
-			return VulkanPhysicalDeviceProperties();
+			return PhysicalDeviceProperties();
 		}
 
 		physicalDeviceProperties.SurfaceCapabilities = GetSurfaceCapabilities(physicalDevice);
@@ -210,7 +210,7 @@ namespace Wingnut
 		return physicalDeviceProperties;
 	}
 
-	VkSurfaceCapabilitiesKHR VulkanDevice::GetSurfaceCapabilities(VkPhysicalDevice physicalDevice)
+	VkSurfaceCapabilitiesKHR Device::GetSurfaceCapabilities(VkPhysicalDevice physicalDevice)
 	{
 		VkSurfaceCapabilitiesKHR surfaceCapabilities;
 
@@ -219,7 +219,7 @@ namespace Wingnut
 		return surfaceCapabilities;
 	}
 
-	VkSurfaceFormatKHR VulkanDevice::GetSurfaceFormat(VkPhysicalDevice physicalDevice)
+	VkSurfaceFormatKHR Device::GetSurfaceFormat(VkPhysicalDevice physicalDevice)
 	{
 		uint32_t surfaceFormatCount = 0;
 		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_Surface, &surfaceFormatCount, nullptr);
@@ -240,7 +240,7 @@ namespace Wingnut
 	//////////////////////////////
 	// Logical device functions
 
-	std::vector<std::string> VulkanDevice::FindDeviceLayers()
+	std::vector<std::string> Device::FindDeviceLayers()
 	{
 		std::vector<std::string> wantedLayerProperties =
 		{
@@ -280,7 +280,7 @@ namespace Wingnut
 		return foundProperties;
 	}
 
-	std::vector<std::string> VulkanDevice::FindDeviceExtensions()
+	std::vector<std::string> Device::FindDeviceExtensions()
 	{
 		std::vector<std::string> wantedExtensionProperties =
 		{

@@ -1,24 +1,24 @@
 #include "wingnut_pch.h"
-#include "VulkanSurface.h"
+#include "Surface.h"
 
 
 
 namespace Wingnut
 {
 
-	VulkanSurface::VulkanSurface(VkInstance instance, void* windowHandle)
+	Surface::Surface(VkInstance instance, void* windowHandle)
 		: m_Instance(instance)
 	{
 		Create(windowHandle);
 
 	}
 
-	VulkanSurface::~VulkanSurface()
+	Surface::~Surface()
 	{
 		Release();
 	}
 
-	void VulkanSurface::Release()
+	void Surface::Release()
 	{
 		if (m_Surface != nullptr)
 		{
@@ -27,7 +27,7 @@ namespace Wingnut
 		}
 	}
 
-	void VulkanSurface::Create(void* windowHandle)
+	void Surface::Create(void* windowHandle)
 	{
 		VkWin32SurfaceCreateInfoKHR createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;

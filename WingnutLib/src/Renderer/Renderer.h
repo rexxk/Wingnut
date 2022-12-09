@@ -1,46 +1,43 @@
 #pragma once
 
+#include "Device.h"
+#include "Surface.h"
+#include "Swapchain.h"
 
-#include "RendererDevice.h"
-#include "RendererSurface.h"
-#include "RendererSwapchain.h"
+#include <vulkan/vulkan.h>
 
 
 namespace Wingnut
 {
 
-
-	enum class RendererAPI
-	{
-		None,
-		Vulkan,
-	};
-
 	struct RendererData
 	{
-		Ref<RendererDevice> Device;
-		Ref<RendererSurface> Surface;
-		Ref<RendererSwapchain> Swapchain;
-
-		RendererAPI API;
+		Ref<Device> Device;
+		Ref<Surface> Surface;
+		Ref<Swapchain> Swapchain;
 	};
-
 
 
 	class Renderer
 	{
 	public:
-		static Ref<Renderer> Create(RendererAPI api, void* windowHandle);
+		Renderer(void* windowHandle);
+		virtual ~Renderer();
 
-		virtual RendererData& GetRendererData() = 0;
+		RendererData& GetRendererData();
 
-
-
-
-		static Renderer& Get() { return *s_Instance; }
 
 	private:
-		inline static Renderer* s_Instance = nullptr;
+		void Create(void* windowHandle);
+
+		bool CreateInstance();
+
+		std::vector<std::string> FindInstanceLayers();
+		std::vector<std::string> FindInstanceExtensions();
+
+	private:
+		VkInstance m_Instance = nullptr;
+
 	};
 
 

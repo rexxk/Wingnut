@@ -1,14 +1,12 @@
 #pragma once
 
-#include "Renderer/RendererDevice.h"
-
 #include <vulkan/vulkan.h>
 
 
 namespace Wingnut
 {
 
-	struct VulkanQueueProperty
+	struct QueueProperty
 	{
 		uint32_t Index = 0;
 
@@ -20,7 +18,7 @@ namespace Wingnut
 		bool Transfer = false;
 	};
 
-	struct VulkanPhysicalDeviceProperties
+	struct PhysicalDeviceProperties
 	{
 		std::string DeviceName = "";
 
@@ -29,30 +27,30 @@ namespace Wingnut
 
 		VkSurfaceFormatKHR SurfaceFormat;
 
-		std::vector<VulkanQueueProperty> QueueFamilyProperties;
+		std::vector<QueueProperty> QueueFamilyProperties;
 	};
 
 
-	class VulkanDevice : public RendererDevice
+	class Device
 	{
 	public:
-		VulkanDevice(VkInstance instance, void* surface);
-		virtual ~VulkanDevice();
+		Device(VkInstance instance, void* surface);
+		virtual ~Device();
 
-		virtual void Release() override;
+		void Release();
 
 		// TODO: Another lazy assumption
-		void* GetDeviceProperties() { return &m_DeviceProperties[0]; }
+		PhysicalDeviceProperties GetDeviceProperties() { return m_DeviceProperties[0]; }
 
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
-		virtual void* GetDevice() override { return m_Device; }
+		VkDevice GetDevice() { return m_Device; }
 
 	private:
 		void Create(VkInstance instance);
 		bool CreatePhysicalDevice(VkInstance instance);
 		bool CreateLogicalDevice();
 
-		VulkanPhysicalDeviceProperties GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice);
+		PhysicalDeviceProperties GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice);
 		VkSurfaceCapabilitiesKHR GetSurfaceCapabilities(VkPhysicalDevice physicalDevice);
 		VkSurfaceFormatKHR GetSurfaceFormat(VkPhysicalDevice physicalDevice);
 
@@ -65,7 +63,7 @@ namespace Wingnut
 		VkDevice m_Device = nullptr;
 		VkSurfaceKHR m_Surface = nullptr;
 
-		std::vector<VulkanPhysicalDeviceProperties> m_DeviceProperties;
+		std::vector<PhysicalDeviceProperties> m_DeviceProperties;
 	};
 
 }
