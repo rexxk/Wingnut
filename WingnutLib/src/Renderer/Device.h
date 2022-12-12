@@ -6,17 +6,17 @@
 namespace Wingnut
 {
 
-	struct QueueProperty
+	struct QueueFamily
 	{
 		uint32_t Index = 0;
 
-		uint32_t Count = 0;
-		uint32_t UsedQueues = 0;
+		bool Free = true;
 
 		bool Graphics = false;
 		bool Compute = false;
 		bool Transfer = false;
 	};
+
 
 	struct PhysicalDeviceProperties
 	{
@@ -27,7 +27,7 @@ namespace Wingnut
 
 		VkSurfaceFormatKHR SurfaceFormat;
 
-		std::vector<QueueProperty> QueueFamilyProperties;
+		std::unordered_map<uint32_t, std::vector<QueueFamily>> QueueFamilies;
 	};
 
 

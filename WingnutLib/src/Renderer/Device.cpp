@@ -84,7 +84,7 @@ namespace Wingnut
 		float priorities[] = { 1.0f };
 
 		// TODO: Lazyness here too, first device property selected.
-		for (auto& queueFamilyProperty : m_DeviceProperties[0].QueueFamilyProperties)
+		for (auto& queueFamilyProperty : m_DeviceProperties[0].QueueFamilies[0])
 		{
 			if (queueFamilyProperty.Graphics == true)
 			{
@@ -96,8 +96,6 @@ namespace Wingnut
 				queueCreateInfo.pQueuePriorities = priorities;
 
 				queueCreateInfos.emplace_back(queueCreateInfo);
-
-				queueFamilyProperty.UsedQueues++;
 
 				break;
 			}
@@ -171,31 +169,37 @@ namespace Wingnut
 		LOG_CORE_TRACE(" - {} queue families", queueFamilyPropertyCount);
 
 		bool haveGraphicsQueue = false;
-		uint32_t queueIndex = 0;
+
+		uint32_t familyIndex = 0;
 
 		for (auto& queueFamilyProperty : queueFamilyProperties)
 		{
-			QueueProperty queueProperties;
-			queueProperties.Count = queueFamilyProperty.queueCount;
-			queueProperties.Index = queueIndex++;
+			QueueFamily queueFamily;
 
-			if (queueFamilyProperty.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+			for (uint32_t queueIndex = 0; queueIndex < queueFamilyProperty.queueCount; queueIndex++)
 			{
-				queueProperties.Graphics = true;
-				haveGraphicsQueue = true;
+				if (queueFamilyProperty.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+				{
+					queueFamily.Graphics = true;
+					haveGraphicsQueue = true;
+				}
+
+				if (queueFamilyProperty.queueFlags & VK_QUEUE_COMPUTE_BIT)
+				{
+					queueFamily.Compute = true;
+				}
+
+				if (queueFamilyProperty.queueFlags & VK_QUEUE_TRANSFER_BIT)
+				{
+					queueFamily.Transfer = true;
+				}
+
+				queueFamily.Index = queueIndex;
+
+				physicalDeviceProperties.QueueFamilies[familyIndex].emplace_back(queueFamily);
 			}
 
-			if (queueFamilyProperty.queueFlags & VK_QUEUE_COMPUTE_BIT)
-			{
-				queueProperties.Compute = true;
-			}
-
-			if (queueFamilyProperty.queueFlags & VK_QUEUE_TRANSFER_BIT)
-			{
-				queueProperties.Transfer = true;
-			}
-
-			physicalDeviceProperties.QueueFamilyProperties.emplace_back(queueProperties);
+			familyIndex++;
 		}
 
 		if (!haveGraphicsQueue)
