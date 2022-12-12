@@ -6,6 +6,15 @@
 namespace Wingnut
 {
 
+
+	enum QueueType
+	{
+		Graphics,
+		Compute,
+		Transfer,
+	};
+
+
 	struct QueueFamily
 	{
 		uint32_t Index = 0;
@@ -41,6 +50,8 @@ namespace Wingnut
 
 		// TODO: Another lazy assumption
 		PhysicalDeviceProperties GetDeviceProperties() { return m_DeviceProperties[0]; }
+
+		QueueFamily& GetQueueFamily(QueueType type);
 
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
 		VkDevice GetDevice() { return m_Device; }

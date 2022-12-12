@@ -324,4 +324,46 @@ namespace Wingnut
 		return foundProperties;
 	}
 
+
+	//////////////////////////////
+	// Misc functions
+
+	QueueFamily& Device::GetQueueFamily(QueueType type)
+	{
+		for (auto& family : m_DeviceProperties[0].QueueFamilies)
+		{
+			auto& familyVector = family.second;
+
+			for (auto& familyItem : familyVector)
+			{
+				if (familyItem.Free != true)
+					continue;
+
+				switch (type)
+				{
+					case QueueType::Graphics:
+					{
+						if (familyItem.Graphics) 
+							return familyItem;
+					}
+
+					case QueueType::Compute:
+					{
+						if (familyItem.Compute)
+							return familyItem;
+					}
+
+					case QueueType::Transfer:
+					{
+						if (familyItem.Transfer)
+							return familyItem;
+					}
+				}
+			}
+
+		}
+
+	}
+
+
 }
