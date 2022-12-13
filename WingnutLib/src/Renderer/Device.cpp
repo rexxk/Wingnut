@@ -292,6 +292,8 @@ namespace Wingnut
 		std::vector<std::string> wantedExtensionProperties =
 		{
 			"VK_KHR_swapchain",
+			"VK_KHR_pipeline_library",
+			"VK_EXT_graphics_pipeline_library",
 		};
 
 		uint32_t propertyCount = 0;

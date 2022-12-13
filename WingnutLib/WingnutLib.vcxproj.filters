@@ -54,6 +54,7 @@
     <ClInclude Include="src\Renderer\CommandPool.h" />
     <ClInclude Include="src\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Renderer\RenderPass.h" />
+    <ClInclude Include="src\Renderer\Pipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -88,5 +89,6 @@
     <ClCompile Include="src\Renderer\CommandPool.cpp" />
     <ClCompile Include="src\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Renderer\RenderPass.cpp" />
+    <ClCompile Include="src\Renderer\Pipeline.cpp" />
   </ItemGroup>
 </Project>
