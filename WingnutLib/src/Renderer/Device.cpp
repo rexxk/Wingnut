@@ -38,6 +38,8 @@ namespace Wingnut
 
 		CreatePhysicalDevice(instance);
 		CreateLogicalDevice();
+
+		CreateQueues();
 	}
 
 	bool Device::CreatePhysicalDevice(VkInstance instance)
@@ -90,7 +92,7 @@ namespace Wingnut
 			{
 				VkDeviceQueueCreateInfo queueCreateInfo = {};
 				queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-				queueCreateInfo.queueFamilyIndex = queueFamilyProperty.Index;
+				queueCreateInfo.queueFamilyIndex = queueFamilyProperty.FamilyIndex;
 				queueCreateInfo.queueCount = 1;
 
 				queueCreateInfo.pQueuePriorities = priorities;
@@ -194,7 +196,8 @@ namespace Wingnut
 					queueFamily.Transfer = true;
 				}
 
-				queueFamily.Index = queueIndex;
+				queueFamily.FamilyIndex = familyIndex;
+				queueFamily.QueueIndex = queueIndex;
 
 				physicalDeviceProperties.QueueFamilies[familyIndex].emplace_back(queueFamily);
 			}
@@ -326,7 +329,7 @@ namespace Wingnut
 
 
 	//////////////////////////////
-	// Misc functions
+	// Queue functions
 
 	QueueFamily& Device::GetQueueFamily(QueueType type)
 	{
@@ -345,25 +348,56 @@ namespace Wingnut
 					{
 						if (familyItem.Graphics) 
 							return familyItem;
+
+						break;
 					}
 
 					case QueueType::Compute:
 					{
 						if (familyItem.Compute)
 							return familyItem;
+
+						break;
 					}
 
 					case QueueType::Transfer:
 					{
 						if (familyItem.Transfer)
 							return familyItem;
+
+						break;
 					}
 				}
 			}
 
 		}
 
+		QueueFamily family;
+		return family;
 	}
 
+	VkQueue Device::GetQueue(QueueType type)
+	{
+		if (type == QueueType::Graphics)
+			return m_GraphicsQueue;
+
+		return nullptr;
+	}
+
+	void Device::CreateQueues()
+	{
+		QueueFamily& familyInfo = GetQueueFamily(QueueType::Graphics);
+
+		vkGetDeviceQueue(m_Device, familyInfo.FamilyIndex, familyInfo.QueueIndex, &m_GraphicsQueue);
+
+		if (m_GraphicsQueue == nullptr)
+		{
+			LOG_CORE_ERROR("[Renderer] Failed to get graphics queue");
+		}
+
+		familyInfo.Free = false;
+
+		LOG_CORE_TRACE("[Renderer] Device queues retrieved")
+	}
 
 }

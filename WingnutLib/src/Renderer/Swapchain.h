@@ -18,6 +18,8 @@ namespace Wingnut
 
 		void Release();
 
+		std::vector<VkImageView>& GetImageViews() { return m_SwapchainImageViews; }
+
 	private:
 		void Reset(VkSurfaceKHR surface);
 

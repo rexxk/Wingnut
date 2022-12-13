@@ -17,7 +17,8 @@ namespace Wingnut
 
 	struct QueueFamily
 	{
-		uint32_t Index = 0;
+		uint32_t FamilyIndex = 0;
+		uint32_t QueueIndex = 0;
 
 		bool Free = true;
 
@@ -56,10 +57,13 @@ namespace Wingnut
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
 		VkDevice GetDevice() { return m_Device; }
 
+		VkQueue GetQueue(QueueType type);
+
 	private:
 		void Create(VkInstance instance);
 		bool CreatePhysicalDevice(VkInstance instance);
 		bool CreateLogicalDevice();
+		void CreateQueues();
 
 		PhysicalDeviceProperties GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice);
 		VkSurfaceCapabilitiesKHR GetSurfaceCapabilities(VkPhysicalDevice physicalDevice);
@@ -73,6 +77,8 @@ namespace Wingnut
 		VkPhysicalDevice m_PhysicalDevice = nullptr;
 		VkDevice m_Device = nullptr;
 		VkSurfaceKHR m_Surface = nullptr;
+
+		VkQueue m_GraphicsQueue = nullptr;
 
 		std::vector<PhysicalDeviceProperties> m_DeviceProperties;
 	};
