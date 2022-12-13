@@ -1,9 +1,10 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
-
 #include "Device.h"
+#include "RenderPass.h"
 #include "Swapchain.h"
+
+#include <vulkan/vulkan.h>
 
 
 namespace Wingnut
@@ -13,15 +14,13 @@ namespace Wingnut
 	class Framebuffer
 	{
 	public:
-		Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, VkExtent2D imageExtent, VkFormat format);
+		Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkExtent2D imageExtent);
 		~Framebuffer();
 
 		void Release();
 
 	private:
 		std::vector<VkFramebuffer> m_Framebuffers;
-
-		VkRenderPass m_RenderPass = nullptr;
 
 		VkDevice m_Device = nullptr;
 

@@ -3,6 +3,7 @@
 #include "CommandPool.h"
 #include "Device.h"
 #include "Framebuffer.h"
+#include "RenderPass.h"
 #include "Surface.h"
 #include "Swapchain.h"
 
@@ -17,6 +18,7 @@ namespace Wingnut
 		Ref<CommandPool> CommandPool = nullptr;
 		Ref<Device> Device = nullptr;
 		Ref<Framebuffer> Framebuffer = nullptr;
+		Ref<RenderPass> RenderPass = nullptr;
 		Ref<Surface> Surface = nullptr;
 		Ref<Swapchain> Swapchain = nullptr;
 	};

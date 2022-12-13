@@ -53,6 +53,7 @@
     <ClInclude Include="src\Renderer\Swapchain.h" />
     <ClInclude Include="src\Renderer\CommandPool.h" />
     <ClInclude Include="src\Renderer\Framebuffer.h" />
+    <ClInclude Include="src\Renderer\RenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -86,5 +87,6 @@
     <ClCompile Include="src\Renderer\Swapchain.cpp" />
     <ClCompile Include="src\Renderer\CommandPool.cpp" />
     <ClCompile Include="src\Renderer\Framebuffer.cpp" />
+    <ClCompile Include="src\Renderer\RenderPass.cpp" />
   </ItemGroup>
 </Project>

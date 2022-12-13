@@ -21,6 +21,11 @@ namespace Wingnut
 			s_VulkanData.Framebuffer->Release();
 		}
 
+		if (s_VulkanData.RenderPass != nullptr)
+		{
+			s_VulkanData.RenderPass->Release();
+		}
+
 		if (s_VulkanData.CommandPool != nullptr)
 		{
 			s_VulkanData.CommandPool->Release();
@@ -71,7 +76,8 @@ namespace Wingnut
 		s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface());
 		
 		s_VulkanData.CommandPool = CreateRef<CommandPool>(s_VulkanData.Device);
-		s_VulkanData.Framebuffer = CreateRef<Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
+		s_VulkanData.RenderPass = CreateRef<RenderPass>(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
+		s_VulkanData.Framebuffer = CreateRef<Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 	}
 
 	bool Renderer::CreateInstance()

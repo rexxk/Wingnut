@@ -110,6 +110,7 @@
     <ClInclude Include="src\Renderer\Device.h" />
     <ClInclude Include="src\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
+    <ClInclude Include="src\Renderer\RenderPass.h" />
     <ClInclude Include="src\Renderer\Surface.h" />
     <ClInclude Include="src\Renderer\Swapchain.h" />
     <ClInclude Include="src\Wingnut.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="src\Renderer\Device.cpp" />
     <ClCompile Include="src\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Renderer\Surface.cpp" />
     <ClCompile Include="src\Renderer\Swapchain.cpp" />
     <ClCompile Include="src\wingnut_pch.cpp">
