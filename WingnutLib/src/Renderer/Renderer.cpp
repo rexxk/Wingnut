@@ -1,10 +1,6 @@
 #include "wingnut_pch.h"
 #include "Renderer.h"
 
-#include "Device.h"
-#include "Surface.h"
-#include "Swapchain.h"
-
 
 namespace Wingnut
 {
@@ -20,6 +16,16 @@ namespace Wingnut
 
 	Renderer::~Renderer()
 	{
+		if (s_VulkanData.Framebuffer != nullptr)
+		{
+			s_VulkanData.Framebuffer->Release();
+		}
+
+		if (s_VulkanData.CommandPool != nullptr)
+		{
+			s_VulkanData.CommandPool->Release();
+		}
+
 		if (s_VulkanData.Swapchain != nullptr)
 		{
 			s_VulkanData.Swapchain->Release();
@@ -64,6 +70,8 @@ namespace Wingnut
 
 		s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface());
 		
+		s_VulkanData.CommandPool = CreateRef<CommandPool>(s_VulkanData.Device);
+		s_VulkanData.Framebuffer = CreateRef<Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
 	}
 
 	bool Renderer::CreateInstance()

@@ -371,9 +371,6 @@ namespace Wingnut
 			}
 
 		}
-
-		QueueFamily family;
-		return family;
 	}
 
 	VkQueue Device::GetQueue(QueueType type)

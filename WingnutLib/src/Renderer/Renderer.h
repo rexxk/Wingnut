@@ -1,6 +1,8 @@
 #pragma once
 
+#include "CommandPool.h"
 #include "Device.h"
+#include "Framebuffer.h"
 #include "Surface.h"
 #include "Swapchain.h"
 
@@ -12,9 +14,11 @@ namespace Wingnut
 
 	struct RendererData
 	{
-		Ref<Device> Device;
-		Ref<Surface> Surface;
-		Ref<Swapchain> Swapchain;
+		Ref<CommandPool> CommandPool = nullptr;
+		Ref<Device> Device = nullptr;
+		Ref<Framebuffer> Framebuffer = nullptr;
+		Ref<Surface> Surface = nullptr;
+		Ref<Swapchain> Swapchain = nullptr;
 	};
 
 

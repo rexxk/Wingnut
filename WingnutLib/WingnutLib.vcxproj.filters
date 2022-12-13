@@ -51,6 +51,8 @@
     <ClInclude Include="src\Renderer\Device.h" />
     <ClInclude Include="src\Renderer\Surface.h" />
     <ClInclude Include="src\Renderer\Swapchain.h" />
+    <ClInclude Include="src\Renderer\CommandPool.h" />
+    <ClInclude Include="src\Renderer\Framebuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -82,5 +84,7 @@
     <ClCompile Include="src\Renderer\Device.cpp" />
     <ClCompile Include="src\Renderer\Surface.cpp" />
     <ClCompile Include="src\Renderer\Swapchain.cpp" />
+    <ClCompile Include="src\Renderer\CommandPool.cpp" />
+    <ClCompile Include="src\Renderer\Framebuffer.cpp" />
   </ItemGroup>
 </Project>

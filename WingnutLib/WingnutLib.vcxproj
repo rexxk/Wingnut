@@ -106,7 +106,9 @@
     <ClInclude Include="src\Event\EventQueue.h" />
     <ClInclude Include="src\Event\EventUtils.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
+    <ClInclude Include="src\Renderer\CommandPool.h" />
     <ClInclude Include="src\Renderer\Device.h" />
+    <ClInclude Include="src\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Renderer\Surface.h" />
     <ClInclude Include="src\Renderer\Swapchain.h" />
@@ -122,7 +124,9 @@
     <ClCompile Include="src\Event\EventBroker.cpp" />
     <ClCompile Include="src\Event\EventQueue.cpp" />
     <ClCompile Include="src\Event\EventUtils.cpp" />
+    <ClCompile Include="src\Renderer\CommandPool.cpp" />
     <ClCompile Include="src\Renderer\Device.cpp" />
+    <ClCompile Include="src\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Renderer\Surface.cpp" />
     <ClCompile Include="src\Renderer\Swapchain.cpp" />
