@@ -84,7 +84,7 @@ namespace Wingnut
 		s_VulkanData.RenderPass = CreateRef<RenderPass>(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
 		s_VulkanData.Framebuffer = CreateRef<Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 
-		s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, s_VulkanData.RenderPass);
+		s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, s_VulkanData.RenderPass, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 	}
 
 	bool Renderer::CreateInstance()
