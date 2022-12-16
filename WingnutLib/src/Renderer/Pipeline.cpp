@@ -3,7 +3,6 @@
 
 
 
-
 namespace Wingnut
 {
 
@@ -160,6 +159,8 @@ namespace Wingnut
 		createInfo.pViewportState = &viewportStateCreateInfo;
 		createInfo.pVertexInputState = &vertexInputStateCreateInfo;
 		createInfo.pMultisampleState = &multisampleCreateInfo;
+		createInfo.pColorBlendState = &colorBlendCreateInfo;
+		createInfo.pInputAssemblyState = &inputAssemblyCreateInfo;
 
 		VkPipelineCacheCreateInfo cacheCreateInfo = {};
 		cacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;

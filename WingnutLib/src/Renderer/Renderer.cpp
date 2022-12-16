@@ -1,6 +1,8 @@
 #include "wingnut_pch.h"
 #include "Renderer.h"
 
+#include "ShaderCompiler.h"
+
 
 namespace Wingnut
 {
@@ -74,6 +76,16 @@ namespace Wingnut
 		LOG_CORE_TRACE("[Renderer] Creating Vulkan renderer");
 
 		if (!CreateInstance()) return;
+
+		// Compile shaders
+
+		ShaderCompiler::Initialize();
+
+		ShaderCompiler::Compile("assets/shaders/BasicShader_vs.glsl", ShaderDomain::Vertex);
+
+		ShaderCompiler::Shutdown();
+
+		// Init Vulkan
 
 		s_VulkanData.Surface = CreateRef<Surface>(m_Instance, windowHandle);
 		s_VulkanData.Device = CreateRef<Device>(m_Instance, s_VulkanData.Surface->GetSurface());
