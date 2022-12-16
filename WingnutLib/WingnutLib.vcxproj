@@ -67,7 +67,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>vendor\vulkan\1.3.231.1\Lib\vulkan-1.lib;vendor\vulkan\1.3.231.1\Lib\glslangd.lib;vendor\vulkan\1.3.231.1\Lib\HLSLd.lib;vendor\vulkan\1.3.231.1\Lib\MachineIndependentd.lib;vendor\vulkan\1.3.231.1\Lib\glslang-default-resource-limitsd.lib;vendor\vulkan\1.3.231.1\Lib\SPIRVd.lib;vendor\vulkan\1.3.231.1\Lib\GenericCodeGend.lib;vendor\vulkan\1.3.231.1\Lib\OGLCompilerd.lib;vendor\vulkan\1.3.231.1\Lib\OSDependentd.lib;vendor\vulkan\1.3.231.1\Lib\shadercd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vendor\vulkan\1.3.231.1\Lib\vulkan-1.lib;vendor\Vulkan\1.3.231.1\Lib\shaderc_combinedd.lib;vendor\Vulkan\1.3.231.1\Lib\MachineIndependentd.lib;vendor\Vulkan\1.3.231.1\Lib\OSDependentd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRVd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Toolsd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-optd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-sharedd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Win64|x64'">
@@ -90,7 +90,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>vendor\vulkan\1.3.231.1\Lib\vulkan-1.lib;vendor\vulkan\1.3.231.1\Lib\glslang.lib;vendor\vulkan\1.3.231.1\Lib\HLSL.lib;vendor\vulkan\1.3.231.1\Lib\MachineIndependent.lib;vendor\vulkan\1.3.231.1\Lib\glslang-default-resource-limits.lib;vendor\vulkan\1.3.231.1\Lib\SPIRV.lib;vendor\vulkan\1.3.231.1\Lib\GenericCodeGen.lib;vendor\vulkan\1.3.231.1\Lib\OGLCompiler.lib;vendor\vulkan\1.3.231.1\Lib\OSDependent.lib;vendor\vulkan\1.3.231.1\Lib\shaderc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vendor\vulkan\1.3.231.1\Lib\vulkan-1.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

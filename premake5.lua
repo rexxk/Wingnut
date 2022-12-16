@@ -66,7 +66,13 @@ project "WingnutLib"
 
 		links
 		{
-			"WingnutLib/vendor/assimp/lib/assimp-vc142-mtd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/shaderc_combinedd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/MachineIndependentd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/OSDependentd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRVd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Toolsd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-optd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-sharedd.lib",
 		}
 	
 	filter "configurations:Release"
@@ -74,7 +80,7 @@ project "WingnutLib"
 
 		links
 		{
-			"WingnutLib/vendor/assimp/lib/assimp-vc142-mt.lib"
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV.lib",
 		}
 	
 

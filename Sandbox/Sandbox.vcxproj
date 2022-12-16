@@ -98,6 +98,10 @@
       <Project>{880A65E2-74C2-A62F-DDC9-7F8BC9A04120}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\BasicShader_fs.glsl" />
+    <None Include="assets\shaders\BasicShader_vs.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
