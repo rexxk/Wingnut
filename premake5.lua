@@ -80,7 +80,13 @@ project "WingnutLib"
 
 		links
 		{
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/shaderc_combined.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/MachineIndependent.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/OSDependent.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-opt.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-shared.lib",
 		}
 	
 
