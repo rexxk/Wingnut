@@ -132,13 +132,6 @@ namespace Wingnut
 		viewportStateCreateInfo.scissorCount = 1;
 		viewportStateCreateInfo.pScissors = &scissor;
 
-		VkPipelineVertexInputStateCreateInfo vertexInputStateCreateInfo = {};
-		vertexInputStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputStateCreateInfo.vertexAttributeDescriptionCount = 0;
-		vertexInputStateCreateInfo.pVertexAttributeDescriptions = nullptr;
-		vertexInputStateCreateInfo.vertexBindingDescriptionCount = 0;
-		vertexInputStateCreateInfo.pVertexBindingDescriptions = nullptr;
-
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyCreateInfo = {};
 		inputAssemblyCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		inputAssemblyCreateInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
@@ -157,6 +150,38 @@ namespace Wingnut
 			shaderStages.emplace_back(stageCreateInfo);
 		}
 
+		std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
+
+		{
+			VkVertexInputAttributeDescription attribDescription;
+			attribDescription.binding = 0;
+			attribDescription.location = 0;
+			attribDescription.format = VK_FORMAT_R32G32B32_SFLOAT;
+			attribDescription.offset = 0;
+
+			attributeDescriptions.emplace_back(attribDescription);
+		}
+		{
+			VkVertexInputAttributeDescription attribDescription;
+			attribDescription.binding = 0;
+			attribDescription.location = 1;
+			attribDescription.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+			attribDescription.offset = 12;
+
+			attributeDescriptions.emplace_back(attribDescription);
+		}
+
+		VkVertexInputBindingDescription vertexInputBindingDescription = {};
+		vertexInputBindingDescription.binding = 0;
+		vertexInputBindingDescription.stride = 28;
+		vertexInputBindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		VkPipelineVertexInputStateCreateInfo vertexInputStateCreateInfo = {};
+		vertexInputStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+		vertexInputStateCreateInfo.vertexBindingDescriptionCount = 1;
+		vertexInputStateCreateInfo.pVertexBindingDescriptions = &vertexInputBindingDescription;
+		vertexInputStateCreateInfo.vertexAttributeDescriptionCount = (uint32_t)attributeDescriptions.size();
+		vertexInputStateCreateInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
 		VkPipelineRasterizationStateCreateInfo rasterizationStateCreateInfo = {};
 		rasterizationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -234,6 +259,9 @@ namespace Wingnut
 		createInfo.pMultisampleState = &multisampleCreateInfo;
 		createInfo.pColorBlendState = &colorBlendCreateInfo;
 		createInfo.pInputAssemblyState = &inputAssemblyCreateInfo;
+		
+		createInfo.pVertexInputState = &vertexInputStateCreateInfo;
+
 
 		VkPipelineCacheCreateInfo cacheCreateInfo = {};
 		cacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
