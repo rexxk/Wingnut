@@ -77,26 +77,24 @@ namespace Wingnut
 
 		if (!CreateInstance()) return;
 
-		// Compile shaders
-
-		ShaderCompiler::Initialize();
-
-		ShaderCompiler::Compile("assets/shaders/BasicShader_vs.glsl", ShaderDomain::Vertex);
-
-		ShaderCompiler::Shutdown();
-
 		// Init Vulkan
 
 		s_VulkanData.Surface = CreateRef<Surface>(m_Instance, windowHandle);
 		s_VulkanData.Device = CreateRef<Device>(m_Instance, s_VulkanData.Surface->GetSurface());
 
 		s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface());
-		
+
 		s_VulkanData.CommandPool = CreateRef<CommandPool>(s_VulkanData.Device);
 		s_VulkanData.RenderPass = CreateRef<RenderPass>(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
 		s_VulkanData.Framebuffer = CreateRef<Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 
-		s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, s_VulkanData.RenderPass, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
+		// Create pipeline
+
+		std::unordered_map<ShaderDomain, std::string> shaderPaths;
+		shaderPaths[ShaderDomain::Vertex] = "assets/shaders/BasicShader_vs.glsl";
+		shaderPaths[ShaderDomain::Fragment] = "assets/shaders/BasicShader_fs.glsl";
+
+		s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, s_VulkanData.RenderPass, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent, shaderPaths);
 	}
 
 	bool Renderer::CreateInstance()

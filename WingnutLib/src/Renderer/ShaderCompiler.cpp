@@ -135,7 +135,7 @@ namespace Wingnut
 		glslang::FinalizeProcess();
 	}
 
-	std::vector<uint32_t> ShaderCompiler::Compile(const std::string& shaderPath, ShaderDomain domain)
+	std::pair<ShaderDomain, std::vector<uint32_t>> ShaderCompiler::Compile(const std::string& shaderPath, ShaderDomain domain)
 	{
 		std::vector<uint32_t> spirvCode;
 
@@ -144,7 +144,7 @@ namespace Wingnut
 		if (!sourceFile.is_open())
 		{
 			LOG_CORE_ERROR("[ShaderCompiler] Unable to open file {} for compiling", shaderPath);
-			return spirvCode;
+			return std::make_pair(ShaderDomain::None, spirvCode);
 		}
 
 		LOG_CORE_TRACE("[ShaderCompile] Compiling shader {}", shaderPath);
@@ -180,7 +180,7 @@ namespace Wingnut
 			LOG_CORE_ERROR("[ShaderCompiler] {}", shader.getInfoLog());
 			LOG_CORE_ERROR(" - {}", shader.getInfoDebugLog());
 
-			return spirvCode;
+			return std::make_pair(ShaderDomain::None, spirvCode);
 		}
 
 		program.addShader(&shader);
@@ -192,12 +192,12 @@ namespace Wingnut
 			LOG_CORE_ERROR("[ShaderCompiler] {}", shader.getInfoLog());
 			LOG_CORE_ERROR(" - {}", shader.getInfoDebugLog());
 
-			return spirvCode;
+			return std::make_pair(ShaderDomain::None, spirvCode);
 		}
 
 		glslang::GlslangToSpv(*program.getIntermediate(stage), spirvCode);
 
-		return spirvCode;
+		return std::make_pair(domain, spirvCode);
 	}
 
 }

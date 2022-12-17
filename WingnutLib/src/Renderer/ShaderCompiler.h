@@ -8,6 +8,7 @@ namespace Wingnut
 
 	enum class ShaderDomain
 	{
+		None,
 		Vertex,
 		Fragment,
 	};
@@ -19,7 +20,7 @@ namespace Wingnut
 		static void Initialize();
 		static void Shutdown();
 
-		static std::vector<uint32_t> Compile(const std::string& shaderPath, ShaderDomain domain);
+		static std::pair<ShaderDomain, std::vector<uint32_t>> Compile(const std::string& shaderPath, ShaderDomain domain);
 
 	};
 
