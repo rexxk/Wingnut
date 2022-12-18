@@ -56,5 +56,14 @@ namespace Wingnut
 		m_Framebuffers.clear();
 	}
 
+	VkFramebuffer Framebuffer::GetNextFramebuffer()
+	{
+		if (m_ActiveFramebuffer >= (uint32_t)m_Framebuffers.size())
+		{
+			m_ActiveFramebuffer = 0;
+		}
+
+		return m_Framebuffers[m_ActiveFramebuffer++];
+	}
 
 }

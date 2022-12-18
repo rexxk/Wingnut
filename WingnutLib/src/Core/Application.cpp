@@ -71,6 +71,9 @@ namespace Wingnut
 			}
 
 
+
+			Renderer::Present();
+
 		}
 
 

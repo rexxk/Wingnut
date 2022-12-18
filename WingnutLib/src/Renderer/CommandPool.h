@@ -18,6 +18,8 @@ namespace Wingnut
 
 		void Release();
 
+		VkCommandPool GetCommandPool() { return m_CommandPool; }
+
 	private:
 		void CreateCommandPool();
 

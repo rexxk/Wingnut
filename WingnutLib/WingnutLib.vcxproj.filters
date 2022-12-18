@@ -77,6 +77,9 @@
     </ClInclude>
     <ClInclude Include="src\Wingnut.h" />
     <ClInclude Include="src\wingnut_pch.h" />
+    <ClInclude Include="src\Renderer\CommandBuffer.h" />
+    <ClInclude Include="src\Renderer\Semaphore.h" />
+    <ClInclude Include="src\Renderer\Fence.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -131,5 +134,8 @@
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\wingnut_pch.cpp" />
+    <ClCompile Include="src\Renderer\CommandBuffer.cpp" />
+    <ClCompile Include="src\Renderer\Semaphore.cpp" />
+    <ClCompile Include="src\Renderer\Fence.cpp" />
   </ItemGroup>
 </Project>

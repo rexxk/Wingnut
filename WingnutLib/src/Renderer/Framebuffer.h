@@ -19,12 +19,14 @@ namespace Wingnut
 
 		void Release();
 
+		VkFramebuffer GetNextFramebuffer();
+
 	private:
 		std::vector<VkFramebuffer> m_Framebuffers;
 
 		VkDevice m_Device = nullptr;
 
-
+		uint32_t m_ActiveFramebuffer = 0;
 	};
 
 

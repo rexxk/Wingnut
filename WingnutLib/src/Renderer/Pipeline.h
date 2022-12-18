@@ -21,6 +21,8 @@ namespace Wingnut
 
 		void Release();
 
+		VkPipeline GetPipeline() { return m_Pipeline; }
+
 	private:
 		void CompileShaders(const std::unordered_map<ShaderDomain, std::string>& shaderPaths);
 		void CreateShaderModule(ShaderDomain domain, const std::vector<uint32_t>& shaderData);

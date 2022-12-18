@@ -18,6 +18,8 @@ namespace Wingnut
 
 		void Release();
 
+		VkSwapchainKHR GetSwapchain() { return m_Swapchain; }
+
 		std::vector<VkImageView>& GetImageViews() { return m_SwapchainImageViews; }
 
 	private:

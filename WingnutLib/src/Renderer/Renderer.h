@@ -1,10 +1,13 @@
 #pragma once
 
+#include "CommandBuffer.h"
 #include "CommandPool.h"
 #include "Device.h"
+#include "Fence.h"
 #include "Framebuffer.h"
 #include "Pipeline.h"
 #include "RenderPass.h"
+#include "Semaphore.h"
 #include "Surface.h"
 #include "Swapchain.h"
 
@@ -16,6 +19,7 @@ namespace Wingnut
 
 	struct RendererData
 	{
+		Ref<CommandBuffer> CommandBuffer = nullptr;
 		Ref<CommandPool> CommandPool = nullptr;
 		Ref<Device> Device = nullptr;
 		Ref<Framebuffer> Framebuffer = nullptr;
@@ -23,6 +27,10 @@ namespace Wingnut
 		Ref<RenderPass> RenderPass = nullptr;
 		Ref<Surface> Surface = nullptr;
 		Ref<Swapchain> Swapchain = nullptr;
+
+		Ref<Fence> InFlightFence = nullptr;
+		Ref<Semaphore> ImageAvailableSemaphore = nullptr;
+		Ref<Semaphore> RenderFinishedSemaphore = nullptr;
 	};
 
 
@@ -31,6 +39,12 @@ namespace Wingnut
 	public:
 		Renderer(void* windowHandle);
 		virtual ~Renderer();
+
+
+		static void BeginScene();
+		static void EndScene();
+
+		static void Present();
 
 		RendererData& GetRendererData();
 

@@ -1,5 +1,6 @@
 #include "MainLayer.h"
 
+using namespace Wingnut;
 
 
 MainLayer::MainLayer(const std::string& name)
@@ -21,5 +22,8 @@ void MainLayer::OnAttach()
 
 void MainLayer::OnUpdate()
 {
+	Renderer::BeginScene();
 
+
+	Renderer::EndScene();
 }
