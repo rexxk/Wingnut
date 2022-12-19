@@ -399,4 +399,26 @@ namespace Wingnut
 		LOG_CORE_TRACE("[Renderer] Device queues retrieved")
 	}
 
+
+	//////////////////////////////
+	// Memory functions
+
+	uint32_t Device::FindMemoryType(uint32_t filter, VkMemoryPropertyFlags properties)
+	{
+		VkPhysicalDeviceMemoryProperties memoryProperties;
+		vkGetPhysicalDeviceMemoryProperties(m_PhysicalDevice, &memoryProperties);
+
+		for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++)
+		{
+			if ((filter & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
+			{
+				return i;
+			}
+		}
+
+		return 0;
+	}
+
+
+
 }

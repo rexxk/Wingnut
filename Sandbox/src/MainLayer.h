@@ -11,6 +11,11 @@ public:
 	virtual ~MainLayer();
 
 	virtual void OnAttach() override;
+	virtual void OnDetach() override;
 	virtual void OnUpdate() override;
+
+private:
+	Ref<Wingnut::VertexBuffer> m_TriangleVertexBuffer = nullptr;
+	Ref<Wingnut::IndexBuffer> m_TriangleIndexBuffer = nullptr;
 
 };

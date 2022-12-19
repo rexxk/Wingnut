@@ -59,6 +59,10 @@ namespace Wingnut
 
 	}
 
+	Application::~Application()
+	{
+		m_Renderer->ReleaseAll();
+	}
 
 	void Application::Run() 
 	{
@@ -89,7 +93,10 @@ namespace Wingnut
 		}
 
 
-		m_Renderer->ReleaseAll();
+		for (auto& layer : m_LayerStack)
+		{
+			layer->OnDetach();
+		}
 
 	}
 

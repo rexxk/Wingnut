@@ -59,6 +59,8 @@ namespace Wingnut
 
 		VkQueue GetQueue(QueueType type);
 
+		uint32_t FindMemoryType(uint32_t filter, VkMemoryPropertyFlags properties);
+
 	private:
 		void Create(VkInstance instance);
 		bool CreatePhysicalDevice(VkInstance instance);

@@ -56,7 +56,7 @@ namespace Wingnut
 
 		static void Present();
 
-		RendererData& GetRendererData();
+		static RendererData& GetRendererData();
 
 		Renderer& Get() { return *s_Instance; }
 

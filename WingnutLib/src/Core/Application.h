@@ -23,6 +23,7 @@ namespace Wingnut
 	{
 	public:
 		Application(const ApplicationProperties& properties);
+		virtual ~Application();
 
 		void Run();
 
