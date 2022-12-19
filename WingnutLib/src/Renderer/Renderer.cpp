@@ -253,6 +253,9 @@ namespace Wingnut
 
 	void Renderer::BeginScene()
 	{
+		s_VulkanData.InFlightFence->Wait(UINT64_MAX);
+		s_VulkanData.InFlightFence->Reset();
+
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = 0;
@@ -282,8 +285,8 @@ namespace Wingnut
 		VkViewport viewport = {};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent.width;
-		viewport.height = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent.height;
+		viewport.width = (float)s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent.width;
+		viewport.height = (float)s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent.height;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 		vkCmdSetViewport(s_VulkanData.CommandBuffer->GetCommandBuffer(), 0, 1, &viewport);
@@ -308,9 +311,6 @@ namespace Wingnut
 
 	void Renderer::Present()
 	{
-		s_VulkanData.InFlightFence->Wait(UINT64_MAX);
-		s_VulkanData.InFlightFence->Reset();
-
 		uint32_t imageIndex = 0;
 		vkAcquireNextImageKHR(s_VulkanData.Device->GetDevice(), s_VulkanData.Swapchain->GetSwapchain(), UINT64_MAX, s_VulkanData.ImageAvailableSemaphore->GetSemaphore(), VK_NULL_HANDLE, &imageIndex);
 
