@@ -80,6 +80,7 @@
     <ClInclude Include="src\Renderer\CommandBuffer.h" />
     <ClInclude Include="src\Renderer\Semaphore.h" />
     <ClInclude Include="src\Renderer\Fence.h" />
+    <ClInclude Include="src\Renderer\Buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -137,5 +138,6 @@
     <ClCompile Include="src\Renderer\CommandBuffer.cpp" />
     <ClCompile Include="src\Renderer\Semaphore.cpp" />
     <ClCompile Include="src\Renderer\Fence.cpp" />
+    <ClCompile Include="src\Renderer\Buffer.cpp" />
   </ItemGroup>
 </Project>

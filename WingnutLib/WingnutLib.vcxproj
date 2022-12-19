@@ -106,6 +106,7 @@
     <ClInclude Include="src\Event\EventQueue.h" />
     <ClInclude Include="src\Event\EventUtils.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
+    <ClInclude Include="src\Renderer\Buffer.h" />
     <ClInclude Include="src\Renderer\CommandBuffer.h" />
     <ClInclude Include="src\Renderer\CommandPool.h" />
     <ClInclude Include="src\Renderer\Device.h" />
@@ -130,6 +131,7 @@
     <ClCompile Include="src\Event\EventBroker.cpp" />
     <ClCompile Include="src\Event\EventQueue.cpp" />
     <ClCompile Include="src\Event\EventUtils.cpp" />
+    <ClCompile Include="src\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Renderer\CommandBuffer.cpp" />
     <ClCompile Include="src\Renderer\CommandPool.cpp" />
     <ClCompile Include="src\Renderer\Device.cpp" />

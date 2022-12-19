@@ -11,11 +11,20 @@
 #include "Surface.h"
 #include "Swapchain.h"
 
+#include <glm/glm.hpp>
+
 #include <vulkan/vulkan.h>
 
 
 namespace Wingnut
 {
+
+	struct Vertex
+	{
+		glm::vec3 Position;
+		glm::vec4 Color;
+	};
+
 
 	struct RendererData
 	{
