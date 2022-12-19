@@ -47,6 +47,7 @@ namespace Wingnut
 	private:
 
 		bool m_Running = false;
+		bool m_ApplicationMinimized = false;
 
 		LayerStack m_LayerStack;
 

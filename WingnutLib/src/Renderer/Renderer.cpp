@@ -3,6 +3,9 @@
 
 #include "ShaderCompiler.h"
 
+#include "Event/EventUtils.h"
+#include "Event/WindowEvents.h"
+
 
 namespace Wingnut
 {
@@ -13,11 +16,51 @@ namespace Wingnut
 
 	Renderer::Renderer(void* windowHandle)
 	{
+		if (s_Instance == nullptr)
+		{
+			s_Instance = this;
+		}
+
 		Create(windowHandle);
+
+		m_CurrentExtent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
+
+		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
+			{
+				if (event.Width() == 0 || event.Height() == 0)
+					return false;
+
+				VkExtent2D extent;
+				extent.width = event.Width();
+				extent.height = event.Height();
+
+				m_CurrentExtent = extent;
+
+				vkDeviceWaitIdle(s_VulkanData.Device->GetDevice());
+
+				s_VulkanData.Swapchain->Resize((VkSurfaceKHR)s_VulkanData.Surface->GetSurface(), extent);
+
+				s_VulkanData.Framebuffer->Release();
+				s_VulkanData.Framebuffer = CreateRef<Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, extent);
+
+
+				return false;
+			});
+
 	}
 
 	Renderer::~Renderer()
 	{
+		ReleaseAll();
+	}
+
+	void Renderer::ReleaseAll()
+	{
+		if (s_VulkanData.Device->GetDevice() != nullptr)
+		{
+			vkDeviceWaitIdle(s_VulkanData.Device->GetDevice());
+		}
+
 		if (s_VulkanData.InFlightFence != nullptr)
 		{
 			s_VulkanData.InFlightFence->Release();
@@ -102,7 +145,7 @@ namespace Wingnut
 		s_VulkanData.Surface = CreateRef<Surface>(m_Instance, windowHandle);
 		s_VulkanData.Device = CreateRef<Device>(m_Instance, s_VulkanData.Surface->GetSurface());
 
-		s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface());
+		s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface(), s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 
 		s_VulkanData.CommandPool = CreateRef<CommandPool>(s_VulkanData.Device);
 		s_VulkanData.RenderPass = CreateRef<RenderPass>(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
@@ -272,7 +315,7 @@ namespace Wingnut
 		renderPassBeginInfo.renderPass = s_VulkanData.RenderPass->GetRenderPass();
 		renderPassBeginInfo.framebuffer = s_VulkanData.Framebuffer->GetNextFramebuffer();
 		renderPassBeginInfo.renderArea.offset = { 0, 0 };
-		renderPassBeginInfo.renderArea.extent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
+		renderPassBeginInfo.renderArea.extent = s_Instance->m_CurrentExtent;
 
 		VkClearValue clearColor = { {{ 0.2f, 0.3f, 0.45f }} };
 		renderPassBeginInfo.clearValueCount = 1;
@@ -285,15 +328,15 @@ namespace Wingnut
 		VkViewport viewport = {};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = (float)s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent.width;
-		viewport.height = (float)s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent.height;
+		viewport.width = (float)s_Instance->m_CurrentExtent.width;
+		viewport.height = (float)s_Instance->m_CurrentExtent.height;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 		vkCmdSetViewport(s_VulkanData.CommandBuffer->GetCommandBuffer(), 0, 1, &viewport);
 
 		VkRect2D scissor = {};
 		scissor.offset = { 0, 0 };
-		scissor.extent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
+		scissor.extent = s_Instance->m_CurrentExtent;
 		vkCmdSetScissor(s_VulkanData.CommandBuffer->GetCommandBuffer(), 0, 1, &scissor);
 	}
 
@@ -351,9 +394,10 @@ namespace Wingnut
 
 		if (vkQueuePresentKHR(s_VulkanData.Device->GetQueue(QueueType::Graphics), &presentInfo) != VK_SUCCESS)
 		{
-			LOG_CORE_ERROR("[Renderer] Failed to present queue");
+//			LOG_CORE_ERROR("[Renderer] Failed to present queue");
 			return;
 		}
+
 	}
 
 }

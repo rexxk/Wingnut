@@ -7,11 +7,11 @@
 namespace Wingnut
 {
 
-	Swapchain::Swapchain(Ref<Device> device, void* surface)
+	Swapchain::Swapchain(Ref<Device> device, void* surface, VkExtent2D extent)
 		: m_Device(device)
 	{
 
-		Reset((VkSurfaceKHR)surface);
+		Resize((VkSurfaceKHR)surface, extent);
 
 	}
 
@@ -36,15 +36,16 @@ namespace Wingnut
 		}
 	}
 
-	void Swapchain::Reset(VkSurfaceKHR surface)
+	void Swapchain::Resize(VkSurfaceKHR surface, VkExtent2D extent)
 	{
 		PhysicalDeviceProperties deviceProperties = m_Device->GetDeviceProperties();
 
+		VkSwapchainKHR newSwapchain = nullptr;
 
 		VkSwapchainCreateInfoKHR createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 
-		createInfo.oldSwapchain = nullptr;
+		createInfo.oldSwapchain = m_Swapchain;
 
 		createInfo.surface = surface;
 
@@ -56,25 +57,31 @@ namespace Wingnut
 		createInfo.imageArrayLayers = 1;
 		createInfo.minImageCount = 2;
 
-		createInfo.imageExtent = deviceProperties.SurfaceCapabilities.currentExtent;
+		createInfo.imageExtent = extent;
 		createInfo.imageFormat = deviceProperties.SurfaceFormat.format;
 		createInfo.imageColorSpace = deviceProperties.SurfaceFormat.colorSpace;
 		createInfo.preTransform = deviceProperties.SurfaceCapabilities.currentTransform;
 
-		if (vkCreateSwapchainKHR((VkDevice)m_Device->GetDevice(), &createInfo, nullptr, &m_Swapchain) != VK_SUCCESS)
+		if (vkCreateSwapchainKHR((VkDevice)m_Device->GetDevice(), &createInfo, nullptr, &newSwapchain) != VK_SUCCESS)
 		{
 			LOG_CORE_ERROR("[Renderer] Unable to create Vulkan swapchain");
 			return;
 		}
 
 		uint32_t imageCount = 0;
-		vkGetSwapchainImagesKHR((VkDevice)m_Device->GetDevice(), m_Swapchain, &imageCount, nullptr);
+		vkGetSwapchainImagesKHR((VkDevice)m_Device->GetDevice(), newSwapchain, &imageCount, nullptr);
 		m_SwapchainImages.resize(imageCount);
-		vkGetSwapchainImagesKHR((VkDevice)m_Device->GetDevice(), m_Swapchain, &imageCount, m_SwapchainImages.data());
+		vkGetSwapchainImagesKHR((VkDevice)m_Device->GetDevice(), newSwapchain, &imageCount, m_SwapchainImages.data());
 
 
 		LOG_CORE_TRACE("[Renderer] Created Vulkan swapchain");
 
+		for (VkImageView imageView : m_SwapchainImageViews)
+		{
+			vkDestroyImageView(m_Device->GetDevice(), imageView, nullptr);
+		}
+
+		m_SwapchainImageViews.clear();
 
 		for (VkImage& image : m_SwapchainImages)
 		{
@@ -107,6 +114,7 @@ namespace Wingnut
 
 		}
 		
+		m_Swapchain = newSwapchain;
 	}
 
 

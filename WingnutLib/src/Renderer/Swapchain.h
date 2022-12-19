@@ -13,17 +13,16 @@ namespace Wingnut
 	class Swapchain
 	{
 	public:
-		Swapchain(Ref<Device> device, void* surface);
+		Swapchain(Ref<Device> device, void* surface, VkExtent2D extent);
 		~Swapchain();
 
 		void Release();
 
+		void Resize(VkSurfaceKHR surface, VkExtent2D newExtent);
+
 		VkSwapchainKHR GetSwapchain() { return m_Swapchain; }
 
 		std::vector<VkImageView>& GetImageViews() { return m_SwapchainImageViews; }
-
-	private:
-		void Reset(VkSurfaceKHR surface);
 
 	private:
 		VkSwapchainKHR m_Swapchain = nullptr;

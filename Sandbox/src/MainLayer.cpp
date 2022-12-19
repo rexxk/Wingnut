@@ -22,6 +22,7 @@ void MainLayer::OnAttach()
 
 void MainLayer::OnUpdate()
 {
+
 	Renderer::BeginScene();
 
 

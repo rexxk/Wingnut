@@ -40,6 +40,7 @@ namespace Wingnut
 		Renderer(void* windowHandle);
 		virtual ~Renderer();
 
+		void ReleaseAll();
 
 		static void BeginScene();
 		static void EndScene();
@@ -48,6 +49,7 @@ namespace Wingnut
 
 		RendererData& GetRendererData();
 
+		Renderer& Get() { return *s_Instance; }
 
 	private:
 		void Create(void* windowHandle);
@@ -60,6 +62,9 @@ namespace Wingnut
 	private:
 		VkInstance m_Instance = nullptr;
 
+		VkExtent2D m_CurrentExtent;
+
+		inline static Renderer* s_Instance = nullptr;
 	};
 
 

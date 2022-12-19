@@ -35,6 +35,15 @@ namespace Wingnut
 			{
 				LOG_CORE_TRACE("Window resized: {},{}", event.Width(), event.Height());
 
+				if (event.Width() == 0 || event.Height() == 0)
+				{
+					m_ApplicationMinimized = true;
+				}
+				else
+				{
+					m_ApplicationMinimized = false;
+				}
+
 				return false;
 			});
 
@@ -63,20 +72,24 @@ namespace Wingnut
 			m_MainWindow->HandleMessages();
 			m_EventQueue->Process();
 
-			for (Ref<Layer> layer : m_LayerStack)
+
+			if (!m_ApplicationMinimized)
 			{
 
-				layer->OnUpdate();
+				for (Ref<Layer> layer : m_LayerStack)
+				{
 
+					layer->OnUpdate();
+
+				}
+
+				Renderer::Present();
 			}
-
-
-
-			Renderer::Present();
 
 		}
 
 
+		m_Renderer->ReleaseAll();
 
 	}
 
