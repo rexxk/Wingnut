@@ -45,11 +45,15 @@ namespace Wingnut
 
 		void Bind(Ref<CommandBuffer> commandBuffer, Ref<Pipeline> pipeline);
 
+		uint32_t IndexCount() { return m_IndexCount; }
+
 		VkBuffer GetBuffer() { return m_Buffer; }
 
 	private:
 		VkBuffer m_Buffer = nullptr;
 		VkDeviceMemory m_BufferMemory = nullptr;
+
+		uint32_t m_IndexCount = 0;
 
 		Ref<Device> m_Device = nullptr;
 	};

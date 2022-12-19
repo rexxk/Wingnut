@@ -141,8 +141,10 @@ namespace Wingnut
 	IndexBuffer::IndexBuffer(Ref<Device> device, const std::vector<uint32_t>& indexList)
 		: m_Device(device)
 	{
+		m_IndexCount = (uint32_t)indexList.size();
+
 		VkDeviceSize bufferSize = sizeof(uint32_t) * (uint32_t)indexList.size();
-		
+
 		VkBuffer stagingBuffer = nullptr;
 		VkDeviceMemory stagingBufferMemory = nullptr;
 

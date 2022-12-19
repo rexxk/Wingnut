@@ -21,9 +21,9 @@ void MainLayer::OnAttach()
 
 	std::vector<Vertex> triangleVertices =
 	{
-		{ { -0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ {  0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ {  0.0f,  0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ { -0.5f,  0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ {  0.0f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ {  0.5f,  0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
 	};
 
 	std::vector<uint32_t> triangleIndices =
@@ -57,8 +57,9 @@ void MainLayer::OnUpdate()
 
 
 	m_TriangleVertexBuffer->Bind(rendererData.GraphicsCommandBuffer, rendererData.Pipeline);
+	m_TriangleIndexBuffer->Bind(rendererData.GraphicsCommandBuffer, rendererData.Pipeline);
 
-
+	vkCmdDrawIndexed(rendererData.GraphicsCommandBuffer->GetCommandBuffer(), m_TriangleIndexBuffer->IndexCount(), 1, 0, 0, 0);
 
 
 	Renderer::EndScene();

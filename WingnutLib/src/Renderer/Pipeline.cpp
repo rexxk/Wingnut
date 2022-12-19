@@ -188,6 +188,7 @@ namespace Wingnut
 		rasterizationStateCreateInfo.depthClampEnable = false;
 		rasterizationStateCreateInfo.rasterizerDiscardEnable = false;
 		rasterizationStateCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
+//		rasterizationStateCreateInfo.polygonMode = VK_POLYGON_MODE_LINE;
 		rasterizationStateCreateInfo.lineWidth = 1.0f;
 		rasterizationStateCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 		rasterizationStateCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
