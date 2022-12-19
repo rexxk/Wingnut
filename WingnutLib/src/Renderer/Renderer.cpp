@@ -58,7 +58,7 @@ namespace Wingnut
 	{
 		if (s_VulkanData.Device->GetDevice() != nullptr)
 		{
-			vkDeviceWaitIdle(s_VulkanData.Device->GetDevice());
+			s_VulkanData.Device->WaitForIdle();
 		}
 
 		if (s_VulkanData.InFlightFence != nullptr)
@@ -76,9 +76,9 @@ namespace Wingnut
 			s_VulkanData.ImageAvailableSemaphore->Release();
 		}
 
-		if (s_VulkanData.CommandBuffer != nullptr)
+		if (s_VulkanData.GraphicsCommandBuffer != nullptr)
 		{
-			s_VulkanData.CommandBuffer->Release();
+			s_VulkanData.GraphicsCommandBuffer->Release();
 		}
 
 		if (s_VulkanData.Pipeline != nullptr)
@@ -96,9 +96,14 @@ namespace Wingnut
 			s_VulkanData.RenderPass->Release();
 		}
 
-		if (s_VulkanData.CommandPool != nullptr)
+		if (s_VulkanData.GraphicsCommandPool != nullptr)
 		{
-			s_VulkanData.CommandPool->Release();
+			s_VulkanData.GraphicsCommandPool->Release();
+		}
+
+		if (s_VulkanData.TransferCommandPool != nullptr)
+		{
+			s_VulkanData.TransferCommandPool->Release();
 		}
 
 		if (s_VulkanData.Swapchain != nullptr)
@@ -147,11 +152,12 @@ namespace Wingnut
 
 		s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface(), s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 
-		s_VulkanData.CommandPool = CreateRef<CommandPool>(s_VulkanData.Device);
+		s_VulkanData.GraphicsCommandPool = CreateRef<CommandPool>(s_VulkanData.Device, CommandPoolType::Graphics);
+		s_VulkanData.TransferCommandPool = CreateRef<CommandPool>(s_VulkanData.Device, CommandPoolType::Transfer);
 		s_VulkanData.RenderPass = CreateRef<RenderPass>(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
 		s_VulkanData.Framebuffer = CreateRef<Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 
-		s_VulkanData.CommandBuffer = CreateRef<CommandBuffer>(s_VulkanData.Device, s_VulkanData.CommandPool);
+		s_VulkanData.GraphicsCommandBuffer = CreateRef<CommandBuffer>(s_VulkanData.Device, s_VulkanData.GraphicsCommandPool);
 
 		// Create pipeline
 
@@ -304,7 +310,7 @@ namespace Wingnut
 		beginInfo.flags = 0;
 		beginInfo.pInheritanceInfo = nullptr;
 
-		if (vkBeginCommandBuffer(s_VulkanData.CommandBuffer->GetCommandBuffer(), &beginInfo) != VK_SUCCESS)
+		if (vkBeginCommandBuffer(s_VulkanData.GraphicsCommandBuffer->GetCommandBuffer(), &beginInfo) != VK_SUCCESS)
 		{
 			LOG_CORE_ERROR("[Renderer] Unable to begin command buffer recording");
 			return;
@@ -321,9 +327,9 @@ namespace Wingnut
 		renderPassBeginInfo.clearValueCount = 1;
 		renderPassBeginInfo.pClearValues = &clearColor;
 
-		vkCmdBeginRenderPass(s_VulkanData.CommandBuffer->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(s_VulkanData.GraphicsCommandBuffer->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-		vkCmdBindPipeline(s_VulkanData.CommandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_VulkanData.Pipeline->GetPipeline());
+		vkCmdBindPipeline(s_VulkanData.GraphicsCommandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_VulkanData.Pipeline->GetPipeline());
 
 		VkViewport viewport = {};
 		viewport.x = 0.0f;
@@ -332,19 +338,19 @@ namespace Wingnut
 		viewport.height = (float)s_Instance->m_CurrentExtent.height;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(s_VulkanData.CommandBuffer->GetCommandBuffer(), 0, 1, &viewport);
+		vkCmdSetViewport(s_VulkanData.GraphicsCommandBuffer->GetCommandBuffer(), 0, 1, &viewport);
 
 		VkRect2D scissor = {};
 		scissor.offset = { 0, 0 };
 		scissor.extent = s_Instance->m_CurrentExtent;
-		vkCmdSetScissor(s_VulkanData.CommandBuffer->GetCommandBuffer(), 0, 1, &scissor);
+		vkCmdSetScissor(s_VulkanData.GraphicsCommandBuffer->GetCommandBuffer(), 0, 1, &scissor);
 	}
 
 	void Renderer::EndScene()
 	{
-		vkCmdEndRenderPass(s_VulkanData.CommandBuffer->GetCommandBuffer());
+		vkCmdEndRenderPass(s_VulkanData.GraphicsCommandBuffer->GetCommandBuffer());
 
-		if (vkEndCommandBuffer(s_VulkanData.CommandBuffer->GetCommandBuffer()) != VK_SUCCESS)
+		if (vkEndCommandBuffer(s_VulkanData.GraphicsCommandBuffer->GetCommandBuffer()) != VK_SUCCESS)
 		{
 			LOG_CORE_ERROR("[Renderer] Unable to end command buffer recording");
 			return;
@@ -366,7 +372,7 @@ namespace Wingnut
 		submitInfo.pWaitSemaphores = waitSemaphores;
 		submitInfo.pWaitDstStageMask = waitStages;
 
-		VkCommandBuffer commandBuffers[] = { s_VulkanData.CommandBuffer->GetCommandBuffer() };
+		VkCommandBuffer commandBuffers[] = { s_VulkanData.GraphicsCommandBuffer->GetCommandBuffer() };
 
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = commandBuffers;

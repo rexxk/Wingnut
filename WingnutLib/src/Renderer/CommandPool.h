@@ -10,10 +10,17 @@ namespace Wingnut
 {
 
 
+	enum class CommandPoolType
+	{
+		Graphics,
+		Transfer,
+	};
+
+
 	class CommandPool
 	{
 	public:
-		CommandPool(Ref<Device> device);
+		CommandPool(Ref<Device> device, CommandPoolType type);
 		~CommandPool();
 
 		void Release();
@@ -27,6 +34,8 @@ namespace Wingnut
 		VkCommandPool m_CommandPool;
 
 		VkDevice m_Device;
+
+		CommandPoolType m_Type;
 	};
 
 

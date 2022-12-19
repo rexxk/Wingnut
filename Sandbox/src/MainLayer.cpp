@@ -42,13 +42,21 @@ void MainLayer::OnAttach()
 
 void MainLayer::OnDetach()
 {
+	Renderer::GetRendererData().Device->WaitForIdle();
+
 	m_TriangleVertexBuffer->Release();
 	m_TriangleIndexBuffer->Release();
 }
 
 void MainLayer::OnUpdate()
 {
+	auto& rendererData = Renderer::GetRendererData();
+
+
 	Renderer::BeginScene();
+
+
+	m_TriangleVertexBuffer->Bind(rendererData.GraphicsCommandBuffer, rendererData.Pipeline);
 
 
 

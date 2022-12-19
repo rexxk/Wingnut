@@ -61,6 +61,8 @@ namespace Wingnut
 
 		uint32_t FindMemoryType(uint32_t filter, VkMemoryPropertyFlags properties);
 
+		void WaitForIdle();
+
 	private:
 		void Create(VkInstance instance);
 		bool CreatePhysicalDevice(VkInstance instance);

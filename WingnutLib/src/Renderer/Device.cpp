@@ -419,6 +419,15 @@ namespace Wingnut
 		return 0;
 	}
 
+	//////////////////////////////
+	// Sync functions
 
+	void Device::WaitForIdle()
+	{
+		if (m_Device != nullptr)
+		{
+			vkDeviceWaitIdle(m_Device);
+		}
+	}
 
 }

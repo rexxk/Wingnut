@@ -28,8 +28,9 @@ namespace Wingnut
 
 	struct RendererData
 	{
-		Ref<CommandBuffer> CommandBuffer = nullptr;
-		Ref<CommandPool> CommandPool = nullptr;
+		Ref<CommandBuffer> GraphicsCommandBuffer = nullptr;
+		Ref<CommandPool> GraphicsCommandPool = nullptr;
+		Ref<CommandPool> TransferCommandPool = nullptr;
 		Ref<Device> Device = nullptr;
 		Ref<Framebuffer> Framebuffer = nullptr;
 		Ref<Pipeline> Pipeline = nullptr;
