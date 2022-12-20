@@ -61,7 +61,7 @@ namespace Wingnut
 
 	Application::~Application()
 	{
-		m_Renderer->ReleaseAll();
+		m_Renderer->Release();
 	}
 
 	void Application::Run() 

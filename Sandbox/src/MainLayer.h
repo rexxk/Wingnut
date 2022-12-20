@@ -3,6 +3,8 @@
 
 #include "Wingnut.h"
 
+using namespace Wingnut::Vulkan;
+
 
 class MainLayer : public Wingnut::Layer
 {
@@ -15,7 +17,7 @@ public:
 	virtual void OnUpdate() override;
 
 private:
-	Ref<Wingnut::VertexBuffer> m_TriangleVertexBuffer = nullptr;
-	Ref<Wingnut::IndexBuffer> m_TriangleIndexBuffer = nullptr;
+	Ref<VertexBuffer> m_TriangleVertexBuffer = nullptr;
+	Ref<IndexBuffer> m_TriangleIndexBuffer = nullptr;
 
 };

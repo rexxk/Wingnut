@@ -48,39 +48,40 @@
     <ClInclude Include="src\Event\WindowEvents.h">
       <Filter>Event</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\CommandPool.h">
+    <ClInclude Include="src\Platform\Vulkan\CommandPool.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Device.h">
+    <ClInclude Include="src\Platform\Vulkan\Device.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Framebuffer.h">
+    <ClInclude Include="src\Platform\Vulkan\Framebuffer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Pipeline.h">
+    <ClInclude Include="src\Platform\Vulkan\Pipeline.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\RenderPass.h">
+    <ClInclude Include="src\Platform\Vulkan\RenderPass.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\Renderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\ShaderCompiler.h">
+    <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Surface.h">
+    <ClInclude Include="src\Platform\Vulkan\Surface.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Swapchain.h">
+    <ClInclude Include="src\Platform\Vulkan\Swapchain.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Wingnut.h" />
     <ClInclude Include="src\wingnut_pch.h" />
-    <ClInclude Include="src\Renderer\CommandBuffer.h" />
-    <ClInclude Include="src\Renderer\Semaphore.h" />
-    <ClInclude Include="src\Renderer\Fence.h" />
-    <ClInclude Include="src\Renderer\Buffer.h" />
+    <ClInclude Include="src\Platform\Vulkan\CommandBuffer.h" />
+    <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
+    <ClInclude Include="src\Platform\Vulkan\Fence.h" />
+    <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
+    <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -107,37 +108,38 @@
     <ClCompile Include="src\Event\EventUtils.cpp">
       <Filter>Event</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\CommandPool.cpp">
+    <ClCompile Include="src\Platform\Vulkan\CommandPool.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Device.cpp">
+    <ClCompile Include="src\Platform\Vulkan\Device.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Framebuffer.cpp">
+    <ClCompile Include="src\Platform\Vulkan\Framebuffer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Pipeline.cpp">
+    <ClCompile Include="src\Platform\Vulkan\Pipeline.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\RenderPass.cpp">
+    <ClCompile Include="src\Platform\Vulkan\RenderPass.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\Renderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\ShaderCompiler.cpp">
+    <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Surface.cpp">
+    <ClCompile Include="src\Platform\Vulkan\Surface.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Swapchain.cpp">
+    <ClCompile Include="src\Platform\Vulkan\Swapchain.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\wingnut_pch.cpp" />
-    <ClCompile Include="src\Renderer\CommandBuffer.cpp" />
-    <ClCompile Include="src\Renderer\Semaphore.cpp" />
-    <ClCompile Include="src\Renderer\Fence.cpp" />
-    <ClCompile Include="src\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\CommandBuffer.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Fence.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Buffer.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
   </ItemGroup>
 </Project>

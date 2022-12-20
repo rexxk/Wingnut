@@ -31,7 +31,7 @@ void MainLayer::OnAttach()
 		0, 1, 2,
 	};
 
-	auto& rendererData = Renderer::GetRendererData();
+	auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 	m_TriangleVertexBuffer = CreateRef<VertexBuffer>(rendererData.Device, triangleVertices);
 
@@ -42,7 +42,7 @@ void MainLayer::OnAttach()
 
 void MainLayer::OnDetach()
 {
-	Renderer::GetRendererData().Device->WaitForIdle();
+	Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
 
 	m_TriangleVertexBuffer->Release();
 	m_TriangleIndexBuffer->Release();
@@ -50,7 +50,7 @@ void MainLayer::OnDetach()
 
 void MainLayer::OnUpdate()
 {
-	auto& rendererData = Renderer::GetRendererData();
+	auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 
 	Renderer::BeginScene();
