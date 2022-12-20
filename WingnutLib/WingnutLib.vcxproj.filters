@@ -82,6 +82,7 @@
     <ClInclude Include="src\Platform\Vulkan\Fence.h" />
     <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
     <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
+    <ClInclude Include="src\Platform\Vulkan\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -141,5 +142,6 @@
     <ClCompile Include="src\Platform\Vulkan\Fence.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Shader.cpp" />
   </ItemGroup>
 </Project>
