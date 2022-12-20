@@ -50,16 +50,18 @@ void MainLayer::OnDetach()
 
 void MainLayer::OnUpdate()
 {
+	uint32_t currentFrame = Renderer::GetContext()->GetCurrentFrame();
+
 	auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 
 	Renderer::BeginScene();
 
 
-	m_TriangleVertexBuffer->Bind(rendererData.GraphicsCommandBuffer, rendererData.Pipeline);
-	m_TriangleIndexBuffer->Bind(rendererData.GraphicsCommandBuffer, rendererData.Pipeline);
+	m_TriangleVertexBuffer->Bind(rendererData.GraphicsCommandBuffers[currentFrame], rendererData.Pipeline);
+	m_TriangleIndexBuffer->Bind(rendererData.GraphicsCommandBuffers[currentFrame], rendererData.Pipeline);
 
-	vkCmdDrawIndexed(rendererData.GraphicsCommandBuffer->GetCommandBuffer(), m_TriangleIndexBuffer->IndexCount(), 1, 0, 0, 0);
+	vkCmdDrawIndexed(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), m_TriangleIndexBuffer->IndexCount(), 1, 0, 0, 0);
 
 
 	Renderer::EndScene();

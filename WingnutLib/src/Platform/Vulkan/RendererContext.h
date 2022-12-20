@@ -23,7 +23,7 @@ namespace Wingnut
 
 		struct RendererData
 		{
-			Ref<CommandBuffer> GraphicsCommandBuffer = nullptr;
+			std::vector<Ref<CommandBuffer>> GraphicsCommandBuffers;
 			Ref<CommandPool> GraphicsCommandPool = nullptr;
 			Ref<CommandPool> TransferCommandPool = nullptr;
 			Ref<Device> Device = nullptr;
@@ -33,9 +33,9 @@ namespace Wingnut
 			Ref<Surface> Surface = nullptr;
 			Ref<Swapchain> Swapchain = nullptr;
 
-			Ref<Fence> InFlightFence = nullptr;
-			Ref<Semaphore> ImageAvailableSemaphore = nullptr;
-			Ref<Semaphore> RenderFinishedSemaphore = nullptr;
+			std::vector<Ref<Fence>> InFlightFences;
+			std::vector<Ref<Semaphore>> ImageAvailableSemaphores;
+			std::vector<Ref<Semaphore>> RenderFinishedSemaphores;
 		};
 
 		class VulkanContext
@@ -52,6 +52,8 @@ namespace Wingnut
 
 			void Present();
 
+			uint32_t GetCurrentFrame() const { return m_CurrentFrame; }
+
 			static RendererData& GetRendererData();
 
 		private:
@@ -67,6 +69,7 @@ namespace Wingnut
 
 			VkExtent2D m_CurrentExtent;
 
+			uint32_t m_CurrentFrame = 0;
 		};
 
 	}

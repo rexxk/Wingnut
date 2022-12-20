@@ -15,6 +15,23 @@ namespace Wingnut
 	};
 
 
+	enum class PolygonFillType
+	{
+		Point,
+		Wireframe,
+		Solid,
+	};
+
+	struct RendererSettings
+	{
+		int FramesInFlight = 2;
+
+		float LineWidth = 1.0f;
+
+		PolygonFillType PolygonFill = PolygonFillType::Solid;
+	};
+
+
 	class Renderer
 	{
 	public:
@@ -28,15 +45,16 @@ namespace Wingnut
 
 		static void Present();
 
+		static RendererSettings& GetRendererSettings() { return s_Instance->m_RendererSettings; }
 
 		static Renderer& Get() { return *s_Instance; }
-
 		static Ref<Vulkan::VulkanContext> GetContext() { return s_Context; }
 
 	private:
 		inline static Renderer* s_Instance = nullptr;
 		inline static Ref<Vulkan::VulkanContext> s_Context = nullptr;
 
+		RendererSettings m_RendererSettings;
 	};
 
 

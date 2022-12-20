@@ -56,7 +56,7 @@ namespace Wingnut
 
 			std::vector<PhysicalDeviceProperties> physicalDeviceProperties;
 
-			// Find best device
+						// Find best device
 			for (auto& physicalDevice : physicalDevices)
 			{
 				PhysicalDeviceProperties deviceProps = GetPhysicalDeviceProperties(physicalDevice);

@@ -1,6 +1,7 @@
 #include "wingnut_pch.h"
 #include "Pipeline.h"
 
+#include "Renderer/Renderer.h"
 
 
 namespace Wingnut
@@ -8,6 +9,19 @@ namespace Wingnut
 
 	namespace Vulkan
 	{
+
+		VkPolygonMode PolygonFillTypeToVulkanPolygonMode(PolygonFillType fillType)
+		{
+			switch (fillType)
+			{
+				case PolygonFillType::Point: return VK_POLYGON_MODE_POINT;
+				case PolygonFillType::Wireframe: return VK_POLYGON_MODE_LINE;
+				case PolygonFillType::Solid: return VK_POLYGON_MODE_FILL;
+			}
+
+			return VK_POLYGON_MODE_FILL;
+		}
+
 
 		VkShaderStageFlagBits ShaderDomainToShaderStageBit(ShaderDomain domain)
 		{
@@ -108,6 +122,8 @@ namespace Wingnut
 
 		void Pipeline::Create(Ref<RenderPass> renderPass, VkExtent2D extent)
 		{
+			RendererSettings& rendererSettings = Renderer::GetRendererSettings();
+
 			VkViewport viewport = {};
 			viewport.x = 0.0f;
 			viewport.y = 0.0f;
@@ -189,9 +205,8 @@ namespace Wingnut
 			rasterizationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 			rasterizationStateCreateInfo.depthClampEnable = false;
 			rasterizationStateCreateInfo.rasterizerDiscardEnable = false;
-			rasterizationStateCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
-			//		rasterizationStateCreateInfo.polygonMode = VK_POLYGON_MODE_LINE;
-			rasterizationStateCreateInfo.lineWidth = 1.0f;
+			rasterizationStateCreateInfo.polygonMode = PolygonFillTypeToVulkanPolygonMode(rendererSettings.PolygonFill);
+			rasterizationStateCreateInfo.lineWidth = rendererSettings.LineWidth;
 			rasterizationStateCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 			rasterizationStateCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
 
@@ -252,7 +267,7 @@ namespace Wingnut
 			createInfo.renderPass = renderPass->GetRenderPass();
 
 			createInfo.layout = m_PipelineLayout;
-			createInfo.stageCount = shaderStages.size();
+			createInfo.stageCount = (uint32_t)shaderStages.size();
 			createInfo.pStages = shaderStages.data();
 
 			createInfo.pRasterizationState = &rasterizationStateCreateInfo;
