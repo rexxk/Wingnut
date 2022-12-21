@@ -31,7 +31,20 @@ namespace Wingnut
 
 		private:
 
+			void LoadSource();
+
+			void Compile();
+
+			void Reflect();
+
+
+		private:
+
 			std::string m_ShaderPath;
+			ShaderDomain m_Domain;
+
+			std::vector<uint32_t> m_Data;
+			std::vector<uint8_t> m_Source;
 
 		};
 
