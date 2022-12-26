@@ -37,6 +37,8 @@ void MainLayer::OnAttach()
 
 	m_TriangleIndexBuffer = CreateRef<IndexBuffer>(rendererData.Device, triangleIndices);
 
+//	Ref<Shader> testShader = CreateRef<Shader>(rendererData.Device, "assets/shaders/basic.shader");
+
 
 }
 

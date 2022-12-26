@@ -18,6 +18,7 @@ namespace Wingnut
 			static void Shutdown();
 
 			static std::pair<ShaderDomain, std::vector<uint32_t>> Compile(const std::string& shaderPath, ShaderDomain domain);
+			static std::pair<ShaderDomain, std::vector<uint32_t>> LoadAndCompile(const std::string& shaderPath, ShaderDomain domain);
 
 		};
 

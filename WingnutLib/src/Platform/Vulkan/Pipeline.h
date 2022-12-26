@@ -2,6 +2,7 @@
 
 #include "Device.h"
 #include "RenderPass.h"
+#include "Shader.h"
 
 #include "ShaderCompiler.h"
 
@@ -15,20 +16,32 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		struct PipelineSpecification
+		{
+			Ref<Shader> PipelineShader;
+
+//			PolygonFillType FillType = PolygonFillType::Solid;
+			float LineWidth = 1.0f;
+
+			VkExtent2D Extent;
+		};
+
+
+
 		class Pipeline
 		{
 		public:
-			Pipeline(Ref<Device> device, Ref<RenderPass> renderPass, VkExtent2D extent, const std::unordered_map<ShaderDomain, std::string>& shaderPaths);
+			Pipeline(Ref<Device> device, Ref<RenderPass> renderPass, const PipelineSpecification& specification);
 			~Pipeline();
 
 			void Release();
 
+			PipelineSpecification& GetSpecification() { return m_Specification; }
+
 			VkPipeline GetPipeline() { return m_Pipeline; }
 
 		private:
-			void CompileShaders(const std::unordered_map<ShaderDomain, std::string>& shaderPaths);
-			void CreateShaderModule(ShaderDomain domain, const std::vector<uint32_t>& shaderData);
-			void Create(Ref<RenderPass> renderPass, VkExtent2D extent);
+			void Create(Ref<RenderPass> renderPass);
 
 		private:
 
@@ -39,10 +52,7 @@ namespace Wingnut
 
 			VkDevice m_Device = nullptr;
 
-
-			std::unordered_map<ShaderDomain, std::vector<uint32_t>> m_ShaderBinaries;
-			std::unordered_map<ShaderDomain, VkShaderModule> m_ShaderModules;
-
+			PipelineSpecification m_Specification;
 		};
 
 

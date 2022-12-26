@@ -36,11 +36,10 @@ namespace Wingnut
 
 
 
-		Pipeline::Pipeline(Ref<Device> device, Ref<RenderPass> renderPass, VkExtent2D extent, const std::unordered_map<ShaderDomain, std::string>& shaderPaths)
-			: m_Device(device->GetDevice())
+		Pipeline::Pipeline(Ref<Device> device, Ref<RenderPass> renderPass, const PipelineSpecification& specification)
+			: m_Device(device->GetDevice()), m_Specification(specification)
 		{
-			CompileShaders(shaderPaths);
-			Create(renderPass, extent);
+			Create(renderPass);
 		}
 
 		Pipeline::~Pipeline()
@@ -50,6 +49,11 @@ namespace Wingnut
 
 		void Pipeline::Release()
 		{
+			if (m_Specification.PipelineShader != nullptr)
+			{
+				m_Specification.PipelineShader->Release();
+			}
+
 			if (m_PipelineLayout != nullptr)
 			{
 				vkDestroyPipelineLayout(m_Device, m_PipelineLayout, nullptr);
@@ -68,73 +72,23 @@ namespace Wingnut
 				m_PipelineCache = nullptr;
 			}
 
-			for (auto& shaderModule : m_ShaderModules)
-			{
-				vkDestroyShaderModule(m_Device, shaderModule.second, nullptr);
-			}
-
-			m_ShaderModules.clear();
-
 		}
 
-		void Pipeline::CompileShaders(const std::unordered_map<ShaderDomain, std::string>& shaderPaths)
-		{
-			ShaderCompiler::Initialize();
-
-			for (auto& shaderPath : shaderPaths)
-			{
-				ShaderDomain shaderDomain = shaderPath.first;
-
-				auto [resultDomain, shaderData] = ShaderCompiler::Compile(shaderPath.second, shaderDomain);
-
-				if (resultDomain == ShaderDomain::None)
-				{
-					LOG_CORE_ERROR("[Pipeline] Failed to compile shader");
-					return;
-				}
-
-				m_ShaderBinaries[resultDomain] = shaderData;
-
-				CreateShaderModule(resultDomain, shaderData);
-			}
-
-			ShaderCompiler::Shutdown();
-
-		}
-
-		void Pipeline::CreateShaderModule(ShaderDomain domain, const std::vector<uint32_t>& shaderData)
-		{
-			VkShaderModuleCreateInfo createInfo = {};
-			createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-			createInfo.codeSize = shaderData.size() * 4;
-			createInfo.pCode = shaderData.data();
-
-			VkShaderModule newShaderModule = nullptr;
-
-			if (vkCreateShaderModule(m_Device, &createInfo, nullptr, &newShaderModule) != VK_SUCCESS)
-			{
-				LOG_CORE_ERROR("[Renderer] Failed to create shader module");
-				return;
-			}
-
-			m_ShaderModules[domain] = newShaderModule;
-		}
-
-		void Pipeline::Create(Ref<RenderPass> renderPass, VkExtent2D extent)
+		void Pipeline::Create(Ref<RenderPass> renderPass)
 		{
 			RendererSettings& rendererSettings = Renderer::GetRendererSettings();
 
 			VkViewport viewport = {};
 			viewport.x = 0.0f;
 			viewport.y = 0.0f;
-			viewport.width = (float)extent.width;
-			viewport.height = (float)extent.height;
+			viewport.width = (float)m_Specification.Extent.width;
+			viewport.height = (float)m_Specification.Extent.height;
 			viewport.minDepth = 0.0f;
 			viewport.maxDepth = 1.0f;
 
 			VkRect2D scissor = {};
 			scissor.offset = { 0, 0 };
-			scissor.extent = extent;
+			scissor.extent = m_Specification.Extent;
 
 			std::vector<VkDynamicState> dynamicStates = { VK_DYNAMIC_STATE_LINE_WIDTH /*, VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR */ };
 
@@ -157,13 +111,13 @@ namespace Wingnut
 
 			std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 
-			for (auto& shaderModule : m_ShaderModules)
+			for (auto& shaderModule : m_Specification.PipelineShader->GetShaderModules())
 			{
 				VkPipelineShaderStageCreateInfo stageCreateInfo = {};
 				stageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-				stageCreateInfo.stage = ShaderDomainToShaderStageBit(shaderModule.first);
+				stageCreateInfo.stage = ShaderDomainToShaderStageBit(shaderModule.Domain);
 				stageCreateInfo.pName = "main";
-				stageCreateInfo.module = shaderModule.second;
+				stageCreateInfo.module = shaderModule.Module;
 
 				shaderStages.emplace_back(stageCreateInfo);
 			}

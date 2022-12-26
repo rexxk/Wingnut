@@ -171,11 +171,11 @@ namespace Wingnut
 
 			// Create pipeline
 
-			std::unordered_map<ShaderDomain, std::string> shaderPaths;
-			shaderPaths[ShaderDomain::Vertex] = "assets/shaders/BasicShader_vs.glsl";
-			shaderPaths[ShaderDomain::Fragment] = "assets/shaders/BasicShader_fs.glsl";
+			PipelineSpecification pipelineSpecification;
+			pipelineSpecification.Extent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
+			pipelineSpecification.PipelineShader = CreateRef<Shader>(s_VulkanData.Device, "assets/shaders/basic.shader");
 
-			s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, s_VulkanData.RenderPass, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent, shaderPaths);
+			s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, s_VulkanData.RenderPass, pipelineSpecification);
 		}
 
 		bool VulkanContext::CreateInstance()

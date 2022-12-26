@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Device.h"
+
+#include <vulkan/vulkan.h>
+
 
 
 namespace Wingnut
@@ -15,37 +19,50 @@ namespace Wingnut
 			Vertex,
 			Fragment,
 
-//			Raytrace,
+			Raytrace,
 
-//			Compute,
+			Compute,
+		};
+
+		struct ShaderModule
+		{
+			VkShaderModule Module = nullptr;
+			ShaderDomain Domain = ShaderDomain::None;
 		};
 
 
 		class Shader
 		{
 		public:
-			Shader(const std::string& shaderPath, ShaderDomain domain);
+			Shader(Ref<Device> device, const std::string& shaderPath);
+			Shader(Ref<Device> device, const std::string& shaderPath, ShaderDomain domain);
 			~Shader();
+
+			void Release();
 
 			void Reload();
 
+			std::vector<ShaderModule>& GetShaderModules() { return m_ShaderModules; }
+
 		private:
 
-			void LoadSource();
-
+			void LoadSources();
 			void Compile();
-
 			void Reflect();
 
 
 		private:
 
+			Ref<Device> m_Device;
+
 			std::string m_ShaderPath;
 			ShaderDomain m_Domain;
 
 			std::vector<uint32_t> m_Data;
-			std::vector<uint8_t> m_Source;
 
+			std::unordered_map<ShaderDomain, std::string> m_Sources;
+
+			std::vector<ShaderModule> m_ShaderModules;
 		};
 
 

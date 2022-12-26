@@ -138,32 +138,9 @@ namespace Wingnut
 			glslang::FinalizeProcess();
 		}
 
-		std::pair<ShaderDomain, std::vector<uint32_t>> ShaderCompiler::Compile(const std::string& shaderPath, ShaderDomain domain)
+		std::pair<ShaderDomain, std::vector<uint32_t>> ShaderCompiler::Compile(const std::string& shaderCode, ShaderDomain domain)
 		{
 			std::vector<uint32_t> spirvCode;
-
-			std::ifstream sourceFile(shaderPath, std::ios::in | std::ios::binary);
-
-			if (!sourceFile.is_open())
-			{
-				LOG_CORE_ERROR("[ShaderCompiler] Unable to open file {} for compiling", shaderPath);
-				return std::make_pair(ShaderDomain::None, spirvCode);
-			}
-
-			LOG_CORE_TRACE("[ShaderCompile] Compiling shader {}", shaderPath);
-
-			sourceFile.seekg(0, sourceFile.end);
-			uint32_t fileLength = (uint32_t)sourceFile.tellg();
-			sourceFile.seekg(sourceFile.beg);
-
-			std::vector<uint8_t> shaderSource(fileLength);
-			sourceFile.read((char*)shaderSource.data(), fileLength);
-
-			shaderSource.emplace_back(0);
-
-			//		LOG_CORE_TRACE("[ShaderCompiler] Data: {}", shaderSource.data());
-			sourceFile.close();
-
 
 			EShLanguage stage = ShaderDomainToEShLanguage(domain);
 			glslang::TShader shader(stage);
@@ -174,7 +151,7 @@ namespace Wingnut
 
 			EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
 
-			const char* shaderStrings[] = { (const char*)shaderSource.data() };
+			const char* shaderStrings[] = { (const char*)shaderCode.data() };
 
 			shader.setStrings(shaderStrings, 1);
 
@@ -188,7 +165,7 @@ namespace Wingnut
 
 			program.addShader(&shader);
 
-			LOG_CORE_TRACE("[ShaderCompile] Linking shader {}", shaderPath);
+//			LOG_CORE_TRACE("[ShaderCompile] Linking shader {}", shaderPath);
 
 			if (!program.link(messages))
 			{
@@ -201,6 +178,33 @@ namespace Wingnut
 			glslang::GlslangToSpv(*program.getIntermediate(stage), spirvCode);
 
 			return std::make_pair(domain, spirvCode);
+		}
+
+		std::pair<ShaderDomain, std::vector<uint32_t>> ShaderCompiler::LoadAndCompile(const std::string& shaderPath, ShaderDomain domain)
+		{
+			std::ifstream sourceFile(shaderPath, std::ios::in | std::ios::binary);
+
+			if (!sourceFile.is_open())
+			{
+				LOG_CORE_ERROR("[ShaderCompiler] Unable to open file {} for compiling", shaderPath);
+				return std::make_pair(ShaderDomain::None, std::vector<uint32_t>());
+			}
+
+			LOG_CORE_TRACE("[ShaderCompile] Compiling shader {}", shaderPath);
+
+			sourceFile.seekg(0, sourceFile.end);
+			uint32_t fileLength = (uint32_t)sourceFile.tellg();
+			sourceFile.seekg(sourceFile.beg);
+
+			std::string shaderSource;
+			shaderSource.resize(fileLength + 1);
+			sourceFile.read((char*)shaderSource.data(), fileLength);
+			shaderSource[fileLength] = 0;
+
+	//		LOG_CORE_TRACE("[ShaderCompiler] Data: {}", shaderSource.data());
+			sourceFile.close();
+
+			return Compile(shaderSource, domain);
 		}
 
 	}
