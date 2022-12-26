@@ -27,8 +27,9 @@ namespace Wingnut
 		{
 			switch (domain)
 			{
-			case ShaderDomain::Vertex: return VK_SHADER_STAGE_VERTEX_BIT;
-			case ShaderDomain::Fragment: return VK_SHADER_STAGE_FRAGMENT_BIT;
+				case ShaderDomain::Vertex: return VK_SHADER_STAGE_VERTEX_BIT;
+				case ShaderDomain::Fragment: return VK_SHADER_STAGE_FRAGMENT_BIT;
+				case ShaderDomain::Compute: return VK_SHADER_STAGE_COMPUTE_BIT;
 			}
 
 			return VK_SHADER_STAGE_VERTEX_BIT;

@@ -79,6 +79,8 @@ namespace Wingnut
 				graphicsCommandBuffer->Release();
 			}
 
+			ShaderStore::Release();
+
 			if (s_VulkanData.Pipeline != nullptr)
 			{
 				s_VulkanData.Pipeline->Release();
@@ -174,6 +176,7 @@ namespace Wingnut
 			// Create pipeline
 
 			ShaderStore::LoadShader("basic", "assets/shaders/basic.shader");
+			ShaderStore::LoadShader("flat", "assets/shaders/flat.shader");
 
 			PipelineSpecification pipelineSpecification;
 			pipelineSpecification.Extent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;

@@ -27,4 +27,12 @@ namespace Wingnut
 		return nullptr;
 	}
 
+	void ShaderStore::Release()
+	{
+		for (auto& shader : s_Shaders)
+		{
+			shader.second->Release();
+		}
+	}
+
 }

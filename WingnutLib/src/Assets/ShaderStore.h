@@ -14,6 +14,8 @@ namespace Wingnut
 
 		static Ref<Vulkan::Shader> GetShader(const std::string& name);
 
+		static void Release();
+
 	private:
 		static inline std::unordered_map<std::string, Ref<Vulkan::Shader>> s_Shaders;
 	};

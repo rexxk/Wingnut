@@ -142,6 +142,8 @@ namespace Wingnut
 		{
 			std::vector<uint32_t> spirvCode;
 
+			LOG_CORE_TRACE("[ShaderCompiler] Compiling shader...");
+
 			EShLanguage stage = ShaderDomainToEShLanguage(domain);
 			glslang::TShader shader(stage);
 			glslang::TProgram program;
@@ -164,8 +166,6 @@ namespace Wingnut
 			}
 
 			program.addShader(&shader);
-
-//			LOG_CORE_TRACE("[ShaderCompile] Linking shader {}", shaderPath);
 
 			if (!program.link(messages))
 			{
