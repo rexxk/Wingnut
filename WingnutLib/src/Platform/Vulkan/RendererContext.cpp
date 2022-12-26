@@ -3,6 +3,8 @@
 
 #include "ShaderCompiler.h"
 
+#include "Assets/ShaderStore.h"
+
 #include "Event/EventUtils.h"
 #include "Event/WindowEvents.h"
 
@@ -171,9 +173,11 @@ namespace Wingnut
 
 			// Create pipeline
 
+			ShaderStore::LoadShader("basic", "assets/shaders/basic.shader");
+
 			PipelineSpecification pipelineSpecification;
 			pipelineSpecification.Extent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
-			pipelineSpecification.PipelineShader = CreateRef<Shader>(s_VulkanData.Device, "assets/shaders/basic.shader");
+			pipelineSpecification.PipelineShader = ShaderStore::GetShader("basic");
 
 			s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, s_VulkanData.RenderPass, pipelineSpecification);
 		}

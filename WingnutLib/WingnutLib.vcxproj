@@ -94,6 +94,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Assets\ShaderStore.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Base.h" />
     <ClInclude Include="src\Core\Entry.h" />
@@ -125,6 +126,7 @@
     <ClInclude Include="src\wingnut_pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Assets\ShaderStore.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Layer.cpp" />
     <ClCompile Include="src\Core\LayerStack.cpp" />
