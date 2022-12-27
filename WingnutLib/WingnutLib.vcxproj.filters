@@ -84,6 +84,7 @@
     <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
     <ClInclude Include="src\Platform\Vulkan\Shader.h" />
     <ClInclude Include="src\Assets\ShaderStore.h" />
+    <ClInclude Include="src\Utils\StringUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -145,5 +146,6 @@
     <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Shader.cpp" />
     <ClCompile Include="src\Assets\ShaderStore.cpp" />
+    <ClCompile Include="src\Utils\StringUtils.cpp" />
   </ItemGroup>
 </Project>

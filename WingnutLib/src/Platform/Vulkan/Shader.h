@@ -44,12 +44,16 @@ namespace Wingnut
 
 			std::vector<ShaderModule>& GetShaderModules() { return m_ShaderModules; }
 
+			std::vector<VkVertexInputAttributeDescription>& GetAttributeDescriptions() { return m_AttributeDescriptions; }
+			uint32_t GetVertexStride() const { return m_VertexStride; }
+
 		private:
 
 			void LoadSources();
 			void Compile();
 			void Reflect();
 
+			void GetVertexLayout(const std::string& shaderSource);
 
 		private:
 
@@ -63,6 +67,10 @@ namespace Wingnut
 			std::unordered_map<ShaderDomain, std::string> m_Sources;
 
 			std::vector<ShaderModule> m_ShaderModules;
+
+			std::vector<VkVertexInputAttributeDescription> m_AttributeDescriptions;
+			uint32_t m_VertexStride = 0;
+
 		};
 
 

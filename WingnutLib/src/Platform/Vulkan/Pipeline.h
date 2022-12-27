@@ -19,7 +19,7 @@ namespace Wingnut
 		struct PipelineSpecification
 		{
 			Ref<Shader> PipelineShader;
-
+			Ref<RenderPass> RenderPass;
 //			PolygonFillType FillType = PolygonFillType::Solid;
 			float LineWidth = 1.0f;
 
@@ -31,7 +31,7 @@ namespace Wingnut
 		class Pipeline
 		{
 		public:
-			Pipeline(Ref<Device> device, Ref<RenderPass> renderPass, const PipelineSpecification& specification);
+			Pipeline(Ref<Device> device, const PipelineSpecification& specification);
 			~Pipeline();
 
 			void Release();
@@ -41,7 +41,7 @@ namespace Wingnut
 			VkPipeline GetPipeline() { return m_Pipeline; }
 
 		private:
-			void Create(Ref<RenderPass> renderPass);
+			void Create();
 
 		private:
 

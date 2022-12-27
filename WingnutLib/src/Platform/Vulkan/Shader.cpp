@@ -3,6 +3,8 @@
 
 #include "ShaderCompiler.h"
 
+#include "Utils/StringUtils.h"
+
 
 namespace Wingnut
 {
@@ -22,6 +24,21 @@ namespace Wingnut
 			return ShaderDomain::None;
 		}
 
+		VkFormat TypeStringToVulkanFormat(const std::string& type)
+		{
+			if (type == "vec3") return VK_FORMAT_R32G32B32_SFLOAT;
+			if (type == "vec4") return VK_FORMAT_R32G32B32A32_SFLOAT;
+
+			return VK_FORMAT_R32G32B32A32_SFLOAT;
+		}
+
+		uint32_t TypeStringToSize(const std::string& type)
+		{
+			if (type == "vec3") return 4 * 3;
+			if (type == "vec4") return 4 * 4;
+
+			return 4;
+		}
 
 		Shader::Shader(Ref<Device> device, const std::string& shaderPath)
 			: m_ShaderPath(shaderPath), m_Device(device)
@@ -159,7 +176,84 @@ namespace Wingnut
 
 		void Shader::Reflect()
 		{
-			
+			for (auto& shader : m_Sources)
+			{
+				ShaderDomain domain = shader.first;
+				std::string shaderSource = shader.second;
+
+				if (domain == ShaderDomain::Vertex)
+				{
+					GetVertexLayout(shaderSource);
+				}
+
+
+			}
+		}
+
+		void Shader::GetVertexLayout(const std::string& shaderSource)
+		{
+			std::istringstream source(shaderSource);
+			std::string line;
+
+			m_VertexStride = 0;
+
+			while (std::getline(source, line))
+			{
+				if (line.size() < 2)
+				{
+					continue;
+				}
+
+				if (line.find("layout") != std::string::npos)
+				{
+					bool validInput = false;
+
+					std::string cleanedLine = RemoveCharacters(line, "();=");
+					std::vector<std::string> tokens = Tokenize(cleanedLine, ' ');
+
+					uint32_t location = -1;
+
+					std::string type;
+					std::string name;
+
+					for (auto& token : tokens)
+					{
+						if (token == "in")
+						{
+							validInput = true;
+						}
+					}
+
+					if (validInput == true)
+					{
+						for (size_t i = 0; i < tokens.size(); i++)
+						{
+							if (tokens[i] == "location")
+							{
+								location = std::atoi(tokens[++i].c_str());
+							}
+
+							if (tokens[i] == "in")
+							{
+								type = tokens[++i];
+								name = tokens[++i];
+							}
+						}
+
+						VkVertexInputAttributeDescription attributeDescription = {};
+						attributeDescription.location = location;
+						attributeDescription.binding = 0;
+						attributeDescription.format = TypeStringToVulkanFormat(type);
+						attributeDescription.offset = m_VertexStride;
+
+						m_AttributeDescriptions.emplace_back(attributeDescription);
+
+						m_VertexStride += TypeStringToSize(type);
+
+//						LOG_CORE_WARN("Layout: location = {}, type = {}, name = {}", location, type, name);
+					}
+				}
+			}
 		}
 
 

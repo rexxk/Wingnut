@@ -37,10 +37,10 @@ namespace Wingnut
 
 
 
-		Pipeline::Pipeline(Ref<Device> device, Ref<RenderPass> renderPass, const PipelineSpecification& specification)
+		Pipeline::Pipeline(Ref<Device> device, const PipelineSpecification& specification)
 			: m_Device(device->GetDevice()), m_Specification(specification)
 		{
-			Create(renderPass);
+			Create();
 		}
 
 		Pipeline::~Pipeline()
@@ -75,7 +75,7 @@ namespace Wingnut
 
 		}
 
-		void Pipeline::Create(Ref<RenderPass> renderPass)
+		void Pipeline::Create()
 		{
 			RendererSettings& rendererSettings = Renderer::GetRendererSettings();
 
@@ -123,38 +123,17 @@ namespace Wingnut
 				shaderStages.emplace_back(stageCreateInfo);
 			}
 
-			std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
-
-			{
-				VkVertexInputAttributeDescription attribDescription;
-				attribDescription.binding = 0;
-				attribDescription.location = 0;
-				attribDescription.format = VK_FORMAT_R32G32B32_SFLOAT;
-				attribDescription.offset = 0;
-
-				attributeDescriptions.emplace_back(attribDescription);
-			}
-			{
-				VkVertexInputAttributeDescription attribDescription;
-				attribDescription.binding = 0;
-				attribDescription.location = 1;
-				attribDescription.format = VK_FORMAT_R32G32B32A32_SFLOAT;
-				attribDescription.offset = 12;
-
-				attributeDescriptions.emplace_back(attribDescription);
-			}
-
 			VkVertexInputBindingDescription vertexInputBindingDescription = {};
 			vertexInputBindingDescription.binding = 0;
-			vertexInputBindingDescription.stride = 28;
+			vertexInputBindingDescription.stride = m_Specification.PipelineShader->GetVertexStride();
 			vertexInputBindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 			VkPipelineVertexInputStateCreateInfo vertexInputStateCreateInfo = {};
 			vertexInputStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 			vertexInputStateCreateInfo.vertexBindingDescriptionCount = 1;
 			vertexInputStateCreateInfo.pVertexBindingDescriptions = &vertexInputBindingDescription;
-			vertexInputStateCreateInfo.vertexAttributeDescriptionCount = (uint32_t)attributeDescriptions.size();
-			vertexInputStateCreateInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+			vertexInputStateCreateInfo.vertexAttributeDescriptionCount = (uint32_t)m_Specification.PipelineShader->GetAttributeDescriptions().size();
+			vertexInputStateCreateInfo.pVertexAttributeDescriptions = m_Specification.PipelineShader->GetAttributeDescriptions().data();
 
 			VkPipelineRasterizationStateCreateInfo rasterizationStateCreateInfo = {};
 			rasterizationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -219,7 +198,7 @@ namespace Wingnut
 
 			VkGraphicsPipelineCreateInfo createInfo = {};
 			createInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-			createInfo.renderPass = renderPass->GetRenderPass();
+			createInfo.renderPass = m_Specification.RenderPass->GetRenderPass();
 
 			createInfo.layout = m_PipelineLayout;
 			createInfo.stageCount = (uint32_t)shaderStages.size();

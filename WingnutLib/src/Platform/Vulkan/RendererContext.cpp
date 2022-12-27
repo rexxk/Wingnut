@@ -181,8 +181,9 @@ namespace Wingnut
 			PipelineSpecification pipelineSpecification;
 			pipelineSpecification.Extent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 			pipelineSpecification.PipelineShader = ShaderStore::GetShader("basic");
+			pipelineSpecification.RenderPass = s_VulkanData.RenderPass;
 
-			s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, s_VulkanData.RenderPass, pipelineSpecification);
+			s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, pipelineSpecification);
 		}
 
 		bool VulkanContext::CreateInstance()
