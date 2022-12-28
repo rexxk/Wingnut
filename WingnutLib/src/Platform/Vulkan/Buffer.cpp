@@ -199,6 +199,57 @@ namespace Wingnut
 			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), m_Buffer, 0, VK_INDEX_TYPE_UINT32);
 		}
 
+		/////////////////////////////////////
+
+		UniformBuffer::UniformBuffer(Ref<Device> device, uint32_t uniformBufferObjectSize)
+			: m_Device(device)
+		{
+			VkDeviceSize bufferSize = uniformBufferObjectSize;
+
+			m_Frames = Renderer::GetRendererSettings().FramesInFlight;
+
+			m_Buffers.resize(m_Frames);
+			m_BuffersMemory.resize(m_Frames);
+			m_MappedBuffers.resize(m_Frames);
+
+			for (uint32_t i = 0; i < m_Frames; i++)
+			{
+				// Create uniform buffer
+				CreateBuffer(m_Device, m_Buffers[i], m_BuffersMemory[i], bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+				vkMapMemory(m_Device->GetDevice(), m_BuffersMemory[i], 0, bufferSize, 0, &m_MappedBuffers[i]);
+			}
+		}
+
+		UniformBuffer::~UniformBuffer()
+		{
+			Release();
+		}
+
+		void UniformBuffer::Release()
+		{
+			for (uint32_t i = 0; i < m_Frames; i++)
+			{
+
+				if (m_Buffers[i] != nullptr)
+				{
+					vkDestroyBuffer(m_Device->GetDevice(), m_Buffers[i], nullptr);
+					m_Buffers[i] = nullptr;
+				}
+
+				if (m_BuffersMemory[i] != nullptr)
+				{
+					vkFreeMemory(m_Device->GetDevice(), m_BuffersMemory[i], nullptr);
+					m_BuffersMemory[i] = nullptr;
+				}
+			}
+		}
+
+		void UniformBuffer::Update(void* uniformBufferObject, uint32_t uniformBufferObjectSize, uint32_t currentImageInFlight)
+		{
+			memcpy(m_MappedBuffers[currentImageInFlight], uniformBufferObject, uniformBufferObjectSize);
+		}
+
 	}
 
 }

@@ -40,6 +40,8 @@ namespace Wingnut
 
 			VkPipeline GetPipeline() { return m_Pipeline; }
 
+			VkPipelineLayout& GetLayout() { return m_PipelineLayout; }
+
 		private:
 			void Create();
 

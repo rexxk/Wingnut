@@ -179,10 +179,12 @@ namespace Wingnut
 			colorBlendCreateInfo.blendConstants[2] = 0.0f;
 			colorBlendCreateInfo.blendConstants[3] = 0.0f;
 
+//			VkDescriptorSetLayout descriptorSetLayouts[] = { m_Specification.PipelineShader->GetDescriptorSetLayout(0)};
+
 			VkPipelineLayoutCreateInfo layoutCreateInfo = {};
 			layoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-			layoutCreateInfo.setLayoutCount = 0;
-			layoutCreateInfo.pSetLayouts = nullptr;
+			layoutCreateInfo.setLayoutCount = (uint32_t)m_Specification.PipelineShader->GetDescriptorSetLayouts().size();
+			layoutCreateInfo.pSetLayouts = m_Specification.PipelineShader->GetDescriptorSetLayouts().data();
 			layoutCreateInfo.pushConstantRangeCount = 0;
 			layoutCreateInfo.pPushConstantRanges = nullptr;
 

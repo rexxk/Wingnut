@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Device.h"
+#include "DescriptorPool.h"
 
 #include <vulkan/vulkan.h>
 
@@ -47,6 +48,10 @@ namespace Wingnut
 			std::vector<VkVertexInputAttributeDescription>& GetAttributeDescriptions() { return m_AttributeDescriptions; }
 			uint32_t GetVertexStride() const { return m_VertexStride; }
 
+			std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayouts() { return m_DescriptorSetLayouts; }
+
+			std::vector<VkDescriptorSet>& GetDescriptorSets() { return m_DescriptorSets; }
+
 		private:
 
 			void LoadSources();
@@ -54,6 +59,9 @@ namespace Wingnut
 			void Reflect();
 
 			void GetVertexLayout(const std::string& shaderSource);
+			void FindUniforms(const std::string& shaderSource, ShaderDomain domain);
+
+			void AllocateDescriptorSets();
 
 		private:
 
@@ -70,6 +78,11 @@ namespace Wingnut
 
 			std::vector<VkVertexInputAttributeDescription> m_AttributeDescriptions;
 			uint32_t m_VertexStride = 0;
+
+			std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>> m_DescriptorSetLayoutBindings;
+			std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
+
+			std::vector<VkDescriptorSet> m_DescriptorSets;
 
 		};
 

@@ -2,6 +2,7 @@
 
 #include "CommandBuffer.h"
 #include "CommandPool.h"
+#include "DescriptorPool.h"
 #include "Device.h"
 #include "Fence.h"
 #include "Framebuffer.h"
@@ -27,11 +28,13 @@ namespace Wingnut
 			Ref<CommandPool> GraphicsCommandPool = nullptr;
 			Ref<CommandPool> TransferCommandPool = nullptr;
 			Ref<Device> Device = nullptr;
+			Ref<DescriptorPool> DescriptorPool = nullptr;
 			Ref<Framebuffer> Framebuffer = nullptr;
 			Ref<Pipeline> Pipeline = nullptr;
 			Ref<RenderPass> RenderPass = nullptr;
 			Ref<Surface> Surface = nullptr;
 			Ref<Swapchain> Swapchain = nullptr;
+
 
 			std::vector<Ref<Fence>> InFlightFences;
 			std::vector<Ref<Semaphore>> ImageAvailableSemaphores;

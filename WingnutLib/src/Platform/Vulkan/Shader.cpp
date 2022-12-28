@@ -3,6 +3,7 @@
 
 #include "ShaderCompiler.h"
 
+#include "Renderer/Renderer.h"
 #include "Utils/StringUtils.h"
 
 
@@ -59,6 +60,15 @@ namespace Wingnut
 
 		void Shader::Release()
 		{
+			for (auto& descriptorSetLayout : m_DescriptorSetLayouts)
+			{
+				if (descriptorSetLayout != nullptr)
+				{
+					vkDestroyDescriptorSetLayout(m_Device->GetDevice(), descriptorSetLayout, nullptr);
+					descriptorSetLayout = nullptr;
+				}
+			}
+
 			for (auto& shaderModule : m_ShaderModules)
 			{
 				vkDestroyShaderModule(m_Device->GetDevice(), shaderModule.Module, nullptr);
@@ -74,6 +84,8 @@ namespace Wingnut
 			Compile();
 
 			Reflect();
+
+			AllocateDescriptorSets();
 		}
 
 		void Shader::LoadSources()
@@ -186,6 +198,26 @@ namespace Wingnut
 					GetVertexLayout(shaderSource);
 				}
 
+				FindUniforms(shaderSource, domain);
+
+			}
+
+			for (uint32_t i = 0; i < m_DescriptorSetLayoutBindings.size(); i++)
+			{
+				VkDescriptorSetLayout newSetLayout = nullptr;
+
+				VkDescriptorSetLayoutCreateInfo layoutCreateInfo = {};
+				layoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+				layoutCreateInfo.bindingCount = (uint32_t)m_DescriptorSetLayoutBindings[i].size();
+				layoutCreateInfo.pBindings = m_DescriptorSetLayoutBindings[i].data();
+
+				if (vkCreateDescriptorSetLayout(m_Device->GetDevice(), &layoutCreateInfo, nullptr, &newSetLayout) != VK_SUCCESS)
+				{
+					LOG_CORE_ERROR("[Shader] Failed to create shader descriptor set layout");
+					return;
+				}
+
+				m_DescriptorSetLayouts.emplace_back(newSetLayout);
 
 			}
 		}
@@ -212,6 +244,7 @@ namespace Wingnut
 					std::vector<std::string> tokens = Tokenize(cleanedLine, ' ');
 
 					uint32_t location = -1;
+					uint32_t binding = 0;
 
 					std::string type;
 					std::string name;
@@ -238,11 +271,16 @@ namespace Wingnut
 								type = tokens[++i];
 								name = tokens[++i];
 							}
+
+							if (tokens[i] == "binding")
+							{
+								binding = std::atoi(tokens[++i].c_str());
+							}
 						}
 
 						VkVertexInputAttributeDescription attributeDescription = {};
 						attributeDescription.location = location;
-						attributeDescription.binding = 0;
+						attributeDescription.binding = binding;
 						attributeDescription.format = TypeStringToVulkanFormat(type);
 						attributeDescription.offset = m_VertexStride;
 
@@ -253,6 +291,91 @@ namespace Wingnut
 //						LOG_CORE_WARN("Layout: location = {}, type = {}, name = {}", location, type, name);
 					}
 				}
+			}
+		}
+
+		void Shader::FindUniforms(const std::string& shaderSource, ShaderDomain domain)
+		{
+			std::istringstream source(shaderSource);
+			std::string line;
+
+			while (std::getline(source, line))
+			{
+				if (line.size() < 2)
+				{
+					continue;
+				}
+
+				if (line.find("uniform") != std::string::npos)
+				{
+					std::string cleanedLine = RemoveCharacters(line, "();={}");
+					std::vector<std::string> tokens = Tokenize(cleanedLine, ' ');
+
+					uint32_t set = 0;
+					uint32_t binding = 0;
+
+					std::string type;
+					std::string name;
+
+					for (size_t i = 0; i < tokens.size(); i++)
+					{
+						if (tokens[i] == "set")
+						{
+							set = std::atoi(tokens[++i].c_str());
+						}
+
+						if (tokens[i] == "binding")
+						{
+							binding = std::atoi(tokens[++i].c_str());
+						}
+					}
+
+					VkDescriptorSetLayoutBinding layoutBinding = {};
+					layoutBinding.binding = binding;
+					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+					layoutBinding.descriptorCount = 1;
+
+					if (domain == ShaderDomain::Vertex)
+					{
+						layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+					}
+					else if (domain == ShaderDomain::Fragment)
+					{
+						layoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+					}
+
+					layoutBinding.pImmutableSamplers = nullptr;
+
+//					LOG_CORE_WARN("Uniform: set = {}, binding = {}", set, binding);
+
+					m_DescriptorSetLayoutBindings[set].emplace_back(layoutBinding);
+				}
+			}
+
+		}
+
+		void Shader::AllocateDescriptorSets()
+		{
+			uint32_t maxSets = (uint32_t)m_DescriptorSetLayouts.size();
+
+			if (maxSets == 0)
+			{
+				return;
+			}
+
+
+			VkDescriptorSetAllocateInfo allocateInfo = {};
+			allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			allocateInfo.descriptorPool = Renderer::GetContext()->GetRendererData().DescriptorPool->GetDescriptorPool();
+			allocateInfo.descriptorSetCount = maxSets;
+			allocateInfo.pSetLayouts = m_DescriptorSetLayouts.data();
+
+			m_DescriptorSets.resize(maxSets);
+
+			if (vkAllocateDescriptorSets(m_Device->GetDevice(), &allocateInfo, m_DescriptorSets.data()) != VK_SUCCESS)
+			{
+				LOG_CORE_TRACE("[Shader] Unable to allocate descriptor sets");
+				return;
 			}
 		}
 

@@ -7,15 +7,19 @@ layout(location = 1) in vec4 a_Color;
 
 layout(location = 0) out vec4 v_Color;
 
-layout(set = 0, binding = 0) uniform UBWorld{
+layout(set = 0, binding = 0) uniform UBWorld {
 	mat4 ViewProjection;
 } ubWorld;
+
+layout(set = 1, binding = 0) uniform Light{
+	mat3 LightDirection;
+} light;
 
 
 void main()
 {
-	//	gl_Position = ubWorld.ViewProjection * vec4(a_Position, 1.0);
-	gl_Position = vec4(a_Position, 1.0);
+	gl_Position = ubWorld.ViewProjection * vec4(a_Position, 1.0);
+//	gl_Position = vec4(a_Position, 1.0);
 
 	v_Color = a_Color;
 }

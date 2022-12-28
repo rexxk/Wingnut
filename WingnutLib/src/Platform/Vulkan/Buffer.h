@@ -16,6 +16,7 @@ namespace Wingnut
 		{
 			Vertex,
 			Index,
+			Uniform,
 		};
 
 
@@ -57,6 +58,29 @@ namespace Wingnut
 			VkDeviceMemory m_BufferMemory = nullptr;
 
 			uint32_t m_IndexCount = 0;
+
+			Ref<Device> m_Device = nullptr;
+		};
+
+		class UniformBuffer
+		{
+		public:
+			UniformBuffer(Ref<Device> device, uint32_t uniformBufferObjectSize);
+			~UniformBuffer();
+
+			void Release();
+
+			VkBuffer GetBuffer(uint32_t frame) { return m_Buffers[frame]; };
+
+			void Update(void* uniformBufferObject, uint32_t uniformBufferObjectSize, uint32_t currentImageInFlight);
+
+		private:
+			std::vector<VkBuffer> m_Buffers;
+			std::vector<VkDeviceMemory> m_BuffersMemory;
+
+			std::vector<void*> m_MappedBuffers;
+
+			uint32_t m_Frames;
 
 			Ref<Device> m_Device = nullptr;
 		};

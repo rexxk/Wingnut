@@ -110,6 +110,7 @@
     <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
     <ClInclude Include="src\Platform\Vulkan\CommandBuffer.h" />
     <ClInclude Include="src\Platform\Vulkan\CommandPool.h" />
+    <ClInclude Include="src\Platform\Vulkan\DescriptorPool.h" />
     <ClInclude Include="src\Platform\Vulkan\Device.h" />
     <ClInclude Include="src\Platform\Vulkan\Fence.h" />
     <ClInclude Include="src\Platform\Vulkan\Framebuffer.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="src\Platform\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\CommandBuffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\CommandPool.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\DescriptorPool.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Device.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Fence.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Framebuffer.cpp" />

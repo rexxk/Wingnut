@@ -79,6 +79,11 @@ namespace Wingnut
 				graphicsCommandBuffer->Release();
 			}
 
+			if (s_VulkanData.DescriptorPool != nullptr)
+			{
+				s_VulkanData.DescriptorPool->Release();
+			}
+
 			ShaderStore::Release();
 
 			if (s_VulkanData.Pipeline != nullptr)
@@ -172,6 +177,9 @@ namespace Wingnut
 				Ref<Semaphore> newRenderFinishedSemaphore = CreateRef<Semaphore>(s_VulkanData.Device);
 				s_VulkanData.RenderFinishedSemaphores.emplace_back(newRenderFinishedSemaphore);
 			}
+
+			// TODO: Max sets hardcoded to 1000
+			s_VulkanData.DescriptorPool = CreateRef<DescriptorPool>(s_VulkanData.Device, 1000);
 
 			// Create pipeline
 

@@ -20,4 +20,7 @@ private:
 	Ref<VertexBuffer> m_TriangleVertexBuffer = nullptr;
 	Ref<IndexBuffer> m_TriangleIndexBuffer = nullptr;
 
+	Ref<UniformBuffer> m_CameraData = nullptr;
+
+
 };
