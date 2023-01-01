@@ -30,7 +30,7 @@ namespace Wingnut
 			Ref<Device> Device = nullptr;
 			Ref<DescriptorPool> DescriptorPool = nullptr;
 			Ref<Framebuffer> Framebuffer = nullptr;
-			Ref<Pipeline> Pipeline = nullptr;
+//			Ref<Pipeline> Pipeline = nullptr;
 			Ref<RenderPass> RenderPass = nullptr;
 			Ref<Surface> Surface = nullptr;
 			Ref<Swapchain> Swapchain = nullptr;
@@ -50,7 +50,7 @@ namespace Wingnut
 			void ReleaseAll();
 
 
-			void BeginScene();
+			void BeginScene(Ref<Pipeline> pipeline);
 			void EndScene();
 
 			void Present();

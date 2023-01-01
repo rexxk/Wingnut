@@ -3,6 +3,7 @@
 
 #include "Wingnut.h"
 
+
 using namespace Wingnut::Vulkan;
 
 
@@ -17,10 +18,10 @@ public:
 	virtual void OnUpdate() override;
 
 private:
+	Ref<Wingnut::Scene> m_Scene = nullptr;
+
 	Ref<VertexBuffer> m_TriangleVertexBuffer = nullptr;
 	Ref<IndexBuffer> m_TriangleIndexBuffer = nullptr;
-
-	Ref<UniformBuffer> m_CameraData = nullptr;
 
 
 };

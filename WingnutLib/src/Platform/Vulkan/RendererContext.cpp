@@ -86,10 +86,10 @@ namespace Wingnut
 
 			ShaderStore::Release();
 
-			if (s_VulkanData.Pipeline != nullptr)
-			{
-				s_VulkanData.Pipeline->Release();
-			}
+//			if (s_VulkanData.Pipeline != nullptr)
+//			{
+//				s_VulkanData.Pipeline->Release();
+//			}
 
 			if (s_VulkanData.Framebuffer != nullptr)
 			{
@@ -183,15 +183,15 @@ namespace Wingnut
 
 			// Create pipeline
 
-			ShaderStore::LoadShader("basic", "assets/shaders/basic.shader");
-			ShaderStore::LoadShader("flat", "assets/shaders/flat.shader");
+//			ShaderStore::LoadShader("basic", "assets/shaders/basic.shader");
+//			ShaderStore::LoadShader("flat", "assets/shaders/flat.shader");
 
-			PipelineSpecification pipelineSpecification;
-			pipelineSpecification.Extent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
-			pipelineSpecification.PipelineShader = ShaderStore::GetShader("basic");
-			pipelineSpecification.RenderPass = s_VulkanData.RenderPass;
+//			PipelineSpecification pipelineSpecification;
+//			pipelineSpecification.Extent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
+//			pipelineSpecification.PipelineShader = ShaderStore::GetShader("basic");
+//			pipelineSpecification.RenderPass = s_VulkanData.RenderPass;
 
-			s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, pipelineSpecification);
+//			s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, pipelineSpecification);
 		}
 
 		bool VulkanContext::CreateInstance()
@@ -323,7 +323,7 @@ namespace Wingnut
 		}
 
 
-		void VulkanContext::BeginScene()
+		void VulkanContext::BeginScene(Ref<Pipeline> pipeline)
 		{
 			s_VulkanData.InFlightFences[m_CurrentFrame]->Wait(UINT64_MAX);
 			s_VulkanData.InFlightFences[m_CurrentFrame]->Reset();
@@ -351,8 +351,8 @@ namespace Wingnut
 			renderPassBeginInfo.pClearValues = &clearColor;
 
 			vkCmdBeginRenderPass(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-			vkCmdBindPipeline(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_VulkanData.Pipeline->GetPipeline());
+			
+			vkCmdBindPipeline(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipeline());
 
 			VkViewport viewport = {};
 			viewport.x = 0.0f;

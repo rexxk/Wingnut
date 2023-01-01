@@ -86,6 +86,7 @@
     <ClInclude Include="src\Assets\ShaderStore.h" />
     <ClInclude Include="src\Utils\StringUtils.h" />
     <ClInclude Include="src\Platform\Vulkan\DescriptorPool.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -149,5 +150,6 @@
     <ClCompile Include="src\Assets\ShaderStore.cpp" />
     <ClCompile Include="src\Utils\StringUtils.cpp" />
     <ClCompile Include="src\Platform\Vulkan\DescriptorPool.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
   </ItemGroup>
 </Project>

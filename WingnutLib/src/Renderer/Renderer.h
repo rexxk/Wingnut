@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 
+#include "Platform/Vulkan/Pipeline.h"
 #include "Platform/Vulkan/RendererContext.h"
 
 
@@ -40,7 +41,7 @@ namespace Wingnut
 
 		void Release();
 
-		static void BeginScene();
+		static void BeginScene(Ref<Vulkan::Pipeline> pipeline);
 		static void EndScene();
 
 		static void Present();
