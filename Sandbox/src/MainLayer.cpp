@@ -39,10 +39,17 @@ void MainLayer::OnAttach()
 
 	auto& rendererData = Renderer::GetContext()->GetRendererData();
 
+	auto extent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
+
+	m_Camera = Camera::Create(glm::vec3(0.0f, 0.0f, -10.0f), extent.width, extent.height);
+
+
 	SceneProperties sceneProperties;
 	sceneProperties.MainRenderPass = rendererData.RenderPass;
 	sceneProperties.GraphicsShader = ShaderStore::GetShader("basic");
 	sceneProperties.PipelineExtent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
+
+	sceneProperties.SceneCamera = m_Camera;
 
 	m_Scene = CreateRef<Scene>(sceneProperties);
 

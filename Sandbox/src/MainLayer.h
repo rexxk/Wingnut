@@ -20,6 +20,8 @@ public:
 private:
 	Ref<Wingnut::Scene> m_Scene = nullptr;
 
+	Ref<Wingnut::Camera> m_Camera = nullptr;
+
 	Ref<VertexBuffer> m_TriangleVertexBuffer = nullptr;
 	Ref<IndexBuffer> m_TriangleIndexBuffer = nullptr;
 

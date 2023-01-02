@@ -53,8 +53,10 @@ namespace Wingnut
 
 		Renderer::BeginScene(s_SceneData.GraphicsPipeline);
 
+
+
 		CameraDescriptorSet cameraDescriptorSet;
-		cameraDescriptorSet.ViewProjection = glm::mat4(1.0f);
+		cameraDescriptorSet.ViewProjection = m_Properties.SceneCamera->GetViewProjectionMatrix();
 
 		s_SceneData.CameraData->Update(&cameraDescriptorSet, sizeof(CameraDescriptorSet), Renderer::GetContext()->GetCurrentFrame());
 

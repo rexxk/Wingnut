@@ -3,6 +3,8 @@
 #include "Platform/Vulkan/Buffer.h"
 #include "Platform/Vulkan/Pipeline.h"
 
+#include "Renderer/Camera.h"
+
 
 namespace Wingnut
 {
@@ -26,6 +28,8 @@ namespace Wingnut
 		VkExtent2D PipelineExtent;
 		Ref<Vulkan::RenderPass> MainRenderPass;
 		Ref<Vulkan::Shader> GraphicsShader;
+
+		Ref<Camera> SceneCamera;
 	};
 
 

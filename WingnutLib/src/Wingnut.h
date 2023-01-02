@@ -10,4 +10,6 @@
 
 #include "Platform/Vulkan/Buffer.h"
 
+#include "Renderer/Camera.h"
+
 #include "Scene/Scene.h"

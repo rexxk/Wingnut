@@ -118,6 +118,7 @@
     <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
     <ClInclude Include="src\Platform\Vulkan\RenderPass.h" />
     <ClInclude Include="src\Platform\Vulkan\Shader.h" />
+    <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
     <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="src\Platform\Vulkan\Pipeline.cpp" />
     <ClCompile Include="src\Platform\Vulkan\RenderPass.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Shader.cpp" />
+    <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />
     <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp" />
