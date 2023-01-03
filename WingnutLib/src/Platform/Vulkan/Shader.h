@@ -2,6 +2,7 @@
 
 #include "Device.h"
 #include "DescriptorPool.h"
+#include "DescriptorSet.h"
 
 #include <vulkan/vulkan.h>
 
@@ -63,6 +64,8 @@ namespace Wingnut
 
 			void AllocateDescriptorSets();
 
+			VkDescriptorSetLayout CreateDescriptorSetLayout(const std::vector<VkDescriptorSetLayoutBinding>& setBindings);
+
 		private:
 
 			Ref<Device> m_Device;
@@ -79,10 +82,14 @@ namespace Wingnut
 			std::vector<VkVertexInputAttributeDescription> m_AttributeDescriptions;
 			uint32_t m_VertexStride = 0;
 
+//			std::vector<VkDescriptorSetLayoutBinding> m_DescriptorSetLayoutBindings;
+
 			std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>> m_DescriptorSetLayoutBindings;
 			std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
 
 			std::vector<VkDescriptorSet> m_DescriptorSets;
+
+//			std::unordered_map<uint32_t, Ref<DescriptorSet>> m_DescriptorSets;
 
 		};
 

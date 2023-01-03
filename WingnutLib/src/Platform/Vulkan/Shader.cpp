@@ -202,25 +202,27 @@ namespace Wingnut
 
 			}
 
-			for (uint32_t i = 0; i < m_DescriptorSetLayoutBindings.size(); i++)
-			{
-				VkDescriptorSetLayout newSetLayout = nullptr;
 
-				VkDescriptorSetLayoutCreateInfo layoutCreateInfo = {};
-				layoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-				layoutCreateInfo.bindingCount = (uint32_t)m_DescriptorSetLayoutBindings[i].size();
-				layoutCreateInfo.pBindings = m_DescriptorSetLayoutBindings[i].data();
-
-				if (vkCreateDescriptorSetLayout(m_Device->GetDevice(), &layoutCreateInfo, nullptr, &newSetLayout) != VK_SUCCESS)
-				{
-					LOG_CORE_ERROR("[Shader] Failed to create shader descriptor set layout");
-					return;
-				}
-
-				m_DescriptorSetLayouts.emplace_back(newSetLayout);
-
-			}
 		}
+
+		VkDescriptorSetLayout Shader::CreateDescriptorSetLayout(const std::vector<VkDescriptorSetLayoutBinding>& setBindings)
+		{
+			VkDescriptorSetLayout newSetLayout = nullptr;
+
+			VkDescriptorSetLayoutCreateInfo layoutCreateInfo = {};
+			layoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			layoutCreateInfo.bindingCount = (uint32_t)setBindings.size();
+			layoutCreateInfo.pBindings = setBindings.data();
+
+			if (vkCreateDescriptorSetLayout(m_Device->GetDevice(), &layoutCreateInfo, nullptr, &newSetLayout) != VK_SUCCESS)
+			{
+				LOG_CORE_ERROR("[Shader] Failed to create shader descriptor set layout");
+				return nullptr;
+			}
+
+			return newSetLayout;
+		}
+
 
 		void Shader::GetVertexLayout(const std::string& shaderSource)
 		{
@@ -356,13 +358,18 @@ namespace Wingnut
 
 		void Shader::AllocateDescriptorSets()
 		{
+			for (auto& descriptorSetLayoutBindings : m_DescriptorSetLayoutBindings)
+			{
+				m_DescriptorSetLayouts.emplace_back(CreateDescriptorSetLayout(descriptorSetLayoutBindings.second));
+			}
+
+
 			uint32_t maxSets = (uint32_t)m_DescriptorSetLayouts.size();
 
 			if (maxSets == 0)
 			{
 				return;
 			}
-
 
 			VkDescriptorSetAllocateInfo allocateInfo = {};
 			allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -377,6 +384,7 @@ namespace Wingnut
 				LOG_CORE_TRACE("[Shader] Unable to allocate descriptor sets");
 				return;
 			}
+
 		}
 
 
