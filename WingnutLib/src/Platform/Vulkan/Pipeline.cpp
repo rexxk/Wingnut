@@ -239,5 +239,24 @@ namespace Wingnut
 
 		}
 
+		void Pipeline::UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize)
+		{
+			VkDescriptorBufferInfo bufferInfo = {};
+			bufferInfo.buffer = buffer;
+			bufferInfo.offset = 0;
+			bufferInfo.range = bufferSize;
+
+			VkWriteDescriptorSet setWrite = {};
+			setWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			setWrite.dstBinding = binding;
+			setWrite.dstSet = m_Specification.PipelineShader->GetDescriptorSet(set).Set;
+			setWrite.descriptorCount = 1;
+			setWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			setWrite.pBufferInfo = &bufferInfo;
+
+			vkUpdateDescriptorSets(Renderer::GetContext()->GetRendererData().Device->GetDevice(), 1, &setWrite, 0, nullptr);
+
+		}
+
 	}
 }

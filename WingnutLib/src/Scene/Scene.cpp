@@ -50,6 +50,7 @@ namespace Wingnut
 	void Scene::Begin()
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
+		uint32_t currentFrame = Renderer::GetContext()->GetCurrentFrame();
 
 		Renderer::BeginScene(s_SceneData.GraphicsPipeline);
 
@@ -58,22 +59,8 @@ namespace Wingnut
 		CameraDescriptorSet cameraDescriptorSet;
 		cameraDescriptorSet.ViewProjection = m_Properties.SceneCamera->GetViewProjectionMatrix();
 
-		s_SceneData.CameraData->Update(&cameraDescriptorSet, sizeof(CameraDescriptorSet), Renderer::GetContext()->GetCurrentFrame());
-
-		VkDescriptorBufferInfo bufferInfo = {};
-		bufferInfo.buffer = s_SceneData.CameraData->GetBuffer(Renderer::GetContext()->GetCurrentFrame());
-		bufferInfo.offset = 0;
-		bufferInfo.range = sizeof(CameraDescriptorSet);
-
-		VkWriteDescriptorSet setWrite = {};
-		setWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		setWrite.dstBinding = 0;
-		setWrite.dstSet = s_SceneData.GraphicsPipeline->GetSpecification().PipelineShader->GetDescriptorSets()[0];
-		setWrite.descriptorCount = 1;
-		setWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		setWrite.pBufferInfo = &bufferInfo;
-
-		vkUpdateDescriptorSets(rendererData.Device->GetDevice(), 1, &setWrite, 0, nullptr);
+		s_SceneData.CameraData->Update(&cameraDescriptorSet, sizeof(CameraDescriptorSet), currentFrame);
+		s_SceneData.GraphicsPipeline->UpdateDescriptor(0, 0, s_SceneData.CameraData->GetBuffer(currentFrame), sizeof(CameraDescriptorSet));
 
 	}
 

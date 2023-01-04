@@ -2,7 +2,6 @@
 
 #include "Device.h"
 #include "DescriptorPool.h"
-#include "DescriptorSet.h"
 
 #include <vulkan/vulkan.h>
 
@@ -33,6 +32,13 @@ namespace Wingnut
 		};
 
 
+		struct SetDescription
+		{
+			uint32_t SetID = -1;
+			VkDescriptorSet Set = nullptr;
+		};
+
+
 		class Shader
 		{
 		public:
@@ -52,6 +58,8 @@ namespace Wingnut
 			std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayouts() { return m_DescriptorSetLayouts; }
 
 			std::vector<VkDescriptorSet>& GetDescriptorSets() { return m_DescriptorSets; }
+
+			SetDescription GetDescriptorSet(uint32_t setID);
 
 		private:
 
@@ -88,6 +96,8 @@ namespace Wingnut
 			std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
 
 			std::vector<VkDescriptorSet> m_DescriptorSets;
+
+			std::vector<SetDescription> m_SetDescriptions;
 
 //			std::unordered_map<uint32_t, Ref<DescriptorSet>> m_DescriptorSets;
 

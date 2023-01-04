@@ -354,6 +354,26 @@ namespace Wingnut
 				}
 			}
 
+			for (auto& setLayoutBinding : m_DescriptorSetLayoutBindings)
+			{
+				bool setExists = false;
+
+				for (auto& setDescription : m_SetDescriptions)
+				{
+					if (setDescription.SetID == setLayoutBinding.first)
+					{
+						setExists = true;
+					}
+				}
+
+				if (!setExists)
+				{
+					SetDescription setDescription;
+					setDescription.SetID = setLayoutBinding.first;
+
+					m_SetDescriptions.emplace_back(setDescription);
+				}
+			}
 		}
 
 		void Shader::AllocateDescriptorSets()
@@ -363,10 +383,9 @@ namespace Wingnut
 				m_DescriptorSetLayouts.emplace_back(CreateDescriptorSetLayout(descriptorSetLayoutBindings.second));
 			}
 
+			uint32_t setCount = (uint32_t)m_DescriptorSetLayouts.size();
 
-			uint32_t maxSets = (uint32_t)m_DescriptorSetLayouts.size();
-
-			if (maxSets == 0)
+			if (setCount == 0)
 			{
 				return;
 			}
@@ -374,10 +393,10 @@ namespace Wingnut
 			VkDescriptorSetAllocateInfo allocateInfo = {};
 			allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 			allocateInfo.descriptorPool = Renderer::GetContext()->GetRendererData().DescriptorPool->GetDescriptorPool();
-			allocateInfo.descriptorSetCount = maxSets;
+			allocateInfo.descriptorSetCount = setCount;
 			allocateInfo.pSetLayouts = m_DescriptorSetLayouts.data();
 
-			m_DescriptorSets.resize(maxSets);
+			m_DescriptorSets.resize(setCount);
 
 			if (vkAllocateDescriptorSets(m_Device->GetDevice(), &allocateInfo, m_DescriptorSets.data()) != VK_SUCCESS)
 			{
@@ -385,8 +404,26 @@ namespace Wingnut
 				return;
 			}
 
+			for (uint32_t i = 0; (uint32_t)i < m_SetDescriptions.size(); i++)
+			{
+				m_SetDescriptions[i].Set = m_DescriptorSets[i];
+			}
 		}
 
+
+		SetDescription Shader::GetDescriptorSet(uint32_t setID)
+		{
+			for (auto& setDescriptor : m_SetDescriptions)
+			{
+				if (setDescriptor.SetID == setID)
+				{
+					return setDescriptor;
+				}
+			}
+
+			LOG_CORE_ERROR("[Shader] Set {} does not exist in shader");
+			return SetDescription();
+		}
 
 	}
 

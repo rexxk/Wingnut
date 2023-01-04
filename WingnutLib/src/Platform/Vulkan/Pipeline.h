@@ -42,6 +42,8 @@ namespace Wingnut
 
 			VkPipelineLayout& GetLayout() { return m_PipelineLayout; }
 
+			void UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize);
+
 		private:
 			void Create();
 
