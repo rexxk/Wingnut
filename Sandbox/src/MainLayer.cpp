@@ -23,16 +23,17 @@ void MainLayer::OnAttach()
 {
 	LOG_TRACE("Attaching Main layer");
 
-	std::vector<Vertex> triangleVertices =
+	std::vector<Vertex> quadVertices =
 	{
 		{ { -0.5f,  0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ {  0.0f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
-		{ {  0.5f,  0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ {  0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ {  0.5f,  0.5f, 0.0f }, { 0.75f, 0.75f, 0.0f, 1.0f } },
 	};
 
-	std::vector<uint32_t> triangleIndices =
+	std::vector<uint32_t> quadIndices =
 	{
-		0, 1, 2,
+		0, 1, 2, 2, 3, 0,
 	};
 
 	ShaderStore::LoadShader("basic", "assets/shaders/Basic.shader");
@@ -41,7 +42,7 @@ void MainLayer::OnAttach()
 
 	auto extent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
-	m_Camera = Camera::Create(glm::vec3(0.0f, 0.0f, -10.0f), extent.width, extent.height);
+	m_Camera = Camera::Create(glm::vec3(0.0f, 0.0f, -3.0f), extent.width, extent.height);
 
 
 	SceneProperties sceneProperties;
@@ -54,8 +55,8 @@ void MainLayer::OnAttach()
 	m_Scene = CreateRef<Scene>(sceneProperties);
 
 
-	m_TriangleVertexBuffer = CreateRef<VertexBuffer>(rendererData.Device, triangleVertices);
-	m_TriangleIndexBuffer = CreateRef<IndexBuffer>(rendererData.Device, triangleIndices);
+	m_VertexBuffer = CreateRef<VertexBuffer>(rendererData.Device, quadVertices);
+	m_IndexBuffer = CreateRef<IndexBuffer>(rendererData.Device, quadIndices);
 
 }
 
@@ -63,8 +64,8 @@ void MainLayer::OnDetach()
 {
 	Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
 
-	m_TriangleVertexBuffer->Release();
-	m_TriangleIndexBuffer->Release();
+	m_VertexBuffer->Release();
+	m_IndexBuffer->Release();
 
 	m_Scene->Release();
 }
@@ -78,15 +79,15 @@ void MainLayer::OnUpdate()
 	auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 
-	m_TriangleVertexBuffer->Bind(rendererData.GraphicsCommandBuffers[currentFrame], m_Scene->GetSceneData().GraphicsPipeline);
-	m_TriangleIndexBuffer->Bind(rendererData.GraphicsCommandBuffers[currentFrame], m_Scene->GetSceneData().GraphicsPipeline);
+	m_VertexBuffer->Bind(rendererData.GraphicsCommandBuffers[currentFrame], m_Scene->GetSceneData().GraphicsPipeline);
+	m_IndexBuffer->Bind(rendererData.GraphicsCommandBuffers[currentFrame], m_Scene->GetSceneData().GraphicsPipeline);
 
 
 	vkCmdBindDescriptorSets(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_Scene->GetSceneData().GraphicsPipeline->GetLayout(), 0, 1,
 		&m_Scene->GetSceneData().GraphicsPipeline->GetSpecification().PipelineShader->GetDescriptorSets()[0], 0, nullptr);
 
 
-	vkCmdDrawIndexed(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), m_TriangleIndexBuffer->IndexCount(), 1, 0, 0, 0);
+	vkCmdDrawIndexed(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), m_IndexBuffer->IndexCount(), 1, 0, 0, 0);
 
 
 	m_Scene->End();

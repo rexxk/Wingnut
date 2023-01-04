@@ -22,8 +22,8 @@ private:
 
 	Ref<Wingnut::Camera> m_Camera = nullptr;
 
-	Ref<VertexBuffer> m_TriangleVertexBuffer = nullptr;
-	Ref<IndexBuffer> m_TriangleIndexBuffer = nullptr;
+	Ref<VertexBuffer> m_VertexBuffer = nullptr;
+	Ref<IndexBuffer> m_IndexBuffer = nullptr;
 
 
 };
