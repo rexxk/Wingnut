@@ -1,6 +1,7 @@
 #include "wingnut_pch.h"
 #include "Buffer.h"
 
+#include "CommandBuffer.h"
 
 
 namespace Wingnut
@@ -46,20 +47,28 @@ namespace Wingnut
 
 		void Buffer::CopyBuffer(Ref<Device> device, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize bufferSize)
 		{
-			VkCommandBuffer commandBuffer = Buffer::BeginCommand(device);
+			auto commandPool = Renderer::GetContext()->GetRendererData().TransferCommandPool;
+
+			Ref<CommandBuffer> commandBuffer = CreateRef<CommandBuffer>(device, commandPool);
+
+			commandBuffer->BeginRecording();
 
 			VkBufferCopy copyRegion = {};
 			copyRegion.srcOffset = 0;
 			copyRegion.dstOffset = 0;
 			copyRegion.size = bufferSize;
-			vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+			vkCmdCopyBuffer(commandBuffer->GetCommandBuffer(), srcBuffer, dstBuffer, 1, &copyRegion);
 
-			Buffer::EndCommand(device, commandBuffer);
+			commandBuffer->EndRecording();
 		}
 
 		void Buffer::TransitionImageLayout(Ref<Device> device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)
 		{
-			VkCommandBuffer commandBuffer = Buffer::BeginCommand(device);
+			auto commandPool = Renderer::GetContext()->GetRendererData().TransferCommandPool;
+
+			Ref<CommandBuffer> commandBuffer = CreateRef<CommandBuffer>(device, commandPool);
+
+			commandBuffer->BeginRecording();
 
 			VkPipelineStageFlags sourceStage;
 			VkPipelineStageFlags destinationStage;
@@ -96,14 +105,17 @@ namespace Wingnut
 				destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 			}
 
-			vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &memoryBarrier);
+			vkCmdPipelineBarrier(commandBuffer->GetCommandBuffer(), sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &memoryBarrier);
 
-			Buffer::EndCommand(device, commandBuffer);
+			commandBuffer->EndRecording();
 		}
 
 		void Buffer::CopyBufferToImage(Ref<Device> device, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
 		{
-			VkCommandBuffer commandBuffer = Buffer::BeginCommand(device);
+			auto commandPool = Renderer::GetContext()->GetRendererData().TransferCommandPool;
+
+			Ref<CommandBuffer> commandBuffer = CreateRef<CommandBuffer>(device, commandPool);
+			commandBuffer->BeginRecording();
 
 			VkBufferImageCopy region = {};
 			region.bufferOffset = 0;
@@ -118,50 +130,12 @@ namespace Wingnut
 			region.imageOffset = { 0, 0, 0 };
 			region.imageExtent = { width, height, 1 };
 
-			vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+			vkCmdCopyBufferToImage(commandBuffer->GetCommandBuffer(), buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
-			Buffer::EndCommand(device, commandBuffer);
+			commandBuffer->EndRecording();
 		}
 
 
-		VkCommandBuffer Buffer::BeginCommand(Ref<Device> device)
-		{
-			auto& rendererData = Renderer::GetContext()->GetRendererData();
-
-			VkCommandBufferAllocateInfo commandBufferAllocateInfo = {};
-			commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-			commandBufferAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-			commandBufferAllocateInfo.commandPool = rendererData.TransferCommandPool->GetCommandPool();
-			commandBufferAllocateInfo.commandBufferCount = 1;
-
-			VkCommandBuffer commandBuffer = nullptr;
-			vkAllocateCommandBuffers(device->GetDevice(), &commandBufferAllocateInfo, &commandBuffer);
-
-			VkCommandBufferBeginInfo commandBufferBeginInfo = {};
-			commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-			commandBufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-			vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
-
-			return commandBuffer;
-		}
-
-		void Buffer::EndCommand(Ref<Device> device, VkCommandBuffer commandBuffer)
-		{
-			auto& rendererData = Renderer::GetContext()->GetRendererData();
-
-			vkEndCommandBuffer(commandBuffer);
-
-			VkSubmitInfo submitInfo = {};
-			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &commandBuffer;
-
-			vkQueueSubmit(device->GetQueue(QueueType::Graphics), 1, &submitInfo, VK_NULL_HANDLE);
-			vkQueueWaitIdle(device->GetQueue(QueueType::Graphics));
-
-			vkFreeCommandBuffers(device->GetDevice(), rendererData.TransferCommandPool->GetCommandPool(), 1, &commandBuffer);
-		}
 
 		VertexBuffer::VertexBuffer(Ref<Device> device, const std::vector<Vertex>& vertexList)
 			: m_Device(device)

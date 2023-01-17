@@ -2,7 +2,6 @@
 #include "CommandBuffer.h"
 
 
-
 namespace Wingnut
 {
 
@@ -41,5 +40,28 @@ namespace Wingnut
 			}
 		}
 
+		void CommandBuffer::BeginRecording()
+		{
+			VkCommandBufferBeginInfo commandBufferBeginInfo = {};
+			commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			commandBufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+			vkBeginCommandBuffer(m_CommandBuffer, &commandBufferBeginInfo);
+		}
+
+		void CommandBuffer::EndRecording()
+		{
+			vkEndCommandBuffer(m_CommandBuffer);
+
+			VkSubmitInfo submitInfo = {};
+			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+			submitInfo.commandBufferCount = 1;
+			submitInfo.pCommandBuffers = &m_CommandBuffer;
+
+			vkQueueSubmit(m_Device->GetQueue(QueueType::Graphics), 1, &submitInfo, VK_NULL_HANDLE);
+			vkQueueWaitIdle(m_Device->GetQueue(QueueType::Graphics));
+		}
+
 	}
+
 }

@@ -20,6 +20,9 @@ namespace Wingnut
 
 			void Release();
 
+			void BeginRecording();
+			void EndRecording();
+
 			VkCommandBuffer GetCommandBuffer() { return m_CommandBuffer; }
 
 		private:
