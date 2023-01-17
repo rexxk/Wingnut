@@ -9,7 +9,7 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
-		void CreateBuffer(Ref<Device> device, VkBuffer& buffer, VkDeviceMemory& deviceMemory, VkDeviceSize size, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags)
+		void Buffer::CreateBuffer(Ref<Device> device, VkBuffer& buffer, VkDeviceMemory& deviceMemory, VkDeviceSize size, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags)
 		{
 			VkBufferCreateInfo bufferCreateInfo = {};
 			bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -44,7 +44,87 @@ namespace Wingnut
 			vkBindBufferMemory(device->GetDevice(), buffer, deviceMemory, 0);
 		}
 
-		void CopyBuffer(Ref<Device> device, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize bufferSize)
+		void Buffer::CopyBuffer(Ref<Device> device, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize bufferSize)
+		{
+			VkCommandBuffer commandBuffer = Buffer::BeginCommand(device);
+
+			VkBufferCopy copyRegion = {};
+			copyRegion.srcOffset = 0;
+			copyRegion.dstOffset = 0;
+			copyRegion.size = bufferSize;
+			vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
+			Buffer::EndCommand(device, commandBuffer);
+		}
+
+		void Buffer::TransitionImageLayout(Ref<Device> device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)
+		{
+			VkCommandBuffer commandBuffer = Buffer::BeginCommand(device);
+
+			VkPipelineStageFlags sourceStage;
+			VkPipelineStageFlags destinationStage;
+
+			VkImageMemoryBarrier memoryBarrier = {};
+			memoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+			memoryBarrier.oldLayout = oldLayout;
+			memoryBarrier.newLayout = newLayout;
+
+			memoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+			memoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+
+			memoryBarrier.image = image;
+			memoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			memoryBarrier.subresourceRange.baseMipLevel = 0;
+			memoryBarrier.subresourceRange.levelCount = 1;
+			memoryBarrier.subresourceRange.baseArrayLayer = 0;
+			memoryBarrier.subresourceRange.layerCount = 1;
+
+			if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+			{
+				memoryBarrier.srcAccessMask = 0;
+				memoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+
+				sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+				destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+			}
+			else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+			{
+				memoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+				memoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+				sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+				destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+			}
+
+			vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &memoryBarrier);
+
+			Buffer::EndCommand(device, commandBuffer);
+		}
+
+		void Buffer::CopyBufferToImage(Ref<Device> device, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
+		{
+			VkCommandBuffer commandBuffer = Buffer::BeginCommand(device);
+
+			VkBufferImageCopy region = {};
+			region.bufferOffset = 0;
+			region.bufferRowLength = 0;
+			region.bufferImageHeight = 0;
+
+			region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			region.imageSubresource.mipLevel = 0;
+			region.imageSubresource.baseArrayLayer = 0;
+			region.imageSubresource.layerCount = 1;
+
+			region.imageOffset = { 0, 0, 0 };
+			region.imageExtent = { width, height, 1 };
+
+			vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+
+			Buffer::EndCommand(device, commandBuffer);
+		}
+
+
+		VkCommandBuffer Buffer::BeginCommand(Ref<Device> device)
 		{
 			auto& rendererData = Renderer::GetContext()->GetRendererData();
 
@@ -63,11 +143,12 @@ namespace Wingnut
 
 			vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
 
-			VkBufferCopy copyRegion = {};
-			copyRegion.srcOffset = 0;
-			copyRegion.dstOffset = 0;
-			copyRegion.size = bufferSize;
-			vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+			return commandBuffer;
+		}
+
+		void Buffer::EndCommand(Ref<Device> device, VkCommandBuffer commandBuffer)
+		{
+			auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 			vkEndCommandBuffer(commandBuffer);
 
@@ -91,7 +172,7 @@ namespace Wingnut
 			VkDeviceMemory stagingBufferMemory = nullptr;
 
 			// Create staging buffer
-			CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+			Buffer::CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 			void* data = nullptr;
 			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
@@ -101,10 +182,10 @@ namespace Wingnut
 
 			// Create vertex buffer
 
-			CreateBuffer(m_Device, m_Buffer, m_BufferMemory, bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+			Buffer::CreateBuffer(m_Device, m_Buffer, m_BufferMemory, bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 			// Copy data
-			CopyBuffer(m_Device, stagingBuffer, m_Buffer, bufferSize);
+			Buffer::CopyBuffer(m_Device, stagingBuffer, m_Buffer, bufferSize);
 
 			vkDestroyBuffer(m_Device->GetDevice(), stagingBuffer, nullptr);
 			vkFreeMemory(m_Device->GetDevice(), stagingBufferMemory, nullptr);
@@ -153,7 +234,7 @@ namespace Wingnut
 			VkDeviceMemory stagingBufferMemory = nullptr;
 
 			// Create staging buffer
-			CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+			Buffer::CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 			void* data = nullptr;
 			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
@@ -163,10 +244,10 @@ namespace Wingnut
 
 			// Create vertex buffer
 
-			CreateBuffer(m_Device, m_Buffer, m_BufferMemory, bufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+			Buffer::CreateBuffer(m_Device, m_Buffer, m_BufferMemory, bufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 			// Copy data
-			CopyBuffer(m_Device, stagingBuffer, m_Buffer, bufferSize);
+			Buffer::CopyBuffer(m_Device, stagingBuffer, m_Buffer, bufferSize);
 
 			vkDestroyBuffer(m_Device->GetDevice(), stagingBuffer, nullptr);
 			vkFreeMemory(m_Device->GetDevice(), stagingBufferMemory, nullptr);
@@ -215,7 +296,7 @@ namespace Wingnut
 			for (uint32_t i = 0; i < m_Frames; i++)
 			{
 				// Create uniform buffer
-				CreateBuffer(m_Device, m_Buffers[i], m_BuffersMemory[i], bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+				Buffer::CreateBuffer(m_Device, m_Buffers[i], m_BuffersMemory[i], bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 				vkMapMemory(m_Device->GetDevice(), m_BuffersMemory[i], 0, bufferSize, 0, &m_MappedBuffers[i]);
 			}

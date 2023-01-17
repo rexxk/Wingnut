@@ -9,6 +9,7 @@
 #include "Event/EventBroker.h"
 
 #include "Platform/Vulkan/Buffer.h"
+#include "Platform/Vulkan/Texture.h"
 
 #include "Renderer/Camera.h"
 

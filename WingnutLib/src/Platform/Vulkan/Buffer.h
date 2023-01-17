@@ -85,5 +85,18 @@ namespace Wingnut
 			Ref<Device> m_Device = nullptr;
 		};
 
+		class Buffer
+		{
+		public:
+			static void CreateBuffer(Ref<Device> device, VkBuffer& buffer, VkDeviceMemory& deviceMemory, VkDeviceSize size, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags);
+			static void CopyBuffer(Ref<Device> device, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize bufferSize);
+
+			static void TransitionImageLayout(Ref<Device> device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+			static void CopyBufferToImage(Ref<Device> device, VkBuffer buffer,  VkImage image, uint32_t width, uint32_t height);
+
+		private:
+			static VkCommandBuffer BeginCommand(Ref<Device> device);
+			static void EndCommand(Ref<Device> device, VkCommandBuffer commandBuffer);
+		};
 	}
 }

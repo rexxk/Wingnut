@@ -35,8 +35,9 @@ namespace Wingnut
 			std::string DeviceName = "";
 
 			VkPhysicalDeviceLimits Limits;
-			VkSurfaceCapabilitiesKHR SurfaceCapabilities;
+			VkPhysicalDeviceFeatures Features;
 
+			VkSurfaceCapabilitiesKHR SurfaceCapabilities;	
 			VkSurfaceFormatKHR SurfaceFormat;
 
 			std::unordered_map<uint32_t, std::vector<QueueFamily>> QueueFamilies;
@@ -74,6 +75,8 @@ namespace Wingnut
 			PhysicalDeviceProperties GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice);
 			VkSurfaceCapabilitiesKHR GetSurfaceCapabilities(VkPhysicalDevice physicalDevice);
 			VkSurfaceFormatKHR GetSurfaceFormat(VkPhysicalDevice physicalDevice);
+
+			VkPhysicalDeviceFeatures  GetDeviceFeatures(VkPhysicalDevice physicalDevice);
 
 			std::vector<std::string> FindDeviceLayers();
 			std::vector<std::string> FindDeviceExtensions();

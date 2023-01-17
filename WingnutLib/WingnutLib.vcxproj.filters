@@ -88,6 +88,7 @@
     <ClInclude Include="src\Platform\Vulkan\DescriptorPool.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Renderer\Camera.h" />
+    <ClInclude Include="src\Platform\Vulkan\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -153,5 +154,7 @@
     <ClCompile Include="src\Platform\Vulkan\DescriptorPool.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Texture.cpp" />
+    <ClCompile Include="src\Utils\stbImage.cpp" />
   </ItemGroup>
 </Project>

@@ -27,6 +27,7 @@ namespace Wingnut
 
 		VkFormat TypeStringToVulkanFormat(const std::string& type)
 		{
+			if (type == "vec2") return VK_FORMAT_R32G32_SFLOAT;
 			if (type == "vec3") return VK_FORMAT_R32G32B32_SFLOAT;
 			if (type == "vec4") return VK_FORMAT_R32G32B32A32_SFLOAT;
 
@@ -35,6 +36,7 @@ namespace Wingnut
 
 		uint32_t TypeStringToSize(const std::string& type)
 		{
+			if (type == "vec2") return 4 * 2;
 			if (type == "vec3") return 4 * 3;
 			if (type == "vec4") return 4 * 4;
 
@@ -315,9 +317,24 @@ namespace Wingnut
 
 					uint32_t set = 0;
 					uint32_t binding = 0;
-
+					
 					std::string type;
 					std::string name;
+
+					VkDescriptorSetLayoutBinding layoutBinding = {};
+
+					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+					layoutBinding.descriptorCount = 1;
+					layoutBinding.pImmutableSamplers = nullptr;
+
+					if (domain == ShaderDomain::Vertex)
+					{
+						layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+					}
+					else if (domain == ShaderDomain::Fragment)
+					{
+						layoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+					}
 
 					for (size_t i = 0; i < tokens.size(); i++)
 					{
@@ -330,28 +347,23 @@ namespace Wingnut
 						{
 							binding = std::atoi(tokens[++i].c_str());
 						}
+
+						if (tokens[i] == "sampler2D")
+						{
+//							layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+							layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+						}
 					}
 
-					VkDescriptorSetLayoutBinding layoutBinding = {};
 					layoutBinding.binding = binding;
-					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-					layoutBinding.descriptorCount = 1;
 
-					if (domain == ShaderDomain::Vertex)
-					{
-						layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-					}
-					else if (domain == ShaderDomain::Fragment)
-					{
-						layoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-					}
 
-					layoutBinding.pImmutableSamplers = nullptr;
 
 //					LOG_CORE_WARN("Uniform: set = {}, binding = {}", set, binding);
 
 					m_DescriptorSetLayoutBindings[set].emplace_back(layoutBinding);
 				}
+
 			}
 
 			for (auto& setLayoutBinding : m_DescriptorSetLayoutBindings)

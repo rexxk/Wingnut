@@ -121,6 +121,13 @@ namespace Wingnut
 				deviceExtensionsPointers.emplace_back(deviceExtension.c_str());
 			}
 
+			VkPhysicalDeviceFeatures deviceFeatures = {};
+			
+			if (m_DeviceProperties[0].Features.samplerAnisotropy == VK_TRUE)
+			{
+				deviceFeatures.samplerAnisotropy = VK_TRUE;
+			}
+
 			VkDeviceCreateInfo createInfo = {};
 			createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 			createInfo.pQueueCreateInfos = queueCreateInfos.data();
@@ -131,6 +138,8 @@ namespace Wingnut
 
 			createInfo.ppEnabledExtensionNames = deviceExtensionsPointers.data();
 			createInfo.enabledExtensionCount = (uint32_t)deviceExtensionsPointers.size();
+
+			createInfo.pEnabledFeatures = &deviceFeatures;
 
 			if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS)
 			{
@@ -216,6 +225,8 @@ namespace Wingnut
 			physicalDeviceProperties.SurfaceCapabilities = GetSurfaceCapabilities(physicalDevice);
 			physicalDeviceProperties.SurfaceFormat = GetSurfaceFormat(physicalDevice);
 
+			physicalDeviceProperties.Features = GetDeviceFeatures(physicalDevice);
+
 			return physicalDeviceProperties;
 		}
 
@@ -244,6 +255,15 @@ namespace Wingnut
 			}
 
 			return VkSurfaceFormatKHR();
+		}
+
+		VkPhysicalDeviceFeatures Device::GetDeviceFeatures(VkPhysicalDevice physicalDevice)
+		{
+			VkPhysicalDeviceFeatures deviceFeatures;
+
+			vkGetPhysicalDeviceFeatures(physicalDevice, &deviceFeatures);
+
+			return deviceFeatures;
 		}
 
 		//////////////////////////////

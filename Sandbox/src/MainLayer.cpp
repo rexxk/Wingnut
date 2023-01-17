@@ -25,10 +25,10 @@ void MainLayer::OnAttach()
 
 	std::vector<Vertex> quadVertices =
 	{
-		{ { -0.5f,  0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ {  0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
-		{ {  0.5f,  0.5f, 0.0f }, { 0.75f, 0.75f, 0.0f, 1.0f } },
+		{ { -0.5f,  0.5f, 0.0f }, { 0.0, 1.0 } },//{ 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ { -0.5f, -0.5f, 0.0f }, { 0.0, 0.0 } },//{ 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ {  0.5f, -0.5f, 0.0f }, { 1.0, 0.0 } },//{ 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ {  0.5f,  0.5f, 0.0f }, { 1.0, 1.0 } },//{ 0.75f, 0.75f, 0.0f, 1.0f } },
 	};
 
 	std::vector<uint32_t> quadIndices =
@@ -58,11 +58,14 @@ void MainLayer::OnAttach()
 	m_VertexBuffer = CreateRef<VertexBuffer>(rendererData.Device, quadVertices);
 	m_IndexBuffer = CreateRef<IndexBuffer>(rendererData.Device, quadIndices);
 
+	m_Texture = CreateRef<Texture2D>("assets/textures/texture.jpg");
 }
 
 void MainLayer::OnDetach()
 {
 	Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
+
+	m_Texture->Release();
 
 	m_VertexBuffer->Release();
 	m_IndexBuffer->Release();
@@ -83,8 +86,11 @@ void MainLayer::OnUpdate()
 	m_IndexBuffer->Bind(rendererData.GraphicsCommandBuffers[currentFrame], m_Scene->GetSceneData().GraphicsPipeline);
 
 
-	vkCmdBindDescriptorSets(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_Scene->GetSceneData().GraphicsPipeline->GetLayout(), 0, 1,
-		&m_Scene->GetSceneData().GraphicsPipeline->GetSpecification().PipelineShader->GetDescriptorSets()[0], 0, nullptr);
+	m_Scene->GetSceneData().GraphicsPipeline->UpdateDescriptor(2, 0, m_Texture->GetImageView(), m_Texture->GetSampler());
+
+
+	vkCmdBindDescriptorSets(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_Scene->GetSceneData().GraphicsPipeline->GetLayout(), 0, 3,
+		m_Scene->GetSceneData().GraphicsPipeline->GetSpecification().PipelineShader->GetDescriptorSets().data(), 0, nullptr);
 
 
 	vkCmdDrawIndexed(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), m_IndexBuffer->IndexCount(), 1, 0, 0, 0);

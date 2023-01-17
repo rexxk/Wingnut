@@ -3,9 +3,9 @@
 
 
 layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec4 a_Color;
+layout(location = 1) in vec2 a_TexCoord;
 
-layout(location = 0) out vec4 v_Color;
+layout(location = 0) out vec2 v_TexCoord;
 
 layout(set = 0, binding = 0) uniform UBWorld {
 	mat4 ViewProjection;
@@ -21,7 +21,7 @@ void main()
 	gl_Position = ubWorld.ViewProjection * vec4(a_Position, 1.0);
 //	gl_Position = vec4(a_Position, 1.0);
 
-	v_Color = a_Color;
+	v_TexCoord = a_TexCoord;
 }
 
 
@@ -30,9 +30,12 @@ void main()
 
 layout(location = 0) out vec4 o_Color;
 
-layout(location = 0) in vec4 v_Color;
+layout(location = 0) in vec2 v_TexCoord;
+
+layout(set = 2, binding = 0) uniform sampler2D u_Texture;
 
 void main()
 {
-	o_Color = v_Color;
+//	o_Color = vec4(0.5); // v_Color;
+	o_Color = texture(u_Texture, v_TexCoord);
 }
