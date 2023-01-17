@@ -88,6 +88,8 @@ namespace Wingnut
 			Reflect();
 
 			AllocateDescriptorSets();
+
+			m_DescriptorSetData.resize(m_DescriptorSets.size());
 		}
 
 		void Shader::LoadSources()
@@ -437,6 +439,51 @@ namespace Wingnut
 			return SetDescription();
 		}
 
+
+		void Shader::UpdateDescriptorSet(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize)
+		{
+			VkDescriptorBufferInfo bufferInfo = {};
+			bufferInfo.buffer = buffer;
+			bufferInfo.offset = 0;
+			bufferInfo.range = bufferSize;
+
+			m_DescriptorSetData[set].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			m_DescriptorSetData[set].dstBinding = binding;
+			m_DescriptorSetData[set].dstSet = GetDescriptorSet(set).Set;
+			m_DescriptorSetData[set].descriptorCount = 1;
+			m_DescriptorSetData[set].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			m_DescriptorSetData[set].pBufferInfo = &bufferInfo;
+
+			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &m_DescriptorSetData[set], 0, nullptr);
+		}
+
+		void Shader::UpdateDescriptorSet(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler)
+		{
+			VkDescriptorImageInfo imageInfo = {};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = imageView;
+			imageInfo.sampler = sampler;
+
+			m_DescriptorSetData[set].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			m_DescriptorSetData[set].dstBinding = binding;
+			m_DescriptorSetData[set].dstSet = GetDescriptorSet(set).Set;
+			m_DescriptorSetData[set].descriptorCount = 1;
+			m_DescriptorSetData[set].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			m_DescriptorSetData[set].pImageInfo = &imageInfo;
+
+			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &m_DescriptorSetData[set], 0, nullptr);
+
+		}
+
+		void Shader::BindDescriptorSets(VkPipelineLayout pipelineLayout)
+		{
+			auto rendererData = Renderer::GetContext()->GetRendererData();
+			auto currentFrame = Renderer::GetContext()->GetCurrentFrame();
+
+			vkCmdBindDescriptorSets(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, m_DescriptorSetData.size(),
+				m_DescriptorSets.data(), 0, nullptr);
+
+		}
 	}
 
 }

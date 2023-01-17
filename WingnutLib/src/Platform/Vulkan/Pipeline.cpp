@@ -241,40 +241,12 @@ namespace Wingnut
 
 		void Pipeline::UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize)
 		{
-			VkDescriptorBufferInfo bufferInfo = {};
-			bufferInfo.buffer = buffer;
-			bufferInfo.offset = 0;
-			bufferInfo.range = bufferSize;
-
-			VkWriteDescriptorSet setWrite = {};
-			setWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			setWrite.dstBinding = binding;
-			setWrite.dstSet = m_Specification.PipelineShader->GetDescriptorSet(set).Set;
-			setWrite.descriptorCount = 1;
-			setWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			setWrite.pBufferInfo = &bufferInfo;
-
-			vkUpdateDescriptorSets(Renderer::GetContext()->GetRendererData().Device->GetDevice(), 1, &setWrite, 0, nullptr);
-
+			m_Specification.PipelineShader->UpdateDescriptorSet(set, binding, buffer, bufferSize);
 		}
 
 		void Pipeline::UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler)
 		{
-			VkDescriptorImageInfo imageInfo = {};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = imageView;
-			imageInfo.sampler = sampler;
-
-			VkWriteDescriptorSet setWrite = {};
-			setWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			setWrite.dstBinding = binding;
-			setWrite.dstSet = m_Specification.PipelineShader->GetDescriptorSet(set).Set;
-			setWrite.descriptorCount = 1;
-			setWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			setWrite.pImageInfo = &imageInfo;
-
-			vkUpdateDescriptorSets(Renderer::GetContext()->GetRendererData().Device->GetDevice(), 1, &setWrite, 0, nullptr);
-
+			m_Specification.PipelineShader->UpdateDescriptorSet(set, binding, imageView, sampler);
 		}
 
 	}

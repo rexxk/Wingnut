@@ -25,10 +25,10 @@ void MainLayer::OnAttach()
 
 	std::vector<Vertex> quadVertices =
 	{
-		{ { -0.5f,  0.5f, 0.0f }, { 0.0, 1.0 } },//{ 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ { -0.5f, -0.5f, 0.0f }, { 0.0, 0.0 } },//{ 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ {  0.5f, -0.5f, 0.0f }, { 1.0, 0.0 } },//{ 0.0f, 0.0f, 1.0f, 1.0f } },
-		{ {  0.5f,  0.5f, 0.0f }, { 1.0, 1.0 } },//{ 0.75f, 0.75f, 0.0f, 1.0f } },
+		{ { -0.5f,  0.5f, 0.0f }, { 0.0, 1.0 }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ { -0.5f, -0.5f, 0.0f }, { 0.0, 0.0 }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ {  0.5f, -0.5f, 0.0f }, { 1.0, 0.0 }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ {  0.5f,  0.5f, 0.0f }, { 1.0, 1.0 }, { 1.0f, 1.0f, 1.0f, 1.0f } },
 	};
 
 	std::vector<uint32_t> quadIndices =
@@ -78,7 +78,6 @@ void MainLayer::OnUpdate()
 	m_Scene->Begin();
 
 	uint32_t currentFrame = Renderer::GetContext()->GetCurrentFrame();
-
 	auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 
@@ -88,9 +87,7 @@ void MainLayer::OnUpdate()
 
 	m_Scene->GetSceneData().GraphicsPipeline->UpdateDescriptor(2, 0, m_Texture->GetImageView(), m_Texture->GetSampler());
 
-
-	vkCmdBindDescriptorSets(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_Scene->GetSceneData().GraphicsPipeline->GetLayout(), 0, 3,
-		m_Scene->GetSceneData().GraphicsPipeline->GetSpecification().PipelineShader->GetDescriptorSets().data(), 0, nullptr);
+	m_Scene->GetSceneData().GraphicsPipeline->GetSpecification().PipelineShader->BindDescriptorSets(m_Scene->GetSceneData().GraphicsPipeline->GetLayout());
 
 
 	vkCmdDrawIndexed(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), m_IndexBuffer->IndexCount(), 1, 0, 0, 0);

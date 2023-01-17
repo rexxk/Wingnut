@@ -61,6 +61,11 @@ namespace Wingnut
 
 			SetDescription GetDescriptorSet(uint32_t setID);
 
+			void UpdateDescriptorSet(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize);
+			void UpdateDescriptorSet(uint32_t set, uint32_t binding, VkImageView image, VkSampler sampler);
+
+			void BindDescriptorSets(VkPipelineLayout pipelineLayout);
+
 		private:
 
 			void LoadSources();
@@ -90,8 +95,6 @@ namespace Wingnut
 			std::vector<VkVertexInputAttributeDescription> m_AttributeDescriptions;
 			uint32_t m_VertexStride = 0;
 
-//			std::vector<VkDescriptorSetLayoutBinding> m_DescriptorSetLayoutBindings;
-
 			std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>> m_DescriptorSetLayoutBindings;
 			std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
 
@@ -99,8 +102,7 @@ namespace Wingnut
 
 			std::vector<SetDescription> m_SetDescriptions;
 
-//			std::unordered_map<uint32_t, Ref<DescriptorSet>> m_DescriptorSets;
-
+			std::vector<VkWriteDescriptorSet> m_DescriptorSetData;
 		};
 
 
