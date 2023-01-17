@@ -4,6 +4,8 @@
 #include "Event/EventUtils.h"
 #include "Event/WindowEvents.h"
 
+#include "Timer.h"
+
 
 namespace Wingnut
 {
@@ -71,6 +73,9 @@ namespace Wingnut
 		m_Running = true;
 
 
+		Timer fpsTimer;
+		uint32_t framesPerSecond = 0;
+
 		while (m_Running)
 		{
 			m_MainWindow->HandleMessages();
@@ -88,6 +93,18 @@ namespace Wingnut
 				}
 
 				Renderer::Present();
+
+
+				framesPerSecond++;
+
+				if (fpsTimer.ElapsedTime() > 1000.0f)
+				{
+					LOG_CORE_TRACE("FPS: {}", framesPerSecond);
+
+					fpsTimer.Reset();
+
+					framesPerSecond = 0;
+				}
 			}
 
 		}

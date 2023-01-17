@@ -101,6 +101,7 @@
     <ClInclude Include="src\Core\Layer.h" />
     <ClInclude Include="src\Core\LayerStack.h" />
     <ClInclude Include="src\Core\Log.h" />
+    <ClInclude Include="src\Core\Timer.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventBroker.h" />

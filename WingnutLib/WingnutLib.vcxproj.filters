@@ -89,6 +89,7 @@
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Platform\Vulkan\Texture.h" />
+    <ClInclude Include="src\Core\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
