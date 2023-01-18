@@ -92,7 +92,7 @@ namespace Wingnut
 
 				}
 
-				Renderer::Present();
+//				Renderer::Present();
 
 
 				framesPerSecond++;

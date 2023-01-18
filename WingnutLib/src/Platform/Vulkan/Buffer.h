@@ -28,8 +28,6 @@ namespace Wingnut
 
 			void Release();
 
-			void Bind(Ref<CommandBuffer> commandBuffer, Ref<Pipeline> pipeline);
-
 			VkBuffer GetBuffer() { return m_Buffer; }
 
 		private:
@@ -46,8 +44,6 @@ namespace Wingnut
 			~IndexBuffer();
 
 			void Release();
-
-			void Bind(Ref<CommandBuffer> commandBuffer, Ref<Pipeline> pipeline);
 
 			uint32_t IndexCount() { return m_IndexCount; }
 

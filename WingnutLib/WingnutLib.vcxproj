@@ -126,6 +126,7 @@
     <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h" />
     <ClInclude Include="src\Platform\Vulkan\Surface.h" />
     <ClInclude Include="src\Platform\Vulkan\Swapchain.h" />
+    <ClInclude Include="src\Renderer\SceneRenderer.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Utils\StringUtils.h" />
     <ClInclude Include="src\Wingnut.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="src\Platform\Vulkan\Surface.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Swapchain.cpp" />
     <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
+    <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Utils\stbImage.cpp" />
     <ClCompile Include="src\Utils\StringUtils.cpp" />

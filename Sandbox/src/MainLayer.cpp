@@ -46,9 +46,7 @@ void MainLayer::OnAttach()
 
 
 	SceneProperties sceneProperties;
-	sceneProperties.MainRenderPass = rendererData.RenderPass;
-	sceneProperties.GraphicsShader = ShaderStore::GetShader("basic");
-	sceneProperties.PipelineExtent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
+	sceneProperties.SceneExtent= rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
 	sceneProperties.SceneCamera = m_Camera;
 
@@ -57,15 +55,11 @@ void MainLayer::OnAttach()
 
 	m_VertexBuffer = CreateRef<VertexBuffer>(rendererData.Device, quadVertices);
 	m_IndexBuffer = CreateRef<IndexBuffer>(rendererData.Device, quadIndices);
-
-	m_Texture = CreateRef<Texture2D>("assets/textures/texture.jpg");
 }
 
 void MainLayer::OnDetach()
 {
 	Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
-
-	m_Texture->Release();
 
 	m_VertexBuffer->Release();
 	m_IndexBuffer->Release();
@@ -81,17 +75,7 @@ void MainLayer::OnUpdate()
 	auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 
-	m_VertexBuffer->Bind(rendererData.GraphicsCommandBuffers[currentFrame], m_Scene->GetSceneData().GraphicsPipeline);
-	m_IndexBuffer->Bind(rendererData.GraphicsCommandBuffers[currentFrame], m_Scene->GetSceneData().GraphicsPipeline);
-
-
-	m_Scene->GetSceneData().GraphicsPipeline->UpdateDescriptor(2, 0, m_Texture->GetImageView(), m_Texture->GetSampler());
-
-	m_Scene->GetSceneData().GraphicsPipeline->GetSpecification().PipelineShader->BindDescriptorSets(m_Scene->GetSceneData().GraphicsPipeline->GetLayout());
-
-
-	vkCmdDrawIndexed(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), m_IndexBuffer->IndexCount(), 1, 0, 0, 0);
-
+	m_Scene->Draw(m_VertexBuffer, m_IndexBuffer);
 
 	m_Scene->End();
 

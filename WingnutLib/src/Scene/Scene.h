@@ -3,7 +3,10 @@
 #include "Platform/Vulkan/Buffer.h"
 #include "Platform/Vulkan/Pipeline.h"
 
+#include "Platform/Vulkan/Texture.h"
+
 #include "Renderer/Camera.h"
+#include "Renderer/SceneRenderer.h"
 
 
 namespace Wingnut
@@ -15,19 +18,10 @@ namespace Wingnut
 	};
 
 
-	struct SceneData
-	{
-		Ref<Vulkan::Pipeline> GraphicsPipeline = nullptr;
-
-		Ref<Vulkan::UniformBuffer> CameraData = nullptr;
-	};
-
 
 	struct SceneProperties
 	{
-		VkExtent2D PipelineExtent;
-		Ref<Vulkan::RenderPass> MainRenderPass;
-		Ref<Vulkan::Shader> GraphicsShader;
+		VkExtent2D SceneExtent;
 
 		Ref<Camera> SceneCamera;
 	};
@@ -44,11 +38,19 @@ namespace Wingnut
 		void Begin();
 		void End();
 
-		SceneData& GetSceneData();
+		void Draw(Ref<Vulkan::VertexBuffer> vertexBuffer, Ref<Vulkan::IndexBuffer> indexBuffer);
 
 	private:
 
 		SceneProperties m_Properties;
+
+		Ref<SceneRenderer> m_SceneRenderer = nullptr;
+
+		Ref<Camera> m_SceneCamera = nullptr;
+
+		Ref<Vulkan::UniformBuffer> m_CameraData = nullptr;
+
+		Ref<Vulkan::Texture2D> m_Texture = nullptr;
 	};
 
 

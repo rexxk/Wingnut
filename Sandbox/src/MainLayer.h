@@ -25,6 +25,5 @@ private:
 	Ref<VertexBuffer> m_VertexBuffer = nullptr;
 	Ref<IndexBuffer> m_IndexBuffer = nullptr;
 
-	Ref<Texture2D> m_Texture = nullptr;
 
 };

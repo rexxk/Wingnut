@@ -42,11 +42,6 @@ namespace Wingnut
 
 		void Release();
 
-		static void BeginScene(Ref<Vulkan::Pipeline> pipeline);
-		static void EndScene();
-
-		static void Present();
-
 		static RendererSettings& GetRendererSettings() { return s_Instance->m_RendererSettings; }
 
 		static Renderer& Get() { return *s_Instance; }

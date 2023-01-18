@@ -24,21 +24,14 @@ namespace Wingnut
 
 		struct RendererData
 		{
-			std::vector<Ref<CommandBuffer>> GraphicsCommandBuffers;
-			Ref<CommandPool> GraphicsCommandPool = nullptr;
 			Ref<CommandPool> TransferCommandPool = nullptr;
 			Ref<Device> Device = nullptr;
 			Ref<DescriptorPool> DescriptorPool = nullptr;
-			Ref<Framebuffer> Framebuffer = nullptr;
 //			Ref<Pipeline> Pipeline = nullptr;
-			Ref<RenderPass> RenderPass = nullptr;
 			Ref<Surface> Surface = nullptr;
+
 			Ref<Swapchain> Swapchain = nullptr;
 
-
-			std::vector<Ref<Fence>> InFlightFences;
-			std::vector<Ref<Semaphore>> ImageAvailableSemaphores;
-			std::vector<Ref<Semaphore>> RenderFinishedSemaphores;
 		};
 
 		class VulkanContext
@@ -48,12 +41,6 @@ namespace Wingnut
 			~VulkanContext();
 
 			void ReleaseAll();
-
-
-			void BeginScene(Ref<Pipeline> pipeline);
-			void EndScene();
-
-			void Present();
 
 			uint32_t GetCurrentFrame() const { return m_CurrentFrame; }
 

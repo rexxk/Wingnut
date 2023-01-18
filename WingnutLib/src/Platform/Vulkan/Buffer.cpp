@@ -185,15 +185,6 @@ namespace Wingnut
 			}
 		}
 
-		void VertexBuffer::Bind(Ref<CommandBuffer> commandBuffer, Ref<Pipeline> pipeline)
-		{
-			vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipeline());
-
-			VkBuffer vertexBuffers[] = { m_Buffer };
-			VkDeviceSize offsets[] = { 0 };
-			vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
-		}
-
 
 		////////////////////////////////////////////
 
@@ -245,13 +236,6 @@ namespace Wingnut
 				vkFreeMemory(m_Device->GetDevice(), m_BufferMemory, nullptr);
 				m_BufferMemory = nullptr;
 			}
-		}
-
-		void IndexBuffer::Bind(Ref<CommandBuffer> commandBuffer, Ref<Pipeline> pipeline)
-		{
-			vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipeline());
-
-			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), m_Buffer, 0, VK_INDEX_TYPE_UINT32);
 		}
 
 		/////////////////////////////////////

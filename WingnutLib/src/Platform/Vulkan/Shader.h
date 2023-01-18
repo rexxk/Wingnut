@@ -64,7 +64,7 @@ namespace Wingnut
 			void UpdateDescriptorSet(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize);
 			void UpdateDescriptorSet(uint32_t set, uint32_t binding, VkImageView image, VkSampler sampler);
 
-			void BindDescriptorSets(VkPipelineLayout pipelineLayout);
+			void BindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout);
 
 		private:
 

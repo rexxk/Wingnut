@@ -239,15 +239,6 @@ namespace Wingnut
 
 		}
 
-		void Pipeline::UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize)
-		{
-			m_Specification.PipelineShader->UpdateDescriptorSet(set, binding, buffer, bufferSize);
-		}
-
-		void Pipeline::UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler)
-		{
-			m_Specification.PipelineShader->UpdateDescriptorSet(set, binding, imageView, sampler);
-		}
 
 	}
 }

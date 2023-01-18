@@ -7,9 +7,6 @@
 namespace Wingnut
 {
 
-	static SceneData s_SceneData;
-
-
 
 
 	Scene::Scene(const SceneProperties& properties)
@@ -17,15 +14,11 @@ namespace Wingnut
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 
-		s_SceneData.CameraData = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(CameraDescriptorSet));
+		m_SceneRenderer = CreateRef<SceneRenderer>(properties.SceneExtent);
 
-		Vulkan::PipelineSpecification pipelineSpecification;
-		pipelineSpecification.Extent = properties.PipelineExtent;
-		pipelineSpecification.PipelineShader = properties.GraphicsShader;
-		pipelineSpecification.RenderPass = properties.MainRenderPass;
+		m_Texture = CreateRef<Vulkan::Texture2D>("assets/textures/texture.jpg");
 
-		s_SceneData.GraphicsPipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
-
+		m_CameraData = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(CameraDescriptorSet));
 
 	}
 
@@ -36,15 +29,18 @@ namespace Wingnut
 
 	void Scene::Release()
 	{
-		if (s_SceneData.CameraData)
+		if (m_CameraData)
 		{
-			s_SceneData.CameraData->Release();
+			m_CameraData->Release();
 		}
 
-		if (s_SceneData.GraphicsPipeline)
+		m_Texture->Release();
+
+		if (m_SceneRenderer)
 		{
-			s_SceneData.GraphicsPipeline->Release();
+			m_SceneRenderer->Release();
 		}
+
 	}
 
 	void Scene::Begin()
@@ -52,26 +48,32 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		uint32_t currentFrame = Renderer::GetContext()->GetCurrentFrame();
 
-		Renderer::BeginScene(s_SceneData.GraphicsPipeline);
+		m_SceneRenderer->BeginScene(currentFrame);
 
 		m_Properties.SceneCamera->Update();
 
-		CameraDescriptorSet cameraDescriptorSet;
+		CameraDescriptorSet cameraDescriptorSet = {};
 		cameraDescriptorSet.ViewProjection = m_Properties.SceneCamera->GetViewProjectionMatrix();
 
-		s_SceneData.CameraData->Update(&cameraDescriptorSet, sizeof(CameraDescriptorSet), currentFrame);
-		s_SceneData.GraphicsPipeline->UpdateDescriptor(0, 0, s_SceneData.CameraData->GetBuffer(currentFrame), sizeof(CameraDescriptorSet));
+		m_CameraData->Update(&cameraDescriptorSet, sizeof(CameraDescriptorSet), currentFrame);
+		m_SceneRenderer->UpdateDescriptor(0, 0, m_CameraData->GetBuffer(currentFrame), sizeof(CameraDescriptorSet));
 
 	}
 
 	void Scene::End()
 	{
-		Renderer::EndScene();
+
+		m_SceneRenderer->EndScene();
+
+		m_SceneRenderer->Present();
 	}
 
-	SceneData& Scene::GetSceneData()
+
+	void Scene::Draw(Ref<Vulkan::VertexBuffer> vertexBuffer, Ref<Vulkan::IndexBuffer> indexBuffer)
 	{
-		return s_SceneData;
+		m_SceneRenderer->UpdateDescriptor(2, 0, m_Texture->GetImageView(), m_Texture->GetSampler());
+
+		m_SceneRenderer->Draw(vertexBuffer, indexBuffer);
 	}
 
 

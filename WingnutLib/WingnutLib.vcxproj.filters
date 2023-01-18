@@ -90,6 +90,7 @@
     <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Platform\Vulkan\Texture.h" />
     <ClInclude Include="src\Core\Timer.h" />
+    <ClInclude Include="src\Renderer\SceneRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -157,5 +158,6 @@
     <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Texture.cpp" />
     <ClCompile Include="src\Utils\stbImage.cpp" />
+    <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
   </ItemGroup>
 </Project>

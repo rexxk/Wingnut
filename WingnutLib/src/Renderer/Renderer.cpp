@@ -30,19 +30,4 @@ namespace Wingnut
 	}
 
 
-	void Renderer::BeginScene(Ref<Vulkan::Pipeline> pipeline)
-	{
-		s_Context->BeginScene(pipeline);
-	}
-
-	void Renderer::EndScene()
-	{
-		s_Context->EndScene();
-	}
-
-	void Renderer::Present()
-	{
-		s_Context->Present();
-	}
-
 }

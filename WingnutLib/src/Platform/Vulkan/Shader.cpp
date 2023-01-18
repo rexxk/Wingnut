@@ -475,12 +475,9 @@ namespace Wingnut
 
 		}
 
-		void Shader::BindDescriptorSets(VkPipelineLayout pipelineLayout)
+		void Shader::BindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout)
 		{
-			auto rendererData = Renderer::GetContext()->GetRendererData();
-			auto currentFrame = Renderer::GetContext()->GetCurrentFrame();
-
-			vkCmdBindDescriptorSets(rendererData.GraphicsCommandBuffers[currentFrame]->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, m_DescriptorSetData.size(),
+			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, (uint32_t)m_DescriptorSetData.size(),
 				m_DescriptorSets.data(), 0, nullptr);
 
 		}

@@ -24,27 +24,6 @@ namespace Wingnut
 
 			m_CurrentExtent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
-			SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
-				{
-					if (event.Width() == 0 || event.Height() == 0)
-						return false;
-
-					VkExtent2D extent;
-					extent.width = event.Width();
-					extent.height = event.Height();
-
-					m_CurrentExtent = extent;
-
-					vkDeviceWaitIdle(s_VulkanData.Device->GetDevice());
-
-					s_VulkanData.Swapchain->Resize((VkSurfaceKHR)s_VulkanData.Surface->GetSurface(), extent);
-
-					s_VulkanData.Framebuffer->Release();
-					s_VulkanData.Framebuffer = CreateRef<Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, extent);
-
-
-					return false;
-				});
 		}
 
 		VulkanContext::~VulkanContext()
@@ -59,25 +38,6 @@ namespace Wingnut
 				s_VulkanData.Device->WaitForIdle();
 			}
 
-			for (auto& inFlightFence : s_VulkanData.InFlightFences)
-			{
-				inFlightFence->Release();
-			}
-
-			for (auto& renderFinishedSemaphore : s_VulkanData.RenderFinishedSemaphores)
-			{
-				renderFinishedSemaphore->Release();
-			}
-
-			for (auto& imageAvailableSemaphore : s_VulkanData.ImageAvailableSemaphores)
-			{
-				imageAvailableSemaphore->Release();
-			}
-
-			for (auto& graphicsCommandBuffer : s_VulkanData.GraphicsCommandBuffers)
-			{
-				graphicsCommandBuffer->Release();
-			}
 
 			if (s_VulkanData.DescriptorPool != nullptr)
 			{
@@ -85,26 +45,6 @@ namespace Wingnut
 			}
 
 			ShaderStore::Release();
-
-//			if (s_VulkanData.Pipeline != nullptr)
-//			{
-//				s_VulkanData.Pipeline->Release();
-//			}
-
-			if (s_VulkanData.Framebuffer != nullptr)
-			{
-				s_VulkanData.Framebuffer->Release();
-			}
-
-			if (s_VulkanData.RenderPass != nullptr)
-			{
-				s_VulkanData.RenderPass->Release();
-			}
-
-			if (s_VulkanData.GraphicsCommandPool != nullptr)
-			{
-				s_VulkanData.GraphicsCommandPool->Release();
-			}
 
 			if (s_VulkanData.TransferCommandPool != nullptr)
 			{
@@ -149,8 +89,6 @@ namespace Wingnut
 
 			if (!CreateInstance()) return;
 
-			uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
-
 			// Init Vulkan
 
 			s_VulkanData.Surface = CreateRef<Surface>(m_Instance, windowHandle);
@@ -158,25 +96,8 @@ namespace Wingnut
 
 			s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface(), s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 
-			s_VulkanData.GraphicsCommandPool = CreateRef<CommandPool>(s_VulkanData.Device, CommandPoolType::Graphics);
 			s_VulkanData.TransferCommandPool = CreateRef<CommandPool>(s_VulkanData.Device, CommandPoolType::Transfer);
-			s_VulkanData.RenderPass = CreateRef<RenderPass>(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
-			s_VulkanData.Framebuffer = CreateRef<Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 
-			for (uint32_t i = 0; i < framesInflight; i++)
-			{
-				Ref<CommandBuffer> newGraphicsCommandBuffer = CreateRef<CommandBuffer>(s_VulkanData.Device, s_VulkanData.GraphicsCommandPool);
-				s_VulkanData.GraphicsCommandBuffers.emplace_back(newGraphicsCommandBuffer);
-
-				Ref<Fence> newInFlightFence = CreateRef<Fence>(s_VulkanData.Device);
-				s_VulkanData.InFlightFences.emplace_back(newInFlightFence);
-
-				Ref<Semaphore> newImageAvailableSemaphore = CreateRef<Semaphore>(s_VulkanData.Device);
-				s_VulkanData.ImageAvailableSemaphores.emplace_back(newImageAvailableSemaphore);
-
-				Ref<Semaphore> newRenderFinishedSemaphore = CreateRef<Semaphore>(s_VulkanData.Device);
-				s_VulkanData.RenderFinishedSemaphores.emplace_back(newRenderFinishedSemaphore);
-			}
 
 			// TODO: Max sets hardcoded to 1000
 			s_VulkanData.DescriptorPool = CreateRef<DescriptorPool>(s_VulkanData.Device, 1000);
@@ -323,114 +244,7 @@ namespace Wingnut
 		}
 
 
-		void VulkanContext::BeginScene(Ref<Pipeline> pipeline)
-		{
-			s_VulkanData.InFlightFences[m_CurrentFrame]->Wait(UINT64_MAX);
-			s_VulkanData.InFlightFences[m_CurrentFrame]->Reset();
 
-			VkCommandBufferBeginInfo beginInfo = {};
-			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-			beginInfo.flags = 0;
-			beginInfo.pInheritanceInfo = nullptr;
-
-			if (vkBeginCommandBuffer(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer(), &beginInfo) != VK_SUCCESS)
-			{
-				LOG_CORE_ERROR("[Renderer] Unable to begin command buffer recording");
-				return;
-			}
-
-			VkRenderPassBeginInfo renderPassBeginInfo = {};
-			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.renderPass = s_VulkanData.RenderPass->GetRenderPass();
-			renderPassBeginInfo.framebuffer = s_VulkanData.Framebuffer->GetNextFramebuffer();
-			renderPassBeginInfo.renderArea.offset = { 0, 0 };
-			renderPassBeginInfo.renderArea.extent = m_CurrentExtent;
-
-			VkClearValue clearColor = { {{ 0.2f, 0.3f, 0.45f }} };
-			renderPassBeginInfo.clearValueCount = 1;
-			renderPassBeginInfo.pClearValues = &clearColor;
-
-			vkCmdBeginRenderPass(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-			
-			vkCmdBindPipeline(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipeline());
-
-			VkViewport viewport = {};
-			viewport.x = 0.0f;
-			viewport.y = 0.0f;
-			viewport.width = (float)m_CurrentExtent.width;
-			viewport.height = (float)m_CurrentExtent.height;
-			viewport.minDepth = 0.0f;
-			viewport.maxDepth = 1.0f;
-			vkCmdSetViewport(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer(), 0, 1, &viewport);
-
-			VkRect2D scissor = {};
-			scissor.offset = { 0, 0 };
-			scissor.extent = m_CurrentExtent;
-			vkCmdSetScissor(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer(), 0, 1, &scissor);
-		}
-
-		void VulkanContext::EndScene()
-		{
-			vkCmdEndRenderPass(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer());
-
-			if (vkEndCommandBuffer(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer()) != VK_SUCCESS)
-			{
-				LOG_CORE_ERROR("[Renderer] Unable to end command buffer recording");
-				return;
-			}
-
-		}
-
-		void VulkanContext::Present()
-		{
-			uint32_t framesInFlight = Renderer::GetRendererSettings().FramesInFlight;
-
-			uint32_t imageIndex = 0;
-			vkAcquireNextImageKHR(s_VulkanData.Device->GetDevice(), s_VulkanData.Swapchain->GetSwapchain(), UINT64_MAX, s_VulkanData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore(), VK_NULL_HANDLE, &imageIndex);
-
-			VkSubmitInfo submitInfo = {};
-			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-			VkSemaphore waitSemaphores[] = { s_VulkanData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore()};
-			VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-			submitInfo.waitSemaphoreCount = 1;
-			submitInfo.pWaitSemaphores = waitSemaphores;
-			submitInfo.pWaitDstStageMask = waitStages;
-
-			VkCommandBuffer commandBuffers[] = { s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer()};
-
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = commandBuffers;
-
-			VkSemaphore signalSemaphores[] = { s_VulkanData.RenderFinishedSemaphores[m_CurrentFrame]->GetSemaphore()};
-
-			submitInfo.signalSemaphoreCount = 1;
-			submitInfo.pSignalSemaphores = signalSemaphores;
-
-			if (vkQueueSubmit(s_VulkanData.Device->GetQueue(QueueType::Graphics), 1, &submitInfo, s_VulkanData.InFlightFences[m_CurrentFrame]->GetFence()))
-			{
-				LOG_CORE_ERROR("[Renderer] Unable to submit queue");
-			}
-
-			VkPresentInfoKHR presentInfo = {};
-			presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-			presentInfo.waitSemaphoreCount = 1;
-			presentInfo.pWaitSemaphores = signalSemaphores;
-
-			VkSwapchainKHR swapchains[] = { s_VulkanData.Swapchain->GetSwapchain() };
-			presentInfo.swapchainCount = 1;
-			presentInfo.pSwapchains = swapchains;
-			presentInfo.pImageIndices = &imageIndex;
-
-
-			if (vkQueuePresentKHR(s_VulkanData.Device->GetQueue(QueueType::Graphics), &presentInfo) != VK_SUCCESS)
-			{
-				//			LOG_CORE_ERROR("[Renderer] Failed to present queue");
-				return;
-			}
-
-			m_CurrentFrame = (m_CurrentFrame++) & framesInFlight;
-		}
 
 	}
 
