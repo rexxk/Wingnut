@@ -74,7 +74,7 @@ namespace Wingnut
 	}
 
 
-	void Scene::Draw(Ref<Vulkan::VertexBuffer> vertexBuffer, Ref<Vulkan::IndexBuffer> indexBuffer)
+	void Scene::Draw()
 	{
 		auto& device = Renderer::GetContext()->GetRendererData().Device;
 
@@ -86,14 +86,10 @@ namespace Wingnut
 		{
 			auto& meshComponent = ECS::EntitySystem::GetComponent<MeshComponent>(entity);
 
-			Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, meshComponent.VertexList);
-			Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, meshComponent.IndexList);
-
-			m_SceneRenderer->Draw(vertexBuffer, indexBuffer);
-
-			vertexBuffer->Release();
-			indexBuffer->Release();
+			m_SceneRenderer->SubmitToDrawList(meshComponent.VertexList, meshComponent.IndexList);
 		}
+
+		m_SceneRenderer->Draw();
 
 	}
 

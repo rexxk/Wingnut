@@ -7,6 +7,7 @@
 #include "Event/EventUtils.h"
 #include "Event/WindowEvents.h"
 
+#include "Platform/Vulkan/Buffer.h"
 #include "Platform/Vulkan/CommandPool.h""
 #include "Platform/Vulkan/CommandBuffer.h""
 #include "Platform/Vulkan/Fence.h"
@@ -39,6 +40,10 @@ namespace Wingnut
 		std::vector<Ref<Vulkan::Fence>> InFlightFences;
 		std::vector<Ref<Vulkan::Semaphore>> ImageAvailableSemaphores;
 		std::vector<Ref<Vulkan::Semaphore>> RenderFinishedSemaphores;
+
+
+		std::vector<std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawList;
+
 	};
 
 
@@ -115,6 +120,8 @@ namespace Wingnut
 
 	void SceneRenderer::Release()
 	{
+
+		s_SceneData.DrawList.clear();
 
 		for (auto& inFlightFence : s_SceneData.InFlightFences)
 		{
@@ -226,7 +233,6 @@ namespace Wingnut
 			LOG_CORE_ERROR("[Renderer] Unable to end command buffer recording");
 			return;
 		}
-
 	}
 
 	void SceneRenderer::Present()
@@ -281,24 +287,30 @@ namespace Wingnut
 
 		m_CurrentFrame = (m_CurrentFrame++) & framesInFlight;
 
+		Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
+
+		s_SceneData.DrawList.clear();
 	}
 
 
-	void SceneRenderer::Draw(Ref<Vulkan::VertexBuffer> vertexBuffer, Ref<Vulkan::IndexBuffer> indexBuffer)
+	void SceneRenderer::Draw()
 	{
 		auto& commandBuffer = s_SceneData.GraphicsCommandBuffers[m_CurrentFrame];
 
 		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_SceneData.StaticPipeline->GetPipeline());
 
-		VkBuffer vertexBuffers[] = { vertexBuffer->GetBuffer() };
-		VkDeviceSize offsets[] = { 0 };
-		vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
+		for (auto [vertexBuffer, indexBuffer] : s_SceneData.DrawList)
+		{
+			VkBuffer vertexBuffers[] = { vertexBuffer->GetBuffer() };
+			VkDeviceSize offsets[] = { 0 };
+			vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
 
-		vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
+			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-		s_SceneData.StaticSceneShader->BindDescriptorSets(commandBuffer->GetCommandBuffer(), s_SceneData.StaticPipeline->GetLayout());
+			s_SceneData.StaticSceneShader->BindDescriptorSets(commandBuffer->GetCommandBuffer(), s_SceneData.StaticPipeline->GetLayout());
 
-		vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
+			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
+		}
 
 	}
 
@@ -311,6 +323,18 @@ namespace Wingnut
 	void SceneRenderer::UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler)
 	{
 		s_SceneData.StaticSceneShader->UpdateDescriptorSet(set, binding, imageView, sampler);
+	}
+
+
+	void SceneRenderer::SubmitToDrawList(const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList)
+	{
+		auto& device = Renderer::GetContext()->GetRendererData().Device;
+
+		Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, vertexList);
+		Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, indexList);
+
+		s_SceneData.DrawList.emplace_back(vertexBuffer, indexBuffer);
+
 	}
 
 }

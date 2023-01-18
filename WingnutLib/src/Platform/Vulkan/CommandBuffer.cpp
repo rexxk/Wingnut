@@ -23,7 +23,7 @@ namespace Wingnut
 				return;
 			}
 
-			LOG_CORE_TRACE("[Renderer] Allocated command buffer");
+//			LOG_CORE_TRACE("[Renderer] Allocated command buffer");
 		}
 
 		CommandBuffer::~CommandBuffer()

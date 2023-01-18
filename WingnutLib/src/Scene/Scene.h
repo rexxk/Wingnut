@@ -45,7 +45,7 @@ namespace Wingnut
 		void Begin();
 		void End();
 
-		void Draw(Ref<Vulkan::VertexBuffer> vertexBuffer, Ref<Vulkan::IndexBuffer> indexBuffer);
+		void Draw();
 
 	private:
 

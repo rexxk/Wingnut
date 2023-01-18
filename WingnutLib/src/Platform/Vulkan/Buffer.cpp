@@ -24,7 +24,7 @@ namespace Wingnut
 				return;
 			}
 
-			LOG_CORE_TRACE("[Renderer] Created staging buffer");
+//			LOG_CORE_TRACE("[Renderer] Created staging buffer");
 
 			VkMemoryRequirements memoryRequirements;
 			vkGetBufferMemoryRequirements(device->GetDevice(), buffer, &memoryRequirements);
@@ -40,7 +40,7 @@ namespace Wingnut
 				return;
 			}
 
-			LOG_CORE_TRACE("[Renderer] Allocated buffer memory");
+//			LOG_CORE_TRACE("[Renderer] Allocated buffer memory");
 
 			vkBindBufferMemory(device->GetDevice(), buffer, deviceMemory, 0);
 		}

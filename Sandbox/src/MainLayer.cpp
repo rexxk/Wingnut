@@ -68,9 +68,6 @@ void MainLayer::OnDetach()
 {
 	Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
 
-	m_VertexBuffer->Release();
-	m_IndexBuffer->Release();
-
 	m_Scene->Release();
 }
 
@@ -82,7 +79,7 @@ void MainLayer::OnUpdate()
 	auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 
-	m_Scene->Draw(m_VertexBuffer, m_IndexBuffer);
+	m_Scene->Draw();
 
 	m_Scene->End();
 
