@@ -76,20 +76,32 @@ namespace Wingnut
 
 	void Scene::Draw(Ref<Vulkan::VertexBuffer> vertexBuffer, Ref<Vulkan::IndexBuffer> indexBuffer)
 	{
+		auto& device = Renderer::GetContext()->GetRendererData().Device;
+
 		m_SceneRenderer->UpdateDescriptor(2, 0, m_Texture->GetImageView(), m_Texture->GetSampler());
 
-		m_SceneRenderer->Draw(vertexBuffer, indexBuffer);
+		auto& entities = ECS::EntitySystem::GetView<MeshComponent>();
+
+		for (auto entity : entities)
+		{
+			auto& meshComponent = ECS::EntitySystem::GetComponent<MeshComponent>(entity);
+
+			Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, meshComponent.VertexList);
+			Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, meshComponent.IndexList);
+
+			m_SceneRenderer->Draw(vertexBuffer, indexBuffer);
+
+			vertexBuffer->Release();
+			indexBuffer->Release();
+		}
+
 	}
 
 
 	UUID Scene::CreateEntity(const std::string& tag)
 	{
 		UUID newEntity = m_EntitySystem->Create();
-
-		TagComponent tagComponent;
-		tagComponent.Tag = tag;
-
-		ECS::EntitySystem::AddComponent<TagComponent>(newEntity, tagComponent);
+		ECS::EntitySystem::AddComponent<TagComponent>(newEntity, tag);
 
 		return newEntity;
 	}

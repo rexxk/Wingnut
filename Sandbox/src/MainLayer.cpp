@@ -47,21 +47,20 @@ void MainLayer::OnAttach()
 
 	SceneProperties sceneProperties;
 	sceneProperties.SceneExtent= rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
-
 	sceneProperties.SceneCamera = m_Camera;
 
 	m_Scene = CreateRef<Scene>(sceneProperties);
 
 
-	m_VertexBuffer = CreateRef<VertexBuffer>(rendererData.Device, quadVertices);
-	m_IndexBuffer = CreateRef<IndexBuffer>(rendererData.Device, quadIndices);
-
-
 	UUID entity = m_Scene->CreateEntity("Entity");
-
 	std::string tag = ECS::EntitySystem::GetComponent<TagComponent>(entity).Tag;
 
 	LOG_TRACE("Entity '{}' created: {}", tag, entity);
+
+	ECS::EntitySystem::AddComponent<MeshComponent>(entity, quadVertices, quadIndices);
+
+
+
 
 }
 

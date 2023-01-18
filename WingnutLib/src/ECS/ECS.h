@@ -113,7 +113,7 @@ namespace Wingnut
 			}
 
 			template<typename T>
-			static std::tuple<const std::vector<UUID>> GetView()
+			static const std::vector<UUID> GetView()
 			{
 				return View<T>::Get();
 			}
