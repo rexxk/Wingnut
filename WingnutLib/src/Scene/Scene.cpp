@@ -1,6 +1,8 @@
 #include "wingnut_pch.h"
 #include "Scene.h"
 
+#include "Components.h"
+
 #include "Renderer/Renderer.h"
 
 
@@ -19,6 +21,9 @@ namespace Wingnut
 		m_Texture = CreateRef<Vulkan::Texture2D>("assets/textures/texture.jpg");
 
 		m_CameraData = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(CameraDescriptorSet));
+
+		m_EntityRegistry = CreateRef<ECS::Registry>();
+		m_EntitySystem = CreateRef<ECS::EntitySystem>(m_EntityRegistry);
 
 	}
 
@@ -74,6 +79,19 @@ namespace Wingnut
 		m_SceneRenderer->UpdateDescriptor(2, 0, m_Texture->GetImageView(), m_Texture->GetSampler());
 
 		m_SceneRenderer->Draw(vertexBuffer, indexBuffer);
+	}
+
+
+	UUID Scene::CreateEntity(const std::string& tag)
+	{
+		UUID newEntity = m_EntitySystem->Create();
+
+		TagComponent tagComponent;
+		tagComponent.Tag = tag;
+
+		ECS::EntitySystem::AddComponent<TagComponent>(newEntity, tagComponent);
+
+		return newEntity;
 	}
 
 

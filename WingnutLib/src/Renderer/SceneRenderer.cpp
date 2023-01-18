@@ -23,11 +23,14 @@ namespace Wingnut
 
 	struct SceneData
 	{
-		std::vector<Ref<Vulkan::CommandBuffer>> GraphicsCommandBuffers;
 		Ref<Vulkan::CommandPool> GraphicsCommandPool = nullptr;
 
+		std::vector<Ref<Vulkan::CommandBuffer>> GraphicsCommandBuffers;
+
 		Ref<Vulkan::Shader> StaticSceneShader = nullptr;
-		Ref<Vulkan::Pipeline> GraphicsPipeline = nullptr;
+		Ref<Vulkan::Shader> DynamicSceneShader = nullptr;
+		Ref<Vulkan::Pipeline> StaticPipeline = nullptr;
+		Ref<Vulkan::Pipeline> DynamicPipeline = nullptr;
 		Ref<Vulkan::Framebuffer> Framebuffer = nullptr;
 		
 		Ref<Vulkan::RenderPass> RenderPass = nullptr;
@@ -59,7 +62,7 @@ namespace Wingnut
 		pipelineSpecification.PipelineShader = s_SceneData.StaticSceneShader;
 		pipelineSpecification.RenderPass = s_SceneData.RenderPass;
 
-		s_SceneData.GraphicsPipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
+		s_SceneData.StaticPipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
 		s_SceneData.GraphicsCommandPool = CreateRef<Vulkan::CommandPool>(rendererData.Device, Vulkan::CommandPoolType::Graphics);
 
 		s_SceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_SceneData.RenderPass, rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
@@ -148,12 +151,17 @@ namespace Wingnut
 			s_SceneData.GraphicsCommandPool->Release();
 		}
 
-		if (s_SceneData.GraphicsPipeline != nullptr)
+		if (s_SceneData.StaticPipeline != nullptr)
 		{
-			s_SceneData.GraphicsPipeline->Release();
-			s_SceneData.GraphicsPipeline = nullptr;
+			s_SceneData.StaticPipeline->Release();
+			s_SceneData.StaticPipeline = nullptr;
 		}
 
+		if (s_SceneData.DynamicPipeline != nullptr)
+		{
+			s_SceneData.DynamicPipeline->Release();
+			s_SceneData.DynamicPipeline = nullptr;
+		}
 	}
 
 
@@ -190,7 +198,7 @@ namespace Wingnut
 
 		vkCmdBeginRenderPass(commandBuffer->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_SceneData.GraphicsPipeline->GetPipeline());
+		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_SceneData.StaticPipeline->GetPipeline());
 
 		VkViewport viewport = {};
 		viewport.x = 0.0f;
@@ -280,7 +288,7 @@ namespace Wingnut
 	{
 		auto& commandBuffer = s_SceneData.GraphicsCommandBuffers[m_CurrentFrame];
 
-		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_SceneData.GraphicsPipeline->GetPipeline());
+		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_SceneData.StaticPipeline->GetPipeline());
 
 		VkBuffer vertexBuffers[] = { vertexBuffer->GetBuffer() };
 		VkDeviceSize offsets[] = { 0 };
@@ -288,7 +296,7 @@ namespace Wingnut
 
 		vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-		s_SceneData.StaticSceneShader->BindDescriptorSets(commandBuffer->GetCommandBuffer(), s_SceneData.GraphicsPipeline->GetLayout());
+		s_SceneData.StaticSceneShader->BindDescriptorSets(commandBuffer->GetCommandBuffer(), s_SceneData.StaticPipeline->GetLayout());
 
 		vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
 

@@ -13,4 +13,5 @@
 
 #include "Renderer/Camera.h"
 
+#include "Scene/Components.h"
 #include "Scene/Scene.h"

@@ -55,6 +55,14 @@ void MainLayer::OnAttach()
 
 	m_VertexBuffer = CreateRef<VertexBuffer>(rendererData.Device, quadVertices);
 	m_IndexBuffer = CreateRef<IndexBuffer>(rendererData.Device, quadIndices);
+
+
+	UUID entity = m_Scene->CreateEntity("Entity");
+
+	std::string tag = ECS::EntitySystem::GetComponent<TagComponent>(entity).Tag;
+
+	LOG_TRACE("Entity '{}' created: {}", tag, entity);
+
 }
 
 void MainLayer::OnDetach()

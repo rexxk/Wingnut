@@ -1,5 +1,8 @@
 #pragma once
 
+
+#include "ECS/ECS.h"
+
 #include "Platform/Vulkan/Buffer.h"
 #include "Platform/Vulkan/Pipeline.h"
 
@@ -35,6 +38,10 @@ namespace Wingnut
 
 		void Release();
 
+		UUID CreateEntity(const std::string& tag);
+
+
+
 		void Begin();
 		void End();
 
@@ -51,6 +58,9 @@ namespace Wingnut
 		Ref<Vulkan::UniformBuffer> m_CameraData = nullptr;
 
 		Ref<Vulkan::Texture2D> m_Texture = nullptr;
+
+		Ref<ECS::Registry> m_EntityRegistry = nullptr;
+		Ref<ECS::EntitySystem> m_EntitySystem = nullptr;
 	};
 
 

@@ -91,6 +91,9 @@
     <ClInclude Include="src\Platform\Vulkan\Texture.h" />
     <ClInclude Include="src\Core\Timer.h" />
     <ClInclude Include="src\Renderer\SceneRenderer.h" />
+    <ClInclude Include="src\ECS\ECS.h" />
+    <ClInclude Include="src\Core\UUID.h" />
+    <ClInclude Include="src\Scene\Components.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -159,5 +162,6 @@
     <ClCompile Include="src\Platform\Vulkan\Texture.cpp" />
     <ClCompile Include="src\Utils\stbImage.cpp" />
     <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
+    <ClCompile Include="src\Core\UUID.cpp" />
   </ItemGroup>
 </Project>

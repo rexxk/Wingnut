@@ -27,6 +27,7 @@ void main()
 	v_TexCoord = a_TexCoord;
 }
 
+///////////////////////////////////////
 
 #type fragment
 #version 450 core
