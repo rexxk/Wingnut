@@ -22,6 +22,8 @@ namespace Wingnut
 
 			void Resize(VkSurfaceKHR surface, VkExtent2D newExtent);
 
+			VkExtent2D GetExtent() { return m_Extent; }
+
 			VkSwapchainKHR GetSwapchain() { return m_Swapchain; }
 
 			std::vector<VkImageView>& GetImageViews() { return m_SwapchainImageViews; }
@@ -31,6 +33,7 @@ namespace Wingnut
 
 			Ref<Device> m_Device = nullptr;
 
+			VkExtent2D m_Extent;
 
 			std::vector<VkImage> m_SwapchainImages;
 			std::vector<VkImageView> m_SwapchainImageViews;

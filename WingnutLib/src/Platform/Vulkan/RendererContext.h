@@ -4,11 +4,6 @@
 #include "CommandPool.h"
 #include "DescriptorPool.h"
 #include "Device.h"
-#include "Fence.h"
-#include "Framebuffer.h"
-#include "Pipeline.h"
-#include "RenderPass.h"
-#include "Semaphore.h"
 #include "Surface.h"
 #include "Swapchain.h"
 
@@ -24,14 +19,15 @@ namespace Wingnut
 
 		struct RendererData
 		{
-			Ref<CommandPool> TransferCommandPool = nullptr;
 			Ref<Device> Device = nullptr;
+
+			Ref<CommandPool> TransferCommandPool = nullptr;
 			Ref<DescriptorPool> DescriptorPool = nullptr;
-//			Ref<Pipeline> Pipeline = nullptr;
-			Ref<Surface> Surface = nullptr;
 
 			Ref<Swapchain> Swapchain = nullptr;
 
+			Ref<Surface> Surface = nullptr;
+			
 		};
 
 		class VulkanContext

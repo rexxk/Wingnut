@@ -98,7 +98,6 @@ namespace Wingnut
 
 			s_VulkanData.TransferCommandPool = CreateRef<CommandPool>(s_VulkanData.Device, CommandPoolType::Transfer);
 
-
 			// TODO: Max sets hardcoded to 1000
 			s_VulkanData.DescriptorPool = CreateRef<DescriptorPool>(s_VulkanData.Device, 1000);
 

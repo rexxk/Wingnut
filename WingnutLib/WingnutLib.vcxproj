@@ -117,6 +117,7 @@
     <ClInclude Include="src\Platform\Vulkan\Device.h" />
     <ClInclude Include="src\Platform\Vulkan\Fence.h" />
     <ClInclude Include="src\Platform\Vulkan\Framebuffer.h" />
+    <ClInclude Include="src\Platform\Vulkan\Image.h" />
     <ClInclude Include="src\Platform\Vulkan\Pipeline.h" />
     <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
     <ClInclude Include="src\Platform\Vulkan\RenderPass.h" />
@@ -153,6 +154,7 @@
     <ClCompile Include="src\Platform\Vulkan\Device.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Fence.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Framebuffer.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Image.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Pipeline.cpp" />
     <ClCompile Include="src\Platform\Vulkan\RenderPass.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Shader.cpp" />

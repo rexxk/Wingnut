@@ -8,10 +8,11 @@
 #include "Event/WindowEvents.h"
 
 #include "Platform/Vulkan/Buffer.h"
-#include "Platform/Vulkan/CommandPool.h""
-#include "Platform/Vulkan/CommandBuffer.h""
+#include "Platform/Vulkan/CommandPool.h"
+#include "Platform/Vulkan/CommandBuffer.h"
 #include "Platform/Vulkan/Fence.h"
 #include "Platform/Vulkan/Framebuffer.h"
+#include "Platform/Vulkan/Image.h"
 #include "Platform/Vulkan/RenderPass.h"
 #include "Platform/Vulkan/Semaphore.h"
 
@@ -36,6 +37,7 @@ namespace Wingnut
 		
 		Ref<Vulkan::RenderPass> RenderPass = nullptr;
 
+		Ref<Vulkan::Image> DepthStencilImage = nullptr;
 
 		std::vector<Ref<Vulkan::Fence>> InFlightFences;
 		std::vector<Ref<Vulkan::Semaphore>> ImageAvailableSemaphores;
@@ -54,9 +56,10 @@ namespace Wingnut
 		: m_Extent(extent)
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
-
 		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
 
+		s_SceneData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)extent.width, (uint32_t)extent.height, 
+			VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
 
 		s_SceneData.RenderPass = CreateRef<Vulkan::RenderPass>(rendererData.Device, rendererData.Device->GetDeviceProperties().SurfaceFormat.format);
 
@@ -70,7 +73,7 @@ namespace Wingnut
 		s_SceneData.StaticPipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
 		s_SceneData.GraphicsCommandPool = CreateRef<Vulkan::CommandPool>(rendererData.Device, Vulkan::CommandPoolType::Graphics);
 
-		s_SceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_SceneData.RenderPass, rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
+		s_SceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_SceneData.RenderPass, s_SceneData.DepthStencilImage->GetImageView(), rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
 
 
 		for (uint32_t i = 0; i < framesInflight; i++)
@@ -106,7 +109,7 @@ namespace Wingnut
 				rendererData.Swapchain->Resize((VkSurfaceKHR)rendererData.Surface->GetSurface(), extent);
 
 				s_SceneData.Framebuffer->Release();
-				s_SceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_SceneData.RenderPass, extent);
+				s_SceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_SceneData.RenderPass, s_SceneData.DepthStencilImage->GetImageView(), extent);
 
 				return false;
 			});
@@ -169,6 +172,12 @@ namespace Wingnut
 			s_SceneData.DynamicPipeline->Release();
 			s_SceneData.DynamicPipeline = nullptr;
 		}
+
+		if (s_SceneData.DepthStencilImage != nullptr)
+		{
+			s_SceneData.DepthStencilImage->Release();
+			s_SceneData.DepthStencilImage = nullptr;
+		}
 	}
 
 
@@ -199,9 +208,12 @@ namespace Wingnut
 		renderPassBeginInfo.renderArea.offset = { 0, 0 };
 		renderPassBeginInfo.renderArea.extent = m_Extent;
 
-		VkClearValue clearColor = { {{ 0.2f, 0.3f, 0.45f }} };
-		renderPassBeginInfo.clearValueCount = 1;
-		renderPassBeginInfo.pClearValues = &clearColor;
+		std::array<VkClearValue, 2> clearValues = {};
+		clearValues[0].color = { {0.2f, 0.3f, 0.45f} };
+		clearValues[1].depthStencil = { 1.0f, 0 };
+
+		renderPassBeginInfo.clearValueCount = (uint32_t)clearValues.size();
+		renderPassBeginInfo.pClearValues = clearValues.data();
 
 		vkCmdBeginRenderPass(commandBuffer->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 

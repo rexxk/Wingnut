@@ -9,7 +9,7 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
-		Framebuffer::Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkExtent2D imageExtent)
+		Framebuffer::Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkImageView depthStencilImageView, VkExtent2D imageExtent)
 			: m_Device(device->GetDevice())
 		{
 
@@ -25,8 +25,10 @@ namespace Wingnut
 				createInfo.width = imageExtent.width;
 				createInfo.height = imageExtent.height;
 
-				createInfo.attachmentCount = 1;
-				createInfo.pAttachments = &imageView;
+				std::vector<VkImageView> imageViews = { imageView, depthStencilImageView };
+
+				createInfo.attachmentCount = (uint32_t)imageViews.size();
+				createInfo.pAttachments = imageViews.data();
 
 				if (vkCreateFramebuffer(m_Device, &createInfo, nullptr, &newFramebuffer) != VK_SUCCESS)
 				{

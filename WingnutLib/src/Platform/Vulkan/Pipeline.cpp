@@ -197,6 +197,17 @@ namespace Wingnut
 
 			LOG_CORE_TRACE("[Renderer] Pipeline layout created");
 
+			VkPipelineDepthStencilStateCreateInfo depthStencilCreateInfo = {};
+			depthStencilCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+			depthStencilCreateInfo.depthTestEnable = VK_TRUE;
+			depthStencilCreateInfo.depthWriteEnable = VK_TRUE;
+			depthStencilCreateInfo.depthCompareOp = VK_COMPARE_OP_LESS;
+			depthStencilCreateInfo.depthBoundsTestEnable = VK_FALSE;
+			depthStencilCreateInfo.minDepthBounds = 0.0f;
+			depthStencilCreateInfo.maxDepthBounds = 1.0f;
+			depthStencilCreateInfo.stencilTestEnable = VK_FALSE;
+			depthStencilCreateInfo.front = {};
+			depthStencilCreateInfo.back = {};
 
 			VkGraphicsPipelineCreateInfo createInfo = {};
 			createInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -213,6 +224,8 @@ namespace Wingnut
 			createInfo.pMultisampleState = &multisampleCreateInfo;
 			createInfo.pColorBlendState = &colorBlendCreateInfo;
 			createInfo.pInputAssemblyState = &inputAssemblyCreateInfo;
+
+			createInfo.pDepthStencilState = &depthStencilCreateInfo;
 
 			createInfo.pVertexInputState = &vertexInputStateCreateInfo;
 

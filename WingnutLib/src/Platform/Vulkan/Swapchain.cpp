@@ -41,6 +41,8 @@ namespace Wingnut
 
 		void Swapchain::Resize(VkSurfaceKHR surface, VkExtent2D extent)
 		{
+			m_Extent = extent;
+
 			PhysicalDeviceProperties deviceProperties = m_Device->GetDeviceProperties();
 
 			VkSwapchainKHR newSwapchain = nullptr;
@@ -60,7 +62,7 @@ namespace Wingnut
 			createInfo.imageArrayLayers = 1;
 			createInfo.minImageCount = 2;
 
-			createInfo.imageExtent = extent;
+			createInfo.imageExtent = m_Extent;
 			createInfo.imageFormat = deviceProperties.SurfaceFormat.format;
 			createInfo.imageColorSpace = deviceProperties.SurfaceFormat.colorSpace;
 			createInfo.preTransform = deviceProperties.SurfaceCapabilities.currentTransform;
