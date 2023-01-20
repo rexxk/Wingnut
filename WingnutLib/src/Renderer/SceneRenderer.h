@@ -37,6 +37,7 @@ namespace Wingnut
 		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList);
 
 	private:
+		void Create();
 		void UpdateEntityCache();
 
 	private:

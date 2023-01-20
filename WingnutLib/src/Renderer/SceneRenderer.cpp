@@ -56,41 +56,7 @@ namespace Wingnut
 	SceneRenderer::SceneRenderer(VkExtent2D extent)
 		: m_Extent(extent)
 	{
-		auto& rendererData = Renderer::GetContext()->GetRendererData();
-		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
-
-		s_SceneData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)extent.width, (uint32_t)extent.height, 
-			VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
-
-		s_SceneData.RenderPass = CreateRef<Vulkan::RenderPass>(rendererData.Device, rendererData.Device->GetDeviceProperties().SurfaceFormat.format);
-
-		s_SceneData.StaticSceneShader = ShaderStore::GetShader("basic");
-
-		Vulkan::PipelineSpecification pipelineSpecification;
-		pipelineSpecification.Extent = extent;
-		pipelineSpecification.PipelineShader = s_SceneData.StaticSceneShader;
-		pipelineSpecification.RenderPass = s_SceneData.RenderPass;
-
-		s_SceneData.StaticPipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
-		s_SceneData.GraphicsCommandPool = CreateRef<Vulkan::CommandPool>(rendererData.Device, Vulkan::CommandPoolType::Graphics);
-
-		s_SceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_SceneData.RenderPass, s_SceneData.DepthStencilImage->GetImageView(), rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
-
-
-		for (uint32_t i = 0; i < framesInflight; i++)
-		{
-			Ref<Vulkan::CommandBuffer> newGraphicsCommandBuffer = CreateRef<Vulkan::CommandBuffer>(rendererData.Device, s_SceneData.GraphicsCommandPool);
-			s_SceneData.GraphicsCommandBuffers.emplace_back(newGraphicsCommandBuffer);
-
-			Ref<Vulkan::Fence> newInFlightFence = CreateRef<Vulkan::Fence>(rendererData.Device);
-			s_SceneData.InFlightFences.emplace_back(newInFlightFence);
-
-			Ref<Vulkan::Semaphore> newImageAvailableSemaphore = CreateRef<Vulkan::Semaphore>(rendererData.Device);
-			s_SceneData.ImageAvailableSemaphores.emplace_back(newImageAvailableSemaphore);
-
-			Ref<Vulkan::Semaphore> newRenderFinishedSemaphore = CreateRef<Vulkan::Semaphore>(rendererData.Device);
-			s_SceneData.RenderFinishedSemaphores.emplace_back(newRenderFinishedSemaphore);
-		}
+		Create();
 
 		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
 			{
@@ -108,6 +74,10 @@ namespace Wingnut
 				vkDeviceWaitIdle(rendererData.Device->GetDevice());
 
 				rendererData.Swapchain->Resize((VkSurfaceKHR)rendererData.Surface->GetSurface(), extent);
+
+				s_SceneData.DepthStencilImage->Release();
+				s_SceneData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)extent.width, (uint32_t)extent.height,
+					VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
 
 				s_SceneData.Framebuffer->Release();
 				s_SceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_SceneData.RenderPass, s_SceneData.DepthStencilImage->GetImageView(), extent);
@@ -182,6 +152,44 @@ namespace Wingnut
 		}
 	}
 
+	void SceneRenderer::Create()
+	{
+		auto& rendererData = Renderer::GetContext()->GetRendererData();
+		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
+
+		s_SceneData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)m_Extent.width, (uint32_t)m_Extent.height,
+			VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
+
+		s_SceneData.RenderPass = CreateRef<Vulkan::RenderPass>(rendererData.Device, rendererData.Device->GetDeviceProperties().SurfaceFormat.format);
+
+		s_SceneData.StaticSceneShader = ShaderStore::GetShader("basic");
+
+		Vulkan::PipelineSpecification pipelineSpecification;
+		pipelineSpecification.Extent = m_Extent;
+		pipelineSpecification.PipelineShader = s_SceneData.StaticSceneShader;
+		pipelineSpecification.RenderPass = s_SceneData.RenderPass;
+
+		s_SceneData.StaticPipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
+		s_SceneData.GraphicsCommandPool = CreateRef<Vulkan::CommandPool>(rendererData.Device, Vulkan::CommandPoolType::Graphics);
+
+		s_SceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_SceneData.RenderPass, s_SceneData.DepthStencilImage->GetImageView(), rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
+
+
+		for (uint32_t i = 0; i < framesInflight; i++)
+		{
+			Ref<Vulkan::CommandBuffer> newGraphicsCommandBuffer = CreateRef<Vulkan::CommandBuffer>(rendererData.Device, s_SceneData.GraphicsCommandPool);
+			s_SceneData.GraphicsCommandBuffers.emplace_back(newGraphicsCommandBuffer);
+
+			Ref<Vulkan::Fence> newInFlightFence = CreateRef<Vulkan::Fence>(rendererData.Device);
+			s_SceneData.InFlightFences.emplace_back(newInFlightFence);
+
+			Ref<Vulkan::Semaphore> newImageAvailableSemaphore = CreateRef<Vulkan::Semaphore>(rendererData.Device);
+			s_SceneData.ImageAvailableSemaphores.emplace_back(newImageAvailableSemaphore);
+
+			Ref<Vulkan::Semaphore> newRenderFinishedSemaphore = CreateRef<Vulkan::Semaphore>(rendererData.Device);
+			s_SceneData.RenderFinishedSemaphores.emplace_back(newRenderFinishedSemaphore);
+		}
+	}
 
 	void SceneRenderer::BeginScene(uint32_t currentFrame)
 	{
