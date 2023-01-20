@@ -34,7 +34,10 @@ namespace Wingnut
 		void UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize);
 		void UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler);
 
-		void SubmitToDrawList(const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList);
+		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList);
+
+	private:
+		void UpdateEntityCache();
 
 	private:
 

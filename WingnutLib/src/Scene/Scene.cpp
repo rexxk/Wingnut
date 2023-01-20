@@ -86,7 +86,7 @@ namespace Wingnut
 		{
 			auto& meshComponent = ECS::EntitySystem::GetComponent<MeshComponent>(entity);
 
-			m_SceneRenderer->SubmitToDrawList(meshComponent.VertexList, meshComponent.IndexList);
+			m_SceneRenderer->SubmitToDrawList(entity, meshComponent.VertexList, meshComponent.IndexList);
 		}
 
 		m_SceneRenderer->Draw();

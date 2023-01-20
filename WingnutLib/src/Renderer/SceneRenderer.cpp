@@ -44,7 +44,8 @@ namespace Wingnut
 		std::vector<Ref<Vulkan::Semaphore>> RenderFinishedSemaphores;
 
 
-		std::vector<std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawList;
+		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawList;
+		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawCache;
 
 	};
 
@@ -125,6 +126,7 @@ namespace Wingnut
 	{
 
 		s_SceneData.DrawList.clear();
+		s_SceneData.DrawCache.clear();
 
 		for (auto& inFlightFence : s_SceneData.InFlightFences)
 		{
@@ -183,6 +185,10 @@ namespace Wingnut
 
 	void SceneRenderer::BeginScene(uint32_t currentFrame)
 	{
+		UpdateEntityCache();
+
+		s_SceneData.DrawList.clear();
+
 		m_CurrentFrame = currentFrame;
 
 		auto& commandBuffer = s_SceneData.GraphicsCommandBuffers[currentFrame];
@@ -300,8 +306,6 @@ namespace Wingnut
 		m_CurrentFrame = (m_CurrentFrame++) & framesInFlight;
 
 		Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
-
-		s_SceneData.DrawList.clear();
 	}
 
 
@@ -311,8 +315,10 @@ namespace Wingnut
 
 		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_SceneData.StaticPipeline->GetPipeline());
 
-		for (auto [vertexBuffer, indexBuffer] : s_SceneData.DrawList)
+		for (auto& entity : s_SceneData.DrawList)
 		{
+			auto [vertexBuffer, indexBuffer] = entity.second;
+	
 			VkBuffer vertexBuffers[] = { vertexBuffer->GetBuffer() };
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
@@ -338,15 +344,30 @@ namespace Wingnut
 	}
 
 
-	void SceneRenderer::SubmitToDrawList(const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList)
+	void SceneRenderer::SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList)
 	{
-		auto& device = Renderer::GetContext()->GetRendererData().Device;
+		if (s_SceneData.DrawCache.find(entityID) == s_SceneData.DrawCache.end())
+		{
+			auto& device = Renderer::GetContext()->GetRendererData().Device;
 
-		Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, vertexList);
-		Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, indexList);
+			Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, vertexList);
+			Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, indexList);
 
-		s_SceneData.DrawList.emplace_back(vertexBuffer, indexBuffer);
+			s_SceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
+		}
 
+		s_SceneData.DrawList[entityID] = s_SceneData.DrawCache[entityID];
+	}
+
+	void SceneRenderer::UpdateEntityCache()
+	{
+		for (auto& entity : s_SceneData.DrawCache)
+		{
+			if (std::find(s_SceneData.DrawList.begin(), s_SceneData.DrawList.end(), entity) == s_SceneData.DrawList.end())
+			{
+				s_SceneData.DrawCache.erase(s_SceneData.DrawCache.find(entity.first));
+			}
+		}
 	}
 
 }
