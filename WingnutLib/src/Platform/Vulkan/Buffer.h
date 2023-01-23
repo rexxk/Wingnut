@@ -28,11 +28,16 @@ namespace Wingnut
 
 			void Release();
 
+			void Resize(const std::vector<Vertex>& vertexList);
+			void SetData(const std::vector<Vertex>& vertexList);
+
 			VkBuffer GetBuffer() { return m_Buffer; }
 
 		private:
 			VkBuffer m_Buffer = nullptr;
 			VkDeviceMemory m_BufferMemory = nullptr;
+
+			VkDeviceSize m_AllocatedBufferSize = 0;
 
 			Ref<Device> m_Device = nullptr;
 		};
@@ -47,6 +52,9 @@ namespace Wingnut
 
 			uint32_t IndexCount() { return m_IndexCount; }
 
+			void Resize(const std::vector<uint32_t>& indexList);
+			void SetData(const std::vector<uint32_t>& indexList);
+
 			VkBuffer GetBuffer() { return m_Buffer; }
 
 		private:
@@ -54,6 +62,8 @@ namespace Wingnut
 			VkDeviceMemory m_BufferMemory = nullptr;
 
 			uint32_t m_IndexCount = 0;
+
+			VkDeviceSize m_AllocatedBufferSize = 0;
 
 			Ref<Device> m_Device = nullptr;
 		};

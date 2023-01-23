@@ -148,29 +148,7 @@ namespace Wingnut
 		VertexBuffer::VertexBuffer(Ref<Device> device, const std::vector<Vertex>& vertexList)
 			: m_Device(device)
 		{
-			VkDeviceSize bufferSize = sizeof(Vertex) * (uint32_t)vertexList.size();
-
-			VkBuffer stagingBuffer = nullptr;
-			VkDeviceMemory stagingBufferMemory = nullptr;
-
-			// Create staging buffer
-			Buffer::CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
-			void* data = nullptr;
-			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
-			memcpy(data, vertexList.data(), (size_t)bufferSize);
-			vkUnmapMemory(m_Device->GetDevice(), stagingBufferMemory);
-
-
-			// Create vertex buffer
-
-			Buffer::CreateBuffer(m_Device, m_Buffer, m_BufferMemory, bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
-			// Copy data
-			Buffer::CopyBuffer(m_Device, stagingBuffer, m_Buffer, bufferSize);
-
-			vkDestroyBuffer(m_Device->GetDevice(), stagingBuffer, nullptr);
-			vkFreeMemory(m_Device->GetDevice(), stagingBufferMemory, nullptr);
+			Resize(vertexList);
 		}
 
 		VertexBuffer::~VertexBuffer()
@@ -193,37 +171,65 @@ namespace Wingnut
 			}
 		}
 
-
-		////////////////////////////////////////////
-
-		IndexBuffer::IndexBuffer(Ref<Device> device, const std::vector<uint32_t>& indexList)
-			: m_Device(device)
+		void VertexBuffer::Resize(const std::vector<Vertex>& vertexList)
 		{
-			m_IndexCount = (uint32_t)indexList.size();
-
-			VkDeviceSize bufferSize = sizeof(uint32_t) * (uint32_t)indexList.size();
+			VkDeviceSize bufferSize = sizeof(Vertex) * (uint32_t)vertexList.size();
 
 			VkBuffer stagingBuffer = nullptr;
 			VkDeviceMemory stagingBufferMemory = nullptr;
+
+			if (bufferSize > m_AllocatedBufferSize)
+			{
+				Release();
+			}
+
+			m_AllocatedBufferSize = bufferSize;
 
 			// Create staging buffer
 			Buffer::CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 			void* data = nullptr;
 			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
-			memcpy(data, indexList.data(), (size_t)bufferSize);
+			memcpy(data, vertexList.data(), (size_t)bufferSize);
 			vkUnmapMemory(m_Device->GetDevice(), stagingBufferMemory);
 
 
 			// Create vertex buffer
 
-			Buffer::CreateBuffer(m_Device, m_Buffer, m_BufferMemory, bufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+			Buffer::CreateBuffer(m_Device, m_Buffer, m_BufferMemory, bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 			// Copy data
 			Buffer::CopyBuffer(m_Device, stagingBuffer, m_Buffer, bufferSize);
 
 			vkDestroyBuffer(m_Device->GetDevice(), stagingBuffer, nullptr);
 			vkFreeMemory(m_Device->GetDevice(), stagingBufferMemory, nullptr);
+		}
+
+		void VertexBuffer::SetData(const std::vector<Vertex>& vertexList)
+		{
+			VkDeviceSize bufferSize = sizeof(Vertex) * (uint32_t)vertexList.size();
+
+			if (bufferSize > m_AllocatedBufferSize)
+			{
+				Resize(vertexList);
+			}
+			else
+			{
+				void* data = nullptr;
+
+				vkMapMemory(m_Device->GetDevice(), m_BufferMemory, 0, bufferSize, 0, &data);
+				memcpy(data, vertexList.data(), (size_t)bufferSize);
+				vkUnmapMemory(m_Device->GetDevice(), m_BufferMemory);
+			}
+
+		}
+
+		////////////////////////////////////////////
+
+		IndexBuffer::IndexBuffer(Ref<Device> device, const std::vector<uint32_t>& indexList)
+			: m_Device(device)
+		{
+			Resize(indexList);
 		}
 
 		IndexBuffer::~IndexBuffer()
@@ -245,6 +251,65 @@ namespace Wingnut
 				m_BufferMemory = nullptr;
 			}
 		}
+
+		void IndexBuffer::Resize(const std::vector<uint32_t>& indexList)
+		{
+			m_IndexCount = (uint32_t)indexList.size();
+
+			VkDeviceSize bufferSize = sizeof(uint32_t) * (uint32_t)indexList.size();
+
+			VkBuffer stagingBuffer = nullptr;
+			VkDeviceMemory stagingBufferMemory = nullptr;
+
+			if (bufferSize > m_AllocatedBufferSize)
+			{
+				Release();
+			}
+
+			m_AllocatedBufferSize = bufferSize;
+
+			// Create staging buffer
+			Buffer::CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+			void* data = nullptr;
+			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
+			memcpy(data, indexList.data(), (size_t)bufferSize);
+			vkUnmapMemory(m_Device->GetDevice(), stagingBufferMemory);
+
+
+			// Create vertex buffer
+
+			Buffer::CreateBuffer(m_Device, m_Buffer, m_BufferMemory, bufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+			// Copy data
+			Buffer::CopyBuffer(m_Device, stagingBuffer, m_Buffer, bufferSize);
+
+			vkDestroyBuffer(m_Device->GetDevice(), stagingBuffer, nullptr);
+			vkFreeMemory(m_Device->GetDevice(), stagingBufferMemory, nullptr);
+
+		}
+
+		void IndexBuffer::SetData(const std::vector<uint32_t>& indexList)
+		{
+			VkDeviceSize bufferSize = sizeof(uint32_t) * (uint32_t)indexList.size();
+
+			if (bufferSize > m_AllocatedBufferSize)
+			{
+				Resize(indexList);
+			}
+			else
+			{
+				void* data = nullptr;
+
+				vkMapMemory(m_Device->GetDevice(), m_BufferMemory, 0, bufferSize, 0, &data);
+				memcpy(data, indexList.data(), (size_t)bufferSize);
+				vkUnmapMemory(m_Device->GetDevice(), m_BufferMemory);
+
+				m_IndexCount = (uint32_t)indexList.size();
+			}
+
+		}
+
 
 		/////////////////////////////////////
 
