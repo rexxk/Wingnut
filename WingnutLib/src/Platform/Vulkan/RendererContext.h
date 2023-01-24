@@ -4,6 +4,7 @@
 #include "CommandPool.h"
 #include "DescriptorPool.h"
 #include "Device.h"
+#include "Semaphore.h"
 #include "Surface.h"
 #include "Swapchain.h"
 
@@ -27,7 +28,10 @@ namespace Wingnut
 			Ref<Swapchain> Swapchain = nullptr;
 
 			Ref<Surface> Surface = nullptr;
-			
+
+			std::vector<Ref<Vulkan::Semaphore>> ImageAvailableSemaphores;
+			std::vector<Ref<Vulkan::Semaphore>> RenderFinishedSemaphores;
+
 		};
 
 		class VulkanContext
@@ -39,6 +43,9 @@ namespace Wingnut
 			void ReleaseAll();
 
 			uint32_t GetCurrentFrame() const { return m_CurrentFrame; }
+
+			void AcquireImage();
+			void Present();
 
 			static RendererData& GetRendererData();
 
@@ -56,6 +63,7 @@ namespace Wingnut
 			VkExtent2D m_CurrentExtent;
 
 			uint32_t m_CurrentFrame = 0;
+			uint32_t m_ImageIndex = 0;
 		};
 
 	}

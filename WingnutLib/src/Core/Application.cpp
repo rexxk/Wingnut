@@ -85,6 +85,9 @@ namespace Wingnut
 			if (!m_ApplicationMinimized)
 			{
 
+				Renderer::AcquireImage();
+
+
 				for (Ref<Layer> layer : m_LayerStack)
 				{
 
@@ -92,7 +95,7 @@ namespace Wingnut
 
 				}
 
-//				Renderer::Present();
+				Renderer::Present();
 
 
 				framesPerSecond++;

@@ -40,9 +40,6 @@ namespace Wingnut
 		Ref<Vulkan::Image> DepthStencilImage = nullptr;
 
 		std::vector<Ref<Vulkan::Fence>> InFlightFences;
-		std::vector<Ref<Vulkan::Semaphore>> ImageAvailableSemaphores;
-		std::vector<Ref<Vulkan::Semaphore>> RenderFinishedSemaphores;
-
 
 		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawList;
 		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawCache;
@@ -101,16 +98,6 @@ namespace Wingnut
 		for (auto& inFlightFence : s_SceneData.InFlightFences)
 		{
 			inFlightFence->Release();
-		}
-
-		for (auto& renderFinishedSemaphore : s_SceneData.RenderFinishedSemaphores)
-		{
-			renderFinishedSemaphore->Release();
-		}
-
-		for (auto& imageAvailableSemaphore : s_SceneData.ImageAvailableSemaphores)
-		{
-			imageAvailableSemaphore->Release();
 		}
 
 		for (auto& graphicsCommandBuffer : s_SceneData.GraphicsCommandBuffers)
@@ -182,12 +169,6 @@ namespace Wingnut
 
 			Ref<Vulkan::Fence> newInFlightFence = CreateRef<Vulkan::Fence>(rendererData.Device);
 			s_SceneData.InFlightFences.emplace_back(newInFlightFence);
-
-			Ref<Vulkan::Semaphore> newImageAvailableSemaphore = CreateRef<Vulkan::Semaphore>(rendererData.Device);
-			s_SceneData.ImageAvailableSemaphores.emplace_back(newImageAvailableSemaphore);
-
-			Ref<Vulkan::Semaphore> newRenderFinishedSemaphore = CreateRef<Vulkan::Semaphore>(rendererData.Device);
-			s_SceneData.RenderFinishedSemaphores.emplace_back(newRenderFinishedSemaphore);
 		}
 	}
 
@@ -261,61 +242,6 @@ namespace Wingnut
 		}
 	}
 
-	void SceneRenderer::Present()
-	{
-		auto& rendererData = Renderer::GetContext()->GetRendererData();
-
-		uint32_t framesInFlight = Renderer::GetRendererSettings().FramesInFlight;
-
-		uint32_t imageIndex = 0;
-		vkAcquireNextImageKHR(rendererData.Device->GetDevice(), rendererData.Swapchain->GetSwapchain(), UINT64_MAX, s_SceneData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore(), VK_NULL_HANDLE, &imageIndex);
-
-		VkSubmitInfo submitInfo = {};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-		VkSemaphore waitSemaphores[] = { s_SceneData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore() };
-		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-		submitInfo.waitSemaphoreCount = 1;
-		submitInfo.pWaitSemaphores = waitSemaphores;
-		submitInfo.pWaitDstStageMask = waitStages;
-
-		VkCommandBuffer commandBuffers[] = { s_SceneData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer() };
-
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = commandBuffers;
-
-		VkSemaphore signalSemaphores[] = { s_SceneData.RenderFinishedSemaphores[m_CurrentFrame]->GetSemaphore() };
-
-		submitInfo.signalSemaphoreCount = 1;
-		submitInfo.pSignalSemaphores = signalSemaphores;
-
-		if (vkQueueSubmit(rendererData.Device->GetQueue(Vulkan::QueueType::Graphics), 1, &submitInfo, s_SceneData.InFlightFences[m_CurrentFrame]->GetFence()))
-		{
-			LOG_CORE_ERROR("[Renderer] Unable to submit queue");
-		}
-
-		VkPresentInfoKHR presentInfo = {};
-		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = signalSemaphores;
-
-		VkSwapchainKHR swapchains[] = { rendererData.Swapchain->GetSwapchain() };
-		presentInfo.swapchainCount = 1;
-		presentInfo.pSwapchains = swapchains;
-		presentInfo.pImageIndices = &imageIndex;
-
-
-		if (vkQueuePresentKHR(rendererData.Device->GetQueue(Vulkan::QueueType::Graphics), &presentInfo) != VK_SUCCESS)
-		{
-			//			LOG_CORE_ERROR("[Renderer] Failed to present queue");
-			return;
-		}
-
-		m_CurrentFrame = (m_CurrentFrame++) & framesInFlight;
-
-		Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
-	}
-
 
 	void SceneRenderer::Draw()
 	{
@@ -376,6 +302,39 @@ namespace Wingnut
 				s_SceneData.DrawCache.erase(s_SceneData.DrawCache.find(entity.first));
 			}
 		}
+	}
+
+	void SceneRenderer::SubmitQueue()
+	{
+		auto& rendererData = Renderer::GetContext()->GetRendererData();
+
+//		uint32_t imageIndex = 0;
+//		vkAcquireNextImageKHR(rendererData.Device->GetDevice(), rendererData.Swapchain->GetSwapchain(), UINT64_MAX, rendererData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore(), VK_NULL_HANDLE, &imageIndex);
+
+		VkSubmitInfo submitInfo = {};
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+		VkSemaphore waitSemaphores[] = { rendererData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore() };
+		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+		submitInfo.waitSemaphoreCount = 1;
+		submitInfo.pWaitSemaphores = waitSemaphores;
+		submitInfo.pWaitDstStageMask = waitStages;
+
+		VkCommandBuffer commandBuffers[] = { s_SceneData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer() };
+
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = commandBuffers;
+
+		VkSemaphore signalSemaphores[] = { rendererData.RenderFinishedSemaphores[m_CurrentFrame]->GetSemaphore() };
+
+		submitInfo.signalSemaphoreCount = 1;
+		submitInfo.pSignalSemaphores = signalSemaphores;
+
+		if (vkQueueSubmit(rendererData.Device->GetQueue(Vulkan::QueueType::Graphics), 1, &submitInfo, s_SceneData.InFlightFences[m_CurrentFrame]->GetFence()))
+		{
+			LOG_CORE_ERROR("[Renderer] Unable to submit queue");
+		}
+
 	}
 
 }

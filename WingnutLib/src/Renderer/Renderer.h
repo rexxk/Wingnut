@@ -44,6 +44,9 @@ namespace Wingnut
 
 		static RendererSettings& GetRendererSettings() { return s_Instance->m_RendererSettings; }
 
+		static void AcquireImage();
+		static void Present();
+
 		static Renderer& Get() { return *s_Instance; }
 		static Ref<Vulkan::VulkanContext> GetContext() { return s_Context; }
 

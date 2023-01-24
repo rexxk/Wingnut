@@ -29,5 +29,15 @@ namespace Wingnut
 		s_Context->ReleaseAll();
 	}
 
+	void Renderer::AcquireImage()
+	{
+		s_Context->AcquireImage();
+	}
+
+	void Renderer::Present()
+	{
+		s_Context->Present();
+	}
+
 
 }

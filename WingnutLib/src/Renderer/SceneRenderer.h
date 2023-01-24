@@ -26,7 +26,7 @@ namespace Wingnut
 		void BeginScene(uint32_t currentFrame);
 		void EndScene();
 
-		void Present();
+		void SubmitQueue();
 
 		void Draw();
 

@@ -46,6 +46,17 @@ namespace Wingnut
 
 			ShaderStore::Release();
 
+			for (auto& imageAvailableSemaphore : s_VulkanData.ImageAvailableSemaphores)
+			{
+				imageAvailableSemaphore->Release();
+			}
+
+			for (auto& renderFinishedSemaphore : s_VulkanData.RenderFinishedSemaphores)
+			{
+				renderFinishedSemaphore->Release();
+			}
+
+
 			if (s_VulkanData.TransferCommandPool != nullptr)
 			{
 				s_VulkanData.TransferCommandPool->Release();
@@ -100,6 +111,18 @@ namespace Wingnut
 
 			// TODO: Max sets hardcoded to 1000
 			s_VulkanData.DescriptorPool = CreateRef<DescriptorPool>(s_VulkanData.Device, 1000);
+
+			uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
+
+			for (uint32_t i = 0; i < framesInflight; i++)
+			{
+				Ref<Vulkan::Semaphore> newImageAvailableSemaphore = CreateRef<Vulkan::Semaphore>(s_VulkanData.Device);
+				s_VulkanData.ImageAvailableSemaphores.emplace_back(newImageAvailableSemaphore);
+
+				Ref<Vulkan::Semaphore> newRenderFinishedSemaphore = CreateRef<Vulkan::Semaphore>(s_VulkanData.Device);
+				s_VulkanData.RenderFinishedSemaphores.emplace_back(newRenderFinishedSemaphore);
+			}
+
 
 			// Create pipeline
 
@@ -243,6 +266,42 @@ namespace Wingnut
 		}
 
 
+		void VulkanContext::AcquireImage()
+		{
+			auto& rendererData = Renderer::GetContext()->GetRendererData();
+
+			vkAcquireNextImageKHR(rendererData.Device->GetDevice(), rendererData.Swapchain->GetSwapchain(), UINT64_MAX, s_VulkanData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore(), VK_NULL_HANDLE, &m_ImageIndex);
+		}
+
+
+		void VulkanContext::Present()
+		{
+			auto& rendererData = Renderer::GetContext()->GetRendererData();
+			uint32_t framesInFlight = Renderer::GetRendererSettings().FramesInFlight;
+
+			VkSemaphore signalSemaphores[] = { s_VulkanData.RenderFinishedSemaphores[m_CurrentFrame]->GetSemaphore() };
+
+			VkPresentInfoKHR presentInfo = {};
+			presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+			presentInfo.waitSemaphoreCount = 1;
+			presentInfo.pWaitSemaphores = signalSemaphores;
+
+			VkSwapchainKHR swapchains[] = { rendererData.Swapchain->GetSwapchain() };
+			presentInfo.swapchainCount = 1;
+			presentInfo.pSwapchains = swapchains;
+			presentInfo.pImageIndices = &m_ImageIndex;
+
+
+			if (vkQueuePresentKHR(rendererData.Device->GetQueue(Vulkan::QueueType::Graphics), &presentInfo) != VK_SUCCESS)
+			{
+				//			LOG_CORE_ERROR("[Renderer] Failed to present queue");
+				return;
+			}
+
+			m_CurrentFrame = (m_CurrentFrame++) & framesInFlight;
+
+			Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
+		}
 
 
 	}

@@ -70,7 +70,7 @@ namespace Wingnut
 
 		m_SceneRenderer->EndScene();
 
-		m_SceneRenderer->Present();
+		m_SceneRenderer->SubmitQueue();
 	}
 
 
