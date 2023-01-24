@@ -98,6 +98,15 @@ namespace Wingnut
 
 				}
 
+				m_ImGuiContext->NewFrame();
+
+				for (Ref<Layer> layer : m_LayerStack)
+				{
+					layer->OnImGuiRender();
+				}
+
+				m_ImGuiContext->Render();
+
 				Renderer::Present();
 
 

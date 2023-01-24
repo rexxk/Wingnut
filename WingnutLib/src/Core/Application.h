@@ -44,6 +44,8 @@ namespace Wingnut
 
 		Ref<Renderer> GetRenderer() { return m_Renderer; }
 
+		Ref<Window> GetWindow() { return m_MainWindow; }
+
 		static Application& Get() { return *s_Instance; }
 
 

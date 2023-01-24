@@ -14,6 +14,7 @@ namespace Wingnut
 		{
 		public:
 			Texture2D(const std::string& texturePath);
+			Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels);
 			~Texture2D();
 
 			void Release();
@@ -22,7 +23,8 @@ namespace Wingnut
 			VkSampler GetSampler() { return m_Sampler; }
 
 		private:
-			void CreateTexture(const std::string& texturePath);
+			void CreateTextureFromFile(const std::string& texturePath);
+			void CreateTextureFromData(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels);
 			void CreateImageView();
 			void CreateSampler();
 

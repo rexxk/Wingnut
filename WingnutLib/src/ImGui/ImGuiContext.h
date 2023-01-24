@@ -2,6 +2,8 @@
 
 #include "Renderer/ImGuiRenderer.h"
 
+#include "Platform/Vulkan/Texture.h"
+
 
 namespace Wingnut
 {
@@ -21,6 +23,10 @@ namespace Wingnut
 	private:
 		Ref<ImGuiRenderer> m_Renderer = nullptr;
 
+		Ref<Vulkan::Texture2D> m_AtlasTexture = nullptr;
+
+		uint32_t m_Width;
+		uint32_t m_Height;
 	};
 
 
