@@ -84,3 +84,9 @@ void MainLayer::OnUpdate()
 	m_Scene->End();
 
 }
+
+
+void MainLayer::OnImGuiRender()
+{
+
+}

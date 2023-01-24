@@ -141,6 +141,8 @@ namespace Wingnut
 
 	void SceneRenderer::Create()
 	{
+		LOG_CORE_TRACE("[SceneRenderer] Creating renderer");
+
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
 
@@ -192,7 +194,7 @@ namespace Wingnut
 
 		if (vkBeginCommandBuffer(commandBuffer->GetCommandBuffer(), &beginInfo) != VK_SUCCESS)
 		{
-			LOG_CORE_ERROR("[Renderer] Unable to begin command buffer recording");
+			LOG_CORE_ERROR("[SceneRenderer] Unable to begin command buffer recording");
 			return;
 		}
 
@@ -237,7 +239,7 @@ namespace Wingnut
 
 		if (vkEndCommandBuffer(commandBuffer->GetCommandBuffer()) != VK_SUCCESS)
 		{
-			LOG_CORE_ERROR("[Renderer] Unable to end command buffer recording");
+			LOG_CORE_ERROR("[SceneRenderer] Unable to end command buffer recording");
 			return;
 		}
 	}
@@ -332,7 +334,7 @@ namespace Wingnut
 
 		if (vkQueueSubmit(rendererData.Device->GetQueue(Vulkan::QueueType::Graphics), 1, &submitInfo, s_SceneData.InFlightFences[m_CurrentFrame]->GetFence()))
 		{
-			LOG_CORE_ERROR("[Renderer] Unable to submit queue");
+			LOG_CORE_ERROR("[SceneRenderer] Unable to submit queue");
 		}
 
 	}

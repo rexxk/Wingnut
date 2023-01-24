@@ -95,6 +95,8 @@
     <ClInclude Include="src\Core\UUID.h" />
     <ClInclude Include="src\Scene\Components.h" />
     <ClInclude Include="src\Platform\Vulkan\Image.h" />
+    <ClInclude Include="src\Renderer\ImGuiRenderer.h" />
+    <ClInclude Include="src\ImGui\ImGuiContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -165,5 +167,7 @@
     <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
     <ClCompile Include="src\Core\UUID.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Image.cpp" />
+    <ClCompile Include="src\Renderer\ImGuiRenderer.cpp" />
+    <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
   </ItemGroup>
 </Project>

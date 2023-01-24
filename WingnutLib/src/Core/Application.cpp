@@ -59,10 +59,13 @@ namespace Wingnut
 
 		m_Renderer = CreateRef<Renderer>(m_MainWindow->WindowHandle());
 
+		m_ImGuiContext = CreateRef<ImGuiContext>();
+
 	}
 
 	Application::~Application()
 	{
+		m_ImGuiContext->Release();
 		m_Renderer->Release();
 	}
 

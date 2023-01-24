@@ -18,6 +18,8 @@ namespace Wingnut
 
 		virtual void OnUpdate() {}
 
+		virtual void OnImGuiRender() {}
+
 	protected:
 		std::string m_Name;
 	};

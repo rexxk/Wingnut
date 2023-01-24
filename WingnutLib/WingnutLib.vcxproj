@@ -110,6 +110,7 @@
     <ClInclude Include="src\Event\EventQueue.h" />
     <ClInclude Include="src\Event\EventUtils.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
+    <ClInclude Include="src\ImGui\ImGuiContext.h" />
     <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
     <ClInclude Include="src\Platform\Vulkan\CommandBuffer.h" />
     <ClInclude Include="src\Platform\Vulkan\CommandPool.h" />
@@ -124,6 +125,7 @@
     <ClInclude Include="src\Platform\Vulkan\Shader.h" />
     <ClInclude Include="src\Platform\Vulkan\Texture.h" />
     <ClInclude Include="src\Renderer\Camera.h" />
+    <ClInclude Include="src\Renderer\ImGuiRenderer.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
     <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h" />
@@ -147,6 +149,7 @@
     <ClCompile Include="src\Event\EventBroker.cpp" />
     <ClCompile Include="src\Event\EventQueue.cpp" />
     <ClCompile Include="src\Event\EventUtils.cpp" />
+    <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\CommandBuffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\CommandPool.cpp" />
@@ -160,6 +163,7 @@
     <ClCompile Include="src\Platform\Vulkan\Shader.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Texture.cpp" />
     <ClCompile Include="src\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Renderer\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />
     <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp" />

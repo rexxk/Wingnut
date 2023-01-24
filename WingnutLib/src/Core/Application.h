@@ -7,6 +7,8 @@
 #include "LayerStack.h"
 #include "Window.h"
 
+#include "ImGui/ImGuiContext.h"
+
 #include "Renderer/Renderer.h"
 
 
@@ -58,6 +60,8 @@ namespace Wingnut
 		Ref<EventQueue> m_EventQueue = nullptr;
 
 		Ref<Renderer> m_Renderer = nullptr;
+
+		Ref<ImGuiContext> m_ImGuiContext = nullptr;
 
 		inline static Application* s_Instance = nullptr;
 

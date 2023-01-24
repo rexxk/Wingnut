@@ -101,6 +101,7 @@
   <ItemGroup>
     <None Include="assets\shaders\Basic.shader" />
     <None Include="assets\shaders\flat.shader" />
+    <None Include="assets\shaders\ImGui.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
