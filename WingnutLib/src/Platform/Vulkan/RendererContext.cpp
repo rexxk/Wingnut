@@ -24,6 +24,35 @@ namespace Wingnut
 
 			m_CurrentExtent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
+
+			SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
+				{
+					auto& rendererData = Renderer::GetContext()->GetRendererData();
+
+					if (event.Width() == 0 || event.Height() == 0)
+						return false;
+
+					VkExtent2D extent = {};
+					extent.width = event.Width();
+					extent.height = event.Height();
+
+					m_CurrentExtent = extent;
+
+					vkDeviceWaitIdle(rendererData.Device->GetDevice());
+
+					rendererData.Swapchain->Resize((VkSurfaceKHR)rendererData.Surface->GetSurface(), extent);
+
+					rendererData.DepthStencilImage->Release();
+					rendererData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)extent.width, (uint32_t)extent.height,
+						VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
+
+					rendererData.Framebuffer->Release();
+					rendererData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, rendererData.RenderPass, rendererData.DepthStencilImage->GetImageView(), extent);
+
+					return false;
+				});
+
+
 		}
 
 		VulkanContext::~VulkanContext()
@@ -46,6 +75,11 @@ namespace Wingnut
 
 			ShaderStore::Release();
 
+			for (auto& inFlightFence : s_VulkanData.InFlightFences)
+			{
+				inFlightFence->Release();
+			}
+
 			for (auto& imageAvailableSemaphore : s_VulkanData.ImageAvailableSemaphores)
 			{
 				imageAvailableSemaphore->Release();
@@ -56,10 +90,35 @@ namespace Wingnut
 				renderFinishedSemaphore->Release();
 			}
 
+			for (auto& graphicsCommandBuffer : s_VulkanData.GraphicsCommandBuffers)
+			{
+				graphicsCommandBuffer->Release();
+			}
+
+			if (s_VulkanData.GraphicsCommandPool != nullptr)
+			{
+				s_VulkanData.GraphicsCommandPool->Release();
+			}
+
 
 			if (s_VulkanData.TransferCommandPool != nullptr)
 			{
 				s_VulkanData.TransferCommandPool->Release();
+			}
+
+			if (s_VulkanData.Framebuffer != nullptr)
+			{
+				s_VulkanData.Framebuffer->Release();
+			}
+
+			if (s_VulkanData.RenderPass != nullptr)
+			{
+				s_VulkanData.RenderPass->Release();
+			}
+
+			if (s_VulkanData.DepthStencilImage != nullptr)
+			{
+				s_VulkanData.DepthStencilImage->Release();
 			}
 
 			if (s_VulkanData.Swapchain != nullptr)
@@ -105,9 +164,20 @@ namespace Wingnut
 			s_VulkanData.Surface = CreateRef<Surface>(m_Instance, windowHandle);
 			s_VulkanData.Device = CreateRef<Device>(m_Instance, s_VulkanData.Surface->GetSurface());
 
-			s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface(), s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
+			m_CurrentExtent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
+			s_VulkanData.RenderPass = CreateRef<Vulkan::RenderPass>(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
+
+			s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface(), m_CurrentExtent);
+
+			s_VulkanData.DepthStencilImage = CreateRef<Vulkan::Image>(s_VulkanData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)m_CurrentExtent.width, (uint32_t)m_CurrentExtent.height,
+				VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
+
+			s_VulkanData.Framebuffer = CreateRef<Vulkan::Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, s_VulkanData.DepthStencilImage->GetImageView(), m_CurrentExtent);
+
+			s_VulkanData.GraphicsCommandPool = CreateRef<Vulkan::CommandPool>(s_VulkanData.Device, Vulkan::CommandPoolType::Graphics);
 			s_VulkanData.TransferCommandPool = CreateRef<CommandPool>(s_VulkanData.Device, CommandPoolType::Transfer);
+
 
 			// TODO: Max sets hardcoded to 1000
 			s_VulkanData.DescriptorPool = CreateRef<DescriptorPool>(s_VulkanData.Device, 1000);
@@ -116,11 +186,17 @@ namespace Wingnut
 
 			for (uint32_t i = 0; i < framesInflight; i++)
 			{
+				Ref<Vulkan::CommandBuffer> newGraphicsCommandBuffer = CreateRef<Vulkan::CommandBuffer>(s_VulkanData.Device, s_VulkanData.GraphicsCommandPool);
+				s_VulkanData.GraphicsCommandBuffers.emplace_back(newGraphicsCommandBuffer);
+
 				Ref<Vulkan::Semaphore> newImageAvailableSemaphore = CreateRef<Vulkan::Semaphore>(s_VulkanData.Device);
 				s_VulkanData.ImageAvailableSemaphores.emplace_back(newImageAvailableSemaphore);
 
 				Ref<Vulkan::Semaphore> newRenderFinishedSemaphore = CreateRef<Vulkan::Semaphore>(s_VulkanData.Device);
 				s_VulkanData.RenderFinishedSemaphores.emplace_back(newRenderFinishedSemaphore);
+
+				Ref<Vulkan::Fence> newInFlightFence = CreateRef<Vulkan::Fence>(s_VulkanData.Device);
+				s_VulkanData.InFlightFences.emplace_back(newInFlightFence);
 			}
 
 
@@ -279,12 +355,12 @@ namespace Wingnut
 			auto& rendererData = Renderer::GetContext()->GetRendererData();
 			uint32_t framesInFlight = Renderer::GetRendererSettings().FramesInFlight;
 
-			VkSemaphore signalSemaphores[] = { s_VulkanData.RenderFinishedSemaphores[m_CurrentFrame]->GetSemaphore() };
+			std::vector<VkSemaphore> signalSemaphores = { s_VulkanData.RenderFinishedSemaphores[m_CurrentFrame]->GetSemaphore() };
 
 			VkPresentInfoKHR presentInfo = {};
 			presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-			presentInfo.waitSemaphoreCount = 1;
-			presentInfo.pWaitSemaphores = signalSemaphores;
+			presentInfo.waitSemaphoreCount = (uint32_t)signalSemaphores.size();
+			presentInfo.pWaitSemaphores = signalSemaphores.data();
 
 			VkSwapchainKHR swapchains[] = { rendererData.Swapchain->GetSwapchain() };
 			presentInfo.swapchainCount = 1;
@@ -303,6 +379,89 @@ namespace Wingnut
 			Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
 		}
 
+		void VulkanContext::BeginScene()
+		{
+			auto& commandBuffer = s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame];
+
+			s_VulkanData.InFlightFences[m_CurrentFrame]->Wait(UINT64_MAX);
+			s_VulkanData.InFlightFences[m_CurrentFrame]->Reset();
+
+			AcquireImage();
+
+
+			VkCommandBufferBeginInfo beginInfo = {};
+			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			beginInfo.flags = 0;
+			beginInfo.pInheritanceInfo = nullptr;
+
+			if (vkBeginCommandBuffer(s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame]->GetCommandBuffer(), &beginInfo) != VK_SUCCESS)
+			{
+				LOG_CORE_ERROR("[ImGuiRenderer] Unable to begin command buffer recording");
+				return;
+			}
+
+			VkRenderPassBeginInfo renderPassBeginInfo = {};
+			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+			renderPassBeginInfo.renderPass = s_VulkanData.RenderPass->GetRenderPass();
+			renderPassBeginInfo.framebuffer = s_VulkanData.Framebuffer->GetNextFramebuffer();
+			renderPassBeginInfo.renderArea.offset = { 0, 0 };
+			renderPassBeginInfo.renderArea.extent = m_CurrentExtent;
+
+			std::array<VkClearValue, 2> clearValues = {};
+			clearValues[0].color = { {0.2f, 0.3f, 0.45f} };
+			clearValues[1].depthStencil = { 1.0f, 0 };
+
+			renderPassBeginInfo.clearValueCount = (uint32_t)clearValues.size();
+			renderPassBeginInfo.pClearValues = clearValues.data();
+
+			vkCmdBeginRenderPass(commandBuffer->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+		}
+
+		void VulkanContext::EndScene()
+		{
+			auto& commandBuffer = s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame];
+
+			vkCmdEndRenderPass(commandBuffer->GetCommandBuffer());
+
+			if (vkEndCommandBuffer(commandBuffer->GetCommandBuffer()) != VK_SUCCESS)
+			{
+				LOG_CORE_ERROR("[ImGuiRenderer] Unable to end command buffer recording");
+				return;
+			}
+
+		}
+
+		void VulkanContext::SubmitQueue()
+		{
+			auto& rendererData = Renderer::GetContext()->GetRendererData();
+			auto& commandBuffer = s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame];
+
+			VkSubmitInfo submitInfo = {};
+			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+			std::vector<VkSemaphore> waitSemaphores = { rendererData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore() };
+			std::vector<VkPipelineStageFlags> waitStages = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+			submitInfo.waitSemaphoreCount = (uint32_t)waitSemaphores.size();
+			submitInfo.pWaitSemaphores = waitSemaphores.data();
+			submitInfo.pWaitDstStageMask = waitStages.data();
+
+			std::vector<VkCommandBuffer> commandBuffers = { commandBuffer->GetCommandBuffer() };
+
+			submitInfo.commandBufferCount = (uint32_t)commandBuffers.size();
+			submitInfo.pCommandBuffers = commandBuffers.data();
+
+			std::vector<VkSemaphore> signalSemaphores = { rendererData.RenderFinishedSemaphores[m_CurrentFrame]->GetSemaphore() };
+
+			submitInfo.signalSemaphoreCount = (uint32_t)signalSemaphores.size();
+			submitInfo.pSignalSemaphores = signalSemaphores.data();
+
+			if (vkQueueSubmit(rendererData.Device->GetQueue(Vulkan::QueueType::Graphics), 1, &submitInfo, rendererData.InFlightFences[m_CurrentFrame]->GetFence()))
+			{
+				LOG_CORE_ERROR("[ImGuiRenderer] Unable to submit queue");
+			}
+
+		}
 
 	}
 

@@ -107,7 +107,6 @@ namespace Wingnut
 
 		m_Renderer->EndScene();
 
-		m_Renderer->SubmitQueue();
 	}
 
 }

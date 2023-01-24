@@ -29,14 +29,24 @@ namespace Wingnut
 		s_Context->ReleaseAll();
 	}
 
-	void Renderer::AcquireImage()
+	void Renderer::SubmitQueue()
 	{
-		s_Context->AcquireImage();
+		s_Context->SubmitQueue();
 	}
 
 	void Renderer::Present()
 	{
 		s_Context->Present();
+	}
+
+	void Renderer::BeginScene()
+	{
+		s_Context->BeginScene();
+	}
+
+	void Renderer::EndScene()
+	{
+		s_Context->EndScene();
 	}
 
 

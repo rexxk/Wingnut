@@ -8,13 +8,7 @@
 #include "Event/WindowEvents.h"
 
 #include "Platform/Vulkan/Buffer.h"
-#include "Platform/Vulkan/CommandPool.h"
-#include "Platform/Vulkan/CommandBuffer.h"
-#include "Platform/Vulkan/Fence.h"
-#include "Platform/Vulkan/Framebuffer.h"
 #include "Platform/Vulkan/Image.h"
-#include "Platform/Vulkan/RenderPass.h"
-#include "Platform/Vulkan/Semaphore.h"
 
 #include "Renderer/Renderer.h"
 
@@ -25,19 +19,8 @@ namespace Wingnut
 
 	struct ImGuiSceneData
 	{
-		Ref<Vulkan::CommandPool> CommandPool = nullptr;
-
-		std::vector<Ref<Vulkan::CommandBuffer>> CommandBuffers;
-
 		Ref<Vulkan::Shader> Shader = nullptr;
 		Ref<Vulkan::Pipeline> Pipeline = nullptr;
-		Ref<Vulkan::Framebuffer> Framebuffer = nullptr;
-
-		Ref<Vulkan::RenderPass> RenderPass = nullptr;
-
-		Ref<Vulkan::Image> DepthStencilImage = nullptr;
-
-		std::vector<Ref<Vulkan::Fence>> InFlightFences;
 
 		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawList;
 		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawCache;
@@ -52,34 +35,6 @@ namespace Wingnut
 		: m_Extent(extent)
 	{
 		Create();
-
-		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
-			{
-				auto& rendererData = Renderer::GetContext()->GetRendererData();
-
-				if (event.Width() == 0 || event.Height() == 0)
-					return false;
-
-				VkExtent2D extent = {};
-				extent.width = event.Width();
-				extent.height = event.Height();
-
-				m_Extent = extent;
-
-				vkDeviceWaitIdle(rendererData.Device->GetDevice());
-
-				rendererData.Swapchain->Resize((VkSurfaceKHR)rendererData.Surface->GetSurface(), extent);
-
-				s_ImGuiSceneData.DepthStencilImage->Release();
-				s_ImGuiSceneData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)extent.width, (uint32_t)extent.height,
-					VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
-
-				s_ImGuiSceneData.Framebuffer->Release();
-				s_ImGuiSceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_ImGuiSceneData.RenderPass, s_ImGuiSceneData.DepthStencilImage->GetImageView(), extent);
-
-				return false;
-			});
-
 	}
 
 	ImGuiRenderer::~ImGuiRenderer()
@@ -93,30 +48,6 @@ namespace Wingnut
 		s_ImGuiSceneData.DrawList.clear();
 		s_ImGuiSceneData.DrawCache.clear();
 
-		for (auto& inFlightFence : s_ImGuiSceneData.InFlightFences)
-		{
-			inFlightFence->Release();
-		}
-
-		for (auto& graphicsCommandBuffer : s_ImGuiSceneData.CommandBuffers)
-		{
-			graphicsCommandBuffer->Release();
-		}
-
-		if (s_ImGuiSceneData.Framebuffer != nullptr)
-		{
-			s_ImGuiSceneData.Framebuffer->Release();
-		}
-
-		if (s_ImGuiSceneData.RenderPass != nullptr)
-		{
-			s_ImGuiSceneData.RenderPass->Release();
-		}
-
-		if (s_ImGuiSceneData.CommandPool != nullptr)
-		{
-			s_ImGuiSceneData.CommandPool->Release();
-		}
 
 		if (s_ImGuiSceneData.Pipeline != nullptr)
 		{
@@ -124,11 +55,6 @@ namespace Wingnut
 			s_ImGuiSceneData.Pipeline = nullptr;
 		}
 
-		if (s_ImGuiSceneData.DepthStencilImage != nullptr)
-		{
-			s_ImGuiSceneData.DepthStencilImage->Release();
-			s_ImGuiSceneData.DepthStencilImage = nullptr;
-		}
 	}
 
 	void ImGuiRenderer::Create()
@@ -138,73 +64,26 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
 
-		s_ImGuiSceneData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)m_Extent.width, (uint32_t)m_Extent.height,
-			VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
-
-		s_ImGuiSceneData.RenderPass = CreateRef<Vulkan::RenderPass>(rendererData.Device, rendererData.Device->GetDeviceProperties().SurfaceFormat.format);
-
 		s_ImGuiSceneData.Shader = ShaderStore::GetShader("ImGui");
 
 		Vulkan::PipelineSpecification pipelineSpecification;
 		pipelineSpecification.Extent = m_Extent;
 		pipelineSpecification.PipelineShader = s_ImGuiSceneData.Shader;
-		pipelineSpecification.RenderPass = s_ImGuiSceneData.RenderPass;
+		pipelineSpecification.RenderPass = rendererData.RenderPass;
 
 		s_ImGuiSceneData.Pipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
-		s_ImGuiSceneData.CommandPool = CreateRef<Vulkan::CommandPool>(rendererData.Device, Vulkan::CommandPoolType::Graphics);
-
-		s_ImGuiSceneData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, s_ImGuiSceneData.RenderPass, s_ImGuiSceneData.DepthStencilImage->GetImageView(), rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent);
-
-
-		for (uint32_t i = 0; i < framesInflight; i++)
-		{
-			Ref<Vulkan::CommandBuffer> newGraphicsCommandBuffer = CreateRef<Vulkan::CommandBuffer>(rendererData.Device, s_ImGuiSceneData.CommandPool);
-			s_ImGuiSceneData.CommandBuffers.emplace_back(newGraphicsCommandBuffer);
-
-			Ref<Vulkan::Fence> newInFlightFence = CreateRef<Vulkan::Fence>(rendererData.Device);
-			s_ImGuiSceneData.InFlightFences.emplace_back(newInFlightFence);
-		}
 	}
 
 	void ImGuiRenderer::BeginScene(uint32_t currentFrame)
 	{
+		auto& rendererData = Renderer::GetContext()->GetRendererData();
+		auto& commandBuffer = rendererData.GraphicsCommandBuffers[currentFrame];
+
 		UpdateEntityCache();
 
 		s_ImGuiSceneData.DrawList.clear();
 
 		m_CurrentFrame = currentFrame;
-
-		auto& commandBuffer = s_ImGuiSceneData.CommandBuffers[currentFrame];
-
-		s_ImGuiSceneData.InFlightFences[currentFrame]->Wait(UINT64_MAX);
-		s_ImGuiSceneData.InFlightFences[currentFrame]->Reset();
-
-		VkCommandBufferBeginInfo beginInfo = {};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.flags = 0;
-		beginInfo.pInheritanceInfo = nullptr;
-
-		if (vkBeginCommandBuffer(commandBuffer->GetCommandBuffer(), &beginInfo) != VK_SUCCESS)
-		{
-			LOG_CORE_ERROR("[ImGuiRenderer] Unable to begin command buffer recording");
-			return;
-		}
-
-		VkRenderPassBeginInfo renderPassBeginInfo = {};
-		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassBeginInfo.renderPass = s_ImGuiSceneData.RenderPass->GetRenderPass();
-		renderPassBeginInfo.framebuffer = s_ImGuiSceneData.Framebuffer->GetNextFramebuffer();
-		renderPassBeginInfo.renderArea.offset = { 0, 0 };
-		renderPassBeginInfo.renderArea.extent = m_Extent;
-
-		std::array<VkClearValue, 2> clearValues = {};
-		clearValues[0].color = { {0.2f, 0.3f, 0.45f} };
-		clearValues[1].depthStencil = { 1.0f, 0 };
-
-		renderPassBeginInfo.clearValueCount = (uint32_t)clearValues.size();
-		renderPassBeginInfo.pClearValues = clearValues.data();
-
-		vkCmdBeginRenderPass(commandBuffer->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_ImGuiSceneData.Pipeline->GetPipeline());
 
@@ -225,21 +104,14 @@ namespace Wingnut
 
 	void ImGuiRenderer::EndScene()
 	{
-		auto& commandBuffer = s_ImGuiSceneData.CommandBuffers[m_CurrentFrame];
 
-		vkCmdEndRenderPass(commandBuffer->GetCommandBuffer());
-
-		if (vkEndCommandBuffer(commandBuffer->GetCommandBuffer()) != VK_SUCCESS)
-		{
-			LOG_CORE_ERROR("[ImGuiRenderer] Unable to end command buffer recording");
-			return;
-		}
 	}
 
 
 	void ImGuiRenderer::Draw()
 	{
-		auto& commandBuffer = s_ImGuiSceneData.CommandBuffers[m_CurrentFrame];
+		auto& rendererData = Renderer::GetContext()->GetRendererData();
+		auto& commandBuffer = rendererData.GraphicsCommandBuffers[m_CurrentFrame];
 
 		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_ImGuiSceneData.Pipeline->GetPipeline());
 
@@ -298,34 +170,6 @@ namespace Wingnut
 		}
 	}
 
-	void ImGuiRenderer::SubmitQueue()
-	{
-		auto& rendererData = Renderer::GetContext()->GetRendererData();
 
-		VkSubmitInfo submitInfo = {};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-		VkSemaphore waitSemaphores[] = { rendererData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore() };
-		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-		submitInfo.waitSemaphoreCount = 1;
-		submitInfo.pWaitSemaphores = waitSemaphores;
-		submitInfo.pWaitDstStageMask = waitStages;
-
-		VkCommandBuffer commandBuffers[] = { s_ImGuiSceneData.CommandBuffers[m_CurrentFrame]->GetCommandBuffer() };
-
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = commandBuffers;
-
-		VkSemaphore signalSemaphores[] = { rendererData.RenderFinishedSemaphores[m_CurrentFrame]->GetSemaphore() };
-
-		submitInfo.signalSemaphoreCount = 1;
-		submitInfo.pSignalSemaphores = signalSemaphores;
-
-		if (vkQueueSubmit(rendererData.Device->GetQueue(Vulkan::QueueType::Graphics), 1, &submitInfo, s_ImGuiSceneData.InFlightFences[m_CurrentFrame]->GetFence()))
-		{
-			LOG_CORE_ERROR("[ImGuiRenderer] Unable to submit queue");
-		}
-
-	}
 
 }

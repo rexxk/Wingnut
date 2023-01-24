@@ -88,8 +88,7 @@ namespace Wingnut
 			if (!m_ApplicationMinimized)
 			{
 
-				Renderer::AcquireImage();
-
+				Renderer::BeginScene();
 
 				for (Ref<Layer> layer : m_LayerStack)
 				{
@@ -106,6 +105,10 @@ namespace Wingnut
 				}
 
 				m_ImGuiContext->Render();
+
+				Renderer::EndScene();
+
+				Renderer::SubmitQueue();
 
 				Renderer::Present();
 
