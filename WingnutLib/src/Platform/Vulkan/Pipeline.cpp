@@ -50,10 +50,10 @@ namespace Wingnut
 
 		void Pipeline::Release()
 		{
-			if (m_Specification.PipelineShader != nullptr)
-			{
-				m_Specification.PipelineShader->Release();
-			}
+//			if (m_Specification.PipelineShader != nullptr)
+//			{
+//				m_Specification.PipelineShader->Release();
+//			}
 
 			if (m_PipelineLayout != nullptr)
 			{

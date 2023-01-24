@@ -35,6 +35,21 @@ namespace Wingnut
 		: m_Extent(extent)
 	{
 		Create();
+
+
+		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
+			{
+				if (event.Width() == 0 || event.Height() == 0)
+					return false;
+
+				m_Extent.width = event.Width();
+				m_Extent.height = event.Height();
+
+				Release();
+				Create();
+
+				return false;
+			});
 	}
 
 	ImGuiRenderer::~ImGuiRenderer()
