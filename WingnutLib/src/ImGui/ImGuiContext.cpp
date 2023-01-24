@@ -8,9 +8,12 @@
 
 #include <imgui.h>
 
+#include <glm/glm.hpp>
+
 
 namespace Wingnut
 {
+
 
 	ImGuiContext::ImGuiContext()
 	{
@@ -103,7 +106,11 @@ namespace Wingnut
 
 		m_Renderer->BeginScene(currentFrame);
 
+		m_Renderer->UpdateDescriptor(1, 0, m_AtlasTexture->GetImageView(), m_AtlasTexture->GetSampler());
 
+
+
+		m_Renderer->Draw();
 
 		m_Renderer->EndScene();
 

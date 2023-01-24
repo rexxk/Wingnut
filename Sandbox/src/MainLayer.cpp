@@ -88,5 +88,9 @@ void MainLayer::OnUpdate()
 
 void MainLayer::OnImGuiRender()
 {
+	ImGui::Begin("Test");
 
+	ImGui::Text("This is only a test text. Hello world?");
+
+	ImGui::End();
 }
