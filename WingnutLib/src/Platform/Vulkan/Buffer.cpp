@@ -229,7 +229,7 @@ namespace Wingnut
 		IndexBuffer::IndexBuffer(Ref<Device> device, const void* data, uint32_t size, uint32_t count)
 			: m_Device(device), m_IndexCount(count)
 		{
-			Resize(data, size);
+			Resize(data, size, count);
 		}
 
 		IndexBuffer::~IndexBuffer()
@@ -252,8 +252,10 @@ namespace Wingnut
 			}
 		}
 
-		void IndexBuffer::Resize(const void* data, uint32_t size)
+		void IndexBuffer::Resize(const void* data, uint32_t size, uint32_t count)
 		{
+			m_IndexCount = count;
+
 			VkDeviceSize bufferSize = size;
 
 			VkBuffer stagingBuffer = nullptr;
@@ -295,7 +297,7 @@ namespace Wingnut
 
 			if (bufferSize > m_AllocatedBufferSize)
 			{
-				Resize(data, size);
+				Resize(data, size, count);
 			}
 			else
 			{

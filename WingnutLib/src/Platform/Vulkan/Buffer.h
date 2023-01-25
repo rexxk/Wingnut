@@ -52,7 +52,7 @@ namespace Wingnut
 
 			uint32_t IndexCount() { return m_IndexCount; }
 
-			void Resize(const void* data, uint32_t size);
+			void Resize(const void* data, uint32_t size, uint32_t count);
 			void SetData(const void* data, uint32_t size, uint32_t count);
 
 			VkBuffer GetBuffer() { return m_Buffer; }

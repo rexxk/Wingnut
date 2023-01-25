@@ -28,13 +28,13 @@ namespace Wingnut
 		void BeginScene(uint32_t currentFrame);
 		void EndScene();
 
-		void Draw();
+		void Bind();
 
 
 		void UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize);
 		void UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler);
 
-		void SubmitToDrawList(UUID entityID, const std::vector<ImDrawVert>& vertexList, const std::vector<ImDrawIdx>& indexList);
+		void SubmitBuffers(const std::vector<ImDrawVert>& vertexList, const std::vector<ImDrawIdx>& indexList);
 
 	private:
 		void Create();
@@ -45,6 +45,9 @@ namespace Wingnut
 		VkExtent2D m_Extent;
 
 		uint32_t m_CurrentFrame;
+
+		Ref<Vulkan::VertexBuffer> m_VertexBuffer = nullptr;
+		Ref<Vulkan::IndexBuffer> m_IndexBuffer = nullptr;
 	};
 
 

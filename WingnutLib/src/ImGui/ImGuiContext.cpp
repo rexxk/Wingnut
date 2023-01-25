@@ -149,6 +149,8 @@ namespace Wingnut
 		if (fbWidth == 0 || fbHeight == 0)
 			return;
 
+		auto& commandBuffer = Renderer::GetContext()->GetRendererData().GraphicsCommandBuffers[Renderer::GetContext()->GetCurrentFrame()];
+
 		if (drawData->TotalVtxCount > 0)
 		{
 			size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
@@ -160,25 +162,79 @@ namespace Wingnut
 			uint32_t vertexLocation = 0;
 			uint32_t indexLocation = 0;
 
-			for (int i = 0; i < drawData->CmdListsCount; i++)
+			for (uint32_t i = 0; i < (uint32_t)drawData->CmdListsCount; i++)
 			{
 
-				memcpy(vertexList.data() + vertexLocation, drawData->CmdLists[i]->VtxBuffer.Data, drawData->CmdLists[i]->VtxBuffer.Size * sizeof(ImDrawVert));
-				memcpy(indexList.data() + indexLocation, drawData->CmdLists[i]->IdxBuffer.Data, drawData->CmdLists[i]->IdxBuffer.Size * sizeof(ImDrawIdx));
+				memcpy(vertexList.data() + vertexLocation, drawData->CmdLists[i]->VtxBuffer.Data, (uint32_t)drawData->CmdLists[i]->VtxBuffer.Size * sizeof(ImDrawVert));
+				memcpy(indexList.data() + indexLocation, drawData->CmdLists[i]->IdxBuffer.Data, (uint32_t)drawData->CmdLists[i]->IdxBuffer.Size * sizeof(ImDrawIdx));
 
 				vertexLocation += drawData->CmdLists[i]->VtxBuffer.Size * sizeof(ImDrawVert);
 				indexLocation += drawData->CmdLists[i]->IdxBuffer.Size * sizeof(ImDrawIdx);
 			}
 
 
+			m_Renderer->SubmitBuffers(vertexList, indexList);
+			m_Renderer->Bind();
 
+			int globalVertexOffset = 0;
+			int globalIndexOffset = 0;
 
-			m_Renderer->SubmitToDrawList(m_ImGuiEntity, vertexList, indexList);
+			for (uint32_t listIndex = 0; listIndex < (uint32_t)drawData->CmdListsCount; listIndex++)
+			{
+				const ImDrawList* commandList = drawData->CmdLists[listIndex];
+
+				for (uint32_t i = 0; i < commandList->CmdBuffer.Size; i++)
+				{
+					const ImDrawCmd* command = &commandList->CmdBuffer[i];
+
+					if (command->UserCallback != NULL)
+					{
+						if (command->UserCallback == ImDrawCallback_ResetRenderState)
+						{
+							// Set render state
+						}
+						else
+						{
+							command->UserCallback(commandList, command);
+						}
+					}
+					else
+					{
+						ImVec2 clipMin((command->ClipRect.x - clipOffset.x) * clipScale.x, (command->ClipRect.y - clipOffset.y) * clipScale.y);
+						ImVec2 clipMax((command->ClipRect.z - clipOffset.x) * clipScale.x, (command->ClipRect.w - clipOffset.y) * clipScale.y);
+
+						if (clipMin.x < 0.0f) { clipMin.x = 0.0f; }
+						if (clipMin.y < 0.0f) { clipMin.y = 0.0f; }
+						if (clipMax.x > fbWidth) { clipMax.x = (float)fbWidth; }
+						if (clipMax.y > fbHeight) { clipMax.y = (float)fbHeight; }
+
+						if (clipMax.x <= clipMin.x || clipMax.y <= clipMin.y)
+							continue;
+
+						VkRect2D scissor;
+						scissor.offset.x = (int32_t)(clipMin.x);
+						scissor.offset.y = (int32_t)(clipMin.y);
+						scissor.extent.width = (uint32_t)(clipMax.x - clipMin.x);
+						scissor.extent.height = (uint32_t)(clipMax.y - clipMin.y);
+						vkCmdSetScissor(commandBuffer->GetCommandBuffer(), 0, 1, &scissor);
+
+						vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), command->ElemCount, 1, command->IdxOffset + globalIndexOffset, command->VtxOffset + globalVertexOffset, 0);
+					}
+				}
+
+				globalVertexOffset += commandList->VtxBuffer.Size;
+				globalIndexOffset += commandList->IdxBuffer.Size;
+			}
+
+			VkRect2D scissor = { { 0, 0 }, { (uint32_t)fbWidth, (uint32_t)fbHeight } };
+			vkCmdSetScissor(commandBuffer->GetCommandBuffer(), 0, 1, &scissor);
+
+//			m_Renderer->SubmitToDrawList(m_ImGuiEntity, vertexList, indexList);
 		}
 
 
-
-		m_Renderer->Draw();
+		// Single entity draw doesn't need drawlists
+//		m_Renderer->Draw();
 
 		m_Renderer->EndScene();
 

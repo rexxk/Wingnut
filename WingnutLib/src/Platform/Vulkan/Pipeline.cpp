@@ -91,7 +91,7 @@ namespace Wingnut
 			scissor.offset = { 0, 0 };
 			scissor.extent = m_Specification.Extent;
 
-			std::vector<VkDynamicState> dynamicStates = { VK_DYNAMIC_STATE_LINE_WIDTH /*, VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR */ };
+			std::vector<VkDynamicState> dynamicStates = { VK_DYNAMIC_STATE_LINE_WIDTH ,VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
 
 			VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo = {};
 			dynamicStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;

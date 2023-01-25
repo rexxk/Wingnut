@@ -77,6 +77,16 @@ namespace Wingnut
 		s_ImGuiSceneData.DrawList.clear();
 		s_ImGuiSceneData.DrawCache.clear();
 
+		if (m_VertexBuffer != nullptr)
+		{
+			m_VertexBuffer->Release();
+		}
+
+		if (m_IndexBuffer != nullptr)
+		{
+			m_IndexBuffer->Release();
+		}
+
 		if (s_ImGuiSceneData.Pipeline != nullptr)
 		{
 			s_ImGuiSceneData.Pipeline->Release();
@@ -136,27 +146,27 @@ namespace Wingnut
 	}
 
 
-	void ImGuiRenderer::Draw()
+	void ImGuiRenderer::Bind()
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		auto& commandBuffer = rendererData.GraphicsCommandBuffers[m_CurrentFrame];
 
 		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_ImGuiSceneData.Pipeline->GetPipeline());
 
-		for (auto& entity : s_ImGuiSceneData.DrawList)
-		{
-			auto& [vertexBuffer, indexBuffer] = entity.second;
+//		for (auto& entity : s_ImGuiSceneData.DrawList)
+//		{
+//			auto& [vertexBuffer, indexBuffer] = entity.second;
 
-			VkBuffer vertexBuffers[] = { vertexBuffer->GetBuffer() };
-			VkDeviceSize offsets[] = { 0 };
-			vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
+		VkBuffer vertexBuffers[] = { m_VertexBuffer->GetBuffer() };
+		VkDeviceSize offsets[] = { 0 };
 
-			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), indexBuffer->GetBuffer(), 0, DataSizeToIndexType(sizeof(ImDrawIdx)));
+		vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
+		vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), m_IndexBuffer->GetBuffer(), 0, DataSizeToIndexType(sizeof(ImDrawIdx)));
 
-			s_ImGuiSceneData.Shader->BindDescriptorSets(commandBuffer->GetCommandBuffer(), s_ImGuiSceneData.Pipeline->GetLayout());
+		s_ImGuiSceneData.Shader->BindDescriptorSets(commandBuffer->GetCommandBuffer(), s_ImGuiSceneData.Pipeline->GetLayout());
 
-			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
-		}
+//			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
+//		}
 
 	}
 
@@ -172,19 +182,29 @@ namespace Wingnut
 	}
 
 
-	void ImGuiRenderer::SubmitToDrawList(UUID entityID, const std::vector<ImDrawVert>& vertexList, const std::vector<ImDrawIdx>& indexList)
+	void ImGuiRenderer::SubmitBuffers(const std::vector<ImDrawVert>& vertexList, const std::vector<ImDrawIdx>& indexList)
 	{
-		if (s_ImGuiSceneData.DrawCache.find(entityID) == s_ImGuiSceneData.DrawCache.end())
+
+		if (m_VertexBuffer == nullptr)
 		{
-			auto& device = Renderer::GetContext()->GetRendererData().Device;
-
-			Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(ImDrawVert));
-			Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
-
-			s_ImGuiSceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
+			m_VertexBuffer = CreateRef<Vulkan::VertexBuffer>(Renderer::GetContext()->GetRendererData().Device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(ImDrawVert));
+		}
+		else
+		{
+//			m_VertexBuffer->Resize(vertexList.data(), (uint32_t)vertexList.size() * sizeof(ImDrawVert));
+			m_VertexBuffer->SetData(vertexList.data(), (uint32_t)vertexList.size() * sizeof(ImDrawVert));
 		}
 
-		s_ImGuiSceneData.DrawList[entityID] = s_ImGuiSceneData.DrawCache[entityID];
+		if (m_IndexBuffer == nullptr)
+		{
+			m_IndexBuffer = CreateRef<Vulkan::IndexBuffer>(Renderer::GetContext()->GetRendererData().Device, indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
+		}
+		else
+		{
+//			m_IndexBuffer->Resize(indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
+			m_IndexBuffer->SetData(indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
+		}
+
 	}
 
 	void ImGuiRenderer::UpdateEntityCache()
