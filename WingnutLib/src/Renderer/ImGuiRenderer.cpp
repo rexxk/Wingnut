@@ -13,6 +13,7 @@
 #include "Renderer/Renderer.h"
 
 
+
 namespace Wingnut
 {
 
@@ -27,8 +28,21 @@ namespace Wingnut
 
 	};
 
-
 	static ImGuiSceneData s_ImGuiSceneData;
+
+
+	VkIndexType DataSizeToIndexType(uint32_t size)
+	{
+		switch (size)
+		{
+			case 1: return VK_INDEX_TYPE_UINT8_EXT;
+			case 2: return VK_INDEX_TYPE_UINT16;
+			case 4: return VK_INDEX_TYPE_UINT32;
+		}
+
+		return VK_INDEX_TYPE_UINT32;
+	}
+
 
 
 	ImGuiRenderer::ImGuiRenderer(VkExtent2D extent)
@@ -62,7 +76,6 @@ namespace Wingnut
 
 		s_ImGuiSceneData.DrawList.clear();
 		s_ImGuiSceneData.DrawCache.clear();
-
 
 		if (s_ImGuiSceneData.Pipeline != nullptr)
 		{
@@ -138,7 +151,7 @@ namespace Wingnut
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
 
-			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
+			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), indexBuffer->GetBuffer(), 0, DataSizeToIndexType(sizeof(ImDrawIdx)));
 
 			s_ImGuiSceneData.Shader->BindDescriptorSets(commandBuffer->GetCommandBuffer(), s_ImGuiSceneData.Pipeline->GetLayout());
 
@@ -159,14 +172,14 @@ namespace Wingnut
 	}
 
 
-	void ImGuiRenderer::SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList)
+	void ImGuiRenderer::SubmitToDrawList(UUID entityID, const std::vector<ImDrawVert>& vertexList, const std::vector<ImDrawIdx>& indexList)
 	{
 		if (s_ImGuiSceneData.DrawCache.find(entityID) == s_ImGuiSceneData.DrawCache.end())
 		{
 			auto& device = Renderer::GetContext()->GetRendererData().Device;
 
-			Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, vertexList);
-			Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, indexList);
+			Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(ImDrawVert));
+			Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
 
 			s_ImGuiSceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
 		}

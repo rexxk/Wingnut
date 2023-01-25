@@ -6,6 +6,8 @@
 #include "Platform/Vulkan/RenderPass.h"
 #include "Platform/Vulkan/Shader.h"
 
+#include <imgui.h>
+
 
 namespace Wingnut
 {
@@ -32,7 +34,7 @@ namespace Wingnut
 		void UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize);
 		void UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler);
 
-		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList);
+		void SubmitToDrawList(UUID entityID, const std::vector<ImDrawVert>& vertexList, const std::vector<ImDrawIdx>& indexList);
 
 	private:
 		void Create();

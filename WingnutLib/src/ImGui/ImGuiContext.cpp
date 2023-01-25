@@ -6,13 +6,21 @@
 #include "Event/EventUtils.h"
 #include "Event/WindowEvents.h"
 
+#include "Scene/Components.h"
+
 #include <imgui.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 
 namespace Wingnut
 {
+
+
+	static ImGuiCameraDescriptor s_CameraDescriptor;
+
 
 
 	ImGuiContext::ImGuiContext()
@@ -55,6 +63,11 @@ namespace Wingnut
 		// TextureID = DescriptorSet 1 - should be read from the shader really and not hardcoded (texture localization)
 		io.Fonts->SetTexID((ImTextureID)1);
 
+		m_EntityRegistry = CreateRef<ECS::Registry>();
+		m_ImGuiEntity = ECS::EntitySystem::Create(m_EntityRegistry);
+		ECS::EntitySystem::AddComponent<TagComponent>(m_ImGuiEntity, "ImGui");
+
+		m_CameraDescriptor = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(ImGuiCameraDescriptor));
 
 		LOG_CORE_TRACE("[ImGui] Context created");
 
@@ -77,6 +90,12 @@ namespace Wingnut
 
 	void ImGuiContext::Release()
 	{
+
+		if (m_CameraDescriptor)
+		{
+			m_CameraDescriptor->Release();
+		}
+
 		if (m_AtlasTexture)
 		{
 			m_AtlasTexture->Release();
@@ -107,6 +126,55 @@ namespace Wingnut
 		m_Renderer->BeginScene(currentFrame);
 
 		m_Renderer->UpdateDescriptor(1, 0, m_AtlasTexture->GetImageView(), m_AtlasTexture->GetSampler());
+
+		ImDrawData* drawData = ImGui::GetDrawData();
+
+		float left = drawData->DisplayPos.x;
+		float right = drawData->DisplayPos.x + drawData->DisplaySize.x;
+		float top = drawData->DisplayPos.y;
+		float bottom = drawData->DisplayPos.y + drawData->DisplaySize.y;
+
+		s_CameraDescriptor.ViewProjection = glm::ortho(left, right, bottom, top);
+
+		m_CameraDescriptor->Update(&s_CameraDescriptor, sizeof(ImGuiCameraDescriptor), currentFrame);
+
+		m_Renderer->UpdateDescriptor(0, 0, m_CameraDescriptor->GetBuffer(currentFrame), sizeof(ImGuiCameraDescriptor));
+
+		ImVec2 clipOffset = drawData->DisplayPos;
+		ImVec2 clipScale = drawData->FramebufferScale;
+
+		int fbWidth = (int)(drawData->DisplaySize.x * drawData->FramebufferScale.x);
+		int fbHeight = (int)(drawData->DisplaySize.y * drawData->FramebufferScale.y);
+
+		if (fbWidth == 0 || fbHeight == 0)
+			return;
+
+		if (drawData->TotalVtxCount > 0)
+		{
+			size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
+			size_t indexSize = drawData->TotalIdxCount * sizeof(ImDrawIdx);
+
+			std::vector<ImDrawVert> vertexList(drawData->TotalVtxCount);
+			std::vector<ImDrawIdx> indexList(drawData->TotalIdxCount);
+
+			uint32_t vertexLocation = 0;
+			uint32_t indexLocation = 0;
+
+			for (int i = 0; i < drawData->CmdListsCount; i++)
+			{
+
+				memcpy(vertexList.data() + vertexLocation, drawData->CmdLists[i]->VtxBuffer.Data, drawData->CmdLists[i]->VtxBuffer.Size * sizeof(ImDrawVert));
+				memcpy(indexList.data() + indexLocation, drawData->CmdLists[i]->IdxBuffer.Data, drawData->CmdLists[i]->IdxBuffer.Size * sizeof(ImDrawIdx));
+
+				vertexLocation += drawData->CmdLists[i]->VtxBuffer.Size * sizeof(ImDrawVert);
+				indexLocation += drawData->CmdLists[i]->IdxBuffer.Size * sizeof(ImDrawIdx);
+			}
+
+
+
+
+			m_Renderer->SubmitToDrawList(m_ImGuiEntity, vertexList, indexList);
+		}
 
 
 

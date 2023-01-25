@@ -23,13 +23,13 @@ namespace Wingnut
 		class VertexBuffer
 		{
 		public:
-			VertexBuffer(Ref<Device> device, const std::vector<Vertex>& vertexList);
+			VertexBuffer(Ref<Device> device, const void* data, uint32_t size);
 			~VertexBuffer();
 
 			void Release();
 
-			void Resize(const std::vector<Vertex>& vertexList);
-			void SetData(const std::vector<Vertex>& vertexList);
+			void Resize(const void* data, uint32_t size);
+			void SetData(const void* data, uint32_t size);
 
 			VkBuffer GetBuffer() { return m_Buffer; }
 
@@ -45,15 +45,15 @@ namespace Wingnut
 		class IndexBuffer
 		{
 		public:
-			IndexBuffer(Ref<Device> device, const std::vector<uint32_t>& indexList);
+			IndexBuffer(Ref<Device> device, const void* data, uint32_t size, uint32_t count);
 			~IndexBuffer();
 
 			void Release();
 
 			uint32_t IndexCount() { return m_IndexCount; }
 
-			void Resize(const std::vector<uint32_t>& indexList);
-			void SetData(const std::vector<uint32_t>& indexList);
+			void Resize(const void* data, uint32_t size);
+			void SetData(const void* data, uint32_t size, uint32_t count);
 
 			VkBuffer GetBuffer() { return m_Buffer; }
 

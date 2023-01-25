@@ -145,10 +145,10 @@ namespace Wingnut
 
 
 
-		VertexBuffer::VertexBuffer(Ref<Device> device, const std::vector<Vertex>& vertexList)
+		VertexBuffer::VertexBuffer(Ref<Device> device, const void* data, uint32_t size)
 			: m_Device(device)
 		{
-			Resize(vertexList);
+			Resize(data, size);
 		}
 
 		VertexBuffer::~VertexBuffer()
@@ -171,9 +171,9 @@ namespace Wingnut
 			}
 		}
 
-		void VertexBuffer::Resize(const std::vector<Vertex>& vertexList)
+		void VertexBuffer::Resize(const void* data, uint32_t size)
 		{
-			VkDeviceSize bufferSize = sizeof(Vertex) * (uint32_t)vertexList.size();
+			VkDeviceSize bufferSize = size;
 
 			VkBuffer stagingBuffer = nullptr;
 			VkDeviceMemory stagingBufferMemory = nullptr;
@@ -188,9 +188,9 @@ namespace Wingnut
 			// Create staging buffer
 			Buffer::CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-			void* data = nullptr;
-			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
-			memcpy(data, vertexList.data(), (size_t)bufferSize);
+			void* memoryAddress = nullptr;
+			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &memoryAddress);
+			memcpy(memoryAddress, data, (size_t)bufferSize);
 			vkUnmapMemory(m_Device->GetDevice(), stagingBufferMemory);
 
 
@@ -205,20 +205,20 @@ namespace Wingnut
 			vkFreeMemory(m_Device->GetDevice(), stagingBufferMemory, nullptr);
 		}
 
-		void VertexBuffer::SetData(const std::vector<Vertex>& vertexList)
+		void VertexBuffer::SetData(const void* data, uint32_t size)
 		{
-			VkDeviceSize bufferSize = sizeof(Vertex) * (uint32_t)vertexList.size();
+			VkDeviceSize bufferSize = size;
 
 			if (bufferSize > m_AllocatedBufferSize)
 			{
-				Resize(vertexList);
+				Resize(data, size);
 			}
 			else
 			{
-				void* data = nullptr;
+				void* memoryAddress = nullptr;
 
-				vkMapMemory(m_Device->GetDevice(), m_BufferMemory, 0, bufferSize, 0, &data);
-				memcpy(data, vertexList.data(), (size_t)bufferSize);
+				vkMapMemory(m_Device->GetDevice(), m_BufferMemory, 0, bufferSize, 0, &memoryAddress);
+				memcpy(memoryAddress, data, (size_t)bufferSize);
 				vkUnmapMemory(m_Device->GetDevice(), m_BufferMemory);
 			}
 
@@ -226,10 +226,10 @@ namespace Wingnut
 
 		////////////////////////////////////////////
 
-		IndexBuffer::IndexBuffer(Ref<Device> device, const std::vector<uint32_t>& indexList)
-			: m_Device(device)
+		IndexBuffer::IndexBuffer(Ref<Device> device, const void* data, uint32_t size, uint32_t count)
+			: m_Device(device), m_IndexCount(count)
 		{
-			Resize(indexList);
+			Resize(data, size);
 		}
 
 		IndexBuffer::~IndexBuffer()
@@ -252,11 +252,9 @@ namespace Wingnut
 			}
 		}
 
-		void IndexBuffer::Resize(const std::vector<uint32_t>& indexList)
+		void IndexBuffer::Resize(const void* data, uint32_t size)
 		{
-			m_IndexCount = (uint32_t)indexList.size();
-
-			VkDeviceSize bufferSize = sizeof(uint32_t) * (uint32_t)indexList.size();
+			VkDeviceSize bufferSize = size;
 
 			VkBuffer stagingBuffer = nullptr;
 			VkDeviceMemory stagingBufferMemory = nullptr;
@@ -271,9 +269,9 @@ namespace Wingnut
 			// Create staging buffer
 			Buffer::CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-			void* data = nullptr;
-			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
-			memcpy(data, indexList.data(), (size_t)bufferSize);
+			void* memoryAddress = nullptr;
+			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &memoryAddress);
+			memcpy(memoryAddress, data, (size_t)bufferSize);
 			vkUnmapMemory(m_Device->GetDevice(), stagingBufferMemory);
 
 
@@ -289,23 +287,23 @@ namespace Wingnut
 
 		}
 
-		void IndexBuffer::SetData(const std::vector<uint32_t>& indexList)
+		void IndexBuffer::SetData(const void* data, uint32_t size, uint32_t count)
 		{
-			VkDeviceSize bufferSize = sizeof(uint32_t) * (uint32_t)indexList.size();
+			m_IndexCount = count;
+
+			VkDeviceSize bufferSize = size;
 
 			if (bufferSize > m_AllocatedBufferSize)
 			{
-				Resize(indexList);
+				Resize(data, size);
 			}
 			else
 			{
-				void* data = nullptr;
+				void* memoryAddress = nullptr;
 
-				vkMapMemory(m_Device->GetDevice(), m_BufferMemory, 0, bufferSize, 0, &data);
-				memcpy(data, indexList.data(), (size_t)bufferSize);
+				vkMapMemory(m_Device->GetDevice(), m_BufferMemory, 0, bufferSize, 0, &memoryAddress);
+				memcpy(memoryAddress, data, (size_t)bufferSize);
 				vkUnmapMemory(m_Device->GetDevice(), m_BufferMemory);
-
-				m_IndexCount = (uint32_t)indexList.size();
 			}
 
 		}

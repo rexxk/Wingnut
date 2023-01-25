@@ -173,8 +173,8 @@ namespace Wingnut
 		{
 			auto& device = Renderer::GetContext()->GetRendererData().Device;
 
-			Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, vertexList);
-			Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, indexList);
+			Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(Vertex));
+			Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, indexList.data(), (uint32_t)indexList.size() * sizeof(uint32_t), (uint32_t)indexList.size());
 
 			s_SceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
 		}
