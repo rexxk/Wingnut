@@ -16,12 +16,31 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+
+		enum class CullMode
+		{
+			None,
+			Back,
+			Front,
+			FrontAndBack,
+		};
+
+		enum class CullingDirection
+		{
+			Clockwise,
+			CounterClockwise,
+		};
+
+
 		struct PipelineSpecification
 		{
 			Ref<Shader> PipelineShader;
 			Ref<RenderPass> RenderPass;
 //			PolygonFillType FillType = PolygonFillType::Solid;
 			float LineWidth = 1.0f;
+
+			CullMode CullMode;
+			CullingDirection CullingDirection;
 
 			VkExtent2D Extent;
 		};

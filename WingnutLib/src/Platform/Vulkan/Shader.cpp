@@ -30,6 +30,7 @@ namespace Wingnut
 			if (type == "vec2") return VK_FORMAT_R32G32_SFLOAT;
 			if (type == "vec3") return VK_FORMAT_R32G32B32_SFLOAT;
 			if (type == "vec4") return VK_FORMAT_R32G32B32A32_SFLOAT;
+			if (type == "uint") return VK_FORMAT_R8G8B8A8_UNORM;
 
 			return VK_FORMAT_R32G32B32A32_SFLOAT;
 		}
@@ -39,6 +40,7 @@ namespace Wingnut
 			if (type == "vec2") return 4 * 2;
 			if (type == "vec3") return 4 * 3;
 			if (type == "vec4") return 4 * 4;
+			if (type == "uint") return 4;
 
 			return 4;
 		}
@@ -235,11 +237,23 @@ namespace Wingnut
 
 			m_VertexStride = 0;
 
+			bool overrideNext = false;
+			std::string overrideType = "";
+
 			while (std::getline(source, line))
 			{
 				if (line.size() < 2)
 				{
 					continue;
+				}
+
+				if (line.find("// override") != std::string::npos)
+				{
+					std::string cleanedString = RemoveCharacters(line, "();=");
+					std::vector<std::string> tokens = Tokenize(cleanedString, ' ');
+
+					overrideNext = true;
+					overrideType = tokens[2];
 				}
 
 				if (line.find("layout") != std::string::npos)
@@ -276,6 +290,12 @@ namespace Wingnut
 							{
 								type = tokens[++i];
 								name = tokens[++i];
+
+								if (overrideNext)
+								{
+									type = overrideType;
+									overrideNext = false;
+								}
 							}
 
 							if (tokens[i] == "binding")
@@ -435,7 +455,7 @@ namespace Wingnut
 				}
 			}
 
-			LOG_CORE_ERROR("[Shader] Set {} does not exist in shader");
+			LOG_CORE_ERROR("[Shader] Set {} does not exist in shader", setID);
 			return SetDescription();
 		}
 
@@ -479,8 +499,16 @@ namespace Wingnut
 		{
 			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, (uint32_t)m_DescriptorSetData.size(),
 				m_DescriptorSets.data(), 0, nullptr);
-
 		}
+
+		void Shader::SetAttributeFormat(uint32_t location, VkFormat format)
+		{
+			if (location > (uint32_t)m_AttributeDescriptions.size())
+				return;
+
+			m_AttributeDescriptions[location].format = format;
+		}
+
 	}
 
 }

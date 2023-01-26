@@ -66,6 +66,8 @@ namespace Wingnut
 
 			void BindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout);
 
+			void SetAttributeFormat(uint32_t location, VkFormat format);
+
 		private:
 
 			void LoadSources();

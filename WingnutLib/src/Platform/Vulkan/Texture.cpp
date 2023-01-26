@@ -49,7 +49,8 @@ namespace Wingnut
 				return;
 			}
 
-			m_Format = VK_FORMAT_R8G8B8A8_SRGB;
+//			m_Format = VK_FORMAT_R8G8B8A8_SRGB;
+			m_Format = VK_FORMAT_R8G8B8A8_UNORM;
 
 			VkDeviceSize size = width * height * 4;
 
@@ -128,7 +129,8 @@ namespace Wingnut
 				return;
 			}
 
-			m_Format = VK_FORMAT_R8G8B8A8_SRGB;
+//			m_Format = VK_FORMAT_R8G8B8A8_SRGB;
+			m_Format = VK_FORMAT_R8G8B8A8_UNORM;
 
 			VkDeviceSize size = width * height * 4;
 

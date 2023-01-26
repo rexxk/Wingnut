@@ -103,11 +103,14 @@ namespace Wingnut
 		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
 
 		s_ImGuiSceneData.Shader = ShaderStore::GetShader("ImGui");
+//		s_ImGuiSceneData.Shader->SetAttributeFormat(2, VK_FORMAT_R8G8B8A8_UNORM);
 
 		Vulkan::PipelineSpecification pipelineSpecification;
 		pipelineSpecification.Extent = m_Extent;
 		pipelineSpecification.PipelineShader = s_ImGuiSceneData.Shader;
 		pipelineSpecification.RenderPass = rendererData.RenderPass;
+		pipelineSpecification.CullMode = Vulkan::CullMode::None;
+		pipelineSpecification.CullingDirection = Vulkan::CullingDirection::CounterClockwise;
 
 		s_ImGuiSceneData.Pipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
 	}
@@ -168,6 +171,16 @@ namespace Wingnut
 //			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
 //		}
 
+	}
+
+	void ImGuiRenderer::BindDescriptor(uint32_t set, VkDescriptorSet descriptorSet)
+	{
+		auto& rendererData = Renderer::GetContext()->GetRendererData();
+		auto& commandBuffer = rendererData.GraphicsCommandBuffers[m_CurrentFrame];
+
+//		s_ImGuiSceneData.Shader->UpdateDescriptorSet(set, descriptorSet);
+
+		vkCmdBindDescriptorSets(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_ImGuiSceneData.Pipeline->GetLayout(), set, 1, &descriptorSet, 0, nullptr);
 	}
 
 

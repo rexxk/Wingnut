@@ -35,6 +35,29 @@ namespace Wingnut
 			return VK_SHADER_STAGE_VERTEX_BIT;
 		}
 
+		VkCullModeFlagBits CullModeToVulkanCullMode(CullMode mode)
+		{
+			switch (mode)
+			{
+				case CullMode::None: return VK_CULL_MODE_NONE;
+				case CullMode::Back: return VK_CULL_MODE_BACK_BIT;
+				case CullMode::Front: return VK_CULL_MODE_FRONT_BIT;
+				case CullMode::FrontAndBack: return VK_CULL_MODE_FRONT_AND_BACK;
+			}
+
+			return VK_CULL_MODE_NONE;
+		}
+
+		VkFrontFace CullingDirectionToVulkanFrontFace(CullingDirection direction)
+		{
+			switch (direction)
+			{
+				case CullingDirection::Clockwise: return VK_FRONT_FACE_CLOCKWISE;
+				case CullingDirection::CounterClockwise: return VK_FRONT_FACE_COUNTER_CLOCKWISE;
+			}
+
+			return VK_FRONT_FACE_CLOCKWISE;
+		}
 
 
 		Pipeline::Pipeline(Ref<Device> device, const PipelineSpecification& specification)
@@ -141,8 +164,8 @@ namespace Wingnut
 			rasterizationStateCreateInfo.rasterizerDiscardEnable = false;
 			rasterizationStateCreateInfo.polygonMode = PolygonFillTypeToVulkanPolygonMode(rendererSettings.PolygonFill);
 			rasterizationStateCreateInfo.lineWidth = rendererSettings.LineWidth;
-			rasterizationStateCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
-			rasterizationStateCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+			rasterizationStateCreateInfo.cullMode = CullModeToVulkanCullMode(m_Specification.CullMode);
+			rasterizationStateCreateInfo.frontFace = CullingDirectionToVulkanFrontFace(m_Specification.CullingDirection);
 
 			rasterizationStateCreateInfo.depthBiasEnable = false;
 			rasterizationStateCreateInfo.depthBiasConstantFactor = 0.0f;
@@ -160,7 +183,7 @@ namespace Wingnut
 
 			VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
 			colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-			colorBlendAttachment.blendEnable = true;
+			colorBlendAttachment.blendEnable = VK_TRUE;
 			colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 			colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
@@ -170,7 +193,7 @@ namespace Wingnut
 
 			VkPipelineColorBlendStateCreateInfo colorBlendCreateInfo = {};
 			colorBlendCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-			colorBlendCreateInfo.logicOpEnable = false;
+			colorBlendCreateInfo.logicOpEnable = VK_FALSE;
 			colorBlendCreateInfo.logicOp = VK_LOGIC_OP_COPY;
 			colorBlendCreateInfo.attachmentCount = 1;
 			colorBlendCreateInfo.pAttachments = &colorBlendAttachment;

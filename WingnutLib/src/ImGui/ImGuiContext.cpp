@@ -57,11 +57,13 @@ namespace Wingnut
 		int32_t bytesPerPixel;
 
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
-
+//		io.Fonts->GetTexDataAsAlpha8(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 		m_AtlasTexture = CreateRef<Vulkan::Texture2D>((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels);
 
 		// TextureID = DescriptorSet 1 - should be read from the shader really and not hardcoded (texture localization)
-		io.Fonts->SetTexID((ImTextureID)1);
+		io.Fonts->SetTexID((ImTextureID)ShaderStore::GetShader("ImGui")->GetDescriptorSet(1).Set);
+
+		m_Renderer->UpdateDescriptor(1, 0, m_AtlasTexture->GetImageView(), m_AtlasTexture->GetSampler());
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 		m_ImGuiEntity = ECS::EntitySystem::Create(m_EntityRegistry);
@@ -125,8 +127,6 @@ namespace Wingnut
 
 		m_Renderer->BeginScene(currentFrame);
 
-		m_Renderer->UpdateDescriptor(1, 0, m_AtlasTexture->GetImageView(), m_AtlasTexture->GetSampler());
-
 		ImDrawData* drawData = ImGui::GetDrawData();
 
 		float left = drawData->DisplayPos.x;
@@ -134,11 +134,14 @@ namespace Wingnut
 		float top = drawData->DisplayPos.y;
 		float bottom = drawData->DisplayPos.y + drawData->DisplaySize.y;
 
-		s_CameraDescriptor.ViewProjection = glm::ortho(left, right, bottom, top);
-
+//		s_CameraDescriptor.ViewProjection = glm::ortho(left, right, bottom, top);
+		s_CameraDescriptor.ViewProjection = glm::ortho(left, right, top, bottom);
 		m_CameraDescriptor->Update(&s_CameraDescriptor, sizeof(ImGuiCameraDescriptor), currentFrame);
 
 		m_Renderer->UpdateDescriptor(0, 0, m_CameraDescriptor->GetBuffer(currentFrame), sizeof(ImGuiCameraDescriptor));
+
+		VkDescriptorSet viewProjectionDescriptor = ShaderStore::GetShader("ImGui")->GetDescriptorSet(0).Set;
+
 
 		ImVec2 clipOffset = drawData->DisplayPos;
 		ImVec2 clipScale = drawData->FramebufferScale;
@@ -168,12 +171,13 @@ namespace Wingnut
 				memcpy(vertexList.data() + vertexLocation, drawData->CmdLists[i]->VtxBuffer.Data, (uint32_t)drawData->CmdLists[i]->VtxBuffer.Size * sizeof(ImDrawVert));
 				memcpy(indexList.data() + indexLocation, drawData->CmdLists[i]->IdxBuffer.Data, (uint32_t)drawData->CmdLists[i]->IdxBuffer.Size * sizeof(ImDrawIdx));
 
-				vertexLocation += drawData->CmdLists[i]->VtxBuffer.Size * sizeof(ImDrawVert);
-				indexLocation += drawData->CmdLists[i]->IdxBuffer.Size * sizeof(ImDrawIdx);
+				vertexLocation += drawData->CmdLists[i]->VtxBuffer.Size;
+				indexLocation += drawData->CmdLists[i]->IdxBuffer.Size;
 			}
 
 
 			m_Renderer->SubmitBuffers(vertexList, indexList);
+
 			m_Renderer->Bind();
 
 			int globalVertexOffset = 0;
@@ -217,6 +221,9 @@ namespace Wingnut
 						scissor.extent.width = (uint32_t)(clipMax.x - clipMin.x);
 						scissor.extent.height = (uint32_t)(clipMax.y - clipMin.y);
 						vkCmdSetScissor(commandBuffer->GetCommandBuffer(), 0, 1, &scissor);
+
+						m_Renderer->BindDescriptor(0, viewProjectionDescriptor);
+						m_Renderer->BindDescriptor(1, (VkDescriptorSet)command->TextureId);
 
 						vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), command->ElemCount, 1, command->IdxOffset + globalIndexOffset, command->VtxOffset + globalVertexOffset, 0);
 					}
