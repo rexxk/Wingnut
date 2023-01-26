@@ -209,7 +209,7 @@ namespace Wingnut
 		{
 			VkDeviceSize bufferSize = size;
 
-			if (bufferSize > m_AllocatedBufferSize)
+			if (bufferSize > m_AllocatedBufferSize || m_BufferMemory == nullptr)
 			{
 				Resize(data, size);
 			}
@@ -220,6 +220,7 @@ namespace Wingnut
 				vkMapMemory(m_Device->GetDevice(), m_BufferMemory, 0, bufferSize, 0, &memoryAddress);
 				memcpy(memoryAddress, data, (size_t)bufferSize);
 				vkUnmapMemory(m_Device->GetDevice(), m_BufferMemory);
+
 			}
 
 		}
@@ -295,7 +296,7 @@ namespace Wingnut
 
 			VkDeviceSize bufferSize = size;
 
-			if (bufferSize > m_AllocatedBufferSize)
+			if (bufferSize > m_AllocatedBufferSize || m_BufferMemory == nullptr)
 			{
 				Resize(data, size, count);
 			}
