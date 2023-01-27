@@ -109,6 +109,7 @@
     <ClInclude Include="src\Event\EventBroker.h" />
     <ClInclude Include="src\Event\EventQueue.h" />
     <ClInclude Include="src\Event\EventUtils.h" />
+    <ClInclude Include="src\Event\KeyboardEvents.h" />
     <ClInclude Include="src\Event\MouseEvents.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
     <ClInclude Include="src\ImGui\ImGuiContext.h" />

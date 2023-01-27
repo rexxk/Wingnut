@@ -4,6 +4,7 @@
 #include "Assets/ShaderStore.h"
 
 #include "Event/EventUtils.h"
+#include "Event/KeyboardEvents.h"
 #include "Event/MouseEvents.h"
 #include "Event/WindowEvents.h"
 
@@ -133,6 +134,36 @@ namespace Wingnut
 			{
 				ImGuiIO& io = ImGui::GetIO();
 				io.MouseWheel += event.Delta();
+
+				return false;
+			});
+
+		SubscribeToEvent<KeyPressedEvent>([&](KeyPressedEvent& event)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.KeysDown[event.Key()] = true;
+
+				LOG_CORE_WARN("KeyDown: {}", event.Key());
+
+				return false;
+			});
+
+		SubscribeToEvent<KeyReleasedEvent>([&](KeyReleasedEvent& event)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.KeysDown[event.Key()] = false;
+
+				LOG_CORE_WARN("KeyUp: {}", event.Key());
+
+				return false;
+			});
+
+		SubscribeToEvent<KeyTypedEvent>([&](KeyTypedEvent& event)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.AddInputCharacter(event.Key());
+
+				LOG_CORE_WARN("KeyTyped: {}", event.Key());
 
 				return false;
 			});

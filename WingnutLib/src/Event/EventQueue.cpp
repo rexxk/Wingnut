@@ -25,7 +25,7 @@ namespace Wingnut
 	{
 		while (m_Queue.size() > 0)
 		{
-			Ref<Event> event = m_Queue.back();
+			Ref<Event> event = m_Queue.front();
 			m_Queue.pop();
 
 			EventBroker::ProcessEvent(event);
