@@ -4,6 +4,7 @@
 #include "Assets/ShaderStore.h"
 
 #include "Event/EventUtils.h"
+#include "Event/MouseEvents.h"
 #include "Event/WindowEvents.h"
 
 #include "Scene/Components.h"
@@ -28,6 +29,19 @@ namespace Wingnut
 
 	static ImGuiScaleTranslate s_ScaleTranslateDescriptor;
 
+
+
+	uint32_t MouseButtonToImGuiMouseButton(MouseButton button)
+	{
+		switch (button)
+		{
+			case MouseButton::Left: return ImGuiMouseButton_Left;
+			case MouseButton::Right: return ImGuiMouseButton_Right;
+			case MouseButton::Middle: return ImGuiMouseButton_Middle;
+		}
+
+		return ImGuiMouseButton_Left;
+	}
 
 
 	ImGuiContext::ImGuiContext()
@@ -91,6 +105,37 @@ namespace Wingnut
 				return false;
 			});
 
+		SubscribeToEvent<MouseButtonPressedEvent>([&](MouseButtonPressedEvent& event)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.MouseDown[MouseButtonToImGuiMouseButton(event.GetMouseButton())] = true;
+
+				return false;
+			});
+
+		SubscribeToEvent<MouseButtonReleasedEvent>([&](MouseButtonReleasedEvent& event)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.MouseDown[MouseButtonToImGuiMouseButton(event.GetMouseButton())] = false;
+
+				return false;
+			});
+
+		SubscribeToEvent<MouseMovedEvent>([&](MouseMovedEvent& event)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.MousePos = ImVec2((float)event.PositionX(), (float)event.PositionY());
+
+				return false;
+			});
+
+		SubscribeToEvent<MouseWheelEvent>([&](MouseWheelEvent& event)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.MouseWheel += event.Delta();
+
+				return false;
+			});
 	}
 
 	ImGuiContext::~ImGuiContext()

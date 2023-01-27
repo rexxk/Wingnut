@@ -10,6 +10,7 @@ namespace Wingnut
 	enum class EventType
 	{
 		WindowClosed, WindowResized,
+		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseWheel,
 	};
 
 

@@ -109,8 +109,10 @@
     <ClInclude Include="src\Event\EventBroker.h" />
     <ClInclude Include="src\Event\EventQueue.h" />
     <ClInclude Include="src\Event\EventUtils.h" />
+    <ClInclude Include="src\Event\MouseEvents.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
     <ClInclude Include="src\ImGui\ImGuiContext.h" />
+    <ClInclude Include="src\Input\KeyDefs.h" />
     <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
     <ClInclude Include="src\Platform\Vulkan\CommandBuffer.h" />
     <ClInclude Include="src\Platform\Vulkan\CommandPool.h" />

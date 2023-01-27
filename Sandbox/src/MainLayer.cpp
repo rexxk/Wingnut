@@ -91,9 +91,8 @@ void MainLayer::OnImGuiRender()
 	ImGui::ShowDemoWindow();
 
 //	ImGui::Begin("Test");
-
-//	ImGui::Text("This is only a test text. Hello world?");
-
-
+//
+//		ImGui::Text("This is only a test text. Hello world?");
+//
 //	ImGui::End();
 }
