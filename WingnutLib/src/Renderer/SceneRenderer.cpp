@@ -92,7 +92,11 @@ namespace Wingnut
 		Vulkan::PipelineSpecification pipelineSpecification;
 		pipelineSpecification.Extent = m_Extent;
 		pipelineSpecification.PipelineShader = s_SceneData.StaticSceneShader;
+		pipelineSpecification.CullMode = Vulkan::CullMode::Back;
+		pipelineSpecification.CullingDirection = Vulkan::CullingDirection::Clockwise;
 		pipelineSpecification.RenderPass = rendererData.RenderPass;
+		pipelineSpecification.DepthTestEnable = true;
+		pipelineSpecification.DepthWriteEnable = true;
 
 		s_SceneData.StaticPipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
 	}

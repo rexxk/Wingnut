@@ -77,7 +77,7 @@ namespace Wingnut
 	{
 		auto& device = Renderer::GetContext()->GetRendererData().Device;
 
-		m_SceneRenderer->UpdateDescriptor(2, 0, m_Texture->GetImageView(), m_Texture->GetSampler());
+		m_SceneRenderer->UpdateDescriptor(1, 0, m_Texture->GetImageView(), m_Texture->GetSampler());
 
 		auto& entities = ECS::EntitySystem::GetView<MeshComponent>();
 

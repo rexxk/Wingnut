@@ -59,6 +59,23 @@ namespace Wingnut
 			return VK_FRONT_FACE_CLOCKWISE;
 		}
 
+		VkCompareOp CompareOperationToVulkanCompareOp(CompareOperation compareOperation)
+		{
+			switch (compareOperation)
+			{
+				case CompareOperation::Always: return VK_COMPARE_OP_ALWAYS;
+				case CompareOperation::Greater: return VK_COMPARE_OP_GREATER;
+				case CompareOperation::GreaterOrEqual: return VK_COMPARE_OP_GREATER_OR_EQUAL;
+				case CompareOperation::Equal: return VK_COMPARE_OP_EQUAL;
+				case CompareOperation::Less: return VK_COMPARE_OP_LESS;
+				case CompareOperation::LessOrEqual: return VK_COMPARE_OP_LESS_OR_EQUAL;
+				case CompareOperation::Never: return VK_COMPARE_OP_NEVER;
+				case CompareOperation::NotEqual: return VK_COMPARE_OP_NOT_EQUAL;
+			}
+
+			return VK_COMPARE_OP_LESS;
+		}
+
 
 		Pipeline::Pipeline(Ref<Device> device, const PipelineSpecification& specification)
 			: m_Device(device->GetDevice()), m_Specification(specification)
@@ -187,7 +204,9 @@ namespace Wingnut
 			colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 			colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-			colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+//			colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+//			colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+			colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 			colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
@@ -222,9 +241,9 @@ namespace Wingnut
 
 			VkPipelineDepthStencilStateCreateInfo depthStencilCreateInfo = {};
 			depthStencilCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-			depthStencilCreateInfo.depthTestEnable = VK_TRUE;
-			depthStencilCreateInfo.depthWriteEnable = VK_TRUE;
-			depthStencilCreateInfo.depthCompareOp = VK_COMPARE_OP_LESS;
+			depthStencilCreateInfo.depthTestEnable = m_Specification.DepthTestEnable;
+			depthStencilCreateInfo.depthWriteEnable = m_Specification.DepthWriteEnable;
+			depthStencilCreateInfo.depthCompareOp = CompareOperationToVulkanCompareOp(m_Specification.DepthCompareOp);
 			depthStencilCreateInfo.depthBoundsTestEnable = VK_FALSE;
 			depthStencilCreateInfo.minDepthBounds = 0.0f;
 			depthStencilCreateInfo.maxDepthBounds = 1.0f;

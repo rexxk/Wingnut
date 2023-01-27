@@ -18,8 +18,15 @@
 namespace Wingnut
 {
 
+	struct ImGuiScaleTranslate
+	{
+		glm::vec2 Scale;
+		glm::vec2 Translate;
+	};
 
-	static ImGuiCameraDescriptor s_CameraDescriptor;
+
+
+	static ImGuiScaleTranslate s_ScaleTranslateDescriptor;
 
 
 
@@ -50,6 +57,8 @@ namespace Wingnut
 
 		ImGui::StyleColorsDark();
 
+		io.DisplaySize = ImVec2(m_Width, m_Height);
+		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 
 		uint8_t* pixels;
 		int32_t atlasWidth;
@@ -64,12 +73,13 @@ namespace Wingnut
 		io.Fonts->SetTexID((ImTextureID)ShaderStore::GetShader("ImGui")->GetDescriptorSet(1).Set);
 
 		m_Renderer->UpdateDescriptor(1, 0, m_AtlasTexture->GetImageView(), m_AtlasTexture->GetSampler());
+//		m_Renderer->UpdateDescriptor(1, 0, texture->GetImageView(), texture->GetSampler());
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 		m_ImGuiEntity = ECS::EntitySystem::Create(m_EntityRegistry);
 		ECS::EntitySystem::AddComponent<TagComponent>(m_ImGuiEntity, "ImGui");
 
-		m_CameraDescriptor = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(ImGuiCameraDescriptor));
+		m_CameraDescriptor = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(ImGuiScaleTranslate));
 
 		LOG_CORE_TRACE("[ImGui] Context created");
 
@@ -92,7 +102,6 @@ namespace Wingnut
 
 	void ImGuiContext::Release()
 	{
-
 		if (m_CameraDescriptor)
 		{
 			m_CameraDescriptor->Release();
@@ -135,10 +144,24 @@ namespace Wingnut
 		float bottom = drawData->DisplayPos.y + drawData->DisplaySize.y;
 
 //		s_CameraDescriptor.ViewProjection = glm::ortho(left, right, bottom, top);
-		s_CameraDescriptor.ViewProjection = glm::ortho(left, right, top, bottom);
-		m_CameraDescriptor->Update(&s_CameraDescriptor, sizeof(ImGuiCameraDescriptor), currentFrame);
+//		s_CameraDescriptor.ViewProjection = glm::ortho(left, right, top, bottom);
+//		m_CameraDescriptor->Update(&s_CameraDescriptor, sizeof(ImGuiCameraDescriptor), currentFrame);
 
-		m_Renderer->UpdateDescriptor(0, 0, m_CameraDescriptor->GetBuffer(currentFrame), sizeof(ImGuiCameraDescriptor));
+		float scale[2];
+		scale[0] = 2.0f / drawData->DisplaySize.x;
+		scale[1] = 2.0f / drawData->DisplaySize.y;
+
+		float translate[2];
+		translate[0] = -1.0f - drawData->DisplayPos.x * scale[0];
+		translate[1] = -1.0f - drawData->DisplayPos.y * scale[1];
+
+		s_ScaleTranslateDescriptor.Scale = glm::vec2(scale[0], scale[1]);
+		s_ScaleTranslateDescriptor.Translate = glm::vec2(translate[0], translate[1]);
+
+		m_CameraDescriptor->Update(&s_ScaleTranslateDescriptor, sizeof(ImGuiScaleTranslate), currentFrame);
+
+//		m_Renderer->UpdateDescriptor(0, 0, m_CameraDescriptor->GetBuffer(currentFrame), sizeof(ImGuiCameraDescriptor));
+		m_Renderer->UpdateDescriptor(0, 0, m_CameraDescriptor->GetBuffer(currentFrame), sizeof(ImGuiScaleTranslate));
 
 		VkDescriptorSet viewProjectionDescriptor = ShaderStore::GetShader("ImGui")->GetDescriptorSet(0).Set;
 

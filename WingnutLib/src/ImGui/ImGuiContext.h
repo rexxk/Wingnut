@@ -10,11 +10,6 @@
 namespace Wingnut
 {
 
-	struct ImGuiCameraDescriptor
-	{
-		glm::mat4 ViewProjection;
-	};
-
 
 	class ImGuiContext
 	{

@@ -31,6 +31,17 @@ namespace Wingnut
 			CounterClockwise,
 		};
 
+		enum class CompareOperation
+		{
+			Always,
+			Greater,
+			GreaterOrEqual,
+			Equal,
+			Less,
+			LessOrEqual,
+			Never,
+			NotEqual,
+		};
 
 		struct PipelineSpecification
 		{
@@ -39,8 +50,12 @@ namespace Wingnut
 //			PolygonFillType FillType = PolygonFillType::Solid;
 			float LineWidth = 1.0f;
 
-			CullMode CullMode;
-			CullingDirection CullingDirection;
+			CullMode CullMode = CullMode::Front;
+			CullingDirection CullingDirection = CullingDirection::Clockwise;
+
+			bool DepthTestEnable = VK_TRUE;
+			bool DepthWriteEnable = VK_TRUE;
+			CompareOperation DepthCompareOp = CompareOperation::Less;
 
 			VkExtent2D Extent;
 		};

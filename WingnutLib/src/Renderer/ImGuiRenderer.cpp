@@ -111,6 +111,9 @@ namespace Wingnut
 		pipelineSpecification.RenderPass = rendererData.RenderPass;
 		pipelineSpecification.CullMode = Vulkan::CullMode::None;
 		pipelineSpecification.CullingDirection = Vulkan::CullingDirection::CounterClockwise;
+		pipelineSpecification.DepthTestEnable = false;
+		pipelineSpecification.DepthWriteEnable = false;
+		pipelineSpecification.DepthCompareOp = Vulkan::CompareOperation::LessOrEqual;
 
 		s_ImGuiSceneData.Pipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
 	}

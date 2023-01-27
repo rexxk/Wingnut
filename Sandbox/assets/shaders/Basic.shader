@@ -13,10 +13,6 @@ layout(set = 0, binding = 0) uniform UBWorld {
 	mat4 ViewProjection;
 } ubWorld;
 
-layout(set = 1, binding = 0) uniform Light{
-	mat3 LightDirection;
-} light;
-
 
 void main()
 {
@@ -37,7 +33,12 @@ layout(location = 0) out vec4 o_Color;
 layout(location = 0) in vec2 v_TexCoord;
 layout(location = 1) in vec4 v_Color;
 
-layout(set = 2, binding = 0) uniform sampler2D u_Texture;
+layout(set = 1, binding = 0) uniform sampler2D u_Texture;
+
+layout(set = 2, binding = 0) uniform Light{
+	mat3 LightDirection;
+} light;
+
 
 void main()
 {
