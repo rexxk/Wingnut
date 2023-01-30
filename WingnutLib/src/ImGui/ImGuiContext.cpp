@@ -75,6 +75,13 @@ namespace Wingnut
 		io.DisplaySize = ImVec2(m_Width, m_Height);
 		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 
+		io.KeyMap[ImGuiKey_Backspace] = WK_BACKSPACE;
+		io.KeyMap[ImGuiKey_Space] = WK_SPACE;
+		io.KeyMap[ImGuiKey_LeftArrow] = WK_LEFT;
+		io.KeyMap[ImGuiKey_UpArrow] = WK_UP;
+		io.KeyMap[ImGuiKey_RightArrow] = WK_RIGHT;
+		io.KeyMap[ImGuiKey_DownArrow] = WK_DOWN;
+
 		uint8_t* pixels;
 		int32_t atlasWidth;
 		int32_t atlasHeight;
