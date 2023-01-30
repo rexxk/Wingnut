@@ -71,7 +71,7 @@ void MainLayer::OnDetach()
 	m_Scene->Release();
 }
 
-void MainLayer::OnUpdate()
+void MainLayer::OnUpdate(Timestep ts)
 {
 	m_Scene->Begin();
 

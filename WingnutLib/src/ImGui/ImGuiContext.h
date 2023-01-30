@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Timestep.h"
+
 #include "Renderer/ImGuiRenderer.h"
 
 #include "Platform/Vulkan/Texture.h"
@@ -19,7 +21,7 @@ namespace Wingnut
 
 		void Release();
 
-		void NewFrame();
+		void NewFrame(Timestep ts);
 		void Render();
 
 

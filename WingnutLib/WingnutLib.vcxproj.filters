@@ -100,6 +100,7 @@
     <ClInclude Include="src\Event\MouseEvents.h" />
     <ClInclude Include="src\Input\KeyDefs.h" />
     <ClInclude Include="src\Event\KeyboardEvents.h" />
+    <ClInclude Include="src\Core\Timestep.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">

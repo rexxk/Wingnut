@@ -5,6 +5,7 @@
 #include "Assets/ShaderStore.h"
 
 #include "Core/Application.h"
+#include "Core/Timestep.h"
 
 #include "Event/EventBroker.h"
 

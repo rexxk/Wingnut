@@ -4,6 +4,7 @@
 #include "Wingnut.h"
 
 
+
 using namespace Wingnut::Vulkan;
 
 
@@ -15,7 +16,7 @@ public:
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
-	virtual void OnUpdate() override;
+	virtual void OnUpdate(Wingnut::Timestep ts) override;
 
 	virtual void OnImGuiRender() override;
 

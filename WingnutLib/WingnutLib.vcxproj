@@ -102,6 +102,7 @@
     <ClInclude Include="src\Core\LayerStack.h" />
     <ClInclude Include="src\Core\Log.h" />
     <ClInclude Include="src\Core\Timer.h" />
+    <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\Core\UUID.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\ECS\ECS.h" />

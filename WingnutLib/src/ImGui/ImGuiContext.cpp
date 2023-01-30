@@ -201,10 +201,11 @@ namespace Wingnut
 		}
 	}
 
-	void ImGuiContext::NewFrame()
+	void ImGuiContext::NewFrame(Timestep ts)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ::ImVec2((float)m_Width, (float)m_Height);
+		io.DeltaTime = ts;
 
 		ImGui::NewFrame();
 	}

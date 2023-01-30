@@ -75,6 +75,7 @@ namespace Wingnut
 
 		m_Running = true;
 
+		Timestep timeStep;
 
 		Timer fpsTimer;
 		uint32_t framesPerSecond = 0;
@@ -83,6 +84,8 @@ namespace Wingnut
 		{
 			m_MainWindow->HandleMessages();
 			m_EventQueue->Process();
+
+			timeStep.Update();
 
 
 			if (!m_ApplicationMinimized)
@@ -93,11 +96,11 @@ namespace Wingnut
 				for (Ref<Layer> layer : m_LayerStack)
 				{
 
-					layer->OnUpdate();
+					layer->OnUpdate(timeStep);
 
 				}
 
-				m_ImGuiContext->NewFrame();
+				m_ImGuiContext->NewFrame(timeStep);
 
 				for (Ref<Layer> layer : m_LayerStack)
 				{
@@ -124,7 +127,6 @@ namespace Wingnut
 					framesPerSecond = 0;
 				}
 			}
-
 		}
 
 
