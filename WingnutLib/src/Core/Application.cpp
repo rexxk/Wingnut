@@ -104,7 +104,7 @@ namespace Wingnut
 
 				for (Ref<Layer> layer : m_LayerStack)
 				{
-					layer->OnImGuiRender();
+					layer->OnUIRender();
 				}
 
 				m_ImGuiContext->Render();

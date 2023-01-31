@@ -19,7 +19,7 @@ namespace Wingnut
 
 		virtual void OnUpdate(Timestep ts) {}
 
-		virtual void OnImGuiRender() {}
+		virtual void OnUIRender() {}
 
 	protected:
 		std::string m_Name;

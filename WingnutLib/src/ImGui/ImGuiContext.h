@@ -28,6 +28,8 @@ namespace Wingnut
 	private:
 		Ref<ImGuiRenderer> m_Renderer = nullptr;
 
+		Ref<Vulkan::ImageSampler> m_UISampler = nullptr;
+
 		Ref<Vulkan::Texture2D> m_AtlasTexture = nullptr;
 		Ref<Vulkan::UniformBuffer> m_CameraDescriptor = nullptr;
 

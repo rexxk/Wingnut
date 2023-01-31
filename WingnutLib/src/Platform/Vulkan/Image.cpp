@@ -168,6 +168,99 @@ namespace Wingnut
 			commandBuffer->EndRecording();
 
 		}
+
+		///////////////////////////////////////////////
+
+		VkFilter ImageSamplerFilterToVulkanFilter(ImageSamplerFilter filter)
+		{
+			switch (filter)
+			{
+				case ImageSamplerFilter::Linear: return VK_FILTER_LINEAR;
+				case ImageSamplerFilter::Nearest: return VK_FILTER_NEAREST;
+			}
+
+			return VK_FILTER_LINEAR;
+		}
+
+		VkSamplerAddressMode ImageSamplerModeToSamplerAddressMode(ImageSamplerMode mode)
+		{
+			switch (mode)
+			{
+				case ImageSamplerMode::ClampToBorder: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+				case ImageSamplerMode::ClampToEdge: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+				case ImageSamplerMode::MirroredRepeat: return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+				case ImageSamplerMode::MirrorClampToEdge: return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
+				case ImageSamplerMode::Repeat: return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			}
+
+			return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+		}
+
+		ImageSampler::ImageSampler(Ref<Device> device, ImageSamplerFilter filter, ImageSamplerMode mode)
+			: m_Device(device)
+		{
+			CreateSampler(filter, mode);
+		}
+
+		ImageSampler::~ImageSampler()
+		{
+			Release();
+		}
+
+		void ImageSampler::Release()
+		{
+			if (m_Sampler != nullptr)
+			{
+				vkDestroySampler(m_Device->GetDevice(), m_Sampler, nullptr);
+				m_Sampler = nullptr;
+			}
+		}
+
+		void ImageSampler::CreateSampler(ImageSamplerFilter filter, ImageSamplerMode mode)
+		{
+			VkSamplerCreateInfo samplerCreateInfo = {};
+			samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+			samplerCreateInfo.magFilter = ImageSamplerFilterToVulkanFilter(filter);
+			samplerCreateInfo.minFilter = ImageSamplerFilterToVulkanFilter(filter);
+
+			samplerCreateInfo.addressModeU = ImageSamplerModeToSamplerAddressMode(mode);
+			samplerCreateInfo.addressModeV = ImageSamplerModeToSamplerAddressMode(mode);
+			samplerCreateInfo.addressModeW = ImageSamplerModeToSamplerAddressMode(mode);
+
+			if (m_Device->GetDeviceProperties().Features.samplerAnisotropy == VK_TRUE)
+			{
+				samplerCreateInfo.anisotropyEnable = VK_TRUE;
+				samplerCreateInfo.maxAnisotropy = m_Device->GetDeviceProperties().Limits.maxSamplerAnisotropy;
+
+				LOG_CORE_TRACE("[Texture sampler] Using anisotropy - max {}", samplerCreateInfo.maxAnisotropy);
+			}
+			else
+			{
+				samplerCreateInfo.anisotropyEnable = VK_FALSE;
+				samplerCreateInfo.maxAnisotropy = 1.0f;
+			}
+
+			samplerCreateInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+
+			samplerCreateInfo.unnormalizedCoordinates = VK_FALSE;
+
+			samplerCreateInfo.compareEnable = VK_FALSE;
+			samplerCreateInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+
+			samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+			samplerCreateInfo.mipLodBias = 0.0f;
+			samplerCreateInfo.minLod = 0.0f;
+			samplerCreateInfo.maxLod = 0.0f;
+
+			if (vkCreateSampler(m_Device->GetDevice(), &samplerCreateInfo, nullptr, &m_Sampler) != VK_SUCCESS)
+			{
+				LOG_CORE_ERROR("[Texture] Unable to create sampler");
+				return;
+			}
+
+		}
+		
+
 	}
 
 }

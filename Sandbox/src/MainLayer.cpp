@@ -66,7 +66,7 @@ void MainLayer::OnAttach()
 
 void MainLayer::OnDetach()
 {
-	Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
+	Renderer::WaitForIdle();
 
 	m_Scene->Release();
 }
@@ -75,10 +75,6 @@ void MainLayer::OnUpdate(Timestep ts)
 {
 	m_Scene->Begin();
 
-	uint32_t currentFrame = Renderer::GetContext()->GetCurrentFrame();
-	auto& rendererData = Renderer::GetContext()->GetRendererData();
-
-
 	m_Scene->Draw();
 
 	m_Scene->End();
@@ -86,13 +82,18 @@ void MainLayer::OnUpdate(Timestep ts)
 }
 
 
-void MainLayer::OnImGuiRender()
+void MainLayer::OnUIRender()
 {
+
+	ImGui::DockSpaceOverViewport();
+
 	ImGui::ShowDemoWindow();
 
-//	ImGui::Begin("Test");
-//
-//		ImGui::Text("This is only a test text. Hello world?");
-//
-//	ImGui::End();
+	ImGui::Begin("Test");
+
+	ImGui::Text("This is only a test text. Hello world?");
+
+//	ImGui::Image((ImTextureID)1, ImVec2(100.0f, 100.0f));
+
+	ImGui::End();
 }

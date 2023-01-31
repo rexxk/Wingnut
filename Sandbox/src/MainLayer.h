@@ -18,7 +18,7 @@ public:
 	virtual void OnDetach() override;
 	virtual void OnUpdate(Wingnut::Timestep ts) override;
 
-	virtual void OnImGuiRender() override;
+	virtual void OnUIRender() override;
 
 private:
 	Ref<Wingnut::Scene> m_Scene = nullptr;

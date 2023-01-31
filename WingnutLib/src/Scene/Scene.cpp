@@ -17,8 +17,9 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 		m_SceneRenderer = CreateRef<SceneRenderer>(properties.SceneExtent);
+		m_ImageSampler = CreateRef<Vulkan::ImageSampler>(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
-		m_Texture = CreateRef<Vulkan::Texture2D>("assets/textures/texture.jpg");
+		m_Texture = CreateRef<Vulkan::Texture2D>("assets/textures/texture.jpg", m_ImageSampler);
 
 		m_CameraData = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(CameraDescriptorSet));
 
@@ -34,12 +35,18 @@ namespace Wingnut
 
 	void Scene::Release()
 	{
+
 		if (m_CameraData)
 		{
 			m_CameraData->Release();
 		}
 
 		m_Texture->Release();
+
+		if (m_ImageSampler)
+		{
+			m_ImageSampler->Release();
+		}
 
 		if (m_SceneRenderer)
 		{
@@ -77,7 +84,7 @@ namespace Wingnut
 	{
 		auto& device = Renderer::GetContext()->GetRendererData().Device;
 
-		m_SceneRenderer->UpdateDescriptor(1, 0, m_Texture->GetImageView(), m_Texture->GetSampler());
+		m_SceneRenderer->UpdateDescriptor(1, 0, m_Texture->GetImageView(), m_Texture->GetSampler()->Sampler());
 
 		auto& entities = ECS::EntitySystem::GetView<MeshComponent>();
 

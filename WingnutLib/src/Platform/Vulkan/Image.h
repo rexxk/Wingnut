@@ -20,6 +20,22 @@ namespace Wingnut
 		};
 
 
+		enum class ImageSamplerFilter
+		{
+			Linear,
+			Nearest,
+		};
+
+		enum class ImageSamplerMode
+		{
+			ClampToBorder,
+			ClampToEdge,
+			MirroredRepeat,
+			MirrorClampToEdge,
+			Repeat,
+		};
+
+
 		class Image
 		{
 		public:
@@ -49,6 +65,25 @@ namespace Wingnut
 			ImageType m_Type;
 		};
 
+
+		class ImageSampler
+		{
+		public:
+			ImageSampler(Ref<Device> device, ImageSamplerFilter filter, ImageSamplerMode mode);
+			~ImageSampler();
+
+			void Release();
+
+			VkSampler Sampler() { return m_Sampler; }
+
+		private:
+			void CreateSampler(ImageSamplerFilter filter, ImageSamplerMode mode);
+
+		private:
+			Ref<Device> m_Device = nullptr;
+
+			VkSampler m_Sampler = nullptr;
+		};
 
 
 	}

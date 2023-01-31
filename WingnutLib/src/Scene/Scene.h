@@ -58,6 +58,7 @@ namespace Wingnut
 		Ref<Vulkan::UniformBuffer> m_CameraData = nullptr;
 
 		Ref<Vulkan::Texture2D> m_Texture = nullptr;
+		Ref<Vulkan::ImageSampler> m_ImageSampler = nullptr;
 
 		Ref<ECS::Registry> m_EntityRegistry = nullptr;
 		Ref<ECS::EntitySystem> m_EntitySystem = nullptr;

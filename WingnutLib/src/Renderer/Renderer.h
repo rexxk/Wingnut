@@ -50,6 +50,8 @@ namespace Wingnut
 		static void BeginScene();
 		static void EndScene();
 
+		static void WaitForIdle();
+
 		static Renderer& Get() { return *s_Instance; }
 		static Ref<Vulkan::VulkanContext> GetContext() { return s_Context; }
 

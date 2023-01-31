@@ -49,5 +49,10 @@ namespace Wingnut
 		s_Context->EndScene();
 	}
 
+	void Renderer::WaitForIdle()
+	{
+		s_Context->GetRendererData().Device->WaitForIdle();
+	}
+
 
 }

@@ -53,6 +53,7 @@ namespace Wingnut
 		ShaderStore::LoadShader("ImGui", "assets/shaders/ImGui.shader");
 
 		m_Renderer = CreateRef<ImGuiRenderer>(extent);
+		m_UISampler = CreateRef<Vulkan::ImageSampler>(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -62,8 +63,10 @@ namespace Wingnut
 		io.BackendPlatformName = "Wingnut";
 		io.BackendRendererName = "Wingnut-Vulkan";
 		io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
+//		io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
 
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 		io.ImeWindowHandle = Application::Get().GetWindow()->WindowHandle();
 
@@ -72,7 +75,7 @@ namespace Wingnut
 
 		ImGui::StyleColorsDark();
 
-		io.DisplaySize = ImVec2(m_Width, m_Height);
+		io.DisplaySize = ImVec2((float)m_Width, (float)m_Height);
 		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 
 		io.KeyMap[ImGuiKey_Backspace] = WK_BACKSPACE;
@@ -89,12 +92,12 @@ namespace Wingnut
 
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 //		io.Fonts->GetTexDataAsAlpha8(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
-		m_AtlasTexture = CreateRef<Vulkan::Texture2D>((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels);
+		m_AtlasTexture = CreateRef<Vulkan::Texture2D>((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, m_UISampler);
 
 		// TextureID = DescriptorSet 1 - should be read from the shader really and not hardcoded (texture localization)
 		io.Fonts->SetTexID((ImTextureID)ShaderStore::GetShader("ImGui")->GetDescriptorSet(1).Set);
 
-		m_Renderer->UpdateDescriptor(1, 0, m_AtlasTexture->GetImageView(), m_AtlasTexture->GetSampler());
+		m_Renderer->UpdateDescriptor(1, 0, m_AtlasTexture->GetImageView(), m_AtlasTexture->GetSampler()->Sampler());
 //		m_Renderer->UpdateDescriptor(1, 0, texture->GetImageView(), texture->GetSampler());
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
@@ -193,6 +196,11 @@ namespace Wingnut
 		if (m_AtlasTexture)
 		{
 			m_AtlasTexture->Release();
+		}
+
+		if (m_UISampler)
+		{
+			m_UISampler->Release();
 		}
 
 		if (m_Renderer)

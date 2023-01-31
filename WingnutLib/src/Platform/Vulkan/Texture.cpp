@@ -13,22 +13,20 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
-		Texture2D::Texture2D(const std::string& texturePath)
+		Texture2D::Texture2D(const std::string& texturePath, Ref<ImageSampler> sampler)
+			: m_Sampler(sampler)
 		{
 			CreateTextureFromFile(texturePath);
 
 			CreateImageView();
-
-			CreateSampler();
 		}
 		
-		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data)
+		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, Ref<ImageSampler> sampler)
+			: m_Sampler(sampler)
 		{
 			CreateTextureFromData(width, height, bitsPerPixel, data);
 
 			CreateImageView();
-
-			CreateSampler();
 		}
 
 		Texture2D::~Texture2D()
@@ -219,56 +217,8 @@ namespace Wingnut
 			}
 		}
 
-		void Texture2D::CreateSampler()
-		{
-			VkSamplerCreateInfo samplerCreateInfo = {};
-			samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-			samplerCreateInfo.magFilter = VK_FILTER_LINEAR;
-			samplerCreateInfo.minFilter = VK_FILTER_LINEAR;
-
-			samplerCreateInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			samplerCreateInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			samplerCreateInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-
-			if (m_Device->GetDeviceProperties().Features.samplerAnisotropy == VK_TRUE)
-			{
-				samplerCreateInfo.anisotropyEnable = VK_TRUE;
-				samplerCreateInfo.maxAnisotropy = m_Device->GetDeviceProperties().Limits.maxSamplerAnisotropy;
-
-				LOG_CORE_TRACE("[Texture sampler] Using anisotropy - max {}", samplerCreateInfo.maxAnisotropy);
-			}
-			else
-			{
-				samplerCreateInfo.anisotropyEnable = VK_FALSE;
-				samplerCreateInfo.maxAnisotropy = 1.0f;
-			}
-
-			samplerCreateInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-
-			samplerCreateInfo.unnormalizedCoordinates = VK_FALSE;
-
-			samplerCreateInfo.compareEnable = VK_FALSE;
-			samplerCreateInfo.compareOp = VK_COMPARE_OP_ALWAYS;
-
-			samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-			samplerCreateInfo.mipLodBias = 0.0f;
-			samplerCreateInfo.minLod = 0.0f;
-			samplerCreateInfo.maxLod = 0.0f;
-
-			if (vkCreateSampler(m_Device->GetDevice(), &samplerCreateInfo, nullptr, &m_Sampler) != VK_SUCCESS)
-			{
-				LOG_CORE_ERROR("[Texture] Unable to create sampler");
-				return;
-			}
-		}
-
 		void Texture2D::Release()
 		{
-			if (m_Sampler != nullptr)
-			{
-				vkDestroySampler(m_Device->GetDevice(), m_Sampler, nullptr);
-				m_Sampler = nullptr;
-			}
 
 			if (m_ImageView != nullptr)
 			{
