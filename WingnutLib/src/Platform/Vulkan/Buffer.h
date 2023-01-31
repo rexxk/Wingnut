@@ -77,6 +77,7 @@ namespace Wingnut
 			void Release();
 
 			VkBuffer GetBuffer(uint32_t frame) { return m_Buffers[frame]; };
+			VkDeviceSize GetBufferSize() { return m_BufferSize; }
 
 			void Update(void* uniformBufferObject, uint32_t uniformBufferObjectSize, uint32_t currentImageInFlight);
 
@@ -85,6 +86,8 @@ namespace Wingnut
 			std::vector<VkDeviceMemory> m_BuffersMemory;
 
 			std::vector<void*> m_MappedBuffers;
+
+			VkDeviceSize m_BufferSize;
 
 			uint32_t m_Frames;
 

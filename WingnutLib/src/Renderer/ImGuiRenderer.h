@@ -29,12 +29,10 @@ namespace Wingnut
 		void EndScene();
 
 		void Bind();
-		void BindDescriptor(uint32_t set, VkDescriptorSet descriptorSet);
-
-		void UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize);
-		void UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler);
 
 		void SubmitBuffers(const std::vector<ImDrawVert>& vertexList, const std::vector<ImDrawIdx>& indexList);
+
+		VkPipelineLayout GetPipelineLayout();
 
 	private:
 		void Create();

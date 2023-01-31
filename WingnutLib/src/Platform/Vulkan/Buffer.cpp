@@ -317,7 +317,7 @@ namespace Wingnut
 		UniformBuffer::UniformBuffer(Ref<Device> device, uint32_t uniformBufferObjectSize)
 			: m_Device(device)
 		{
-			VkDeviceSize bufferSize = uniformBufferObjectSize;
+			m_BufferSize = uniformBufferObjectSize;
 
 			m_Frames = Renderer::GetRendererSettings().FramesInFlight;
 
@@ -328,9 +328,9 @@ namespace Wingnut
 			for (uint32_t i = 0; i < m_Frames; i++)
 			{
 				// Create uniform buffer
-				Buffer::CreateBuffer(m_Device, m_Buffers[i], m_BuffersMemory[i], bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+				Buffer::CreateBuffer(m_Device, m_Buffers[i], m_BuffersMemory[i], m_BufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-				vkMapMemory(m_Device->GetDevice(), m_BuffersMemory[i], 0, bufferSize, 0, &m_MappedBuffers[i]);
+				vkMapMemory(m_Device->GetDevice(), m_BuffersMemory[i], 0, m_BufferSize, 0, &m_MappedBuffers[i]);
 			}
 		}
 

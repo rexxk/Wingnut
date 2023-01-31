@@ -15,7 +15,7 @@
 namespace Wingnut
 {
 
-	struct CameraDescriptorSet
+	struct CameraData
 	{
 		glm::mat4 ViewProjection;
 	};
@@ -55,9 +55,11 @@ namespace Wingnut
 
 		Ref<Camera> m_SceneCamera = nullptr;
 
-		Ref<Vulkan::UniformBuffer> m_CameraData = nullptr;
+		Ref<Vulkan::UniformBuffer> m_CameraDataBuffer = nullptr;
+		Ref<Vulkan::Descriptor> m_CameraDescriptor = nullptr;
 
 		Ref<Vulkan::Texture2D> m_Texture = nullptr;
+		Ref<Vulkan::Descriptor> m_TextureDescriptor = nullptr;
 		Ref<Vulkan::ImageSampler> m_ImageSampler = nullptr;
 
 		Ref<ECS::Registry> m_EntityRegistry = nullptr;

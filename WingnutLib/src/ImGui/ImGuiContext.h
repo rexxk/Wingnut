@@ -28,10 +28,14 @@ namespace Wingnut
 	private:
 		Ref<ImGuiRenderer> m_Renderer = nullptr;
 
-		Ref<Vulkan::ImageSampler> m_UISampler = nullptr;
 
+		Ref<Vulkan::UniformBuffer> m_CameraBuffer = nullptr;
+		Ref<Vulkan::Descriptor> m_CameraDescriptor = nullptr;
+
+		Ref<Vulkan::ImageSampler> m_UISampler = nullptr;
 		Ref<Vulkan::Texture2D> m_AtlasTexture = nullptr;
-		Ref<Vulkan::UniformBuffer> m_CameraDescriptor = nullptr;
+		Ref<Vulkan::Descriptor> m_AtlasDescriptor = nullptr;
+
 
 		Ref<ECS::Registry> m_EntityRegistry;
 		UUID m_ImGuiEntity = 0;

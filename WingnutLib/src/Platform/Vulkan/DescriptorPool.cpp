@@ -15,7 +15,7 @@ namespace Wingnut
 		{
 			VkDescriptorPoolSize poolSize = {};
 			poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			poolSize.descriptorCount = 10; // Renderer::GetRendererSettings().FramesInFlight;
+			poolSize.descriptorCount = 100; // Renderer::GetRendererSettings().FramesInFlight;
 
 			VkDescriptorPoolCreateInfo createInfo = {};
 			createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;

@@ -27,6 +27,8 @@ namespace Wingnut
 
 		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawList;
 		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawCache;
+
+		std::vector<Ref<Vulkan::Descriptor>> DescriptorList;
 	};
 
 
@@ -106,6 +108,8 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		auto& commandBuffer = rendererData.GraphicsCommandBuffers[currentFrame];
 
+		s_SceneData.DescriptorList.clear();
+
 		UpdateEntityCache();
 
 		s_SceneData.DrawList.clear();
@@ -134,7 +138,6 @@ namespace Wingnut
 
 	}
 
-
 	void SceneRenderer::Draw()
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
@@ -148,28 +151,24 @@ namespace Wingnut
 	
 			VkBuffer vertexBuffers[] = { vertexBuffer->GetBuffer() };
 			VkDeviceSize offsets[] = { 0 };
-			vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
 
+			vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
 			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-			s_SceneData.StaticSceneShader->BindDescriptorSets(commandBuffer->GetCommandBuffer(), s_SceneData.StaticPipeline->GetLayout());
+			for (auto& descriptor : s_SceneData.DescriptorList)
+			{
+				descriptor->Bind(commandBuffer, s_SceneData.StaticPipeline->GetLayout());
+			}
 
 			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
 		}
 
 	}
 
-
-	void SceneRenderer::UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize)
+	void SceneRenderer::SubmitDescriptor(Ref<Vulkan::Descriptor> descriptor)
 	{
-		s_SceneData.StaticSceneShader->UpdateDescriptorSet(set, binding, buffer, bufferSize);
+		s_SceneData.DescriptorList.emplace_back(descriptor);
 	}
-
-	void SceneRenderer::UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler)
-	{
-		s_SceneData.StaticSceneShader->UpdateDescriptorSet(set, binding, imageView, sampler);
-	}
-
 
 	void SceneRenderer::SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList)
 	{

@@ -1,6 +1,8 @@
 #include "wingnut_pch.h"
 #include "Scene.h"
 
+#include "Assets/ShaderStore.h"
+
 #include "Components.h"
 
 #include "Renderer/Renderer.h"
@@ -20,8 +22,10 @@ namespace Wingnut
 		m_ImageSampler = CreateRef<Vulkan::ImageSampler>(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
 		m_Texture = CreateRef<Vulkan::Texture2D>("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized, m_ImageSampler);
+		m_TextureDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), TextureDescriptor, 0, m_Texture);
 
-		m_CameraData = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(CameraDescriptorSet));
+		m_CameraDataBuffer = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(CameraData));
+		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), CameraDescriptor, 0, m_CameraDataBuffer);
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 		m_EntitySystem = CreateRef<ECS::EntitySystem>(m_EntityRegistry);
@@ -36,9 +40,9 @@ namespace Wingnut
 	void Scene::Release()
 	{
 
-		if (m_CameraData)
+		if (m_CameraDataBuffer)
 		{
-			m_CameraData->Release();
+			m_CameraDataBuffer->Release();
 		}
 
 		m_Texture->Release();
@@ -64,11 +68,13 @@ namespace Wingnut
 
 		m_Properties.SceneCamera->Update();
 
-		CameraDescriptorSet cameraDescriptorSet = {};
-		cameraDescriptorSet.ViewProjection = m_Properties.SceneCamera->GetViewProjectionMatrix();
+		CameraData cameraData = {};
+		cameraData.ViewProjection = m_Properties.SceneCamera->GetViewProjectionMatrix();
 
-		m_CameraData->Update(&cameraDescriptorSet, sizeof(CameraDescriptorSet), currentFrame);
-		m_SceneRenderer->UpdateDescriptor(0, 0, m_CameraData->GetBuffer(currentFrame), sizeof(CameraDescriptorSet));
+		m_CameraDataBuffer->Update(&cameraData, sizeof(CameraData), currentFrame);
+
+		m_SceneRenderer->SubmitDescriptor(m_CameraDescriptor);
+		m_SceneRenderer->SubmitDescriptor(m_TextureDescriptor);
 
 	}
 
@@ -83,8 +89,6 @@ namespace Wingnut
 	void Scene::Draw()
 	{
 		auto& device = Renderer::GetContext()->GetRendererData().Device;
-
-		m_SceneRenderer->UpdateDescriptor(1, 0, m_Texture->GetImageView(), m_Texture->GetSampler()->Sampler());
 
 		auto& entities = ECS::EntitySystem::GetView<MeshComponent>();
 

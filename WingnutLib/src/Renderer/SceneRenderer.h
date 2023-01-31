@@ -28,10 +28,7 @@ namespace Wingnut
 
 		void Draw();
 
-
-		void UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize);
-		void UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler);
-
+		void SubmitDescriptor(Ref<Vulkan::Descriptor> descriptor);
 		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList);
 
 	private:

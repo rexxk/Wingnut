@@ -91,20 +91,18 @@ namespace Wingnut
 		int32_t bytesPerPixel;
 
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
-//		io.Fonts->GetTexDataAsAlpha8(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
+
 		m_AtlasTexture = CreateRef<Vulkan::Texture2D>((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized, m_UISampler);
+		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), ImGuiTextureDescriptor, 0, m_AtlasTexture);
 
-		// TextureID = DescriptorSet 1 - should be read from the shader really and not hardcoded (texture localization)
-		io.Fonts->SetTexID((ImTextureID)ShaderStore::GetShader("ImGui")->GetDescriptorSet(1).Set);
-
-		m_Renderer->UpdateDescriptor(1, 0, m_AtlasTexture->GetImageView(), m_AtlasTexture->GetSampler()->Sampler());
-//		m_Renderer->UpdateDescriptor(1, 0, texture->GetImageView(), texture->GetSampler());
+		io.Fonts->SetTexID((ImTextureID)m_AtlasDescriptor->GetDescriptor());
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 		m_ImGuiEntity = ECS::EntitySystem::Create(m_EntityRegistry);
 		ECS::EntitySystem::AddComponent<TagComponent>(m_ImGuiEntity, "ImGui");
 
-		m_CameraDescriptor = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(ImGuiScaleTranslate));
+		m_CameraBuffer = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(ImGuiScaleTranslate));
+		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), ImGuiCameraDescriptor, 0, m_CameraBuffer);
 
 		LOG_CORE_TRACE("[ImGui] Context created");
 
@@ -198,6 +196,11 @@ namespace Wingnut
 			m_AtlasTexture->Release();
 		}
 
+		if (m_CameraBuffer)
+		{
+			m_CameraBuffer->Release();
+		}
+
 		if (m_UISampler)
 		{
 			m_UISampler->Release();
@@ -235,10 +238,6 @@ namespace Wingnut
 		float top = drawData->DisplayPos.y;
 		float bottom = drawData->DisplayPos.y + drawData->DisplaySize.y;
 
-//		s_CameraDescriptor.ViewProjection = glm::ortho(left, right, bottom, top);
-//		s_CameraDescriptor.ViewProjection = glm::ortho(left, right, top, bottom);
-//		m_CameraDescriptor->Update(&s_CameraDescriptor, sizeof(ImGuiCameraDescriptor), currentFrame);
-
 		float scale[2];
 		scale[0] = 2.0f / drawData->DisplaySize.x;
 		scale[1] = 2.0f / drawData->DisplaySize.y;
@@ -250,12 +249,7 @@ namespace Wingnut
 		s_ScaleTranslateDescriptor.Scale = glm::vec2(scale[0], scale[1]);
 		s_ScaleTranslateDescriptor.Translate = glm::vec2(translate[0], translate[1]);
 
-		m_CameraDescriptor->Update(&s_ScaleTranslateDescriptor, sizeof(ImGuiScaleTranslate), currentFrame);
-
-//		m_Renderer->UpdateDescriptor(0, 0, m_CameraDescriptor->GetBuffer(currentFrame), sizeof(ImGuiCameraDescriptor));
-		m_Renderer->UpdateDescriptor(0, 0, m_CameraDescriptor->GetBuffer(currentFrame), sizeof(ImGuiScaleTranslate));
-
-		VkDescriptorSet viewProjectionDescriptor = ShaderStore::GetShader("ImGui")->GetDescriptorSet(0).Set;
+		m_CameraBuffer->Update(&s_ScaleTranslateDescriptor, sizeof(ImGuiScaleTranslate), currentFrame);
 
 
 		ImVec2 clipOffset = drawData->DisplayPos;
@@ -337,8 +331,8 @@ namespace Wingnut
 						scissor.extent.height = (uint32_t)(clipMax.y - clipMin.y);
 						vkCmdSetScissor(commandBuffer->GetCommandBuffer(), 0, 1, &scissor);
 
-						m_Renderer->BindDescriptor(0, viewProjectionDescriptor);
-						m_Renderer->BindDescriptor(1, (VkDescriptorSet)command->TextureId);
+						m_CameraDescriptor->Bind(commandBuffer, m_Renderer->GetPipelineLayout());
+						m_AtlasDescriptor->Bind(commandBuffer, m_Renderer->GetPipelineLayout());
 
 						vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), command->ElemCount, 1, command->IdxOffset + globalIndexOffset, command->VtxOffset + globalVertexOffset, 0);
 					}
@@ -350,13 +344,7 @@ namespace Wingnut
 
 			VkRect2D scissor = { { 0, 0 }, { (uint32_t)fbWidth, (uint32_t)fbHeight } };
 			vkCmdSetScissor(commandBuffer->GetCommandBuffer(), 0, 1, &scissor);
-
-//			m_Renderer->SubmitToDrawList(m_ImGuiEntity, vertexList, indexList);
 		}
-
-
-		// Single entity draw doesn't need drawlists
-//		m_Renderer->Draw();
 
 		m_Renderer->EndScene();
 

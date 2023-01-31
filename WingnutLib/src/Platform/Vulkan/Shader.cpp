@@ -3,6 +3,8 @@
 
 #include "ShaderCompiler.h"
 
+#include "Buffer.h"
+
 #include "Renderer/Renderer.h"
 #include "Utils/StringUtils.h"
 
@@ -66,10 +68,10 @@ namespace Wingnut
 		{
 			for (auto& descriptorSetLayout : m_DescriptorSetLayouts)
 			{
-				if (descriptorSetLayout != nullptr)
+				if (descriptorSetLayout.second != nullptr)
 				{
-					vkDestroyDescriptorSetLayout(m_Device->GetDevice(), descriptorSetLayout, nullptr);
-					descriptorSetLayout = nullptr;
+					vkDestroyDescriptorSetLayout(m_Device->GetDevice(), descriptorSetLayout.second, nullptr);
+					descriptorSetLayout.second = nullptr;
 				}
 			}
 
@@ -88,10 +90,6 @@ namespace Wingnut
 			Compile();
 
 			Reflect();
-
-			AllocateDescriptorSets();
-
-			m_DescriptorSetData.resize(m_DescriptorSets.size());
 		}
 
 		void Shader::LoadSources()
@@ -208,6 +206,10 @@ namespace Wingnut
 
 			}
 
+			for (auto& descriptorSetLayoutBindings : m_DescriptorSetLayoutBindings)
+			{
+				m_DescriptorSetLayouts[descriptorSetLayoutBindings.first] = CreateDescriptorSetLayout(descriptorSetLayoutBindings.second);
+			}
 
 		}
 
@@ -219,7 +221,7 @@ namespace Wingnut
 			layoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 			layoutCreateInfo.bindingCount = (uint32_t)setBindings.size();
 			layoutCreateInfo.pBindings = setBindings.data();
-
+			
 			if (vkCreateDescriptorSetLayout(m_Device->GetDevice(), &layoutCreateInfo, nullptr, &newSetLayout) != VK_SUCCESS)
 			{
 				LOG_CORE_ERROR("[Shader] Failed to create shader descriptor set layout");
@@ -229,6 +231,15 @@ namespace Wingnut
 			return newSetLayout;
 		}
 
+		VkDescriptorSetLayout Shader::GetDescriptorSetLayout(uint32_t set)
+		{
+			if (m_DescriptorSetLayouts.find(set) != m_DescriptorSetLayouts.end())
+			{
+				return m_DescriptorSetLayouts[set];
+			}
+			
+			return nullptr;
+		}
 
 		void Shader::GetVertexLayout(const std::string& shaderSource)
 		{
@@ -379,126 +390,12 @@ namespace Wingnut
 
 					layoutBinding.binding = binding;
 
-
-
 //					LOG_CORE_WARN("Uniform: set = {}, binding = {}", set, binding);
 
 					m_DescriptorSetLayoutBindings[set].emplace_back(layoutBinding);
 				}
 
 			}
-
-			for (auto& setLayoutBinding : m_DescriptorSetLayoutBindings)
-			{
-				bool setExists = false;
-
-				for (auto& setDescription : m_SetDescriptions)
-				{
-					if (setDescription.SetID == setLayoutBinding.first)
-					{
-						setExists = true;
-					}
-				}
-
-				if (!setExists)
-				{
-					SetDescription setDescription;
-					setDescription.SetID = setLayoutBinding.first;
-
-					m_SetDescriptions.emplace_back(setDescription);
-				}
-			}
-		}
-
-		void Shader::AllocateDescriptorSets()
-		{
-			for (auto& descriptorSetLayoutBindings : m_DescriptorSetLayoutBindings)
-			{
-				m_DescriptorSetLayouts.emplace_back(CreateDescriptorSetLayout(descriptorSetLayoutBindings.second));
-			}
-
-			uint32_t setCount = (uint32_t)m_DescriptorSetLayouts.size();
-
-			if (setCount == 0)
-			{
-				return;
-			}
-
-			VkDescriptorSetAllocateInfo allocateInfo = {};
-			allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-			allocateInfo.descriptorPool = Renderer::GetContext()->GetRendererData().DescriptorPool->GetDescriptorPool();
-			allocateInfo.descriptorSetCount = setCount;
-			allocateInfo.pSetLayouts = m_DescriptorSetLayouts.data();
-
-			m_DescriptorSets.resize(setCount);
-
-			if (vkAllocateDescriptorSets(m_Device->GetDevice(), &allocateInfo, m_DescriptorSets.data()) != VK_SUCCESS)
-			{
-				LOG_CORE_TRACE("[Shader] Unable to allocate descriptor sets");
-				return;
-			}
-
-			for (uint32_t i = 0; (uint32_t)i < m_SetDescriptions.size(); i++)
-			{
-				m_SetDescriptions[i].Set = m_DescriptorSets[i];
-			}
-		}
-
-
-		SetDescription Shader::GetDescriptorSet(uint32_t setID)
-		{
-			for (auto& setDescriptor : m_SetDescriptions)
-			{
-				if (setDescriptor.SetID == setID)
-				{
-					return setDescriptor;
-				}
-			}
-
-			LOG_CORE_ERROR("[Shader] Set {} does not exist in shader", setID);
-			return SetDescription();
-		}
-
-
-		void Shader::UpdateDescriptorSet(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize)
-		{
-			VkDescriptorBufferInfo bufferInfo = {};
-			bufferInfo.buffer = buffer;
-			bufferInfo.offset = 0;
-			bufferInfo.range = bufferSize;
-
-			m_DescriptorSetData[set].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			m_DescriptorSetData[set].dstBinding = binding;
-			m_DescriptorSetData[set].dstSet = GetDescriptorSet(set).Set;
-			m_DescriptorSetData[set].descriptorCount = 1;
-			m_DescriptorSetData[set].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			m_DescriptorSetData[set].pBufferInfo = &bufferInfo;
-
-			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &m_DescriptorSetData[set], 0, nullptr);
-		}
-
-		void Shader::UpdateDescriptorSet(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler)
-		{
-			VkDescriptorImageInfo imageInfo = {};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = imageView;
-			imageInfo.sampler = sampler;
-
-			m_DescriptorSetData[set].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			m_DescriptorSetData[set].dstBinding = binding;
-			m_DescriptorSetData[set].dstSet = GetDescriptorSet(set).Set;
-			m_DescriptorSetData[set].descriptorCount = 1;
-			m_DescriptorSetData[set].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			m_DescriptorSetData[set].pImageInfo = &imageInfo;
-
-			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &m_DescriptorSetData[set], 0, nullptr);
-
-		}
-
-		void Shader::BindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout)
-		{
-			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, (uint32_t)m_DescriptorSetData.size(),
-				m_DescriptorSets.data(), 0, nullptr);
 		}
 
 		void Shader::SetAttributeFormat(uint32_t location, VkFormat format)
@@ -507,6 +404,97 @@ namespace Wingnut
 				return;
 
 			m_AttributeDescriptions[location].format = format;
+		}
+
+
+		///////////////////////////////////////////////////
+
+		Ref<Descriptor> Descriptor::Create(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer)
+		{
+			return CreateRef<Descriptor>(device, shader, set, binding, buffer);
+		}
+
+		Ref<Descriptor> Descriptor::Create(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<Texture2D> texture)
+		{
+			return CreateRef<Descriptor>(device, shader, set, binding, texture);
+		}
+
+
+
+
+		Descriptor::Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer)
+			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::DataBuffer), m_Set(set), m_Binding(binding)
+		{
+			Allocate();
+
+			VkDescriptorBufferInfo bufferInfo = {};
+			bufferInfo.buffer = buffer->GetBuffer(Renderer::GetContext()->GetCurrentFrame());
+			bufferInfo.offset = 0;
+			bufferInfo.range = buffer->GetBufferSize();
+
+			VkWriteDescriptorSet writeSet = {};
+			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			writeSet.dstBinding = m_Binding;
+			writeSet.dstSet = m_Descriptor;
+			writeSet.descriptorCount = 1;
+			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			writeSet.pBufferInfo = &bufferInfo;
+
+			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
+
+		}
+
+		Descriptor::Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<Texture2D> texture)
+			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::Texture), m_Set(set), m_Binding(binding)
+		{
+			Allocate();
+
+			VkDescriptorImageInfo imageInfo = {};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = texture->GetImageView();
+			imageInfo.sampler = texture->GetSampler()->Sampler();
+
+			VkWriteDescriptorSet writeSet = {};
+			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			writeSet.dstBinding = m_Binding;
+			writeSet.dstSet = m_Descriptor;
+			writeSet.descriptorCount = 1;
+			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			writeSet.pImageInfo = &imageInfo;
+
+			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
+		}
+
+		Descriptor::~Descriptor()
+		{
+			Release();
+		}
+
+		void Descriptor::Release()
+		{
+			
+		}
+
+		void Descriptor::Allocate()
+		{
+			VkDescriptorSetAllocateInfo allocateInfo = {};
+			allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			allocateInfo.descriptorPool = Renderer::GetContext()->GetRendererData().DescriptorPool->GetDescriptorPool();
+			allocateInfo.descriptorSetCount = 1;
+
+			VkDescriptorSetLayout layouts[] = { m_Shader->GetDescriptorSetLayout(m_Set) };
+			allocateInfo.pSetLayouts = layouts;
+
+			if (vkAllocateDescriptorSets(m_Device->GetDevice(), &allocateInfo, &m_Descriptor) != VK_SUCCESS)
+			{
+				LOG_CORE_TRACE("[Shader] Unable to allocate descriptor sets");
+				return;
+			}
+		}
+
+		void Descriptor::Bind(Ref<CommandBuffer> commandBuffer, VkPipelineLayout pipelineLayout)
+		{
+			vkCmdBindDescriptorSets(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, m_Set, 1, &m_Descriptor, 0, nullptr);
 		}
 
 	}

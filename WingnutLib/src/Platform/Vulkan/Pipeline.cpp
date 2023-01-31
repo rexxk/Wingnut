@@ -223,10 +223,20 @@ namespace Wingnut
 
 //			VkDescriptorSetLayout descriptorSetLayouts[] = { m_Specification.PipelineShader->GetDescriptorSetLayout(0)};
 
+			std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
+
+			for (auto& descriptorSet : m_Specification.PipelineShader->GetDescriptorSetLayouts())
+			{
+				descriptorSetLayouts.emplace_back(descriptorSet.second);
+			}
+			
+
 			VkPipelineLayoutCreateInfo layoutCreateInfo = {};
 			layoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-			layoutCreateInfo.setLayoutCount = (uint32_t)m_Specification.PipelineShader->GetDescriptorSetLayouts().size();
-			layoutCreateInfo.pSetLayouts = m_Specification.PipelineShader->GetDescriptorSetLayouts().data();
+//			layoutCreateInfo.setLayoutCount = (uint32_t)m_Specification.PipelineShader->GetDescriptorSetLayouts().size();
+			layoutCreateInfo.setLayoutCount = (uint32_t)descriptorSetLayouts.size();
+//			layoutCreateInfo.pSetLayouts = m_Specification.PipelineShader->GetDescriptorSetLayouts().data();
+			layoutCreateInfo.pSetLayouts = descriptorSetLayouts.data();
 			layoutCreateInfo.pushConstantRangeCount = 0;
 			layoutCreateInfo.pPushConstantRanges = nullptr;
 

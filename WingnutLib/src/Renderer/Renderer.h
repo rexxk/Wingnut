@@ -9,6 +9,15 @@
 namespace Wingnut
 {
 
+
+	const uint32_t ImGuiCameraDescriptor = 0;
+	const uint32_t ImGuiTextureDescriptor = 1;
+
+	const uint32_t CameraDescriptor = 0;
+	const uint32_t TextureDescriptor = 1;
+	const uint32_t LightsDescriptor = 2;
+
+
 	struct Vertex
 	{
 		glm::vec3 Position;

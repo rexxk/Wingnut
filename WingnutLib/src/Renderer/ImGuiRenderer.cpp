@@ -95,6 +95,11 @@ namespace Wingnut
 
 	}
 
+	VkPipelineLayout ImGuiRenderer::GetPipelineLayout()
+	{
+		return s_ImGuiSceneData.Pipeline->GetLayout();
+	}
+
 	void ImGuiRenderer::Create()
 	{
 		LOG_CORE_TRACE("[ImGuiRenderer] Creating renderer");
@@ -169,34 +174,10 @@ namespace Wingnut
 		vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
 		vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), m_IndexBuffer->GetBuffer(), 0, DataSizeToIndexType(sizeof(ImDrawIdx)));
 
-		s_ImGuiSceneData.Shader->BindDescriptorSets(commandBuffer->GetCommandBuffer(), s_ImGuiSceneData.Pipeline->GetLayout());
-
 //			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
 //		}
 
 	}
-
-	void ImGuiRenderer::BindDescriptor(uint32_t set, VkDescriptorSet descriptorSet)
-	{
-		auto& rendererData = Renderer::GetContext()->GetRendererData();
-		auto& commandBuffer = rendererData.GraphicsCommandBuffers[m_CurrentFrame];
-
-//		s_ImGuiSceneData.Shader->UpdateDescriptorSet(set, descriptorSet);
-
-		vkCmdBindDescriptorSets(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_ImGuiSceneData.Pipeline->GetLayout(), set, 1, &descriptorSet, 0, nullptr);
-	}
-
-
-	void ImGuiRenderer::UpdateDescriptor(uint32_t set, uint32_t binding, VkBuffer buffer, uint32_t bufferSize)
-	{
-		s_ImGuiSceneData.Shader->UpdateDescriptorSet(set, binding, buffer, bufferSize);
-	}
-
-	void ImGuiRenderer::UpdateDescriptor(uint32_t set, uint32_t binding, VkImageView imageView, VkSampler sampler)
-	{
-		s_ImGuiSceneData.Shader->UpdateDescriptorSet(set, binding, imageView, sampler);
-	}
-
 
 	void ImGuiRenderer::SubmitBuffers(const std::vector<ImDrawVert>& vertexList, const std::vector<ImDrawIdx>& indexList)
 	{
