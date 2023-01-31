@@ -85,7 +85,7 @@ void MainLayer::OnUpdate(Timestep ts)
 void MainLayer::OnUIRender()
 {
 
-	ImGui::DockSpaceOverViewport();
+//	ImGui::DockSpaceOverViewport();
 
 	ImGui::ShowDemoWindow();
 

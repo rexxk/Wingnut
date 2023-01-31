@@ -12,12 +12,18 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		enum class TextureFormat
+		{
+			R8G8B8A8_Normalized,
+			R8G8B8A8_SRGB,
+		};
+
 
 		class Texture2D
 		{
 		public:
-			Texture2D(const std::string& texturePath, Ref<ImageSampler> sampler);
-			Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, Ref<ImageSampler> sampler);
+			Texture2D(const std::string& texturePath, TextureFormat format, Ref<ImageSampler> sampler);
+			Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, Ref<ImageSampler> sampler);
 			~Texture2D();
 
 			void Release();
@@ -27,13 +33,14 @@ namespace Wingnut
 
 		private:
 			void CreateTextureFromFile(const std::string& texturePath);
-			void CreateTextureFromData(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels);
+			void CreateTexture(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels);
 
 		private:
 			Ref<Image> m_Image = nullptr;
 			Ref<ImageSampler> m_Sampler = nullptr;
 
-			VkFormat m_Format = VK_FORMAT_UNDEFINED;
+			TextureFormat m_Format;
+//			VkFormat m_Format = VK_FORMAT_UNDEFINED;
 
 			Ref<Device> m_Device = nullptr;
 		};

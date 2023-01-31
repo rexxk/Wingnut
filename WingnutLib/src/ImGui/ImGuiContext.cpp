@@ -92,7 +92,7 @@ namespace Wingnut
 
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 //		io.Fonts->GetTexDataAsAlpha8(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
-		m_AtlasTexture = CreateRef<Vulkan::Texture2D>((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, m_UISampler);
+		m_AtlasTexture = CreateRef<Vulkan::Texture2D>((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized, m_UISampler);
 
 		// TextureID = DescriptorSet 1 - should be read from the shader really and not hardcoded (texture localization)
 		io.Fonts->SetTexID((ImTextureID)ShaderStore::GetShader("ImGui")->GetDescriptorSet(1).Set);

@@ -19,7 +19,7 @@ namespace Wingnut
 		m_SceneRenderer = CreateRef<SceneRenderer>(properties.SceneExtent);
 		m_ImageSampler = CreateRef<Vulkan::ImageSampler>(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
-		m_Texture = CreateRef<Vulkan::Texture2D>("assets/textures/texture.jpg", m_ImageSampler);
+		m_Texture = CreateRef<Vulkan::Texture2D>("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized, m_ImageSampler);
 
 		m_CameraData = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(CameraDescriptorSet));
 
