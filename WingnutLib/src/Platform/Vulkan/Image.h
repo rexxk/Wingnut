@@ -17,6 +17,7 @@ namespace Wingnut
 		enum class ImageType
 		{
 			DepthStencil,
+			Texture2D,
 		};
 
 
@@ -44,7 +45,7 @@ namespace Wingnut
 
 			void Release();
 
-//			VkImage GetImage() { return m_Image; }
+			VkImage GetImage() { return m_Image; }
 			VkImageView GetImageView() { return m_ImageView; }
 
 		private:

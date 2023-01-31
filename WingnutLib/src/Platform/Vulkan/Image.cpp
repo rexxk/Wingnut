@@ -70,7 +70,7 @@ namespace Wingnut
 
 			if (vkCreateImage(m_Device->GetDevice(), &imageCreateInfo, nullptr, &m_Image) != VK_SUCCESS)
 			{
-				LOG_CORE_ERROR("[Texture] Unable to create texture image");
+				LOG_CORE_ERROR("[Image] Unable to create image");
 				return;
 			}
 
@@ -84,7 +84,7 @@ namespace Wingnut
 
 			if (vkAllocateMemory(m_Device->GetDevice(), &allocateInfo, nullptr, &m_ImageMemory) != VK_SUCCESS)
 			{
-				LOG_CORE_ERROR("[Texture] Unable to allocate texture image memory");
+				LOG_CORE_ERROR("[Image] Unable to allocate image memory");
 				return;
 			}
 
@@ -107,9 +107,11 @@ namespace Wingnut
 
 			if (vkCreateImageView(m_Device->GetDevice(), &imageViewCreateInfo, nullptr, &m_ImageView) != VK_SUCCESS)
 			{
-				LOG_CORE_ERROR("[Texture] Unable to create texture image view");
+				LOG_CORE_ERROR("[Image] Unable to create image view");
 				return;
 			}
+
+
 		}
 
 		void Image::TransitionLayout(VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)

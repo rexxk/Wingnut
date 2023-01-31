@@ -22,27 +22,20 @@ namespace Wingnut
 
 			void Release();
 
-			VkImageView GetImageView() { return m_ImageView; }
+			VkImageView GetImageView() { return m_Image->GetImageView(); }
 			Ref<ImageSampler> GetSampler() { return m_Sampler; }
 
 		private:
 			void CreateTextureFromFile(const std::string& texturePath);
 			void CreateTextureFromData(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels);
-			void CreateImageView();
 
 		private:
-			Ref<Device> m_Device = nullptr;
-
-			VkImage m_Image = nullptr;
-			VkDeviceMemory m_ImageMemory = nullptr;
-
-			VkImageView m_ImageView = nullptr;
-
-//			VkSampler m_Sampler = nullptr;
-
+			Ref<Image> m_Image = nullptr;
 			Ref<ImageSampler> m_Sampler = nullptr;
 
 			VkFormat m_Format = VK_FORMAT_UNDEFINED;
+
+			Ref<Device> m_Device = nullptr;
 		};
 
 
