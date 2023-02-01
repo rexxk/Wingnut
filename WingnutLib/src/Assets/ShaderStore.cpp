@@ -14,7 +14,7 @@ namespace Wingnut
 			return;
 		}
 
-		s_Shaders[name] = CreateRef<Vulkan::Shader>(Renderer::GetContext()->GetRendererData().Device, shaderPath);
+		s_Shaders[name] = Vulkan::Shader::Create(Renderer::GetContext()->GetRendererData().Device, shaderPath);
 	}
 
 	Ref<Vulkan::Shader> ShaderStore::GetShader(const std::string& name)

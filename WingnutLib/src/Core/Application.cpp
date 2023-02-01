@@ -57,9 +57,9 @@ namespace Wingnut
 
 		m_MainWindow = Window::Create(windowProps);
 
-		m_Renderer = CreateRef<Renderer>(m_MainWindow->WindowHandle());
+		m_Renderer = Renderer::Create(m_MainWindow->WindowHandle());
 
-		m_ImGuiContext = CreateRef<ImGuiContext>();
+		m_ImGuiContext = ImGuiContext::Create();
 
 	}
 

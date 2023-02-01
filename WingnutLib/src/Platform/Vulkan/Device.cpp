@@ -9,10 +9,16 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		Ref<Device> Device::Create(VkInstance instance, void* surface)
+		{
+			return CreateRef<Device>(instance, surface);
+		}
+
+
 		Device::Device(VkInstance instance, void* surface)
 			: m_Surface((VkSurfaceKHR)surface)
 		{
-			Create(instance);
+			CreateDevice(instance);
 		}
 
 		Device::~Device()
@@ -34,7 +40,7 @@ namespace Wingnut
 			}
 		}
 
-		void Device::Create(VkInstance instance)
+		void Device::CreateDevice(VkInstance instance)
 		{
 			LOG_CORE_TRACE("[Renderer] Finding Vulkan device");
 

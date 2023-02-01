@@ -8,6 +8,12 @@ namespace Wingnut
 
 
 
+	Ref<Renderer> Renderer::Create(void* windowHandle)
+	{
+		return CreateRef<Renderer>(windowHandle);
+	}
+
+
 
 	Renderer::Renderer(void* windowHandle)
 	{

@@ -9,6 +9,13 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+
+		Ref<Framebuffer> Framebuffer::Create(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkImageView depthStencilImageView, VkExtent2D imageExtent)
+		{
+			return CreateRef<Framebuffer>(device, swapchain, renderPass, depthStencilImageView, imageExtent);
+		}
+
+
 		Framebuffer::Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkImageView depthStencilImageView, VkExtent2D imageExtent)
 			: m_Device(device->GetDevice())
 		{

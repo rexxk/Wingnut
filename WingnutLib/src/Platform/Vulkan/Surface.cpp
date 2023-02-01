@@ -9,10 +9,16 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		Ref<Surface> Surface::Create(VkInstance instance, void* windowHandle)
+		{
+			return CreateRef<Surface>(instance, windowHandle);
+		}
+
+
 		Surface::Surface(VkInstance instance, void* windowHandle)
 			: m_Instance(instance)
 		{
-			Create(windowHandle);
+			CreateSurface(windowHandle);
 
 		}
 
@@ -30,7 +36,7 @@ namespace Wingnut
 			}
 		}
 
-		void Surface::Create(void* windowHandle)
+		void Surface::CreateSurface(void* windowHandle)
 		{
 			VkWin32SurfaceCreateInfoKHR createInfo = {};
 			createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;

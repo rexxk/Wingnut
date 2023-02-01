@@ -77,10 +77,16 @@ namespace Wingnut
 		}
 
 
+		Ref<Pipeline> Pipeline::Create(Ref<Device> device, const PipelineSpecification& pipelineSpecification)
+		{
+			return CreateRef<Pipeline>(device, pipelineSpecification);
+		}
+
+
 		Pipeline::Pipeline(Ref<Device> device, const PipelineSpecification& specification)
 			: m_Device(device->GetDevice()), m_Specification(specification)
 		{
-			Create();
+			CreatePipeline();
 		}
 
 		Pipeline::~Pipeline()
@@ -115,7 +121,7 @@ namespace Wingnut
 
 		}
 
-		void Pipeline::Create()
+		void Pipeline::CreatePipeline()
 		{
 			RendererSettings& rendererSettings = Renderer::GetRendererSettings();
 

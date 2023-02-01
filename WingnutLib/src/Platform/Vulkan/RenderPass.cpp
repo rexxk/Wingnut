@@ -9,10 +9,16 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		Ref<RenderPass> RenderPass::Create(Ref<Device> device, VkFormat format)
+		{
+			return CreateRef<RenderPass>(device, format);
+		}
+
+
 		RenderPass::RenderPass(Ref<Device> device, VkFormat format)
 			: m_Device(device->GetDevice())
 		{
-			Create(format);
+			CreateRenderPass(format);
 		}
 
 		RenderPass::~RenderPass()
@@ -29,7 +35,7 @@ namespace Wingnut
 			}
 		}
 
-		void RenderPass::Create(VkFormat format)
+		void RenderPass::CreateRenderPass(VkFormat format)
 		{
 			VkAttachmentDescription colorAttachmentDescription = {};
 			colorAttachmentDescription.format = format;

@@ -46,6 +46,8 @@ namespace Wingnut
 	class Renderer
 	{
 	public:
+		static Ref<Renderer> Create(void* windowHandle);
+
 		Renderer(void* windowHandle);
 		virtual ~Renderer();
 

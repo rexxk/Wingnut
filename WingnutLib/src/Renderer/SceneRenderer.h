@@ -18,6 +18,8 @@ namespace Wingnut
 	class SceneRenderer
 	{
 	public:
+		static Ref<SceneRenderer> Create(VkExtent2D extent);
+
 		SceneRenderer(VkExtent2D extent);
 		~SceneRenderer();
 
@@ -32,7 +34,7 @@ namespace Wingnut
 		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList);
 
 	private:
-		void Create();
+		void CreateRenderer();
 		void UpdateEntityCache();
 
 	private:

@@ -16,6 +16,8 @@ namespace Wingnut
 	class ImGuiContext
 	{
 	public:
+		static Ref<ImGuiContext> Create();
+
 		ImGuiContext();
 		~ImGuiContext();
 

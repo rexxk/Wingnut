@@ -12,19 +12,24 @@ namespace Wingnut
 {
 
 
+	Ref<Scene> Scene::Create(const SceneProperties& sceneProperties)
+	{
+		return CreateRef<Scene>(sceneProperties);
+	}
+
 
 	Scene::Scene(const SceneProperties& properties)
 		: m_Properties(properties)
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 
-		m_SceneRenderer = CreateRef<SceneRenderer>(properties.SceneExtent);
-		m_ImageSampler = CreateRef<Vulkan::ImageSampler>(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
+		m_SceneRenderer = SceneRenderer::Create(properties.SceneExtent);
+		m_ImageSampler = Vulkan::ImageSampler::Create(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
-		m_Texture = CreateRef<Vulkan::Texture2D>("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized, m_ImageSampler);
+		m_Texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized, m_ImageSampler);
 		m_TextureDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), TextureDescriptor, 0, m_Texture);
 
-		m_CameraDataBuffer = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(CameraData));
+		m_CameraDataBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(CameraData));
 		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), CameraDescriptor, 0, m_CameraDataBuffer);
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();

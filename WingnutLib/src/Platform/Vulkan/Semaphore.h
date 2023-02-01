@@ -14,6 +14,8 @@ namespace Wingnut
 		class Semaphore
 		{
 		public:
+			static Ref<Semaphore> Create(Ref<Device> device);
+
 			Semaphore(Ref<Device> device);
 			~Semaphore();
 

@@ -8,6 +8,13 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		Ref<CommandBuffer> CommandBuffer::Create(Ref<Device> device, Ref<CommandPool> commandPool)
+		{
+			return CreateRef<CommandBuffer>(device, commandPool);
+		}
+
+
+
 		CommandBuffer::CommandBuffer(Ref<Device> device, Ref<CommandPool> commandPool)
 			: m_Device(device), m_CommandPool(commandPool)
 		{

@@ -47,6 +47,8 @@ namespace Wingnut
 		class Device
 		{
 		public:
+			static Ref<Device> Create(VkInstance instance, void* surface);
+
 			Device(VkInstance instance, void* surface);
 			virtual ~Device();
 
@@ -67,7 +69,7 @@ namespace Wingnut
 			void WaitForIdle();
 
 		private:
-			void Create(VkInstance instance);
+			void CreateDevice(VkInstance instance);
 			bool CreatePhysicalDevice(VkInstance instance);
 			bool CreateLogicalDevice();
 			void CreateQueues();

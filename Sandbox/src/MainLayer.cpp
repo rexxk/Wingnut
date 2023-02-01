@@ -49,7 +49,7 @@ void MainLayer::OnAttach()
 	sceneProperties.SceneExtent= rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 	sceneProperties.SceneCamera = m_Camera;
 
-	m_Scene = CreateRef<Scene>(sceneProperties);
+	m_Scene = Scene::Create(sceneProperties);
 
 
 	UUID entity = m_Scene->CreateEntity("Entity");
@@ -58,8 +58,6 @@ void MainLayer::OnAttach()
 	LOG_TRACE("Entity '{}' created: {}", tag, entity);
 
 	ECS::EntitySystem::AddComponent<MeshComponent>(entity, quadVertices, quadIndices);
-
-
 
 
 }

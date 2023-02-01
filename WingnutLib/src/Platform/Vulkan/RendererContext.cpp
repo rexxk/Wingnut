@@ -18,9 +18,15 @@ namespace Wingnut
 		static RendererData s_VulkanData;
 
 
+		Ref<VulkanContext> VulkanContext::Create(void* windowHandle)
+		{
+			return CreateRef<VulkanContext>(windowHandle);
+		}
+
+
 		VulkanContext::VulkanContext(void* windowHandle)
 		{
-			Create(windowHandle);
+			CreateContext(windowHandle);
 
 			m_CurrentExtent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
@@ -153,7 +159,7 @@ namespace Wingnut
 		// Vulkan instance creation and setup
 		//
 
-		void VulkanContext::Create(void* windowHandle)
+		void VulkanContext::CreateContext(void* windowHandle)
 		{
 			LOG_CORE_TRACE("[Renderer] Creating Vulkan renderer");
 
@@ -161,41 +167,41 @@ namespace Wingnut
 
 			// Init Vulkan
 
-			s_VulkanData.Surface = CreateRef<Surface>(m_Instance, windowHandle);
-			s_VulkanData.Device = CreateRef<Device>(m_Instance, s_VulkanData.Surface->GetSurface());
+			s_VulkanData.Surface = Surface::Create(m_Instance, windowHandle);
+			s_VulkanData.Device = Device::Create(m_Instance, s_VulkanData.Surface->GetSurface());
 
 			m_CurrentExtent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
-			s_VulkanData.RenderPass = CreateRef<Vulkan::RenderPass>(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
+			s_VulkanData.RenderPass = RenderPass::Create(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
 
-			s_VulkanData.Swapchain = CreateRef<Swapchain>(s_VulkanData.Device, s_VulkanData.Surface->GetSurface(), m_CurrentExtent);
+			s_VulkanData.Swapchain = Swapchain::Create(s_VulkanData.Device, s_VulkanData.Surface->GetSurface(), m_CurrentExtent);
 
-			s_VulkanData.DepthStencilImage = CreateRef<Vulkan::Image>(s_VulkanData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)m_CurrentExtent.width, (uint32_t)m_CurrentExtent.height,
+			s_VulkanData.DepthStencilImage = Image::Create(s_VulkanData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)m_CurrentExtent.width, (uint32_t)m_CurrentExtent.height,
 				VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-			s_VulkanData.Framebuffer = CreateRef<Vulkan::Framebuffer>(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, s_VulkanData.DepthStencilImage->GetImageView(), m_CurrentExtent);
+			s_VulkanData.Framebuffer = Framebuffer::Create(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, s_VulkanData.DepthStencilImage->GetImageView(), m_CurrentExtent);
 
-			s_VulkanData.GraphicsCommandPool = CreateRef<Vulkan::CommandPool>(s_VulkanData.Device, Vulkan::CommandPoolType::Graphics);
-			s_VulkanData.TransferCommandPool = CreateRef<CommandPool>(s_VulkanData.Device, CommandPoolType::Transfer);
+			s_VulkanData.GraphicsCommandPool = CommandPool::Create(s_VulkanData.Device, CommandPoolType::Graphics);
+			s_VulkanData.TransferCommandPool = CommandPool::Create(s_VulkanData.Device, CommandPoolType::Transfer);
 
 
 			// TODO: Max sets hardcoded to 1000
-			s_VulkanData.DescriptorPool = CreateRef<DescriptorPool>(s_VulkanData.Device, 1000);
+			s_VulkanData.DescriptorPool = DescriptorPool::Create(s_VulkanData.Device, 1000);
 
 			uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
 
 			for (uint32_t i = 0; i < framesInflight; i++)
 			{
-				Ref<Vulkan::CommandBuffer> newGraphicsCommandBuffer = CreateRef<Vulkan::CommandBuffer>(s_VulkanData.Device, s_VulkanData.GraphicsCommandPool);
+				Ref<Vulkan::CommandBuffer> newGraphicsCommandBuffer = CommandBuffer::Create(s_VulkanData.Device, s_VulkanData.GraphicsCommandPool);
 				s_VulkanData.GraphicsCommandBuffers.emplace_back(newGraphicsCommandBuffer);
 
-				Ref<Vulkan::Semaphore> newImageAvailableSemaphore = CreateRef<Vulkan::Semaphore>(s_VulkanData.Device);
+				Ref<Vulkan::Semaphore> newImageAvailableSemaphore = Semaphore::Create(s_VulkanData.Device);
 				s_VulkanData.ImageAvailableSemaphores.emplace_back(newImageAvailableSemaphore);
 
-				Ref<Vulkan::Semaphore> newRenderFinishedSemaphore = CreateRef<Vulkan::Semaphore>(s_VulkanData.Device);
+				Ref<Vulkan::Semaphore> newRenderFinishedSemaphore = Semaphore::Create(s_VulkanData.Device);
 				s_VulkanData.RenderFinishedSemaphores.emplace_back(newRenderFinishedSemaphore);
 
-				Ref<Vulkan::Fence> newInFlightFence = CreateRef<Vulkan::Fence>(s_VulkanData.Device);
+				Ref<Vulkan::Fence> newInFlightFence = Fence::Create(s_VulkanData.Device);
 				s_VulkanData.InFlightFences.emplace_back(newInFlightFence);
 			}
 

@@ -16,6 +16,8 @@ namespace Wingnut
 		class Framebuffer
 		{
 		public:
+			static Ref<Framebuffer> Create(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkImageView depthStencilImageView, VkExtent2D imageExtent);
+
 			Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkImageView depthStencilImageView, VkExtent2D imageExtent);
 			~Framebuffer();
 

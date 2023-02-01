@@ -23,6 +23,8 @@ namespace Wingnut
 		class VertexBuffer
 		{
 		public:
+			static Ref<VertexBuffer> Create(Ref<Device> device, const void* data, uint32_t size);
+
 			VertexBuffer(Ref<Device> device, const void* data, uint32_t size);
 			~VertexBuffer();
 
@@ -45,6 +47,8 @@ namespace Wingnut
 		class IndexBuffer
 		{
 		public:
+			static Ref<IndexBuffer> Create(Ref<Device> device, const void* data, uint32_t size, uint32_t count);
+
 			IndexBuffer(Ref<Device> device, const void* data, uint32_t size, uint32_t count);
 			~IndexBuffer();
 
@@ -71,6 +75,8 @@ namespace Wingnut
 		class UniformBuffer
 		{
 		public:
+			static Ref<UniformBuffer> Create(Ref<Device> device, uint32_t objectSize);
+
 			UniformBuffer(Ref<Device> device, uint32_t uniformBufferObjectSize);
 			~UniformBuffer();
 

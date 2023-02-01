@@ -15,6 +15,8 @@ namespace Wingnut
 		class Swapchain
 		{
 		public:
+			static Ref<Swapchain> Create(Ref<Device> device, void* surface, VkExtent2D extent);
+
 			Swapchain(Ref<Device> device, void* surface, VkExtent2D extent);
 			~Swapchain();
 

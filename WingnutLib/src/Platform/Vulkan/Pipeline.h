@@ -65,6 +65,8 @@ namespace Wingnut
 		class Pipeline
 		{
 		public:
+			static Ref<Pipeline> Create(Ref<Device> device, const PipelineSpecification& pipelineSpecification);
+
 			Pipeline(Ref<Device> device, const PipelineSpecification& specification);
 			~Pipeline();
 
@@ -77,7 +79,7 @@ namespace Wingnut
 			VkPipelineLayout& GetLayout() { return m_PipelineLayout; }
 
 		private:
-			void Create();
+			void CreatePipeline();
 
 		private:
 

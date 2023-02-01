@@ -49,6 +49,8 @@ namespace Wingnut
 		class VulkanContext
 		{
 		public:
+			static Ref<VulkanContext> Create(void* windowHandle = nullptr);
+
 			VulkanContext(void* windowHandle = nullptr);
 			~VulkanContext();
 
@@ -66,7 +68,7 @@ namespace Wingnut
 			static RendererData& GetRendererData();
 
 		private:
-			void Create(void* windowHandle);
+			void CreateContext(void* windowHandle);
 
 			bool CreateInstance();
 

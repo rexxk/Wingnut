@@ -15,7 +15,10 @@ namespace Wingnut
 		class CommandBuffer
 		{
 		public:
-			CommandBuffer(Ref<Device> m_Device, Ref<CommandPool> commandPool);
+			
+			static Ref<CommandBuffer> Create(Ref<Device> device, Ref<CommandPool> commandPool);
+
+			CommandBuffer(Ref<Device> device, Ref<CommandPool> commandPool);
 			~CommandBuffer();
 
 			void Release();

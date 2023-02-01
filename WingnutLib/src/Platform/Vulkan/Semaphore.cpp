@@ -8,6 +8,12 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		Ref<Semaphore> Semaphore::Create(Ref<Device> device)
+		{
+			return CreateRef<Semaphore>(device);
+		}
+
+
 		Semaphore::Semaphore(Ref<Device> device)
 			: m_Device(device)
 		{

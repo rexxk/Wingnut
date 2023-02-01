@@ -144,6 +144,11 @@ namespace Wingnut
 		}
 
 
+		Ref<VertexBuffer> VertexBuffer::Create(Ref<Device> device, const void* data, uint32_t size)
+		{
+			return CreateRef<VertexBuffer>(device, data, size);
+		}
+
 
 		VertexBuffer::VertexBuffer(Ref<Device> device, const void* data, uint32_t size)
 			: m_Device(device)
@@ -226,6 +231,13 @@ namespace Wingnut
 		}
 
 		////////////////////////////////////////////
+
+
+		Ref<IndexBuffer> IndexBuffer::Create(Ref<Device> device, const void* data, uint32_t size, uint32_t count)
+		{
+			return CreateRef<IndexBuffer>(device, data, size, count);
+		}
+
 
 		IndexBuffer::IndexBuffer(Ref<Device> device, const void* data, uint32_t size, uint32_t count)
 			: m_Device(device), m_IndexCount(count)
@@ -313,6 +325,12 @@ namespace Wingnut
 
 
 		/////////////////////////////////////
+
+		Ref<UniformBuffer> UniformBuffer::Create(Ref<Device> device, uint32_t objectSize)
+		{
+			return CreateRef<UniformBuffer>(device, objectSize);
+		}
+
 
 		UniformBuffer::UniformBuffer(Ref<Device> device, uint32_t uniformBufferObjectSize)
 			: m_Device(device)

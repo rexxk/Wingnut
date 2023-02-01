@@ -10,6 +10,12 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		Ref<Swapchain> Swapchain::Create(Ref<Device> device, void* surface, VkExtent2D extent)
+		{
+			return CreateRef<Swapchain>(device, surface, extent);
+		}
+
+
 		Swapchain::Swapchain(Ref<Device> device, void* surface, VkExtent2D extent)
 			: m_Device(device)
 		{

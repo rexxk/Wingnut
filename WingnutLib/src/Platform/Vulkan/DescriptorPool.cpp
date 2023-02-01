@@ -10,6 +10,12 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		Ref<DescriptorPool> DescriptorPool::Create(Ref<Device> device, uint32_t maxSets)
+		{
+			return CreateRef<DescriptorPool>(device, maxSets);
+		}
+
+
 		DescriptorPool::DescriptorPool(Ref<Device> device, uint32_t maxSets)
 			: m_Device(device)
 		{

@@ -14,6 +14,9 @@ namespace Wingnut
 		class Fence
 		{
 		public:
+
+			static Ref<Fence> Create(Ref<Device> device);
+
 			Fence(Ref<Device> device);
 			~Fence();
 

@@ -9,6 +9,12 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		Ref<Fence> Fence::Create(Ref<Device> device)
+		{
+			return CreateRef<Fence>(device);
+		}
+
+
 		Fence::Fence(Ref<Device> device)
 			: m_Device(device)
 		{

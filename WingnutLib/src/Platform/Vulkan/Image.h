@@ -40,6 +40,8 @@ namespace Wingnut
 		class Image
 		{
 		public:
+			static Ref<Image> Create(Ref<Device> device, ImageType type, uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags, VkImageTiling tiling, VkImageAspectFlags aspectFlags);
+
 			Image(Ref<Device> device, ImageType type, uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags, VkImageTiling tiling, VkImageAspectFlags aspectFlags);
 			~Image();
 
@@ -70,6 +72,8 @@ namespace Wingnut
 		class ImageSampler
 		{
 		public:
+			static Ref<ImageSampler> Create(Ref<Device> device, ImageSamplerFilter filter, ImageSamplerMode mode);
+
 			ImageSampler(Ref<Device> device, ImageSamplerFilter filter, ImageSamplerMode mode);
 			~ImageSampler();
 

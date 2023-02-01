@@ -47,13 +47,13 @@ namespace Wingnut
 			return 4;
 		}
 
-		Shader::Shader(Ref<Device> device, const std::string& shaderPath)
-			: m_ShaderPath(shaderPath), m_Device(device)
+		Ref<Shader> Shader::Create(Ref<Device> device, const std::string& shaderPath)
 		{
-			Reload();
+			return CreateRef<Shader>(device, shaderPath);
 		}
 
-		Shader::Shader(Ref<Device> device, const std::string& shaderPath, ShaderDomain domain)
+
+		Shader::Shader(Ref<Device> device, const std::string& shaderPath)
 			: m_ShaderPath(shaderPath), m_Device(device)
 		{
 			Reload();

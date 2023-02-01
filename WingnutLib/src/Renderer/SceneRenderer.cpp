@@ -35,10 +35,16 @@ namespace Wingnut
 	static SceneData s_SceneData;
 
 
+	Ref<SceneRenderer> SceneRenderer::Create(VkExtent2D extent)
+	{
+		return CreateRef<SceneRenderer>(extent);
+	}
+
+
 	SceneRenderer::SceneRenderer(VkExtent2D extent)
 		: m_Extent(extent)
 	{
-		Create();
+		CreateRenderer();
 
 
 		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
@@ -50,7 +56,7 @@ namespace Wingnut
 				m_Extent.height = event.Height();
 
 				Release();
-				Create();
+				CreateRenderer();
 
 				return false;
 			});
@@ -82,7 +88,7 @@ namespace Wingnut
 
 	}
 
-	void SceneRenderer::Create()
+	void SceneRenderer::CreateRenderer()
 	{
 		LOG_CORE_TRACE("[SceneRenderer] Creating renderer");
 
@@ -100,7 +106,7 @@ namespace Wingnut
 		pipelineSpecification.DepthTestEnable = true;
 		pipelineSpecification.DepthWriteEnable = true;
 
-		s_SceneData.StaticPipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
+		s_SceneData.StaticPipeline = Vulkan::Pipeline::Create(rendererData.Device, pipelineSpecification);
 	}
 
 	void SceneRenderer::BeginScene(uint32_t currentFrame)
@@ -176,8 +182,8 @@ namespace Wingnut
 		{
 			auto& device = Renderer::GetContext()->GetRendererData().Device;
 
-			Ref<Vulkan::VertexBuffer> vertexBuffer = CreateRef<Vulkan::VertexBuffer>(device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(Vertex));
-			Ref<Vulkan::IndexBuffer> indexBuffer = CreateRef<Vulkan::IndexBuffer>(device, indexList.data(), (uint32_t)indexList.size() * sizeof(uint32_t), (uint32_t)indexList.size());
+			Ref<Vulkan::VertexBuffer> vertexBuffer = Vulkan::VertexBuffer::Create(device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(Vertex));
+			Ref<Vulkan::IndexBuffer> indexBuffer = Vulkan::IndexBuffer::Create(device, indexList.data(), (uint32_t)indexList.size() * sizeof(uint32_t), (uint32_t)indexList.size());
 
 			s_SceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
 		}

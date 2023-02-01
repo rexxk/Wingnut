@@ -9,6 +9,12 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
+		Ref<CommandPool> CommandPool::Create(Ref<Device> device, CommandPoolType type)
+		{
+			return CreateRef<CommandPool>(device, type);
+		}
+
+
 		CommandPool::CommandPool(Ref<Device> device, CommandPoolType type)
 			: m_Device(device->GetDevice()), m_Type(type)
 		{

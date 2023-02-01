@@ -45,6 +45,12 @@ namespace Wingnut
 	}
 
 
+	Ref<ImGuiContext> ImGuiContext::Create()
+	{
+		return CreateRef<ImGuiContext>();
+	}
+
+
 	ImGuiContext::ImGuiContext()
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
@@ -52,8 +58,8 @@ namespace Wingnut
 
 		ShaderStore::LoadShader("ImGui", "assets/shaders/ImGui.shader");
 
-		m_Renderer = CreateRef<ImGuiRenderer>(extent);
-		m_UISampler = CreateRef<Vulkan::ImageSampler>(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
+		m_Renderer = ImGuiRenderer::Create(extent);
+		m_UISampler = Vulkan::ImageSampler::Create(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -92,7 +98,7 @@ namespace Wingnut
 
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 
-		m_AtlasTexture = CreateRef<Vulkan::Texture2D>((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized, m_UISampler);
+		m_AtlasTexture = Vulkan::Texture2D::Create((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized, m_UISampler);
 		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), ImGuiTextureDescriptor, 0, m_AtlasTexture);
 
 		io.Fonts->SetTexID((ImTextureID)m_AtlasDescriptor->GetDescriptor());
@@ -101,7 +107,7 @@ namespace Wingnut
 		m_ImGuiEntity = ECS::EntitySystem::Create(m_EntityRegistry);
 		ECS::EntitySystem::AddComponent<TagComponent>(m_ImGuiEntity, "ImGui");
 
-		m_CameraBuffer = CreateRef<Vulkan::UniformBuffer>(rendererData.Device, sizeof(ImGuiScaleTranslate));
+		m_CameraBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(ImGuiScaleTranslate));
 		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), ImGuiCameraDescriptor, 0, m_CameraBuffer);
 
 		LOG_CORE_TRACE("[ImGui] Context created");
@@ -296,7 +302,7 @@ namespace Wingnut
 			{
 				const ImDrawList* commandList = drawData->CmdLists[listIndex];
 
-				for (uint32_t i = 0; i < commandList->CmdBuffer.Size; i++)
+				for (uint32_t i = 0; i < (uint32_t)commandList->CmdBuffer.Size; i++)
 				{
 					const ImDrawCmd* command = &commandList->CmdBuffer[i];
 

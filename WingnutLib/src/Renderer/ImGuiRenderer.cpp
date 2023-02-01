@@ -44,11 +44,16 @@ namespace Wingnut
 	}
 
 
+	Ref<ImGuiRenderer> ImGuiRenderer::Create(VkExtent2D extent)
+	{
+		return CreateRef<ImGuiRenderer>(extent);
+	}
+
 
 	ImGuiRenderer::ImGuiRenderer(VkExtent2D extent)
 		: m_Extent(extent)
 	{
-		Create();
+		CreateRenderer();
 
 
 		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
@@ -60,7 +65,7 @@ namespace Wingnut
 				m_Extent.height = event.Height();
 
 				Release();
-				Create();
+				CreateRenderer();
 
 				return false;
 			});
@@ -100,7 +105,7 @@ namespace Wingnut
 		return s_ImGuiSceneData.Pipeline->GetLayout();
 	}
 
-	void ImGuiRenderer::Create()
+	void ImGuiRenderer::CreateRenderer()
 	{
 		LOG_CORE_TRACE("[ImGuiRenderer] Creating renderer");
 
@@ -108,7 +113,6 @@ namespace Wingnut
 		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
 
 		s_ImGuiSceneData.Shader = ShaderStore::GetShader("ImGui");
-//		s_ImGuiSceneData.Shader->SetAttributeFormat(2, VK_FORMAT_R8G8B8A8_UNORM);
 
 		Vulkan::PipelineSpecification pipelineSpecification;
 		pipelineSpecification.Extent = m_Extent;
@@ -120,7 +124,7 @@ namespace Wingnut
 		pipelineSpecification.DepthWriteEnable = false;
 		pipelineSpecification.DepthCompareOp = Vulkan::CompareOperation::LessOrEqual;
 
-		s_ImGuiSceneData.Pipeline = CreateRef<Vulkan::Pipeline>(rendererData.Device, pipelineSpecification);
+		s_ImGuiSceneData.Pipeline = Vulkan::Pipeline::Create(rendererData.Device, pipelineSpecification);
 	}
 
 	void ImGuiRenderer::BeginScene(uint32_t currentFrame)
@@ -164,18 +168,11 @@ namespace Wingnut
 
 		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_ImGuiSceneData.Pipeline->GetPipeline());
 
-//		for (auto& entity : s_ImGuiSceneData.DrawList)
-//		{
-//			auto& [vertexBuffer, indexBuffer] = entity.second;
-
 		VkBuffer vertexBuffers[] = { m_VertexBuffer->GetBuffer() };
 		VkDeviceSize offsets[] = { 0 };
 
 		vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
 		vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), m_IndexBuffer->GetBuffer(), 0, DataSizeToIndexType(sizeof(ImDrawIdx)));
-
-//			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
-//		}
 
 	}
 
@@ -184,21 +181,19 @@ namespace Wingnut
 
 		if (m_VertexBuffer == nullptr)
 		{
-			m_VertexBuffer = CreateRef<Vulkan::VertexBuffer>(Renderer::GetContext()->GetRendererData().Device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(ImDrawVert));
+			m_VertexBuffer = Vulkan::VertexBuffer::Create(Renderer::GetContext()->GetRendererData().Device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(ImDrawVert));
 		}
 		else
 		{
-//			m_VertexBuffer->Resize(vertexList.data(), (uint32_t)vertexList.size() * sizeof(ImDrawVert));
 			m_VertexBuffer->SetData(vertexList.data(), (uint32_t)vertexList.size() * sizeof(ImDrawVert));
 		}
 
 		if (m_IndexBuffer == nullptr)
 		{
-			m_IndexBuffer = CreateRef<Vulkan::IndexBuffer>(Renderer::GetContext()->GetRendererData().Device, indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
+			m_IndexBuffer = Vulkan::IndexBuffer::Create(Renderer::GetContext()->GetRendererData().Device, indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
 		}
 		else
 		{
-//			m_IndexBuffer->Resize(indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
 			m_IndexBuffer->SetData(indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
 		}
 

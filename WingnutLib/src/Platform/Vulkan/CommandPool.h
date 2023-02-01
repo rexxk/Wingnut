@@ -22,6 +22,8 @@ namespace Wingnut
 		class CommandPool
 		{
 		public:
+			static Ref<CommandPool> Create(Ref<Device> device, CommandPoolType type);
+
 			CommandPool(Ref<Device> device, CommandPoolType type);
 			~CommandPool();
 

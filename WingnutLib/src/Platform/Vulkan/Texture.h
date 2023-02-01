@@ -22,6 +22,9 @@ namespace Wingnut
 		class Texture2D
 		{
 		public:
+			static Ref<Texture2D> Create(const std::string& texturePath, TextureFormat format, Ref<ImageSampler> sampler);
+			static Ref<Texture2D> Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, Ref<ImageSampler> sampler);
+
 			Texture2D(const std::string& texturePath, TextureFormat format, Ref<ImageSampler> sampler);
 			Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, Ref<ImageSampler> sampler);
 			~Texture2D();

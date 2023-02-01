@@ -13,6 +13,8 @@ namespace Wingnut
 		class Surface
 		{
 		public:
+			static Ref<Surface> Create(VkInstance instance, void* windowHandle);
+
 			Surface(VkInstance instance, void* windowHandle);
 			virtual ~Surface();
 
@@ -22,7 +24,7 @@ namespace Wingnut
 
 
 		private:
-			void Create(void* windowHandle);
+			void CreateSurface(void* windowHandle);
 
 		private:
 			VkSurfaceKHR m_Surface = nullptr;

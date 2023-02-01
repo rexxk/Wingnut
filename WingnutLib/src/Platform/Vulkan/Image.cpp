@@ -11,6 +11,11 @@ namespace Wingnut
 
 	namespace Vulkan
 	{
+		Ref<Image> Image::Create(Ref<Device> device, ImageType type, uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags, VkImageTiling tiling, VkImageAspectFlags aspectFlags)
+		{
+			return CreateRef<Image>(device, type, width, height, format, usageFlags, memoryFlags, tiling, aspectFlags);
+		}
+
 
 		Image::Image(Ref<Device> device, ImageType type, uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags, VkImageTiling tiling, VkImageAspectFlags aspectFlags)
 			: m_Device(device), m_Format(format), m_Type(type)
@@ -197,6 +202,12 @@ namespace Wingnut
 
 			return VK_SAMPLER_ADDRESS_MODE_REPEAT;
 		}
+
+		Ref<ImageSampler> ImageSampler::Create(Ref<Device> device, ImageSamplerFilter filter, ImageSamplerMode mode)
+		{
+			return CreateRef<ImageSampler>(device, filter, mode);
+		}
+
 
 		ImageSampler::ImageSampler(Ref<Device> device, ImageSamplerFilter filter, ImageSamplerMode mode)
 			: m_Device(device)

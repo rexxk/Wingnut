@@ -20,6 +20,8 @@ namespace Wingnut
 	class ImGuiRenderer
 	{
 	public:
+		static Ref<ImGuiRenderer> Create(VkExtent2D extent);
+
 		ImGuiRenderer(VkExtent2D extent);
 		~ImGuiRenderer();
 
@@ -35,7 +37,7 @@ namespace Wingnut
 		VkPipelineLayout GetPipelineLayout();
 
 	private:
-		void Create();
+		void CreateRenderer();
 		void UpdateEntityCache();
 
 	private:

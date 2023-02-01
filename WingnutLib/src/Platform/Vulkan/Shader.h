@@ -37,8 +37,9 @@ namespace Wingnut
 		class Shader
 		{
 		public:
+			static Ref<Shader> Create(Ref<Device> device, const std::string& shaderPath);
+
 			Shader(Ref<Device> device, const std::string& shaderPath);
-			Shader(Ref<Device> device, const std::string& shaderPath, ShaderDomain domain);
 			~Shader();
 
 			void Release();

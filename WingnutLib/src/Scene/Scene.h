@@ -33,6 +33,8 @@ namespace Wingnut
 	class Scene
 	{
 	public:
+		static Ref<Scene> Create(const SceneProperties& sceneProperties);
+
 		Scene(const SceneProperties& properties);
 		~Scene();
 

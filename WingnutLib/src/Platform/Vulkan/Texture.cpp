@@ -24,6 +24,17 @@ namespace Wingnut
 		}
 
 
+		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format, Ref<ImageSampler> sampler)
+		{
+			return CreateRef<Texture2D>(texturePath, format, sampler);
+		}
+
+		Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, Ref<ImageSampler> sampler)
+		{
+			return CreateRef<Texture2D>(width, height, bitsPerPixel, pixels, format, sampler);
+		}
+
+
 		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, Ref<ImageSampler> sampler)
 			: m_Sampler(sampler), m_Format(format)
 		{

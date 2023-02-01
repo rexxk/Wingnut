@@ -15,6 +15,8 @@ namespace Wingnut
 		class DescriptorPool
 		{
 		public:
+			static Ref<DescriptorPool> Create(Ref<Device> device, uint32_t maxSets);
+
 			DescriptorPool(Ref<Device> device, uint32_t maxSets);
 			~DescriptorPool();
 

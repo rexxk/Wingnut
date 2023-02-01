@@ -13,14 +13,17 @@ namespace Wingnut
 		class RenderPass
 		{
 		public:
+			static Ref<RenderPass> Create(Ref<Device> device, VkFormat format);
+
 			RenderPass(Ref<Device> device, VkFormat format);
 			~RenderPass();
 
 			void Release();
 
-			void Create(VkFormat format);
-
 			VkRenderPass GetRenderPass() { return m_RenderPass; }
+
+		private:
+			void CreateRenderPass(VkFormat format);
 
 		private:
 			VkRenderPass m_RenderPass = nullptr;
