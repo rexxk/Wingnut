@@ -60,7 +60,7 @@ namespace Wingnut
 
 			createInfo.surface = surface;
 
-			createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 
 			createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 			createInfo.presentMode = VK_PRESENT_MODE_MAILBOX_KHR;

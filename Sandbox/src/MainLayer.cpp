@@ -39,8 +39,8 @@ void MainLayer::OnAttach()
 	ShaderStore::LoadShader("basic", "assets/shaders/Basic.shader");
 
 	auto& rendererData = Renderer::GetContext()->GetRendererData();
-
 	auto extent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
+
 
 	m_Camera = Camera::Create(glm::vec3(0.0f, 0.0f, -3.0f), extent.width, extent.height);
 
@@ -87,11 +87,10 @@ void MainLayer::OnUIRender()
 
 	ImGui::ShowDemoWindow();
 
-	ImGui::Begin("Test");
+	ImGui::Begin("Viewport");
 
-	ImGui::Text("This is only a test text. Hello world?");
-
-//	ImGui::Image((ImTextureID)1, ImVec2(100.0f, 100.0f));
+		ImVec2 windowSize = ImGui::GetWindowSize();
+//		ImGui::Image((ImTextureID)m_Scene->GetRenderImageDescriptor(), windowSize);
 
 	ImGui::End();
 }

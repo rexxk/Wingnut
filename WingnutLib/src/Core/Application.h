@@ -45,6 +45,7 @@ namespace Wingnut
 		Ref<Renderer> GetRenderer() { return m_Renderer; }
 
 		Ref<Window> GetWindow() { return m_MainWindow; }
+		Ref<ImGuiContext> GetUIContext() { return m_ImGuiContext; }
 
 		static Application& Get() { return *s_Instance; }
 

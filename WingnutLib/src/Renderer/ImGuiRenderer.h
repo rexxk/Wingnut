@@ -6,6 +6,7 @@
 #include "Platform/Vulkan/RenderPass.h"
 #include "Platform/Vulkan/Shader.h"
 
+
 #include <imgui.h>
 
 
@@ -38,7 +39,6 @@ namespace Wingnut
 
 	private:
 		void CreateRenderer();
-		void UpdateEntityCache();
 
 	private:
 

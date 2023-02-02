@@ -9,23 +9,47 @@ namespace Wingnut
 	namespace Vulkan
 	{
 
-		Ref<RenderPass> RenderPass::Create(Ref<Device> device, VkFormat format)
+		VkAttachmentLoadOp AttachmentLoadOpToVulkanAttachmentLoadOp(AttachmentLoadOp loadOp)
 		{
-			return CreateRef<RenderPass>(device, format);
+			switch (loadOp)
+			{
+				case AttachmentLoadOp::Clear: return VK_ATTACHMENT_LOAD_OP_CLEAR;
+				case AttachmentLoadOp::DontCare: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+				case AttachmentLoadOp::Load: return VK_ATTACHMENT_LOAD_OP_LOAD;
+			}
+
+			return VK_ATTACHMENT_LOAD_OP_CLEAR;
+		}
+
+		VkAttachmentStoreOp AttachmentStoreOpToVulkanAttachmentStoreOp(AttachmentStoreOp storeOp)
+		{
+			switch (storeOp)
+			{
+				case AttachmentStoreOp::DontCare: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
+				case AttachmentStoreOp::None: return VK_ATTACHMENT_STORE_OP_NONE;
+				case AttachmentStoreOp::Store: return VK_ATTACHMENT_STORE_OP_STORE;
+			}
+
+			return VK_ATTACHMENT_STORE_OP_STORE;
+		}
+
+		Ref<RenderPass> RenderPass::Create(Ref<Device> device, const RenderPassSpecification& specification)
+		{
+			return CreateRef<RenderPass>(device, specification);
 		}
 
 
-		RenderPass::RenderPass(Ref<Device> device, VkFormat format)
-			: m_Device(device->GetDevice())
+		RenderPass::RenderPass(Ref<Device> device, const RenderPassSpecification& specification)
+			: m_Device(device->GetDevice()), m_Specification(specification)
 		{
-			CreateRenderPass(format);
+			CreateRenderPass();
 		}
 
 		RenderPass::~RenderPass()
 		{
 			Release();
 		}
-
+		
 		void RenderPass::Release()
 		{
 			if (m_RenderPass != nullptr)
@@ -35,19 +59,26 @@ namespace Wingnut
 			}
 		}
 
-		void RenderPass::CreateRenderPass(VkFormat format)
+		void RenderPass::CreateRenderPass()
 		{
 			VkAttachmentDescription colorAttachmentDescription = {};
-			colorAttachmentDescription.format = format;
+			colorAttachmentDescription.format = m_Specification.Format;
 			colorAttachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
 
-			colorAttachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-			colorAttachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			colorAttachmentDescription.loadOp = AttachmentLoadOpToVulkanAttachmentLoadOp(m_Specification.LoadOp);
+			colorAttachmentDescription.storeOp = AttachmentStoreOpToVulkanAttachmentStoreOp(m_Specification.StoreOp);
 
 			colorAttachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			colorAttachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 
-			colorAttachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			if (m_Specification.LoadOp == AttachmentLoadOp::Load)
+			{
+				colorAttachmentDescription.initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+			}
+			else
+			{
+				colorAttachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			}
 			colorAttachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
 			VkAttachmentReference colorAttachmentReference = {};
@@ -58,13 +89,21 @@ namespace Wingnut
 			depthAttachmentDescription.format = VK_FORMAT_D32_SFLOAT;
 			depthAttachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
 
-			depthAttachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			depthAttachmentDescription.loadOp = AttachmentLoadOpToVulkanAttachmentLoadOp(m_Specification.LoadOp);
 			depthAttachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 
 			depthAttachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			depthAttachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 
-			depthAttachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			if (m_Specification.LoadOp == AttachmentLoadOp::Load)
+			{
+				depthAttachmentDescription.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+			}
+			else
+			{
+				depthAttachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			}
+
 			depthAttachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
 			VkAttachmentReference depthAttachmentReference = {};

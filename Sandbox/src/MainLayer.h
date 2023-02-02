@@ -25,5 +25,4 @@ private:
 
 	Ref<Wingnut::Camera> m_Camera = nullptr;
 
-
 };

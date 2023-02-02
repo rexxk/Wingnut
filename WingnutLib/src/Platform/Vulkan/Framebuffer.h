@@ -16,13 +16,14 @@ namespace Wingnut
 		class Framebuffer
 		{
 		public:
-			static Ref<Framebuffer> Create(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkImageView depthStencilImageView, VkExtent2D imageExtent);
+			static Ref<Framebuffer> Create(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkExtent2D imageExtent, VkImageView depthStencilImageView, VkImageView renderToTexture = nullptr);
 
-			Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkImageView depthStencilImageView, VkExtent2D imageExtent);
+			Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkExtent2D imageExtent, VkImageView depthStencilImageView, VkImageView renderToTexture);
 			~Framebuffer();
 
 			void Release();
 
+			VkFramebuffer GetFramebuffer() { return m_Framebuffers[m_ActiveFramebuffer]; }
 			VkFramebuffer GetNextFramebuffer();
 
 		private:

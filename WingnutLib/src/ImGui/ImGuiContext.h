@@ -26,6 +26,7 @@ namespace Wingnut
 		void NewFrame(Timestep ts);
 		void Render();
 
+		Ref<Vulkan::ImageSampler> GetSampler() { return m_UISampler; }
 
 	private:
 		Ref<ImGuiRenderer> m_Renderer = nullptr;

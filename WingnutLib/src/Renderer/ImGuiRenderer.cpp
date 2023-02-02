@@ -22,10 +22,6 @@ namespace Wingnut
 	{
 		Ref<Vulkan::Shader> Shader = nullptr;
 		Ref<Vulkan::Pipeline> Pipeline = nullptr;
-
-		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawList;
-		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawCache;
-
 	};
 
 	static ImGuiSceneData s_ImGuiSceneData;
@@ -79,9 +75,6 @@ namespace Wingnut
 	void ImGuiRenderer::Release()
 	{
 
-		s_ImGuiSceneData.DrawList.clear();
-		s_ImGuiSceneData.DrawCache.clear();
-
 		if (m_VertexBuffer != nullptr)
 		{
 			m_VertexBuffer->Release();
@@ -117,7 +110,7 @@ namespace Wingnut
 		Vulkan::PipelineSpecification pipelineSpecification;
 		pipelineSpecification.Extent = m_Extent;
 		pipelineSpecification.PipelineShader = s_ImGuiSceneData.Shader;
-		pipelineSpecification.RenderPass = rendererData.RenderPass;
+		pipelineSpecification.RenderPass = rendererData.UIRenderPass;
 		pipelineSpecification.CullMode = Vulkan::CullMode::None;
 		pipelineSpecification.CullingDirection = Vulkan::CullingDirection::CounterClockwise;
 		pipelineSpecification.DepthTestEnable = false;
@@ -132,13 +125,23 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		auto& commandBuffer = rendererData.GraphicsCommandBuffers[currentFrame];
 
-		UpdateEntityCache();
-
-		s_ImGuiSceneData.DrawList.clear();
-
 		m_CurrentFrame = currentFrame;
 
 		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_ImGuiSceneData.Pipeline->GetPipeline());
+
+//
+		VkRenderPassBeginInfo renderPassBeginInfo = {};
+		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		renderPassBeginInfo.renderPass = rendererData.UIRenderPass->GetRenderPass();
+		renderPassBeginInfo.framebuffer = rendererData.UIFramebuffer->GetNextFramebuffer();
+		renderPassBeginInfo.renderArea.offset = { 0, 0 };
+		renderPassBeginInfo.renderArea.extent = m_Extent;
+
+		renderPassBeginInfo.clearValueCount = 0;
+		renderPassBeginInfo.pClearValues = nullptr;
+
+		vkCmdBeginRenderPass(commandBuffer->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+//
 
 		VkViewport viewport = {};
 		viewport.x = 0.0f;
@@ -157,7 +160,10 @@ namespace Wingnut
 
 	void ImGuiRenderer::EndScene()
 	{
+		auto& rendererData = Renderer::GetContext()->GetRendererData();
+		auto& commandBuffer = rendererData.GraphicsCommandBuffers[m_CurrentFrame];
 
+		vkCmdEndRenderPass(commandBuffer->GetCommandBuffer());
 	}
 
 
@@ -197,17 +203,6 @@ namespace Wingnut
 			m_IndexBuffer->SetData(indexList.data(), (uint32_t)indexList.size() * sizeof(ImDrawIdx), (uint32_t)indexList.size());
 		}
 
-	}
-
-	void ImGuiRenderer::UpdateEntityCache()
-	{
-		for (auto& entity : s_ImGuiSceneData.DrawCache)
-		{
-			if (std::find(s_ImGuiSceneData.DrawList.begin(), s_ImGuiSceneData.DrawList.end(), entity) == s_ImGuiSceneData.DrawList.end())
-			{
-				s_ImGuiSceneData.DrawCache.erase(s_ImGuiSceneData.DrawCache.find(entity.first));
-			}
-		}
 	}
 
 

@@ -73,6 +73,10 @@ namespace Wingnut
 		s_SceneData.DrawList.clear();
 		s_SceneData.DrawCache.clear();
 
+		if (m_RenderImage != nullptr)
+		{
+			m_RenderImage->Release();
+		}
 
 		if (s_SceneData.StaticPipeline != nullptr)
 		{
@@ -102,11 +106,16 @@ namespace Wingnut
 		pipelineSpecification.PipelineShader = s_SceneData.StaticSceneShader;
 		pipelineSpecification.CullMode = Vulkan::CullMode::Back;
 		pipelineSpecification.CullingDirection = Vulkan::CullingDirection::Clockwise;
-		pipelineSpecification.RenderPass = rendererData.RenderPass;
+		pipelineSpecification.RenderPass = rendererData.SceneRenderPass;
 		pipelineSpecification.DepthTestEnable = true;
 		pipelineSpecification.DepthWriteEnable = true;
 
 		s_SceneData.StaticPipeline = Vulkan::Pipeline::Create(rendererData.Device, pipelineSpecification);
+
+
+		m_RenderImage = Vulkan::Image::Create(rendererData.Device, Vulkan::ImageType::Texture2D, m_Extent.width, m_Extent.height, VK_FORMAT_R8G8B8A8_UNORM,
+			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+
 	}
 
 	void SceneRenderer::BeginScene(uint32_t currentFrame)
@@ -141,6 +150,23 @@ namespace Wingnut
 
 	void SceneRenderer::EndScene()
 	{
+		auto& rendererData = Renderer::GetContext()->GetRendererData();
+		auto& commandBuffer = rendererData.GraphicsCommandBuffers[m_CurrentFrame];
+
+		vkCmdEndRenderPass(commandBuffer->GetCommandBuffer());
+
+		VkImageBlit region = { };
+		region.srcOffsets[0] = { 0, 0, 0 };
+		region.srcOffsets[1] = { (int)m_Extent.width, (int)m_Extent.height, 1 };
+		region.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		region.srcSubresource.layerCount = 1;
+
+		region.dstOffsets[0] = { 0, 0, 0 };
+		region.dstOffsets[1] = { (int)m_Extent.width, (int)m_Extent.height, 1 };
+		region.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		region.dstSubresource.layerCount = 1;
+
+		vkCmdBlitImage(commandBuffer->GetCommandBuffer(), rendererData.Swapchain->GetImage(m_CurrentFrame), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_RenderImage->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region, VK_FILTER_LINEAR);
 
 	}
 

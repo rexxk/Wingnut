@@ -8,6 +8,7 @@
 #include "Framebuffer.h"
 #include "Image.h"
 #include "Semaphore.h"
+#include "Shader.h"
 #include "Surface.h"
 #include "Swapchain.h"
 
@@ -31,15 +32,18 @@ namespace Wingnut
 			Ref<CommandPool> TransferCommandPool = nullptr;
 			Ref<DescriptorPool> DescriptorPool = nullptr;
 
-			Ref<Vulkan::Framebuffer> Framebuffer = nullptr;
-			Ref<Vulkan::RenderPass> RenderPass = nullptr;
+			Ref<Vulkan::Framebuffer> SceneFramebuffer = nullptr;
+			Ref<Vulkan::Framebuffer> UIFramebuffer = nullptr;
+
+			Ref<Vulkan::RenderPass> SceneRenderPass = nullptr;
+			Ref<Vulkan::RenderPass> UIRenderPass = nullptr;
 
 			Ref<Swapchain> Swapchain = nullptr;
 
 			Ref<Surface> Surface = nullptr;
 
 			Ref<Vulkan::Image> DepthStencilImage = nullptr;
-
+			
 			std::vector<Ref<Vulkan::Semaphore>> ImageAvailableSemaphores;
 			std::vector<Ref<Vulkan::Semaphore>> RenderFinishedSemaphores;
 			std::vector<Ref<Vulkan::Fence>> InFlightFences;

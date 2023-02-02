@@ -29,6 +29,7 @@ namespace Wingnut
 			VkSwapchainKHR GetSwapchain() { return m_Swapchain; }
 
 			std::vector<VkImageView>& GetImageViews() { return m_SwapchainImageViews; }
+			VkImage GetImage(uint32_t currentFrame) { return m_SwapchainImages[currentFrame]; }
 
 		private:
 			VkSwapchainKHR m_Swapchain = nullptr;

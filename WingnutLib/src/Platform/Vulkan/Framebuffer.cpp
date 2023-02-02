@@ -10,13 +10,13 @@ namespace Wingnut
 	{
 
 
-		Ref<Framebuffer> Framebuffer::Create(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkImageView depthStencilImageView, VkExtent2D imageExtent)
+		Ref<Framebuffer> Framebuffer::Create(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkExtent2D imageExtent, VkImageView depthStencilImageView, VkImageView renderToTexture)
 		{
-			return CreateRef<Framebuffer>(device, swapchain, renderPass, depthStencilImageView, imageExtent);
+			return CreateRef<Framebuffer>(device, swapchain, renderPass, imageExtent, depthStencilImageView, renderToTexture);
 		}
 
 
-		Framebuffer::Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkImageView depthStencilImageView, VkExtent2D imageExtent)
+		Framebuffer::Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkExtent2D imageExtent, VkImageView depthStencilImageView, VkImageView renderToTexture)
 			: m_Device(device->GetDevice())
 		{
 
@@ -34,6 +34,11 @@ namespace Wingnut
 
 				std::vector<VkImageView> imageViews = { imageView, depthStencilImageView };
 
+				if (renderToTexture != nullptr)
+				{
+					imageViews.emplace_back(renderToTexture);
+				}
+
 				createInfo.attachmentCount = (uint32_t)imageViews.size();
 				createInfo.pAttachments = imageViews.data();
 
@@ -47,7 +52,6 @@ namespace Wingnut
 
 				LOG_CORE_TRACE("[Renderer] Framebuffer created");
 			}
-
 
 		}
 

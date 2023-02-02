@@ -52,8 +52,11 @@ namespace Wingnut
 					rendererData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)extent.width, (uint32_t)extent.height,
 						VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-					rendererData.Framebuffer->Release();
-					rendererData.Framebuffer = CreateRef<Vulkan::Framebuffer>(rendererData.Device, rendererData.Swapchain, rendererData.RenderPass, rendererData.DepthStencilImage->GetImageView(), extent);
+					rendererData.SceneFramebuffer->Release();
+					rendererData.SceneFramebuffer = Vulkan::Framebuffer::Create(rendererData.Device, rendererData.Swapchain, rendererData.SceneRenderPass, extent, rendererData.DepthStencilImage->GetImageView());
+
+					rendererData.UIFramebuffer->Release();
+					rendererData.UIFramebuffer = Vulkan::Framebuffer::Create(rendererData.Device, rendererData.Swapchain, rendererData.UIRenderPass, extent, rendererData.DepthStencilImage->GetImageView());
 
 					return false;
 				});
@@ -112,14 +115,24 @@ namespace Wingnut
 				s_VulkanData.TransferCommandPool->Release();
 			}
 
-			if (s_VulkanData.Framebuffer != nullptr)
+			if (s_VulkanData.UIFramebuffer != nullptr)
 			{
-				s_VulkanData.Framebuffer->Release();
+				s_VulkanData.UIFramebuffer->Release();
 			}
 
-			if (s_VulkanData.RenderPass != nullptr)
+			if (s_VulkanData.SceneFramebuffer != nullptr)
 			{
-				s_VulkanData.RenderPass->Release();
+				s_VulkanData.SceneFramebuffer->Release();
+			}
+
+			if (s_VulkanData.UIRenderPass != nullptr)
+			{
+				s_VulkanData.UIRenderPass->Release();
+			}
+
+			if (s_VulkanData.SceneRenderPass != nullptr)
+			{
+				s_VulkanData.SceneRenderPass->Release();
 			}
 
 			if (s_VulkanData.DepthStencilImage != nullptr)
@@ -163,7 +176,10 @@ namespace Wingnut
 		{
 			LOG_CORE_TRACE("[Renderer] Creating Vulkan renderer");
 
-			if (!CreateInstance()) return;
+			if (!CreateInstance())
+			{
+				return;
+			}
 
 			// Init Vulkan
 
@@ -172,14 +188,26 @@ namespace Wingnut
 
 			m_CurrentExtent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
-			s_VulkanData.RenderPass = RenderPass::Create(s_VulkanData.Device, s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format);
+			RenderPassSpecification renderPassSpecification = {};
+			renderPassSpecification.Format = s_VulkanData.Device->GetDeviceProperties().SurfaceFormat.format;
+			renderPassSpecification.Target = RenderTarget::Image;
+			renderPassSpecification.LoadOp = AttachmentLoadOp::Clear;
+			renderPassSpecification.StoreOp = AttachmentStoreOp::Store;
+
+			s_VulkanData.SceneRenderPass = RenderPass::Create(s_VulkanData.Device, renderPassSpecification);
+
+			renderPassSpecification.Target = RenderTarget::Screen;
+			renderPassSpecification.LoadOp = AttachmentLoadOp::Load;
+
+			s_VulkanData.UIRenderPass = RenderPass::Create(s_VulkanData.Device, renderPassSpecification);
 
 			s_VulkanData.Swapchain = Swapchain::Create(s_VulkanData.Device, s_VulkanData.Surface->GetSurface(), m_CurrentExtent);
 
-			s_VulkanData.DepthStencilImage = Image::Create(s_VulkanData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)m_CurrentExtent.width, (uint32_t)m_CurrentExtent.height,
+			s_VulkanData.DepthStencilImage = Image::Create(s_VulkanData.Device, Vulkan::ImageType::DepthStencil, m_CurrentExtent.width, m_CurrentExtent.height,
 				VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-			s_VulkanData.Framebuffer = Framebuffer::Create(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.RenderPass, s_VulkanData.DepthStencilImage->GetImageView(), m_CurrentExtent);
+			s_VulkanData.SceneFramebuffer = Framebuffer::Create(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.SceneRenderPass, m_CurrentExtent, s_VulkanData.DepthStencilImage->GetImageView());
+			s_VulkanData.UIFramebuffer = Framebuffer::Create(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.UIRenderPass, m_CurrentExtent, s_VulkanData.DepthStencilImage->GetImageView());
 
 			s_VulkanData.GraphicsCommandPool = CommandPool::Create(s_VulkanData.Device, CommandPoolType::Graphics);
 			s_VulkanData.TransferCommandPool = CommandPool::Create(s_VulkanData.Device, CommandPoolType::Transfer);
@@ -205,18 +233,6 @@ namespace Wingnut
 				s_VulkanData.InFlightFences.emplace_back(newInFlightFence);
 			}
 
-
-			// Create pipeline
-
-//			ShaderStore::LoadShader("basic", "assets/shaders/basic.shader");
-//			ShaderStore::LoadShader("flat", "assets/shaders/flat.shader");
-
-//			PipelineSpecification pipelineSpecification;
-//			pipelineSpecification.Extent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
-//			pipelineSpecification.PipelineShader = ShaderStore::GetShader("basic");
-//			pipelineSpecification.RenderPass = s_VulkanData.RenderPass;
-
-//			s_VulkanData.Pipeline = CreateRef<Pipeline>(s_VulkanData.Device, pipelineSpecification);
 		}
 
 		bool VulkanContext::CreateInstance()
@@ -408,14 +424,15 @@ namespace Wingnut
 
 			VkRenderPassBeginInfo renderPassBeginInfo = {};
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.renderPass = s_VulkanData.RenderPass->GetRenderPass();
-			renderPassBeginInfo.framebuffer = s_VulkanData.Framebuffer->GetNextFramebuffer();
+			renderPassBeginInfo.renderPass = s_VulkanData.SceneRenderPass->GetRenderPass();
+			renderPassBeginInfo.framebuffer = s_VulkanData.SceneFramebuffer->GetNextFramebuffer();
 			renderPassBeginInfo.renderArea.offset = { 0, 0 };
 			renderPassBeginInfo.renderArea.extent = m_CurrentExtent;
 
-			std::array<VkClearValue, 2> clearValues = {};
+			std::array<VkClearValue, 3> clearValues = {};
 			clearValues[0].color = { {0.2f, 0.3f, 0.45f} };
 			clearValues[1].depthStencil = { 1.0f, 0 };
+			clearValues[2].color = { {0.2f, 0.3f, 0.45f} };
 
 			renderPassBeginInfo.clearValueCount = (uint32_t)clearValues.size();
 			renderPassBeginInfo.pClearValues = clearValues.data();
@@ -428,7 +445,7 @@ namespace Wingnut
 		{
 			auto& commandBuffer = s_VulkanData.GraphicsCommandBuffers[m_CurrentFrame];
 
-			vkCmdEndRenderPass(commandBuffer->GetCommandBuffer());
+//			vkCmdEndRenderPass(commandBuffer->GetCommandBuffer());
 
 			if (vkEndCommandBuffer(commandBuffer->GetCommandBuffer()) != VK_SUCCESS)
 			{

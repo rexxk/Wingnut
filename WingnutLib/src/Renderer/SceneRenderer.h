@@ -33,11 +33,15 @@ namespace Wingnut
 		void SubmitDescriptor(Ref<Vulkan::Descriptor> descriptor);
 		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList);
 
+		Ref<Vulkan::Image> GetRenderImage() { return m_RenderImage; }
+
 	private:
 		void CreateRenderer();
 		void UpdateEntityCache();
 
 	private:
+
+		Ref<Vulkan::Image> m_RenderImage = nullptr;
 
 		VkExtent2D m_Extent;
 

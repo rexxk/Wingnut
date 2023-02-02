@@ -42,6 +42,7 @@ namespace Wingnut
 
 		UUID CreateEntity(const std::string& tag);
 
+//		Ref<Vulkan::Descriptor> GetRenderImageDescriptor() { return m_Renderer->GetRenderImage(); }
 
 
 		void Begin();

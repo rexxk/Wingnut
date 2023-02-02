@@ -10,9 +10,11 @@
 #include "Event/EventBroker.h"
 
 #include "Platform/Vulkan/Buffer.h"
+#include "Platform/Vulkan/Shader.h"
 #include "Platform/Vulkan/Texture.h"
 
 #include "Renderer/Camera.h"
+#include "Renderer/Renderer.h"
 
 #include "Scene/Components.h"
 #include "Scene/Scene.h"

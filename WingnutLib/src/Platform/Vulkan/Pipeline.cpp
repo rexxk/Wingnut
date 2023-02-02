@@ -96,10 +96,6 @@ namespace Wingnut
 
 		void Pipeline::Release()
 		{
-//			if (m_Specification.PipelineShader != nullptr)
-//			{
-//				m_Specification.PipelineShader->Release();
-//			}
 
 			if (m_PipelineLayout != nullptr)
 			{
@@ -210,8 +206,6 @@ namespace Wingnut
 			colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 			colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-//			colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-//			colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 			colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 			colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
@@ -227,8 +221,6 @@ namespace Wingnut
 			colorBlendCreateInfo.blendConstants[2] = 0.0f;
 			colorBlendCreateInfo.blendConstants[3] = 0.0f;
 
-//			VkDescriptorSetLayout descriptorSetLayouts[] = { m_Specification.PipelineShader->GetDescriptorSetLayout(0)};
-
 			std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
 
 			for (auto& descriptorSet : m_Specification.PipelineShader->GetDescriptorSetLayouts())
@@ -239,9 +231,7 @@ namespace Wingnut
 
 			VkPipelineLayoutCreateInfo layoutCreateInfo = {};
 			layoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-//			layoutCreateInfo.setLayoutCount = (uint32_t)m_Specification.PipelineShader->GetDescriptorSetLayouts().size();
 			layoutCreateInfo.setLayoutCount = (uint32_t)descriptorSetLayouts.size();
-//			layoutCreateInfo.pSetLayouts = m_Specification.PipelineShader->GetDescriptorSetLayouts().data();
 			layoutCreateInfo.pSetLayouts = descriptorSetLayouts.data();
 			layoutCreateInfo.pushConstantRangeCount = 0;
 			layoutCreateInfo.pPushConstantRanges = nullptr;
@@ -282,9 +272,7 @@ namespace Wingnut
 			createInfo.pMultisampleState = &multisampleCreateInfo;
 			createInfo.pColorBlendState = &colorBlendCreateInfo;
 			createInfo.pInputAssemblyState = &inputAssemblyCreateInfo;
-
 			createInfo.pDepthStencilState = &depthStencilCreateInfo;
-
 			createInfo.pVertexInputState = &vertexInputStateCreateInfo;
 
 

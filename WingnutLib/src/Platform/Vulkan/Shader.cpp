@@ -419,6 +419,11 @@ namespace Wingnut
 			return CreateRef<Descriptor>(device, shader, set, binding, texture);
 		}
 
+		Ref<Descriptor> Descriptor::Create(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<Image> image, Ref<ImageSampler> sampler)
+		{
+			return CreateRef<Descriptor>(device, shader, set, binding, image, sampler);
+		}
+
 
 
 
@@ -453,6 +458,27 @@ namespace Wingnut
 			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			imageInfo.imageView = texture->GetImageView();
 			imageInfo.sampler = texture->GetSampler()->Sampler();
+
+			VkWriteDescriptorSet writeSet = {};
+			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			writeSet.dstBinding = m_Binding;
+			writeSet.dstSet = m_Descriptor;
+			writeSet.descriptorCount = 1;
+			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			writeSet.pImageInfo = &imageInfo;
+
+			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
+		}
+
+		Descriptor::Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<Image> image, Ref<ImageSampler> sampler)
+			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::Texture), m_Set(set), m_Binding(binding)
+		{
+			Allocate();
+
+			VkDescriptorImageInfo imageInfo = {};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = image->GetImageView();
+			imageInfo.sampler = sampler->Sampler();
 
 			VkWriteDescriptorSet writeSet = {};
 			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
