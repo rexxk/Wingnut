@@ -9,6 +9,8 @@
 
 #include "Event/EventBroker.h"
 
+#include "ImGui/ImGuiContext.h"
+
 #include "Platform/Vulkan/Buffer.h"
 #include "Platform/Vulkan/Shader.h"
 #include "Platform/Vulkan/Texture.h"

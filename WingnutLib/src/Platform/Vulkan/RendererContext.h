@@ -42,8 +42,10 @@ namespace Wingnut
 
 			Ref<Surface> Surface = nullptr;
 
-			Ref<Vulkan::Image> DepthStencilImage = nullptr;
+			Ref<Image> DepthStencilImage = nullptr;
 			
+			Ref<Image> SceneTexture = nullptr;
+
 			std::vector<Ref<Vulkan::Semaphore>> ImageAvailableSemaphores;
 			std::vector<Ref<Vulkan::Semaphore>> RenderFinishedSemaphores;
 			std::vector<Ref<Vulkan::Fence>> InFlightFences;

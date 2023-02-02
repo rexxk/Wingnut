@@ -42,8 +42,9 @@ namespace Wingnut
 
 		UUID CreateEntity(const std::string& tag);
 
-//		Ref<Vulkan::Descriptor> GetRenderImageDescriptor() { return m_Renderer->GetRenderImage(); }
+		void CreateUISceneImageDescriptor(Ref<Vulkan::ImageSampler> sampler);
 
+		Ref<Vulkan::Descriptor> GetSceneImageDescriptor() { return m_RendererImageDescriptor; }
 
 		void Begin();
 		void End();
@@ -55,6 +56,8 @@ namespace Wingnut
 		SceneProperties m_Properties;
 
 		Ref<SceneRenderer> m_SceneRenderer = nullptr;
+		
+		Ref<Vulkan::Descriptor> m_RendererImageDescriptor = nullptr;
 
 		Ref<Camera> m_SceneCamera = nullptr;
 

@@ -62,7 +62,7 @@ namespace Wingnut
 			commandBuffer->EndRecording();
 		}
 
-		void Buffer::TransitionImageLayout(Ref<Device> device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)
+		void Buffer::TransitionImageLayout(Ref<Device> device, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout)
 		{
 			auto commandPool = Renderer::GetContext()->GetRendererData().TransferCommandPool;
 

@@ -52,11 +52,24 @@ namespace Wingnut
 					rendererData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)extent.width, (uint32_t)extent.height,
 						VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-					rendererData.SceneFramebuffer->Release();
-					rendererData.SceneFramebuffer = Vulkan::Framebuffer::Create(rendererData.Device, rendererData.Swapchain, rendererData.SceneRenderPass, extent, rendererData.DepthStencilImage->GetImageView());
+					rendererData.SceneTexture->Release();
+					rendererData.SceneTexture = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::Texture2D, (uint32_t)extent.width, (uint32_t)extent.height,
+						VK_FORMAT_B8G8R8A8_UNORM, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
-					rendererData.UIFramebuffer->Release();
-					rendererData.UIFramebuffer = Vulkan::Framebuffer::Create(rendererData.Device, rendererData.Swapchain, rendererData.UIRenderPass, extent, rendererData.DepthStencilImage->GetImageView());
+					{
+						std::vector<VkImageView> imageViews;
+						imageViews.emplace_back(s_VulkanData.SceneTexture->GetImageView());
+
+						rendererData.SceneFramebuffer->Release();
+						rendererData.SceneFramebuffer = Vulkan::Framebuffer::Create(rendererData.Device, rendererData.SceneRenderPass, extent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
+					}
+
+					{
+						std::vector<VkImageView> imageViews = s_VulkanData.Swapchain->GetImageViews();
+
+						rendererData.UIFramebuffer->Release();
+						rendererData.UIFramebuffer = Vulkan::Framebuffer::Create(rendererData.Device, rendererData.UIRenderPass, extent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
+					}
 
 					return false;
 				});
@@ -76,6 +89,11 @@ namespace Wingnut
 				s_VulkanData.Device->WaitForIdle();
 			}
 
+
+			if (s_VulkanData.SceneTexture != nullptr)
+			{
+				s_VulkanData.SceneTexture->Release();
+			}
 
 			if (s_VulkanData.DescriptorPool != nullptr)
 			{
@@ -133,6 +151,11 @@ namespace Wingnut
 			if (s_VulkanData.SceneRenderPass != nullptr)
 			{
 				s_VulkanData.SceneRenderPass->Release();
+			}
+
+			if (s_VulkanData.SceneTexture != nullptr)
+			{
+				s_VulkanData.SceneTexture->Release();
 			}
 
 			if (s_VulkanData.DepthStencilImage != nullptr)
@@ -197,17 +220,12 @@ namespace Wingnut
 			s_VulkanData.SceneRenderPass = RenderPass::Create(s_VulkanData.Device, renderPassSpecification);
 
 			renderPassSpecification.Target = RenderTarget::Screen;
-			renderPassSpecification.LoadOp = AttachmentLoadOp::Load;
+			renderPassSpecification.LoadOp = AttachmentLoadOp::Clear;
+//			renderPassSpecification.LoadOp = AttachmentLoadOp::Load;
 
 			s_VulkanData.UIRenderPass = RenderPass::Create(s_VulkanData.Device, renderPassSpecification);
 
 			s_VulkanData.Swapchain = Swapchain::Create(s_VulkanData.Device, s_VulkanData.Surface->GetSurface(), m_CurrentExtent);
-
-			s_VulkanData.DepthStencilImage = Image::Create(s_VulkanData.Device, Vulkan::ImageType::DepthStencil, m_CurrentExtent.width, m_CurrentExtent.height,
-				VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
-
-			s_VulkanData.SceneFramebuffer = Framebuffer::Create(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.SceneRenderPass, m_CurrentExtent, s_VulkanData.DepthStencilImage->GetImageView());
-			s_VulkanData.UIFramebuffer = Framebuffer::Create(s_VulkanData.Device, s_VulkanData.Swapchain, s_VulkanData.UIRenderPass, m_CurrentExtent, s_VulkanData.DepthStencilImage->GetImageView());
 
 			s_VulkanData.GraphicsCommandPool = CommandPool::Create(s_VulkanData.Device, CommandPoolType::Graphics);
 			s_VulkanData.TransferCommandPool = CommandPool::Create(s_VulkanData.Device, CommandPoolType::Transfer);
@@ -231,6 +249,30 @@ namespace Wingnut
 
 				Ref<Vulkan::Fence> newInFlightFence = Fence::Create(s_VulkanData.Device);
 				s_VulkanData.InFlightFences.emplace_back(newInFlightFence);
+			}
+
+			s_VulkanData.DepthStencilImage = Image::Create(s_VulkanData.Device, Vulkan::ImageType::DepthStencil, m_CurrentExtent.width, m_CurrentExtent.height,
+				VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
+
+			std::vector<VkImageView> imageViews = s_VulkanData.Swapchain->GetImageViews();
+			imageViews.emplace_back(s_VulkanData.DepthStencilImage->GetImageView());
+
+			s_VulkanData.SceneTexture = CreateRef<Vulkan::Image>(s_VulkanData.Device, Vulkan::ImageType::Texture2D, (uint32_t)m_CurrentExtent.width, (uint32_t)m_CurrentExtent.height,
+				VK_FORMAT_B8G8R8A8_UNORM, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+
+			s_VulkanData.SceneTexture->TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL); //VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+
+			{
+				std::vector<VkImageView> imageViews;
+				imageViews.emplace_back(s_VulkanData.SceneTexture->GetImageView());
+
+				s_VulkanData.SceneFramebuffer = Vulkan::Framebuffer::Create(s_VulkanData.Device, s_VulkanData.SceneRenderPass, m_CurrentExtent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
+			}
+
+			{
+				std::vector<VkImageView> imageViews = s_VulkanData.Swapchain->GetImageViews();
+
+				s_VulkanData.UIFramebuffer = Vulkan::Framebuffer::Create(s_VulkanData.Device, s_VulkanData.UIRenderPass, m_CurrentExtent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
 			}
 
 		}

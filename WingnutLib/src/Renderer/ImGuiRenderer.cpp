@@ -137,8 +137,13 @@ namespace Wingnut
 		renderPassBeginInfo.renderArea.offset = { 0, 0 };
 		renderPassBeginInfo.renderArea.extent = m_Extent;
 
-		renderPassBeginInfo.clearValueCount = 0;
-		renderPassBeginInfo.pClearValues = nullptr;
+		std::array<VkClearValue, 3> clearValues = {};
+		clearValues[0].color = { {0.2f, 0.3f, 0.45f} };
+		clearValues[1].depthStencil = { 1.0f, 0 };
+		clearValues[2].color = { {0.2f, 0.3f, 0.45f} };
+
+		renderPassBeginInfo.clearValueCount = (uint32_t)clearValues.size();
+		renderPassBeginInfo.pClearValues = clearValues.data();
 
 		vkCmdBeginRenderPass(commandBuffer->GetCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 //

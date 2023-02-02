@@ -53,6 +53,13 @@ namespace Wingnut
 
 	ImGuiContext::ImGuiContext()
 	{
+		if (s_Instance != nullptr)
+		{
+			return;
+		}
+
+		s_Instance = this;
+
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		VkExtent2D extent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
@@ -338,7 +345,9 @@ namespace Wingnut
 						vkCmdSetScissor(commandBuffer->GetCommandBuffer(), 0, 1, &scissor);
 
 						m_CameraDescriptor->Bind(commandBuffer, m_Renderer->GetPipelineLayout());
-						m_AtlasDescriptor->Bind(commandBuffer, m_Renderer->GetPipelineLayout());
+//						m_AtlasDescriptor->Bind(commandBuffer, m_Renderer->GetPipelineLayout());
+
+						vkCmdBindDescriptorSets(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_Renderer->GetPipelineLayout(), ImGuiTextureDescriptor, 1, (VkDescriptorSet*)&command->TextureId, 0, nullptr);
 
 						vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), command->ElemCount, 1, command->IdxOffset + globalIndexOffset, command->VtxOffset + globalVertexOffset, 0);
 					}

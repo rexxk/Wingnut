@@ -1,6 +1,11 @@
 #include "MainLayer.h"
 
+#include "ImGui/ImGuiContext.h"
+
+
 #include <glm/gtc/type_ptr.hpp>
+
+
 
 using namespace Wingnut;
 
@@ -59,6 +64,7 @@ void MainLayer::OnAttach()
 
 	ECS::EntitySystem::AddComponent<MeshComponent>(entity, quadVertices, quadIndices);
 
+	m_Scene->CreateUISceneImageDescriptor(Wingnut::ImGuiContext::Get().GetSampler());
 
 }
 
@@ -83,14 +89,14 @@ void MainLayer::OnUpdate(Timestep ts)
 void MainLayer::OnUIRender()
 {
 
-//	ImGui::DockSpaceOverViewport();
+	ImGui::DockSpaceOverViewport();
 
 	ImGui::ShowDemoWindow();
 
 	ImGui::Begin("Viewport");
 
 		ImVec2 windowSize = ImGui::GetWindowSize();
-//		ImGui::Image((ImTextureID)m_Scene->GetRenderImageDescriptor(), windowSize);
+		ImGui::Image((ImTextureID)m_Scene->GetSceneImageDescriptor()->GetDescriptor(), windowSize);
 
 	ImGui::End();
 }

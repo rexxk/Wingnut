@@ -106,7 +106,7 @@ namespace Wingnut
 			static void CreateBuffer(Ref<Device> device, VkBuffer& buffer, VkDeviceMemory& deviceMemory, VkDeviceSize size, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags);
 			static void CopyBuffer(Ref<Device> device, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize bufferSize);
 
-			static void TransitionImageLayout(Ref<Device> device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+			static void TransitionImageLayout(Ref<Device> device, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout);
 			static void CopyBufferToImage(Ref<Device> device, VkBuffer buffer,  VkImage image, uint32_t width, uint32_t height);
 		};
 	}

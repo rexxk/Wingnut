@@ -2,7 +2,6 @@
 
 #include "Device.h"
 #include "RenderPass.h"
-#include "Swapchain.h"
 
 #include <vulkan/vulkan.h>
 
@@ -16,9 +15,9 @@ namespace Wingnut
 		class Framebuffer
 		{
 		public:
-			static Ref<Framebuffer> Create(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkExtent2D imageExtent, VkImageView depthStencilImageView, VkImageView renderToTexture = nullptr);
+			static Ref<Framebuffer> Create(Ref<Device> device, Ref<RenderPass> renderPass, VkExtent2D imageExtent, const std::vector<VkImageView>& imageViews, VkImageView depthStencilView);
 
-			Framebuffer(Ref<Device> device, Ref<Swapchain> swapchain, Ref<RenderPass> renderPass, VkExtent2D imageExtent, VkImageView depthStencilImageView, VkImageView renderToTexture);
+			Framebuffer(Ref<Device> device, Ref<RenderPass> renderPass, VkExtent2D imageExtent, const std::vector<VkImageView>& imageViews, VkImageView depthStencilView);
 			~Framebuffer();
 
 			void Release();

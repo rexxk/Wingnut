@@ -79,7 +79,15 @@ namespace Wingnut
 			{
 				colorAttachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			}
-			colorAttachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+			if (m_Specification.Target == RenderTarget::Image)
+			{
+				colorAttachmentDescription.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			}
+			else
+			{
+				colorAttachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+			}
 
 			VkAttachmentReference colorAttachmentReference = {};
 			colorAttachmentReference.attachment = 0;
@@ -118,13 +126,51 @@ namespace Wingnut
 			subpassDescription.pColorAttachments = &colorAttachmentReference;
 			subpassDescription.pDepthStencilAttachment = &depthAttachmentReference;
 
-			VkSubpassDependency dependency = {};
-			dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-			dependency.dstSubpass = 0;
-			dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-			dependency.srcAccessMask = 0;
-			dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-			dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			std::vector<VkSubpassDependency> dependencies;
+
+			if (m_Specification.Target == RenderTarget::Image)
+			{
+				{
+					VkSubpassDependency dependency = {};
+					dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+					dependency.dstSubpass = 0;
+					dependency.srcStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+					dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+					dependency.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+					dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+					dependency.dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+					dependencies.emplace_back(dependency);
+				}
+
+				{
+					VkSubpassDependency dependency = {};
+					dependency.srcSubpass = 0;
+					dependency.dstSubpass = VK_SUBPASS_EXTERNAL;
+					dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+					dependency.dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+					dependency.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+					dependency.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+					dependency.dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+					dependencies.emplace_back(dependency);
+				}
+			}
+			else
+			{
+				{
+					VkSubpassDependency dependency = {};
+					dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+					dependency.dstSubpass = 0;
+					dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+					dependency.srcAccessMask = 0;
+					dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+					dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+
+					dependencies.emplace_back(dependency);
+				}
+			}
+
 
 			VkRenderPassCreateInfo passCreateInfo = {};
 			passCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -134,11 +180,10 @@ namespace Wingnut
 			passCreateInfo.subpassCount = 1;
 			passCreateInfo.pSubpasses = &subpassDescription;
 
-			passCreateInfo.dependencyCount = 1;
-			passCreateInfo.pDependencies = &dependency;
+			passCreateInfo.dependencyCount = (uint32_t)dependencies.size();
+			passCreateInfo.pDependencies = dependencies.data();
 
 			vkCreateRenderPass(m_Device, &passCreateInfo, nullptr, &m_RenderPass);
-
 		}
 
 	}

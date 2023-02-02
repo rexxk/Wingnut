@@ -47,6 +47,8 @@ namespace Wingnut
 
 			void Release();
 
+			void TransitionLayout(VkImageLayout oldLayout, VkImageLayout newLayout);
+
 			VkImage GetImage() { return m_Image; }
 			VkImageView GetImageView() { return m_ImageView; }
 
@@ -54,7 +56,6 @@ namespace Wingnut
 			void CreateImage(uint32_t width, uint32_t height, VkImageUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags, VkImageTiling tiling);
 			void CreateImageView(VkImageAspectFlags aspectFlags);
 
-			void TransitionLayout(VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
 
 		private:
 			VkImage m_Image = nullptr;

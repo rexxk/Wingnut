@@ -119,7 +119,7 @@ namespace Wingnut
 
 		}
 
-		void Image::TransitionLayout(VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)
+		void Image::TransitionLayout(VkImageLayout oldLayout, VkImageLayout newLayout)
 		{
 			auto commandPool = Renderer::GetContext()->GetRendererData().TransferCommandPool;
 
@@ -168,6 +168,22 @@ namespace Wingnut
 
 				sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 				destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+			}
+			else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+			{
+				memoryBarrier.srcAccessMask = 0;
+				memoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+				sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+				destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+			}
+			else if (oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+			{
+				memoryBarrier.srcAccessMask = 0;
+				memoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+				sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+				destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 			}
 
 			vkCmdPipelineBarrier(commandBuffer->GetCommandBuffer(), sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &memoryBarrier);

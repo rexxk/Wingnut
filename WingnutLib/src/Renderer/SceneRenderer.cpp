@@ -116,6 +116,8 @@ namespace Wingnut
 		m_RenderImage = Vulkan::Image::Create(rendererData.Device, Vulkan::ImageType::Texture2D, m_Extent.width, m_Extent.height, VK_FORMAT_R8G8B8A8_UNORM,
 			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
+//		m_RenderImage->TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
 	}
 
 	void SceneRenderer::BeginScene(uint32_t currentFrame)
@@ -155,6 +157,9 @@ namespace Wingnut
 
 		vkCmdEndRenderPass(commandBuffer->GetCommandBuffer());
 
+//		m_RenderImage->TransitionLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		
+/*
 		VkImageBlit region = { };
 		region.srcOffsets[0] = { 0, 0, 0 };
 		region.srcOffsets[1] = { (int)m_Extent.width, (int)m_Extent.height, 1 };
@@ -166,8 +171,11 @@ namespace Wingnut
 		region.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		region.dstSubresource.layerCount = 1;
 
-		vkCmdBlitImage(commandBuffer->GetCommandBuffer(), rendererData.Swapchain->GetImage(m_CurrentFrame), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_RenderImage->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region, VK_FILTER_LINEAR);
+//		rendererData.SceneTexture->TransitionLayout(VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+		rendererData.SceneTexture->TransitionLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
 
+		vkCmdBlitImage(commandBuffer->GetCommandBuffer(), rendererData.SceneTexture->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_RenderImage->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region, VK_FILTER_LINEAR);
+*/
 	}
 
 	void SceneRenderer::Draw()

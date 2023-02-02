@@ -117,5 +117,11 @@ namespace Wingnut
 		return newEntity;
 	}
 
+	void Scene::CreateUISceneImageDescriptor(Ref<Vulkan::ImageSampler> sampler)
+	{
+		auto& rendererData = Renderer::GetContext()->GetRendererData();
+		m_RendererImageDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), ImGuiTextureDescriptor, 0, rendererData.SceneTexture, sampler);
+	}
+
 
 }
