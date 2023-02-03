@@ -52,13 +52,16 @@ namespace Wingnut
 					rendererData.DepthStencilImage = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::DepthStencil, (uint32_t)extent.width, (uint32_t)extent.height,
 						VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-					rendererData.SceneTexture->Release();
-					rendererData.SceneTexture = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::Texture2D, (uint32_t)extent.width, (uint32_t)extent.height,
-						VK_FORMAT_B8G8R8A8_UNORM, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+					rendererData.SceneImage->Release();
+					rendererData.SceneImage = Texture2D::Create(extent.width, extent.height, 4, nullptr, TextureFormat::RenderTarget);
+//					rendererData.SceneTexture->Release();
+//					rendererData.SceneTexture = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::Texture2D, (uint32_t)extent.width, (uint32_t)extent.height,
+//						/*VK_FORMAT_B8G8R8A8_UNORM*/ VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
 					{
 						std::vector<VkImageView> imageViews;
-						imageViews.emplace_back(s_VulkanData.SceneTexture->GetImageView());
+//						imageViews.emplace_back(s_VulkanData.SceneTexture->GetImageView());
+						imageViews.emplace_back(s_VulkanData.SceneImage->GetImageView());
 
 						rendererData.SceneFramebuffer->Release();
 						rendererData.SceneFramebuffer = Vulkan::Framebuffer::Create(rendererData.Device, rendererData.SceneRenderPass, extent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
@@ -89,11 +92,6 @@ namespace Wingnut
 				s_VulkanData.Device->WaitForIdle();
 			}
 
-
-			if (s_VulkanData.SceneTexture != nullptr)
-			{
-				s_VulkanData.SceneTexture->Release();
-			}
 
 			if (s_VulkanData.DescriptorPool != nullptr)
 			{
@@ -153,9 +151,14 @@ namespace Wingnut
 				s_VulkanData.SceneRenderPass->Release();
 			}
 
-			if (s_VulkanData.SceneTexture != nullptr)
+//			if (s_VulkanData.SceneTexture != nullptr)
+//			{
+//				s_VulkanData.SceneTexture->Release();
+//			}
+
+			if (s_VulkanData.SceneImage != nullptr)
 			{
-				s_VulkanData.SceneTexture->Release();
+				s_VulkanData.SceneImage->Release();
 			}
 
 			if (s_VulkanData.DepthStencilImage != nullptr)
@@ -230,7 +233,6 @@ namespace Wingnut
 			s_VulkanData.GraphicsCommandPool = CommandPool::Create(s_VulkanData.Device, CommandPoolType::Graphics);
 			s_VulkanData.TransferCommandPool = CommandPool::Create(s_VulkanData.Device, CommandPoolType::Transfer);
 
-
 			// TODO: Max sets hardcoded to 1000
 			s_VulkanData.DescriptorPool = DescriptorPool::Create(s_VulkanData.Device, 1000);
 
@@ -257,14 +259,17 @@ namespace Wingnut
 			std::vector<VkImageView> imageViews = s_VulkanData.Swapchain->GetImageViews();
 			imageViews.emplace_back(s_VulkanData.DepthStencilImage->GetImageView());
 
-			s_VulkanData.SceneTexture = CreateRef<Vulkan::Image>(s_VulkanData.Device, Vulkan::ImageType::Texture2D, (uint32_t)m_CurrentExtent.width, (uint32_t)m_CurrentExtent.height,
-				VK_FORMAT_B8G8R8A8_UNORM, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+			s_VulkanData.SceneImage = Texture2D::Create(m_CurrentExtent.width, m_CurrentExtent.height, 4, nullptr, TextureFormat::RenderTarget);
 
-			s_VulkanData.SceneTexture->TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL); //VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+//			s_VulkanData.SceneTexture = CreateRef<Vulkan::Image>(s_VulkanData.Device, Vulkan::ImageType::Texture2D, (uint32_t)m_CurrentExtent.width, (uint32_t)m_CurrentExtent.height,
+//				VK_FORMAT_B8G8R8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+
+//			s_VulkanData.SceneTexture->TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL); //VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
 
 			{
 				std::vector<VkImageView> imageViews;
-				imageViews.emplace_back(s_VulkanData.SceneTexture->GetImageView());
+//				imageViews.emplace_back(s_VulkanData.SceneTexture->GetImageView());
+				imageViews.emplace_back(s_VulkanData.SceneImage->GetImageView());
 
 				s_VulkanData.SceneFramebuffer = Vulkan::Framebuffer::Create(s_VulkanData.Device, s_VulkanData.SceneRenderPass, m_CurrentExtent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
 			}

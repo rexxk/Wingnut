@@ -4,7 +4,6 @@
 #include "Wingnut.h"
 
 
-
 using namespace Wingnut::Vulkan;
 
 
@@ -25,4 +24,6 @@ private:
 
 	Ref<Wingnut::Camera> m_Camera = nullptr;
 
+	Ref<Wingnut::Vulkan::Texture2D> m_DebugTexture = nullptr;
+	Ref<Wingnut::Vulkan::Descriptor> m_DebugDescriptor = nullptr;
 };

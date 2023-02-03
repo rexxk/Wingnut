@@ -57,6 +57,7 @@ void MainLayer::OnAttach()
 	m_Scene = Scene::Create(sceneProperties);
 
 
+
 	UUID entity = m_Scene->CreateEntity("Entity");
 	std::string tag = ECS::EntitySystem::GetComponent<TagComponent>(entity).Tag;
 
@@ -66,11 +67,18 @@ void MainLayer::OnAttach()
 
 	m_Scene->CreateUISceneImageDescriptor(Wingnut::ImGuiContext::Get().GetSampler());
 
+	m_DebugTexture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
+	m_DebugDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), Wingnut::ImGuiContext::Get().GetSampler(), ImGuiTextureDescriptor, 0, m_DebugTexture);
+
+
 }
 
 void MainLayer::OnDetach()
 {
 	Renderer::WaitForIdle();
+
+
+	m_DebugTexture->Release();
 
 	m_Scene->Release();
 }
@@ -97,6 +105,7 @@ void MainLayer::OnUIRender()
 
 		ImVec2 windowSize = ImGui::GetWindowSize();
 		ImGui::Image((ImTextureID)m_Scene->GetSceneImageDescriptor()->GetDescriptor(), windowSize);
+//		ImGui::Image((ImTextureID)m_DebugDescriptor->GetDescriptor(), windowSize);
 
 	ImGui::End();
 }

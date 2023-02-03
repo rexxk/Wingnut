@@ -26,8 +26,8 @@ namespace Wingnut
 		m_SceneRenderer = SceneRenderer::Create(properties.SceneExtent);
 		m_ImageSampler = Vulkan::ImageSampler::Create(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
-		m_Texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized, m_ImageSampler);
-		m_TextureDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), TextureDescriptor, 0, m_Texture);
+		m_Texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
+		m_TextureDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), m_ImageSampler, TextureDescriptor, 0, m_Texture);
 
 		m_CameraDataBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(CameraData));
 		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), CameraDescriptor, 0, m_CameraDataBuffer);
@@ -120,7 +120,8 @@ namespace Wingnut
 	void Scene::CreateUISceneImageDescriptor(Ref<Vulkan::ImageSampler> sampler)
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
-		m_RendererImageDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), ImGuiTextureDescriptor, 0, rendererData.SceneTexture, sampler);
+
+		m_RendererImageDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), sampler, ImGuiTextureDescriptor, 0, rendererData.SceneImage);
 	}
 
 

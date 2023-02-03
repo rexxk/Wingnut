@@ -102,13 +102,11 @@ namespace Wingnut
 		{
 		public:
 			static Ref<Descriptor> Create(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer);
-			static Ref<Descriptor> Create(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<Texture2D> texture);
-			static Ref<Descriptor> Create(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<Image> image, Ref<ImageSampler> sampler);
+			static Ref<Descriptor> Create(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture);
 
 
 			Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer);
-			Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<Texture2D> texture);
-			Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<Image> image, Ref<ImageSampler> sampler);
+			Descriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture);
 			~Descriptor();
 
 			void Release();

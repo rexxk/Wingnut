@@ -176,6 +176,7 @@ namespace Wingnut
 
 		vkCmdBlitImage(commandBuffer->GetCommandBuffer(), rendererData.SceneTexture->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_RenderImage->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region, VK_FILTER_LINEAR);
 */
+
 	}
 
 	void SceneRenderer::Draw()

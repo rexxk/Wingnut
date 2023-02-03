@@ -18,31 +18,32 @@ namespace Wingnut
 			{
 				case TextureFormat::R8G8B8A8_Normalized: return VK_FORMAT_R8G8B8A8_UNORM;
 				case TextureFormat::R8G8B8A8_SRGB: return VK_FORMAT_R8G8B8A8_SRGB;
+				case TextureFormat::RenderTarget: return VK_FORMAT_B8G8R8A8_UNORM;
 			}
 
 			return VK_FORMAT_UNDEFINED;
 		}
 
 
-		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format, Ref<ImageSampler> sampler)
+		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format)
 		{
-			return CreateRef<Texture2D>(texturePath, format, sampler);
+			return CreateRef<Texture2D>(texturePath, format);
 		}
 
-		Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, Ref<ImageSampler> sampler)
+		Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format)
 		{
-			return CreateRef<Texture2D>(width, height, bitsPerPixel, pixels, format, sampler);
+			return CreateRef<Texture2D>(width, height, bitsPerPixel, pixels, format);
 		}
 
 
-		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, Ref<ImageSampler> sampler)
-			: m_Sampler(sampler), m_Format(format)
+		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format)
+			: m_Format(format)
 		{
 			CreateTextureFromFile(texturePath);
 		}
 		
-		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, TextureFormat format, Ref<ImageSampler> sampler)
-			: m_Sampler(sampler), m_Format(format)
+		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, TextureFormat format)
+			: m_Format(format)
 		{
 			CreateTexture(width, height, bitsPerPixel, data);
 		}
@@ -74,11 +75,11 @@ namespace Wingnut
 		{
 			m_Device = Renderer::GetContext()->GetRendererData().Device;
 
-			if (pixels == nullptr)
-			{
-				LOG_CORE_ERROR("[Texture] No data for texture");
-				return;
-			}
+//			if (pixels == nullptr)
+//			{
+//				LOG_CORE_ERROR("[Texture] No data for texture");
+//				return;
+//			}
 
 			VkDeviceSize size = width * height * 4;
 
@@ -87,15 +88,26 @@ namespace Wingnut
 
 			Buffer::CreateBuffer(m_Device, stagingBuffer, stagingBufferMemory, size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
-			void* memoryAddress;
+			if (pixels != nullptr)
+			{
+				void* memoryAddress;
 
-			vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, size, 0, &memoryAddress);
-			memcpy(memoryAddress, pixels, size);
-			vkUnmapMemory(m_Device->GetDevice(), stagingBufferMemory);
+				vkMapMemory(m_Device->GetDevice(), stagingBufferMemory, 0, size, 0, &memoryAddress);
+				memcpy(memoryAddress, pixels, size);
+				vkUnmapMemory(m_Device->GetDevice(), stagingBufferMemory);
+			}
+
 
 			LOG_CORE_TRACE("[Texture] Created texture");
 
-			m_Image = CreateRef<Image>(m_Device, ImageType::Texture2D, width, height, TextureFormatToVulkanFormat(m_Format), VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+			VkImageUsageFlags usageFlags = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+
+			if (m_Format == TextureFormat::RenderTarget)
+			{
+				usageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			}
+
+			m_Image = Image::Create(m_Device, ImageType::Texture2D, width, height, TextureFormatToVulkanFormat(m_Format), usageFlags, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
 			Buffer::TransitionImageLayout(m_Device, m_Image->GetImage(), VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 			Buffer::CopyBufferToImage(m_Device, stagingBuffer, m_Image->GetImage(), (uint32_t)width, (uint32_t)height);
