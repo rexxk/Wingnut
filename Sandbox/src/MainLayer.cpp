@@ -103,9 +103,8 @@ void MainLayer::OnUIRender()
 
 	ImGui::Begin("Viewport");
 
-		ImVec2 windowSize = ImGui::GetWindowSize();
+		ImVec2 windowSize = ImGui::GetContentRegionAvail();
 		ImGui::Image((ImTextureID)m_Scene->GetSceneImageDescriptor()->GetDescriptor(), windowSize);
-//		ImGui::Image((ImTextureID)m_DebugDescriptor->GetDescriptor(), windowSize);
 
 	ImGui::End();
 }

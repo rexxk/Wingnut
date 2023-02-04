@@ -100,18 +100,25 @@ namespace Wingnut
 
 			LOG_CORE_TRACE("[Texture] Created texture");
 
-			VkImageUsageFlags usageFlags = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+			VkImageUsageFlags usageFlags = VK_IMAGE_USAGE_SAMPLED_BIT;
 
 			if (m_Format == TextureFormat::RenderTarget)
 			{
 				usageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 			}
+			else
+			{
+				usageFlags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+			}
 
 			m_Image = Image::Create(m_Device, ImageType::Texture2D, width, height, TextureFormatToVulkanFormat(m_Format), usageFlags, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
-			Buffer::TransitionImageLayout(m_Device, m_Image->GetImage(), VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-			Buffer::CopyBufferToImage(m_Device, stagingBuffer, m_Image->GetImage(), (uint32_t)width, (uint32_t)height);
-			Buffer::TransitionImageLayout(m_Device, m_Image->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+			if (m_Format != TextureFormat::RenderTarget)
+			{
+				Buffer::TransitionImageLayout(m_Device, m_Image->GetImage(), VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+				Buffer::CopyBufferToImage(m_Device, stagingBuffer, m_Image->GetImage(), (uint32_t)width, (uint32_t)height);
+				Buffer::TransitionImageLayout(m_Device, m_Image->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+			}
 
 			vkFreeMemory(m_Device->GetDevice(), stagingBufferMemory, nullptr);
 			vkDestroyBuffer(m_Device->GetDevice(), stagingBuffer, nullptr);
