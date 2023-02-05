@@ -55,6 +55,8 @@ namespace Wingnut
 
 		void Update(Timestep ts);
 
+		void EnableCamera(bool enable) { m_SceneCamera->Enable(enable);	}
+
 	private:
 
 		Ref<SceneRenderer> m_SceneRenderer = nullptr;

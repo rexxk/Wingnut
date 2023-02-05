@@ -49,6 +49,11 @@ namespace Wingnut
 
 	void Camera::Update(Timestep ts)
 	{
+		if (!m_Enabled)
+		{
+			return;
+		}
+
 		if (MouseInput::IsButtonPressed(MouseButton::Right))
 		{
 //			LOG_CORE_TRACE("[Right button] - Position: {},{} - Delta: {},{}", MouseInput::PositionX(), MouseInput::PositionY(), MouseInput::DeltaX(), MouseInput::DeltaY());

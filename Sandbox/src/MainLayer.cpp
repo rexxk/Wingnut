@@ -122,6 +122,15 @@ void MainLayer::OnUIRender()
 
 		ImGui::Image((ImTextureID)m_Scene->GetSceneImageDescriptor()->GetDescriptor(), windowSize);
 
+		if (ImGui::IsWindowHovered())
+		{
+			m_Scene->EnableCamera(true);
+		}
+		else
+		{
+			m_Scene->EnableCamera(false);
+		}
+
 	ImGui::End();
 
 	ImGui::PopStyleVar();

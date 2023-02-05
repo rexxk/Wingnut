@@ -26,6 +26,8 @@ namespace Wingnut
 
 		void Update(Timestep ts);
 
+		void Enable(bool enable) { m_Enabled = enable; }
+
 	private:
 		void CalculateViewMatrix();
 		glm::vec3 CalculatePosition();
@@ -55,6 +57,7 @@ namespace Wingnut
 
 		float m_MouseSpeed = 1.0f;
 
+		bool m_Enabled = false;
 	};
 
 
