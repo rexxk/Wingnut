@@ -427,42 +427,15 @@ namespace Wingnut
 		{
 			Allocate();
 
-			VkDescriptorBufferInfo bufferInfo = {};
-			bufferInfo.buffer = buffer->GetBuffer(Renderer::GetContext()->GetCurrentFrame());
-			bufferInfo.offset = 0;
-			bufferInfo.range = buffer->GetBufferSize();
-
-			VkWriteDescriptorSet writeSet = {};
-			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			writeSet.dstBinding = m_Binding;
-			writeSet.dstSet = m_Descriptor;
-			writeSet.descriptorCount = 1;
-			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			writeSet.pBufferInfo = &bufferInfo;
-
-			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
-
+			CreateDescriptor(device, shader, set, binding, buffer);
 		}
 
 		Descriptor::Descriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture)
-			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::Texture), m_Set(set), m_Binding(binding)
+			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::Texture), m_Set(set), m_Binding(binding), m_Sampler(sampler)
 		{
 			Allocate();
 
-			VkDescriptorImageInfo imageInfo = {};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = texture->GetImageView();
-			imageInfo.sampler = sampler->Sampler();
-
-			VkWriteDescriptorSet writeSet = {};
-			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			writeSet.dstBinding = m_Binding;
-			writeSet.dstSet = m_Descriptor;
-			writeSet.descriptorCount = 1;
-			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			writeSet.pImageInfo = &imageInfo;
-
-			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
+			CreateDescriptor(device, shader, sampler, set, binding, texture);
 		}
 
 		Descriptor::~Descriptor()
@@ -492,10 +465,66 @@ namespace Wingnut
 			}
 		}
 
+		void Descriptor::CreateDescriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer)
+		{
+			VkDescriptorBufferInfo bufferInfo = {};
+			bufferInfo.buffer = buffer->GetBuffer(Renderer::GetContext()->GetCurrentFrame());
+			bufferInfo.offset = 0;
+			bufferInfo.range = buffer->GetBufferSize();
+
+			VkWriteDescriptorSet writeSet = {};
+			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			writeSet.dstBinding = m_Binding;
+			writeSet.dstSet = m_Descriptor;
+			writeSet.descriptorCount = 1;
+			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			writeSet.pBufferInfo = &bufferInfo;
+
+			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
+
+		}
+
+		void Descriptor::CreateDescriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture)
+		{
+			VkDescriptorImageInfo imageInfo = {};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = texture->GetImageView();
+			imageInfo.sampler = sampler->Sampler();
+
+			VkWriteDescriptorSet writeSet = {};
+			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			writeSet.dstBinding = m_Binding;
+			writeSet.dstSet = m_Descriptor;
+			writeSet.descriptorCount = 1;
+			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			writeSet.pImageInfo = &imageInfo;
+
+			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
+		}
+
 		void Descriptor::Bind(Ref<CommandBuffer> commandBuffer, VkPipelineLayout pipelineLayout)
 		{
 			vkCmdBindDescriptorSets(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, m_Set, 1, &m_Descriptor, 0, nullptr);
 		}
+
+		void Descriptor::UpdateDescriptor(Ref<Texture2D> texture)
+		{
+			VkDescriptorImageInfo imageInfo = {};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = texture->GetImageView();
+			imageInfo.sampler = m_Sampler->Sampler();
+
+			VkWriteDescriptorSet writeSet = {};
+			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			writeSet.dstBinding = m_Binding;
+			writeSet.dstSet = m_Descriptor;
+			writeSet.descriptorCount = 1;
+			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			writeSet.pImageInfo = &imageInfo;
+
+			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
+		}
+
 
 	}
 

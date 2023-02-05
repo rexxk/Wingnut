@@ -113,10 +113,16 @@ namespace Wingnut
 
 			void Bind(Ref<CommandBuffer> commandBuffer, VkPipelineLayout pipelineLayout);
 
+			void UpdateDescriptor(Ref<Texture2D> texture);
+
 			VkDescriptorSet GetDescriptor() { return m_Descriptor; }
 
 		private:
 			void Allocate();
+
+			void CreateDescriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer);
+			void CreateDescriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture);
+
 
 		private:
 
@@ -129,6 +135,7 @@ namespace Wingnut
 
 			Ref<Device> m_Device = nullptr;
 			Ref<Shader> m_Shader = nullptr;
+			Ref<ImageSampler> m_Sampler = nullptr;
 		};
 
 

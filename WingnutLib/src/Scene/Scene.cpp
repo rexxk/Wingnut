@@ -3,6 +3,9 @@
 
 #include "Assets/ShaderStore.h"
 
+#include "Event/EventUtils.h"
+#include "Event/WindowEvents.h"
+
 #include "Components.h"
 
 #include "Renderer/Renderer.h"
@@ -34,6 +37,16 @@ namespace Wingnut
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 		m_EntitySystem = CreateRef<ECS::EntitySystem>(m_EntityRegistry);
+
+
+		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
+			{
+				auto& rendererData = Renderer::GetContext()->GetRendererData();
+				m_RendererImageDescriptor->UpdateDescriptor(rendererData.SceneImage);
+
+				return false;
+			});
+
 
 	}
 

@@ -54,9 +54,6 @@ namespace Wingnut
 
 					rendererData.SceneImage->Release();
 					rendererData.SceneImage = Texture2D::Create(extent.width, extent.height, 4, nullptr, TextureFormat::RenderTarget);
-//					rendererData.SceneTexture->Release();
-//					rendererData.SceneTexture = CreateRef<Vulkan::Image>(rendererData.Device, Vulkan::ImageType::Texture2D, (uint32_t)extent.width, (uint32_t)extent.height,
-//						/*VK_FORMAT_B8G8R8A8_UNORM*/ VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
 					{
 						std::vector<VkImageView> imageViews;
@@ -76,7 +73,6 @@ namespace Wingnut
 
 					return false;
 				});
-
 
 		}
 
@@ -150,11 +146,6 @@ namespace Wingnut
 			{
 				s_VulkanData.SceneRenderPass->Release();
 			}
-
-//			if (s_VulkanData.SceneTexture != nullptr)
-//			{
-//				s_VulkanData.SceneTexture->Release();
-//			}
 
 			if (s_VulkanData.SceneImage != nullptr)
 			{
@@ -260,11 +251,6 @@ namespace Wingnut
 			imageViews.emplace_back(s_VulkanData.DepthStencilImage->GetImageView());
 
 			s_VulkanData.SceneImage = Texture2D::Create(m_CurrentExtent.width, m_CurrentExtent.height, 4, nullptr, TextureFormat::RenderTarget);
-
-//			s_VulkanData.SceneTexture = CreateRef<Vulkan::Image>(s_VulkanData.Device, Vulkan::ImageType::Texture2D, (uint32_t)m_CurrentExtent.width, (uint32_t)m_CurrentExtent.height,
-//				VK_FORMAT_B8G8R8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
-
-//			s_VulkanData.SceneTexture->TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL); //VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
 
 			{
 				std::vector<VkImageView> imageViews;

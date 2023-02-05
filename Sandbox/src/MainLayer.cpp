@@ -67,18 +67,12 @@ void MainLayer::OnAttach()
 
 	m_Scene->CreateUISceneImageDescriptor(Wingnut::ImGuiContext::Get().GetSampler());
 
-	m_DebugTexture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
-	m_DebugDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), Wingnut::ImGuiContext::Get().GetSampler(), ImGuiTextureDescriptor, 0, m_DebugTexture);
-
 
 }
 
 void MainLayer::OnDetach()
 {
 	Renderer::WaitForIdle();
-
-
-	m_DebugTexture->Release();
 
 	m_Scene->Release();
 }
@@ -101,11 +95,10 @@ void MainLayer::OnUIRender()
 
 	ImGui::ShowDemoWindow();
 
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	bool viewportOpen = false;
-	ImGui::Begin("Viewport", &viewportOpen, ImGuiWindowFlags_NoTitleBar);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
+	ImGui::Begin("Viewport", &viewportOpen, ImGuiWindowFlags_NoTitleBar);
 
 		ImVec2 windowSize = ImGui::GetContentRegionAvail();
 		ImGui::Image((ImTextureID)m_Scene->GetSceneImageDescriptor()->GetDescriptor(), windowSize);
