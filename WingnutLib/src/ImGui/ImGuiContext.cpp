@@ -103,6 +103,8 @@ namespace Wingnut
 		int32_t atlasHeight;
 		int32_t bytesPerPixel;
 
+		io.Fonts->AddFontFromFileTTF("assets/fonts/Carlito-Regular.ttf", 16);
+
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 
 		m_AtlasTexture = Vulkan::Texture2D::Create((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized);
