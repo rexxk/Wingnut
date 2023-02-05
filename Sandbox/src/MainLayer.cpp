@@ -101,10 +101,17 @@ void MainLayer::OnUIRender()
 
 	ImGui::ShowDemoWindow();
 
-	ImGui::Begin("Viewport");
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	bool viewportOpen = false;
+	ImGui::Begin("Viewport", &viewportOpen, ImGuiWindowFlags_NoTitleBar);
+
 
 		ImVec2 windowSize = ImGui::GetContentRegionAvail();
 		ImGui::Image((ImTextureID)m_Scene->GetSceneImageDescriptor()->GetDescriptor(), windowSize);
 
 	ImGui::End();
+
+	ImGui::PopStyleVar();
+
 }

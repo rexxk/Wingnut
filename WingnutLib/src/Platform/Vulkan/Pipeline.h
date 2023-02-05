@@ -43,6 +43,14 @@ namespace Wingnut
 			NotEqual,
 		};
 
+		enum class BlendState
+		{
+			One,
+			SourceAlpha,
+			OneMinusSourceAlpha,
+			Zero,
+		};
+
 		struct PipelineSpecification
 		{
 			Ref<Shader> PipelineShader;
@@ -56,6 +64,10 @@ namespace Wingnut
 			bool DepthTestEnable = VK_TRUE;
 			bool DepthWriteEnable = VK_TRUE;
 			CompareOperation DepthCompareOp = CompareOperation::Less;
+
+			bool BlendEnable = VK_TRUE;
+			BlendState SourceBlendFactor = BlendState::SourceAlpha;
+			BlendState DestinationBlendFactor = BlendState::OneMinusSourceAlpha;
 
 			VkExtent2D Extent;
 		};

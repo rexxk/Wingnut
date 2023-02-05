@@ -110,6 +110,8 @@ namespace Wingnut
 		pipelineSpecification.DepthTestEnable = true;
 		pipelineSpecification.DepthWriteEnable = true;
 
+//		pipelineSpecification.BlendEnable = false;
+
 		s_SceneData.StaticPipeline = Vulkan::Pipeline::Create(rendererData.Device, pipelineSpecification);
 
 
@@ -156,26 +158,6 @@ namespace Wingnut
 		auto& commandBuffer = rendererData.GraphicsCommandBuffers[m_CurrentFrame];
 
 		vkCmdEndRenderPass(commandBuffer->GetCommandBuffer());
-
-//		m_RenderImage->TransitionLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-		
-/*
-		VkImageBlit region = { };
-		region.srcOffsets[0] = { 0, 0, 0 };
-		region.srcOffsets[1] = { (int)m_Extent.width, (int)m_Extent.height, 1 };
-		region.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		region.srcSubresource.layerCount = 1;
-
-		region.dstOffsets[0] = { 0, 0, 0 };
-		region.dstOffsets[1] = { (int)m_Extent.width, (int)m_Extent.height, 1 };
-		region.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		region.dstSubresource.layerCount = 1;
-
-//		rendererData.SceneTexture->TransitionLayout(VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-		rendererData.SceneTexture->TransitionLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-
-		vkCmdBlitImage(commandBuffer->GetCommandBuffer(), rendererData.SceneTexture->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_RenderImage->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region, VK_FILTER_LINEAR);
-*/
 
 	}
 

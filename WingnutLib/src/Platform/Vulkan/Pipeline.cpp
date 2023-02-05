@@ -76,6 +76,18 @@ namespace Wingnut
 			return VK_COMPARE_OP_LESS;
 		}
 
+		VkBlendFactor BlendStateToVulkanBlendFactor(BlendState state)
+		{
+			switch (state)
+			{
+				case BlendState::One: return VK_BLEND_FACTOR_ONE;
+				case BlendState::OneMinusSourceAlpha: return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+				case BlendState::SourceAlpha: return VK_BLEND_FACTOR_SRC_ALPHA;
+				case BlendState::Zero: return VK_BLEND_FACTOR_ZERO;
+			}
+
+			return VK_BLEND_FACTOR_SRC_ALPHA;
+		}
 
 		Ref<Pipeline> Pipeline::Create(Ref<Device> device, const PipelineSpecification& pipelineSpecification)
 		{
@@ -202,9 +214,9 @@ namespace Wingnut
 
 			VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
 			colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-			colorBlendAttachment.blendEnable = VK_TRUE;
-			colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-			colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+			colorBlendAttachment.blendEnable = m_Specification.BlendEnable;
+			colorBlendAttachment.srcColorBlendFactor = BlendStateToVulkanBlendFactor(m_Specification.SourceBlendFactor);
+			colorBlendAttachment.dstColorBlendFactor = BlendStateToVulkanBlendFactor(m_Specification.DestinationBlendFactor);
 			colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
 			colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA; // ONE; // _MINUS_SRC_ALPHA;
 			colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
