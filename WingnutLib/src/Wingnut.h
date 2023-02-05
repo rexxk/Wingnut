@@ -8,6 +8,11 @@
 #include "Core/Timestep.h"
 
 #include "Event/EventBroker.h"
+#include "Event/EventUtils.h"
+#include "Event/KeyboardEvents.h"
+#include "Event/MouseEvents.h"
+#include "Event/UIEvents.h"
+#include "Event/WindowEvents.h"
 
 #include "ImGui/ImGuiContext.h"
 

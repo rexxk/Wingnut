@@ -91,16 +91,28 @@ void MainLayer::OnUpdate(Timestep ts)
 void MainLayer::OnUIRender()
 {
 
-	ImGui::DockSpaceOverViewport();
+	static uint32_t viewportWidth = 0;
+	static uint32_t viewportHeight = 0;
+
+	ImGui::DockSpaceOverViewport(nullptr); //, ImGuiDockNodeFlags_AutoHideTabBar);
 
 	ImGui::ShowDemoWindow();
 
-	bool viewportOpen = false;
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-	ImGui::Begin("Viewport", &viewportOpen, ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
 
 		ImVec2 windowSize = ImGui::GetContentRegionAvail();
+
+		if ((uint32_t)windowSize.x != viewportWidth || (uint32_t)windowSize.y != viewportHeight)
+		{
+			Ref<Wingnut::UIViewportResizedEvent> event = CreateRef<Wingnut::UIViewportResizedEvent>((uint32_t)windowSize.x, (uint32_t)windowSize.y);
+			AddEventToQueue(event);
+
+			viewportWidth = (uint32_t)windowSize.x;
+			viewportHeight = (uint32_t)windowSize.y;
+		}
+
 		ImGui::Image((ImTextureID)m_Scene->GetSceneImageDescriptor()->GetDescriptor(), windowSize);
 
 	ImGui::End();

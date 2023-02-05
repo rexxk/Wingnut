@@ -2,6 +2,7 @@
 #include "Camera.h"
 
 #include "Event/EventUtils.h"
+#include "Event/UIEvents.h"
 #include "Event/WindowEvents.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -25,7 +26,8 @@ namespace Wingnut
 
 		CalculateViewMatrix();
 
-		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
+//		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
+		SubscribeToEvent<UIViewportResizedEvent>([&](UIViewportResizedEvent& event)
 			{
 				if (event.Width() == 0 || event.Height() == 0)
 					return false;

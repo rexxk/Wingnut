@@ -112,6 +112,7 @@
     <ClInclude Include="src\Event\EventUtils.h" />
     <ClInclude Include="src\Event\KeyboardEvents.h" />
     <ClInclude Include="src\Event\MouseEvents.h" />
+    <ClInclude Include="src\Event\UIEvents.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
     <ClInclude Include="src\ImGui\ImGuiContext.h" />
     <ClInclude Include="src\Input\KeyDefs.h" />
