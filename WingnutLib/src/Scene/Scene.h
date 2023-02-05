@@ -1,6 +1,8 @@
 #pragma once
 
 
+#include "Core/Timestep.h"
+
 #include "ECS/ECS.h"
 
 #include "Platform/Vulkan/Buffer.h"
@@ -51,15 +53,16 @@ namespace Wingnut
 
 		void Draw();
 
-	private:
+		void Update(Timestep ts);
 
-		SceneProperties m_Properties;
+	private:
 
 		Ref<SceneRenderer> m_SceneRenderer = nullptr;
 		
 		Ref<Vulkan::Descriptor> m_RendererImageDescriptor = nullptr;
 
 		Ref<Camera> m_SceneCamera = nullptr;
+		VkExtent2D m_SceneExtent;
 
 		Ref<Vulkan::UniformBuffer> m_CameraDataBuffer = nullptr;
 		Ref<Vulkan::Descriptor> m_CameraDescriptor = nullptr;

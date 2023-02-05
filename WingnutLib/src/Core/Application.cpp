@@ -61,6 +61,8 @@ namespace Wingnut
 
 		m_ImGuiContext = ImGuiContext::Create();
 
+		m_MouseInput = CreateRef<MouseInput>();
+
 	}
 
 	Application::~Application()

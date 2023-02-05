@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Timestep.h"
+
 #include <glm/glm.hpp>
 
 
@@ -22,7 +24,7 @@ namespace Wingnut
 
 		const glm::vec3& GetPosition() const { return m_Position; }
 
-		void Update();
+		void Update(Timestep ts);
 
 	private:
 		void CalculateViewMatrix();
@@ -33,6 +35,8 @@ namespace Wingnut
 		glm::vec3 GetUpDirection();
 		glm::vec3 GetRightDirection();
 		glm::vec3 GetForwardDirection();
+
+		float ZoomSpeed() const;
 
 	private:
 
@@ -49,7 +53,7 @@ namespace Wingnut
 
 		float m_Exposure = 0.8f;
 
-		float m_MouseSpeed = 0.01f;
+		float m_MouseSpeed = 1.0f;
 
 	};
 

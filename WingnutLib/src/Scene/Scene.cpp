@@ -22,11 +22,13 @@ namespace Wingnut
 
 
 	Scene::Scene(const SceneProperties& properties)
-		: m_Properties(properties)
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 
-		m_SceneRenderer = SceneRenderer::Create(properties.SceneExtent);
+		m_SceneExtent = properties.SceneExtent;
+		m_SceneCamera = properties.SceneCamera;
+
+		m_SceneRenderer = SceneRenderer::Create(m_SceneExtent);
 		m_ImageSampler = Vulkan::ImageSampler::Create(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
 		m_Texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
@@ -84,10 +86,8 @@ namespace Wingnut
 
 		m_SceneRenderer->BeginScene(currentFrame);
 
-		m_Properties.SceneCamera->Update();
-
 		CameraData cameraData = {};
-		cameraData.ViewProjection = m_Properties.SceneCamera->GetViewProjectionMatrix();
+		cameraData.ViewProjection = m_SceneCamera->GetViewProjectionMatrix();
 
 		m_CameraDataBuffer->Update(&cameraData, sizeof(CameraData), currentFrame);
 
@@ -135,6 +135,12 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 
 		m_RendererImageDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), sampler, ImGuiTextureDescriptor, 0, rendererData.SceneImage);
+	}
+
+
+	void Scene::Update(Timestep ts)
+	{
+		m_SceneCamera->Update(ts);
 	}
 
 

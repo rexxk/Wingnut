@@ -9,6 +9,8 @@
 
 #include "ImGui/ImGuiContext.h"
 
+#include "Input/MouseInput.h"
+
 #include "Renderer/Renderer.h"
 
 
@@ -65,6 +67,8 @@ namespace Wingnut
 		Ref<Renderer> m_Renderer = nullptr;
 
 		Ref<ImGuiContext> m_ImGuiContext = nullptr;
+
+		Ref<MouseInput> m_MouseInput = nullptr;
 
 		inline static Application* s_Instance = nullptr;
 

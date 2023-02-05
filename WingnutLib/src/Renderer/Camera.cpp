@@ -5,6 +5,8 @@
 #include "Event/UIEvents.h"
 #include "Event/WindowEvents.h"
 
+#include "Input/MouseInput.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
@@ -45,8 +47,35 @@ namespace Wingnut
 
 	}
 
-	void Camera::Update()
+	void Camera::Update(Timestep ts)
 	{
+		if (MouseInput::IsButtonPressed(MouseButton::Right))
+		{
+//			LOG_CORE_TRACE("[Right button] - Position: {},{} - Delta: {},{}", MouseInput::PositionX(), MouseInput::PositionY(), MouseInput::DeltaX(), MouseInput::DeltaY());
+
+			float yawSign = GetUpDirection().y < 0 ? -1.0f : 1.0f;
+			m_Yaw += yawSign * MouseInput::DeltaX() * (m_MouseSpeed * 10) * ts;
+			m_Pitch += MouseInput::DeltaY() * (m_MouseSpeed * 10) * ts;
+
+		}
+		else if (MouseInput::IsButtonPressed(MouseButton::Middle))
+		{
+			m_LookAt += -GetRightDirection() * (float)MouseInput::DeltaX() * m_MouseSpeed * m_Distance * (float)ts;
+			m_LookAt += GetUpDirection() * (float)MouseInput::DeltaY() * m_MouseSpeed * m_Distance * (float)ts;
+		}
+
+		int32_t wheelDelta = MouseInput::WheelDelta();
+		if (wheelDelta != 0)
+		{
+			m_Distance -= wheelDelta * ZoomSpeed();
+
+			if (m_Distance < 1.0f)
+			{
+				m_Distance = 1.0f;
+			}
+		}
+
+		CalculateViewMatrix();
 
 	}
 
@@ -72,6 +101,27 @@ namespace Wingnut
 	glm::vec3 Camera::GetForwardDirection()
 	{
 		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
+	}
+
+	glm::vec3 Camera::GetUpDirection()
+	{
+		return glm::rotate(GetOrientation(), glm::vec3(0.0f, -1.0f, 0.0f));
+	}
+
+	glm::vec3 Camera::GetRightDirection()
+	{
+		return glm::rotate(GetOrientation(), glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+
+	float Camera::ZoomSpeed() const
+	{
+		float distance = m_Distance * 0.2f;
+		distance = std::max(distance, 0.0f);
+
+		float speed = distance * distance;
+		speed = std::min(speed, 100.0f);
+
+		return speed;
 	}
 
 }

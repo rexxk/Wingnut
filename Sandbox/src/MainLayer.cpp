@@ -79,6 +79,13 @@ void MainLayer::OnDetach()
 
 void MainLayer::OnUpdate(Timestep ts)
 {
+
+	m_Scene->Update(ts);
+
+
+
+	// Draw
+
 	m_Scene->Begin();
 
 	m_Scene->Draw();
