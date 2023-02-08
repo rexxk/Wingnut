@@ -57,6 +57,8 @@ namespace Wingnut
 
 		void EnableCamera(bool enable) { m_SceneCamera->Enable(enable);	}
 
+		const std::unordered_set<UUID>& GetEntityList();
+
 	private:
 
 		Ref<SceneRenderer> m_SceneRenderer = nullptr;

@@ -16,6 +16,8 @@
 
 #include "ImGui/ImGuiContext.h"
 
+#include "ImGui/Panels/SceneHierarchy.h"
+
 #include "Platform/Vulkan/Buffer.h"
 #include "Platform/Vulkan/Shader.h"
 #include "Platform/Vulkan/Texture.h"
@@ -24,6 +26,7 @@
 #include "Renderer/Renderer.h"
 
 #include "Scene/Components.h"
+#include "Scene/Entity.h"
 #include "Scene/Scene.h"
 
 #include <imgui.h>

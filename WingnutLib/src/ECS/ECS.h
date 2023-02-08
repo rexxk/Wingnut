@@ -23,6 +23,9 @@ namespace Wingnut
 		{
 			friend class EntitySystem;
 
+		public:
+			const std::unordered_set<UUID>& GetRegistry() { return m_Registry; }
+
 		private:
 			UUID GetUUID()
 			{

@@ -58,16 +58,17 @@ void MainLayer::OnAttach()
 
 
 
-	UUID entity = m_Scene->CreateEntity("Entity");
-	std::string tag = ECS::EntitySystem::GetComponent<TagComponent>(entity).Tag;
+	Entity entity(m_Scene->CreateEntity("Entity"));
+	std::string tag = entity.GetComponent<TagComponent>().Tag;
 
-	LOG_TRACE("Entity '{}' created: {}", tag, entity);
+	LOG_TRACE("Entity '{}' created: {}", tag, (uint64_t)entity);
 
-	ECS::EntitySystem::AddComponent<MeshComponent>(entity, quadVertices, quadIndices);
+	entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
 
 	m_Scene->CreateUISceneImageDescriptor(Wingnut::ImGuiContext::Get().GetSampler());
 
 
+	m_SceneHierarchyPanel = CreateRef<SceneHierarchy>(m_Scene);
 }
 
 void MainLayer::OnDetach()
@@ -97,11 +98,14 @@ void MainLayer::OnUpdate(Timestep ts)
 
 void MainLayer::OnUIRender()
 {
-
 	static uint32_t viewportWidth = 0;
 	static uint32_t viewportHeight = 0;
 
 	ImGui::DockSpaceOverViewport(nullptr); //, ImGuiDockNodeFlags_AutoHideTabBar);
+
+
+	m_SceneHierarchyPanel->Draw();
+
 
 	ImGui::ShowDemoWindow();
 
@@ -134,5 +138,7 @@ void MainLayer::OnUIRender()
 	ImGui::End();
 
 	ImGui::PopStyleVar();
+
+
 
 }

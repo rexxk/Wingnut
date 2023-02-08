@@ -7,6 +7,7 @@
 #include "Event/WindowEvents.h"
 
 #include "Components.h"
+#include "Entity.h"
 
 #include "Renderer/Renderer.h"
 
@@ -125,10 +126,15 @@ namespace Wingnut
 
 	UUID Scene::CreateEntity(const std::string& tag)
 	{
-		UUID newEntity = m_EntitySystem->Create();
-		ECS::EntitySystem::AddComponent<TagComponent>(newEntity, tag);
+		UUID id = m_EntitySystem->Create();
+		ECS::EntitySystem::AddComponent<TagComponent>(id, tag);
 
-		return newEntity;
+		return id;
+	}
+
+	const std::unordered_set<UUID>& Scene::GetEntityList()
+	{
+		return m_EntityRegistry->GetRegistry();
 	}
 
 	void Scene::CreateUISceneImageDescriptor(Ref<Vulkan::ImageSampler> sampler)
