@@ -104,6 +104,8 @@ namespace Wingnut
 		int32_t bytesPerPixel;
 
 		io.Fonts->AddFontFromFileTTF("assets/fonts/Carlito-Regular.ttf", 16);
+//		io.Fonts->AddFontFromFileTTF("assets/fonts/Carlito-Italic.ttf", 16);
+//		io.Fonts->AddFontFromFileTTF("assets/fonts/Carlito-Bold.ttf", 16);
 
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 
