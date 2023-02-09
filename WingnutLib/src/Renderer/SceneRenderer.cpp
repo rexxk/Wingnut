@@ -23,11 +23,12 @@ namespace Wingnut
 		Ref<Vulkan::VertexBuffer> VertexBuffer;
 		Ref<Vulkan::IndexBuffer> IndexBuffer;
 
-		glm::mat4 Transform;
+		Ref<Vulkan::Descriptor> TransformDescriptor = nullptr;
+		Ref<Vulkan::UniformBuffer> TransformBuffer = nullptr;
 
 		bool operator==(const SceneItem& other) const
 		{
-			return (VertexBuffer == other.VertexBuffer) && (IndexBuffer == other.IndexBuffer);
+			return (VertexBuffer == other.VertexBuffer) && (IndexBuffer == other.IndexBuffer) && (TransformDescriptor == other.TransformDescriptor) && (TransformBuffer == other.TransformBuffer);
 		}
 	};
 
@@ -45,9 +46,6 @@ namespace Wingnut
 		std::unordered_map<UUID, SceneItem> DrawCache;
 
 		std::vector<Ref<Vulkan::Descriptor>> DescriptorList;
-
-		Ref<Vulkan::Descriptor> TransformDescriptor = nullptr;
-		Ref<Vulkan::UniformBuffer> TransformBuffer = nullptr;
 	};
 
 
@@ -97,12 +95,6 @@ namespace Wingnut
 			m_RenderImage->Release();
 		}
 
-		if (s_SceneData.TransformBuffer != nullptr)
-		{
-			s_SceneData.TransformBuffer->Release();
-			s_SceneData.TransformBuffer = nullptr;
-		}
-
 		if (s_SceneData.StaticPipeline != nullptr)
 		{
 			s_SceneData.StaticPipeline->Release();
@@ -144,9 +136,6 @@ namespace Wingnut
 			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
 //		m_RenderImage->TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-		s_SceneData.TransformBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(glm::mat4));
-		s_SceneData.TransformDescriptor = Vulkan::Descriptor::Create(rendererData.Device, s_SceneData.StaticSceneShader, TransformDescriptor, 0, s_SceneData.TransformBuffer);
 
 	}
 
@@ -195,24 +184,22 @@ namespace Wingnut
 
 		vkCmdBindPipeline(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, s_SceneData.StaticPipeline->GetPipeline());
 
+		for (auto& descriptor : s_SceneData.DescriptorList)
+		{
+			descriptor->Bind(commandBuffer, s_SceneData.StaticPipeline->GetLayout());
+		}
+
 		for (auto& entity : s_SceneData.DrawList)
 		{
 			SceneItem& sceneItem = entity.second;
 
-			s_SceneData.TransformBuffer->Update(&sceneItem.Transform, sizeof(glm::mat4), m_CurrentFrame);
-//			s_SceneData.TransformDescriptor->UpdateDescriptor(s_SceneData.TransformBuffer);
-			s_SceneData.TransformDescriptor->Bind(commandBuffer, s_SceneData.StaticPipeline->GetLayout());
+			sceneItem.TransformDescriptor->Bind(commandBuffer, s_SceneData.StaticPipeline->GetLayout());
 
 			VkBuffer vertexBuffers[] = { sceneItem.VertexBuffer->GetBuffer() };
 			VkDeviceSize offsets[] = { 0 };
 
 			vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
 			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), sceneItem.IndexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
-
-			for (auto& descriptor : s_SceneData.DescriptorList)
-			{
-				descriptor->Bind(commandBuffer, s_SceneData.StaticPipeline->GetLayout());
-			}
 
 			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), sceneItem.IndexBuffer->IndexCount(), 1, 0, 0, 0);
 		}
@@ -233,12 +220,15 @@ namespace Wingnut
 			Ref<Vulkan::VertexBuffer> vertexBuffer = Vulkan::VertexBuffer::Create(device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(Vertex));
 			Ref<Vulkan::IndexBuffer> indexBuffer = Vulkan::IndexBuffer::Create(device, indexList.data(), (uint32_t)indexList.size() * sizeof(uint32_t), (uint32_t)indexList.size());
 
+			Ref<Vulkan::UniformBuffer> transformBuffer = Vulkan::UniformBuffer::Create(device, sizeof(glm::mat4));
+			Ref<Vulkan::Descriptor> transformDescriptor = Vulkan::Descriptor::Create(device, s_SceneData.StaticSceneShader, TransformDescriptor, 0, transformBuffer);
+
 //			s_SceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
-			s_SceneData.DrawCache[entityID] = { vertexBuffer, indexBuffer, transform };
+			s_SceneData.DrawCache[entityID] = { vertexBuffer, indexBuffer, transformDescriptor, transformBuffer };
 		}
 		else
 		{
-			s_SceneData.DrawCache[entityID].Transform = transform;
+			s_SceneData.DrawCache[entityID].TransformBuffer->Update((void*)&transform, sizeof(glm::mat4), m_CurrentFrame);
 		}
 
 		s_SceneData.DrawList[entityID] = s_SceneData.DrawCache[entityID];

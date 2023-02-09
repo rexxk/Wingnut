@@ -60,13 +60,22 @@ void MainLayer::OnAttach()
 	Entity cameraEntity = m_Scene->CreateEntity("Camera entity");
 
 
-	Entity entity = m_Scene->CreateEntity("Entity");
-	std::string tag = entity.GetComponent<TagComponent>().Tag;
+	{
+		Entity entity = m_Scene->CreateEntity("Entity");
+//		std::string tag = entity.GetComponent<TagComponent>().Tag;
+//		LOG_TRACE("Entity '{}' created: {}", tag, (uint64_t)entity);
 
-	LOG_TRACE("Entity '{}' created: {}", tag, (uint64_t)entity);
+		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
+		entity.AddComponent<TransformComponent>();
+	}
 
-	entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
-	entity.AddComponent<TransformComponent>();
+	{
+		Entity entity = m_Scene->CreateEntity("Another entity");
+
+		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
+		entity.AddComponent<TransformComponent>();
+	}
+
 
 	m_Scene->CreateUISceneImageDescriptor(Wingnut::ImGuiContext::Get().GetSampler());
 
