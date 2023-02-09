@@ -10,8 +10,16 @@ namespace Wingnut
 	class Entity
 	{
 	public:
-		Entity(UUID entityID);
-		~Entity();
+		Entity(UUID entityID)
+			: m_EntityID(entityID)
+		{
+
+		}
+
+		~Entity()
+		{
+
+		}
 
 		UUID ID() const { return m_EntityID; }
 
@@ -30,9 +38,9 @@ namespace Wingnut
 		}
 
 		template<typename T>
-		bool HaveComponent()
+		bool HasComponent()
 		{
-			return ECS::EntitySystem::HaveComponent<T>(m_EntityID);
+			return ECS::EntitySystem::HasComponent<T>(m_EntityID);
 		}
 
 		template<typename T>

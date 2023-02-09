@@ -66,11 +66,13 @@ void MainLayer::OnAttach()
 	LOG_TRACE("Entity '{}' created: {}", tag, (uint64_t)entity);
 
 	entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
+	entity.AddComponent<TransformComponent>();
 
 	m_Scene->CreateUISceneImageDescriptor(Wingnut::ImGuiContext::Get().GetSampler());
 
+	m_PropertyPanel = CreateRef<PropertyPanel>();
+	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
 
-	m_SceneHierarchyPanel = CreateRef<SceneHierarchy>(m_Scene);
 }
 
 void MainLayer::OnDetach()
@@ -107,7 +109,7 @@ void MainLayer::OnUIRender()
 
 
 	m_SceneHierarchyPanel->Draw();
-
+	m_PropertyPanel->Draw();
 
 	ImGui::ShowDemoWindow();
 

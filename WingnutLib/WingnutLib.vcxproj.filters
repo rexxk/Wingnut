@@ -103,8 +103,9 @@
     <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\Event\UIEvents.h" />
     <ClInclude Include="src\Input\MouseInput.h" />
-    <ClInclude Include="src\ImGui\Panels\SceneHierarchy.h" />
+    <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h" />
     <ClInclude Include="src\Scene\Entity.h" />
+    <ClInclude Include="src\ImGui\Panels\PropertyPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -178,7 +179,7 @@
     <ClCompile Include="src\Renderer\ImGuiRenderer.cpp" />
     <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
     <ClCompile Include="src\Input\MouseInput.cpp" />
-    <ClCompile Include="src\ImGui\Panels\SceneHierarchy.cpp" />
-    <ClCompile Include="src\Scene\Entity.cpp" />
+    <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp" />
+    <ClCompile Include="src\ImGui\Panels\PropertyPanel.cpp" />
   </ItemGroup>
 </Project>

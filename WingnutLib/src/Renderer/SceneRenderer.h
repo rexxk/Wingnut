@@ -31,7 +31,7 @@ namespace Wingnut
 		void Draw();
 
 		void SubmitDescriptor(Ref<Vulkan::Descriptor> descriptor);
-		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList);
+		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList, const glm::mat4& transform);
 
 		Ref<Vulkan::Image> GetRenderImage() { return m_RenderImage; }
 

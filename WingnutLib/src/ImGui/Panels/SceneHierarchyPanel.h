@@ -6,11 +6,11 @@
 namespace Wingnut
 {
 
-	class SceneHierarchy
+	class SceneHierarchyPanel
 	{
 	public:
-		SceneHierarchy(Ref<Scene> scene);
-		~SceneHierarchy();
+		SceneHierarchyPanel(Ref<Scene> scene);
+		~SceneHierarchyPanel();
 
 		void Draw();
 

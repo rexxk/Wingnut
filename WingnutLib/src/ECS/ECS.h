@@ -83,7 +83,7 @@ namespace Wingnut
 			template<typename T, typename ... Args>
 			static void AddComponent(UUID uuid, Args&& ... args)
 			{
-				if (EntitySystem::HaveComponent<T>(uuid))
+				if (EntitySystem::HasComponent<T>(uuid))
 				{
 					LOG_CORE_WARN("[ECS] Entity {} already have component", uuid);
 					return;
@@ -96,7 +96,7 @@ namespace Wingnut
 			template<typename T>
 			static void RemoveComponent(UUID uuid)
 			{
-				if (EntitySystem::HaveComponent<T>(uuid))
+				if (EntitySystem::HasComponent<T>(uuid))
 				{
 					ComponentContainer<T>::Remove(uuid);
 					View<T>::Remove(uuid);
@@ -104,7 +104,7 @@ namespace Wingnut
 			}
 
 			template<typename T>
-			static bool HaveComponent(UUID uuid)
+			static bool HasComponent(UUID uuid)
 			{
 				return View<T>::Find(uuid);
 			}

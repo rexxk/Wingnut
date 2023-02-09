@@ -14,8 +14,9 @@ namespace Wingnut
 	const uint32_t ImGuiTextureDescriptor = 1;
 
 	const uint32_t CameraDescriptor = 0;
-	const uint32_t TextureDescriptor = 1;
-	const uint32_t LightsDescriptor = 2;
+	const uint32_t TransformDescriptor = 1;
+	const uint32_t TextureDescriptor = 2;
+	const uint32_t LightsDescriptor = 3;
 
 
 	struct Vertex

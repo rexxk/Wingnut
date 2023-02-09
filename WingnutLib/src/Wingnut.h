@@ -16,7 +16,8 @@
 
 #include "ImGui/ImGuiContext.h"
 
-#include "ImGui/Panels/SceneHierarchy.h"
+#include "ImGui/Panels/PropertyPanel.h"
+#include "ImGui/Panels/SceneHierarchyPanel.h"
 
 #include "Platform/Vulkan/Buffer.h"
 #include "Platform/Vulkan/Shader.h"

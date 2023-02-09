@@ -115,7 +115,8 @@
     <ClInclude Include="src\Event\UIEvents.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
     <ClInclude Include="src\ImGui\ImGuiContext.h" />
-    <ClInclude Include="src\ImGui\Panels\SceneHierarchy.h" />
+    <ClInclude Include="src\ImGui\Panels\PropertyPanel.h" />
+    <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h" />
     <ClInclude Include="src\Input\KeyDefs.h" />
     <ClInclude Include="src\Input\MouseInput.h" />
     <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
@@ -158,7 +159,8 @@
     <ClCompile Include="src\Event\EventQueue.cpp" />
     <ClCompile Include="src\Event\EventUtils.cpp" />
     <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
-    <ClCompile Include="src\ImGui\Panels\SceneHierarchy.cpp" />
+    <ClCompile Include="src\ImGui\Panels\PropertyPanel.cpp" />
+    <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp" />
     <ClCompile Include="src\Input\MouseInput.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\CommandBuffer.cpp" />
@@ -181,7 +183,6 @@
     <ClCompile Include="src\Platform\Vulkan\Swapchain.cpp" />
     <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
     <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
-    <ClCompile Include="src\Scene\Entity.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Utils\stbImage.cpp" />
     <ClCompile Include="src\Utils\StringUtils.cpp" />

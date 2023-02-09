@@ -1,5 +1,5 @@
 #include "wingnut_pch.h"
-#include "SceneHierarchy.h"
+#include "SceneHierarchyPanel.h"
 
 #include "Scene/Components.h"
 
@@ -13,18 +13,18 @@
 namespace Wingnut
 {
 
-	SceneHierarchy::SceneHierarchy(Ref<Scene> scene)
+	SceneHierarchyPanel::SceneHierarchyPanel(Ref<Scene> scene)
 		: m_Scene(scene), m_SelectedEntity(ECS::EntitySystem::Null)
 	{
 
 	}
 
-	SceneHierarchy::~SceneHierarchy()
+	SceneHierarchyPanel::~SceneHierarchyPanel()
 	{
 
 	}
 
-	void SceneHierarchy::Draw()
+	void SceneHierarchyPanel::Draw()
 	{
 		ImGui::Begin("Scene Hierarchy");
 
@@ -37,7 +37,7 @@ namespace Wingnut
 		ImGui::End();
 	}
 
-	void SceneHierarchy::DrawEntity(Entity& entity)
+	void SceneHierarchyPanel::DrawEntity(Entity& entity)
 	{
 		TagComponent& tagComponent = entity.GetComponent<TagComponent>();
 
@@ -60,6 +60,11 @@ namespace Wingnut
 			ImGui::TreePop();
 		}
 
+		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0))
+		{
+			m_SelectedEntity = Entity(ECS::EntitySystem::Null);
+			AddEventToQueue(CreateRef<EntitySelectedEvent>(m_SelectedEntity));
+		}
 
 	}
 

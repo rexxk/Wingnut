@@ -115,7 +115,14 @@ namespace Wingnut
 		{
 			auto& meshComponent = ECS::EntitySystem::GetComponent<MeshComponent>(entity);
 
-			m_SceneRenderer->SubmitToDrawList(entity, meshComponent.VertexList, meshComponent.IndexList);
+			glm::mat4 transform = glm::mat4(1.0f);
+
+			if (ECS::EntitySystem::HasComponent<TransformComponent>(entity))
+			{
+				transform = ECS::EntitySystem::GetComponent<TransformComponent>(entity).Transform;
+			}
+
+			m_SceneRenderer->SubmitToDrawList(entity, meshComponent.VertexList, meshComponent.IndexList, transform);
 		}
 
 		m_SceneRenderer->Draw();

@@ -24,6 +24,7 @@ private:
 
 	Ref<Wingnut::Camera> m_Camera = nullptr;
 
-	Ref<Wingnut::SceneHierarchy> m_SceneHierarchyPanel = nullptr;
+	Ref<Wingnut::PropertyPanel> m_PropertyPanel = nullptr;
+	Ref<Wingnut::SceneHierarchyPanel> m_SceneHierarchyPanel = nullptr;
 
 };

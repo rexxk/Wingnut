@@ -1,8 +1,8 @@
 #pragma once
 
-
 #include "wingnut_pch.h"
 
+#include <glm/glm.hpp>
 
 
 namespace Wingnut
@@ -30,6 +30,27 @@ namespace Wingnut
 
 	};
 
+	struct TransformComponent
+	{
+		glm::mat4 Transform;
+
+		TransformComponent()
+		{
+			Transform = glm::mat4(1.0f);
+		}
+
+		TransformComponent(const glm::mat4& transform)
+			: Transform(transform)
+		{
+
+		}
+
+		TransformComponent(const TransformComponent& other)
+		{
+			Transform = other.Transform;
+		}
+
+	};
 
 	struct MeshComponent
 	{

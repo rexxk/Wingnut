@@ -18,6 +18,20 @@ namespace Wingnut
 {
 
 
+	struct SceneItem
+	{
+		Ref<Vulkan::VertexBuffer> VertexBuffer;
+		Ref<Vulkan::IndexBuffer> IndexBuffer;
+
+		glm::mat4 Transform;
+
+		bool operator==(const SceneItem& other) const
+		{
+			return (VertexBuffer == other.VertexBuffer) && (IndexBuffer == other.IndexBuffer);
+		}
+	};
+
+
 	struct SceneData
 	{
 		Ref<Vulkan::Shader> StaticSceneShader = nullptr;
@@ -25,10 +39,15 @@ namespace Wingnut
 		Ref<Vulkan::Pipeline> StaticPipeline = nullptr;
 		Ref<Vulkan::Pipeline> DynamicPipeline = nullptr;
 
-		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawList;
-		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawCache;
+//		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawList;
+//		std::unordered_map<UUID, std::pair<Ref<Vulkan::VertexBuffer>, Ref<Vulkan::IndexBuffer>>> DrawCache;
+		std::unordered_map<UUID, SceneItem> DrawList;
+		std::unordered_map<UUID, SceneItem> DrawCache;
 
 		std::vector<Ref<Vulkan::Descriptor>> DescriptorList;
+
+		Ref<Vulkan::Descriptor> TransformDescriptor = nullptr;
+		Ref<Vulkan::UniformBuffer> TransformBuffer = nullptr;
 	};
 
 
@@ -78,6 +97,12 @@ namespace Wingnut
 			m_RenderImage->Release();
 		}
 
+		if (s_SceneData.TransformBuffer != nullptr)
+		{
+			s_SceneData.TransformBuffer->Release();
+			s_SceneData.TransformBuffer = nullptr;
+		}
+
 		if (s_SceneData.StaticPipeline != nullptr)
 		{
 			s_SceneData.StaticPipeline->Release();
@@ -120,6 +145,9 @@ namespace Wingnut
 
 //		m_RenderImage->TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
+		s_SceneData.TransformBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(glm::mat4));
+		s_SceneData.TransformDescriptor = Vulkan::Descriptor::Create(rendererData.Device, s_SceneData.StaticSceneShader, TransformDescriptor, 0, s_SceneData.TransformBuffer);
+
 	}
 
 	void SceneRenderer::BeginScene(uint32_t currentFrame)
@@ -158,7 +186,6 @@ namespace Wingnut
 		auto& commandBuffer = rendererData.GraphicsCommandBuffers[m_CurrentFrame];
 
 		vkCmdEndRenderPass(commandBuffer->GetCommandBuffer());
-
 	}
 
 	void SceneRenderer::Draw()
@@ -170,20 +197,24 @@ namespace Wingnut
 
 		for (auto& entity : s_SceneData.DrawList)
 		{
-			auto [vertexBuffer, indexBuffer] = entity.second;
-	
-			VkBuffer vertexBuffers[] = { vertexBuffer->GetBuffer() };
+			SceneItem& sceneItem = entity.second;
+
+			s_SceneData.TransformBuffer->Update(&sceneItem.Transform, sizeof(glm::mat4), m_CurrentFrame);
+//			s_SceneData.TransformDescriptor->UpdateDescriptor(s_SceneData.TransformBuffer);
+			s_SceneData.TransformDescriptor->Bind(commandBuffer, s_SceneData.StaticPipeline->GetLayout());
+
+			VkBuffer vertexBuffers[] = { sceneItem.VertexBuffer->GetBuffer() };
 			VkDeviceSize offsets[] = { 0 };
 
 			vkCmdBindVertexBuffers(commandBuffer->GetCommandBuffer(), 0, 1, vertexBuffers, offsets);
-			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
+			vkCmdBindIndexBuffer(commandBuffer->GetCommandBuffer(), sceneItem.IndexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
 			for (auto& descriptor : s_SceneData.DescriptorList)
 			{
 				descriptor->Bind(commandBuffer, s_SceneData.StaticPipeline->GetLayout());
 			}
 
-			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), indexBuffer->IndexCount(), 1, 0, 0, 0);
+			vkCmdDrawIndexed(commandBuffer->GetCommandBuffer(), sceneItem.IndexBuffer->IndexCount(), 1, 0, 0, 0);
 		}
 
 	}
@@ -193,7 +224,7 @@ namespace Wingnut
 		s_SceneData.DescriptorList.emplace_back(descriptor);
 	}
 
-	void SceneRenderer::SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList)
+	void SceneRenderer::SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList, const glm::mat4& transform)
 	{
 		if (s_SceneData.DrawCache.find(entityID) == s_SceneData.DrawCache.end())
 		{
@@ -202,7 +233,12 @@ namespace Wingnut
 			Ref<Vulkan::VertexBuffer> vertexBuffer = Vulkan::VertexBuffer::Create(device, vertexList.data(), (uint32_t)vertexList.size() * sizeof(Vertex));
 			Ref<Vulkan::IndexBuffer> indexBuffer = Vulkan::IndexBuffer::Create(device, indexList.data(), (uint32_t)indexList.size() * sizeof(uint32_t), (uint32_t)indexList.size());
 
-			s_SceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
+//			s_SceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
+			s_SceneData.DrawCache[entityID] = { vertexBuffer, indexBuffer, transform };
+		}
+		else
+		{
+			s_SceneData.DrawCache[entityID].Transform = transform;
 		}
 
 		s_SceneData.DrawList[entityID] = s_SceneData.DrawCache[entityID];

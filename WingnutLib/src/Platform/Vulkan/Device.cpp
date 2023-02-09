@@ -374,33 +374,36 @@ namespace Wingnut
 
 					switch (type)
 					{
-					case QueueType::Graphics:
-					{
-						if (familyItem.Graphics)
-							return familyItem;
+						case QueueType::Graphics:
+						{
+							if (familyItem.Graphics)
+								return familyItem;
 
-						break;
-					}
+							break;
+						}
 
-					case QueueType::Compute:
-					{
-						if (familyItem.Compute)
-							return familyItem;
+						case QueueType::Compute:
+						{
+							if (familyItem.Compute)
+								return familyItem;
 
-						break;
-					}
+							break;
+						}
 
-					case QueueType::Transfer:
-					{
-						if (familyItem.Transfer)
-							return familyItem;
+						case QueueType::Transfer:
+						{
+							if (familyItem.Transfer)
+								return familyItem;
 
-						break;
-					}
+							break;
+						}
 					}
 				}
 
 			}
+
+			auto& familyVector = m_DeviceProperties[0].QueueFamilies[0];
+			return familyVector[0];
 		}
 
 		VkQueue Device::GetQueue(QueueType type)
