@@ -57,6 +57,8 @@ void MainLayer::OnAttach()
 	m_Scene = Scene::Create(sceneProperties);
 
 
+	Entity cameraEntity = m_Scene->CreateEntity("Camera entity");
+
 
 	Entity entity = m_Scene->CreateEntity("Entity");
 	std::string tag = entity.GetComponent<TagComponent>().Tag;

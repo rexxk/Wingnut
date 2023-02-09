@@ -2,6 +2,8 @@
 
 #include "Event.h"
 
+#include "Scene/Entity.h"
+
 #include <cstdint>
 
 
@@ -27,5 +29,19 @@ namespace Wingnut
 
 	};
 
+	class EntitySelectedEvent : public Event
+	{
+	public:
+		EntitySelectedEvent(const Entity& entity)
+			: Event(EventType::EntitySelected), m_Entity(entity)
+		{
+
+		}
+
+		Entity& GetEntity() { return m_Entity; }
+
+	private:
+		Entity m_Entity;
+	};
 
 }

@@ -25,6 +25,7 @@ namespace Wingnut
 			case EventType::MouseMoved: EventCallback<MouseMovedEvent>::Execute(std::dynamic_pointer_cast<MouseMovedEvent>(event)); return;
 			case EventType::MouseWheel: EventCallback<MouseWheelEvent>::Execute(std::dynamic_pointer_cast<MouseWheelEvent>(event)); return;
 
+			case EventType::EntitySelected: EventCallback<EntitySelectedEvent>::Execute(std::dynamic_pointer_cast<EntitySelectedEvent>(event)); return;
 			case EventType::UIViewportResized: EventCallback<UIViewportResizedEvent>::Execute(std::dynamic_pointer_cast<UIViewportResizedEvent>(event)); return;
 
 			case EventType::WindowClosed:	EventCallback<WindowClosedEvent>::Execute(std::dynamic_pointer_cast<WindowClosedEvent>(event)); return;

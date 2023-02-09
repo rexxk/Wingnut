@@ -19,6 +19,8 @@ namespace Wingnut
 
 	private:
 		Ref<Scene> m_Scene = nullptr;
+
+		Entity m_SelectedEntity;
 	};
 
 
