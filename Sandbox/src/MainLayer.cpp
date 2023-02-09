@@ -58,7 +58,7 @@ void MainLayer::OnAttach()
 
 
 
-	Entity entity(m_Scene->CreateEntity("Entity"));
+	Entity entity = m_Scene->CreateEntity("Entity");
 	std::string tag = entity.GetComponent<TagComponent>().Tag;
 
 	LOG_TRACE("Entity '{}' created: {}", tag, (uint64_t)entity);

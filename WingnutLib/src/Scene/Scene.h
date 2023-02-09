@@ -13,6 +13,8 @@
 #include "Renderer/Camera.h"
 #include "Renderer/SceneRenderer.h"
 
+#include "Scene/Entity.h"
+
 
 namespace Wingnut
 {
@@ -42,7 +44,8 @@ namespace Wingnut
 
 		void Release();
 
-		UUID CreateEntity(const std::string& tag);
+		Entity CreateEntity(const std::string& tag);
+		std::vector<Entity>& GetEntities() { return m_SceneEntities; }
 
 		void CreateUISceneImageDescriptor(Ref<Vulkan::ImageSampler> sampler);
 
@@ -56,8 +59,6 @@ namespace Wingnut
 		void Update(Timestep ts);
 
 		void EnableCamera(bool enable) { m_SceneCamera->Enable(enable);	}
-
-		const std::unordered_set<UUID>& GetEntityList();
 
 	private:
 
@@ -76,7 +77,8 @@ namespace Wingnut
 		Ref<Vulkan::ImageSampler> m_ImageSampler = nullptr;
 
 		Ref<ECS::Registry> m_EntityRegistry = nullptr;
-		Ref<ECS::EntitySystem> m_EntitySystem = nullptr;
+
+		std::vector<Entity> m_SceneEntities;
 	};
 
 

@@ -1,6 +1,8 @@
 #include "wingnut_pch.h"
 #include "SceneHierarchy.h"
 
+#include "Scene/Components.h"
+
 #include <imgui.h>
 
 
@@ -23,21 +25,23 @@ namespace Wingnut
 	{
 		ImGui::Begin("Scene Hierarchy");
 
-		for (auto& uuid : m_Scene->GetEntityList())
+		for (Entity& entity : m_Scene->GetEntities())
 		{
-			DrawEntity(uuid);
+			DrawEntity(entity);
 		}
 		
 
 		ImGui::End();
 	}
 
-	void SceneHierarchy::DrawEntity(UUID uuid)
+	void SceneHierarchy::DrawEntity(Entity& entity)
 	{
+		TagComponent& tagComponent = entity.GetComponent<TagComponent>();
 
-		if (ImGui::TreeNodeEx((void*)(uint32_t)uuid, ImGuiTreeNodeFlags_OpenOnArrow, "%llu", (uint64_t)uuid))
+		if (ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity.ID(), ImGuiTreeNodeFlags_OpenOnArrow, "%s", tagComponent.Tag.c_str()))
 		{
-
+			ImGui::Text("%llu", (uint64_t)entity.ID());
+				
 			ImGui::TreePop();
 		}
 

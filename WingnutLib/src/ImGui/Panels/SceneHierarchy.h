@@ -15,7 +15,7 @@ namespace Wingnut
 		void Draw();
 
 	private:
-		void DrawEntity(UUID uuid);
+		void DrawEntity(Entity& entity);
 
 	private:
 		Ref<Scene> m_Scene = nullptr;

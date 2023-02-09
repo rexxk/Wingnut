@@ -40,7 +40,6 @@ namespace Wingnut
 		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), CameraDescriptor, 0, m_CameraDataBuffer);
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
-		m_EntitySystem = CreateRef<ECS::EntitySystem>(m_EntityRegistry);
 
 
 		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
@@ -124,18 +123,16 @@ namespace Wingnut
 	}
 
 
-	UUID Scene::CreateEntity(const std::string& tag)
+	Entity Scene::CreateEntity(const std::string& tag)
 	{
-		UUID id = m_EntitySystem->Create();
-		ECS::EntitySystem::AddComponent<TagComponent>(id, tag);
+		Entity entity(ECS::EntitySystem::Create(m_EntityRegistry));
+		entity.AddComponent<TagComponent>(tag);
 
-		return id;
+		m_SceneEntities.emplace_back(entity);
+
+		return entity;
 	}
 
-	const std::unordered_set<UUID>& Scene::GetEntityList()
-	{
-		return m_EntityRegistry->GetRegistry();
-	}
 
 	void Scene::CreateUISceneImageDescriptor(Ref<Vulkan::ImageSampler> sampler)
 	{
