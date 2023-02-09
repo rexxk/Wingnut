@@ -78,6 +78,18 @@ void MainLayer::OnAttach()
 	selfieMaterial->CreateDescriptor(m_Scene->GetShader(), m_LinearSampler);
 
 
+	Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
+
+	MaterialData textureMaterialData;
+	textureMaterialData.Texture = texture;
+
+	Ref<Material> textureMaterial = Material::Create(textureMaterialData);
+	//	selfieMaterial->SetTexture(selfieTexture);
+
+	UUID nextMaterialID = MaterialStore::StoreMaterial(textureMaterial);
+	textureMaterial->CreateDescriptor(m_Scene->GetShader(), m_LinearSampler);
+
+
 	{
 		Entity entity = m_Scene->CreateEntity("Entity");
 //		std::string tag = entity.GetComponent<TagComponent>().Tag;
@@ -93,7 +105,7 @@ void MainLayer::OnAttach()
 
 		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
 		entity.AddComponent<TransformComponent>();
-		entity.AddComponent<MaterialComponent>(newMaterialID);
+		entity.AddComponent<MaterialComponent>(nextMaterialID);
 	}
 
 
