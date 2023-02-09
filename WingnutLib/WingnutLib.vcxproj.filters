@@ -106,6 +106,8 @@
     <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h" />
     <ClInclude Include="src\Scene\Entity.h" />
     <ClInclude Include="src\ImGui\Panels\PropertyPanel.h" />
+    <ClInclude Include="src\Renderer\Material.h" />
+    <ClInclude Include="src\Assets\MaterialStore.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -181,5 +183,7 @@
     <ClCompile Include="src\Input\MouseInput.cpp" />
     <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\PropertyPanel.cpp" />
+    <ClCompile Include="src\Renderer\Material.cpp" />
+    <ClCompile Include="src\Assets\MaterialStore.cpp" />
   </ItemGroup>
 </Project>

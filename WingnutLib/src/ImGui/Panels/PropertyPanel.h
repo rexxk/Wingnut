@@ -19,6 +19,7 @@ namespace Wingnut
 		void DrawTagComponent();
 		void DrawMeshComponent();
 		void DrawTransformComponent();
+		void DrawMaterialComponent();
 
 	private:
 		Entity m_SelectedEntity;

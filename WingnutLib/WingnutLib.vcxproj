@@ -94,6 +94,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Assets\MaterialStore.h" />
     <ClInclude Include="src\Assets\ShaderStore.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Base.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="src\Platform\Vulkan\Texture.h" />
     <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Renderer\ImGuiRenderer.h" />
+    <ClInclude Include="src\Renderer\Material.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
     <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h" />
@@ -148,6 +150,7 @@
     <ClInclude Include="src\wingnut_pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Assets\MaterialStore.cpp" />
     <ClCompile Include="src\Assets\ShaderStore.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Layer.cpp" />
@@ -176,6 +179,7 @@
     <ClCompile Include="src\Platform\Vulkan\Texture.cpp" />
     <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Renderer\ImGuiRenderer.cpp" />
+    <ClCompile Include="src\Renderer\Material.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />
     <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp" />

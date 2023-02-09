@@ -26,6 +26,8 @@ namespace Wingnut
 		Ref<Vulkan::Descriptor> TransformDescriptor = nullptr;
 		Ref<Vulkan::UniformBuffer> TransformBuffer = nullptr;
 
+		Ref<Material> Material = nullptr;
+
 		bool operator==(const SceneItem& other) const
 		{
 			return (VertexBuffer == other.VertexBuffer) && (IndexBuffer == other.IndexBuffer) && (TransformDescriptor == other.TransformDescriptor) && (TransformBuffer == other.TransformBuffer);
@@ -194,6 +196,7 @@ namespace Wingnut
 			SceneItem& sceneItem = entity.second;
 
 			sceneItem.TransformDescriptor->Bind(commandBuffer, s_SceneData.StaticPipeline->GetLayout());
+			sceneItem.Material->GetDescriptor()->Bind(commandBuffer, s_SceneData.StaticPipeline->GetLayout());
 
 			VkBuffer vertexBuffers[] = { sceneItem.VertexBuffer->GetBuffer() };
 			VkDeviceSize offsets[] = { 0 };
@@ -211,7 +214,7 @@ namespace Wingnut
 		s_SceneData.DescriptorList.emplace_back(descriptor);
 	}
 
-	void SceneRenderer::SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList, const glm::mat4& transform)
+	void SceneRenderer::SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList, const glm::mat4& transform, Ref<Material> material)
 	{
 		if (s_SceneData.DrawCache.find(entityID) == s_SceneData.DrawCache.end())
 		{
@@ -224,11 +227,12 @@ namespace Wingnut
 			Ref<Vulkan::Descriptor> transformDescriptor = Vulkan::Descriptor::Create(device, s_SceneData.StaticSceneShader, TransformDescriptor, 0, transformBuffer);
 
 //			s_SceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
-			s_SceneData.DrawCache[entityID] = { vertexBuffer, indexBuffer, transformDescriptor, transformBuffer };
+			s_SceneData.DrawCache[entityID] = { vertexBuffer, indexBuffer, transformDescriptor, transformBuffer, material };
 		}
 		else
 		{
 			s_SceneData.DrawCache[entityID].TransformBuffer->Update((void*)&transform, sizeof(glm::mat4), m_CurrentFrame);
+			s_SceneData.DrawCache[entityID].Material = material;
 		}
 
 		s_SceneData.DrawList[entityID] = s_SceneData.DrawCache[entityID];
@@ -243,6 +247,11 @@ namespace Wingnut
 				s_SceneData.DrawCache.erase(s_SceneData.DrawCache.find(entity.first));
 			}
 		}
+	}
+
+	Ref<Vulkan::Shader> SceneRenderer::GetShader()
+	{
+		return s_SceneData.StaticSceneShader;
 	}
 
 }

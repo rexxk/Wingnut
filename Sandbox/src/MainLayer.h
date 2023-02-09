@@ -24,6 +24,8 @@ private:
 
 	Ref<Wingnut::Camera> m_Camera = nullptr;
 
+	Ref<Wingnut::Vulkan::ImageSampler> m_LinearSampler = nullptr;
+
 	Ref<Wingnut::PropertyPanel> m_PropertyPanel = nullptr;
 	Ref<Wingnut::SceneHierarchyPanel> m_SceneHierarchyPanel = nullptr;
 

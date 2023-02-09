@@ -1,6 +1,7 @@
 #include "wingnut_pch.h"
 #include "Scene.h"
 
+#include "Assets/MaterialStore.h"
 #include "Assets/ShaderStore.h"
 
 #include "Event/EventUtils.h"
@@ -9,6 +10,7 @@
 #include "Components.h"
 #include "Entity.h"
 
+#include "Renderer/Material.h"
 #include "Renderer/Renderer.h"
 
 
@@ -30,11 +32,6 @@ namespace Wingnut
 		m_SceneCamera = properties.SceneCamera;
 
 		m_SceneRenderer = SceneRenderer::Create(m_SceneExtent);
-		m_ImageSampler = Vulkan::ImageSampler::Create(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
-
-//		m_Texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
-		m_Texture = Vulkan::Texture2D::Create("assets/textures/selfie.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
-		m_TextureDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), m_ImageSampler, TextureDescriptor, 0, m_Texture);
 
 		m_CameraDataBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(CameraData));
 		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), CameraDescriptor, 0, m_CameraDataBuffer);
@@ -66,13 +63,6 @@ namespace Wingnut
 			m_CameraDataBuffer->Release();
 		}
 
-		m_Texture->Release();
-
-		if (m_ImageSampler)
-		{
-			m_ImageSampler->Release();
-		}
-
 		if (m_SceneRenderer)
 		{
 			m_SceneRenderer->Release();
@@ -93,7 +83,6 @@ namespace Wingnut
 		m_CameraDataBuffer->Update(&cameraData, sizeof(CameraData), currentFrame);
 
 		m_SceneRenderer->SubmitDescriptor(m_CameraDescriptor);
-		m_SceneRenderer->SubmitDescriptor(m_TextureDescriptor);
 
 	}
 
@@ -122,7 +111,14 @@ namespace Wingnut
 				transform = ECS::EntitySystem::GetComponent<TransformComponent>(entity).Transform;
 			}
 
-			m_SceneRenderer->SubmitToDrawList(entity, meshComponent.VertexList, meshComponent.IndexList, transform);
+			Ref<Material> material = nullptr;
+
+			if (ECS::EntitySystem::HasComponent<MaterialComponent>(entity))
+			{
+				material = MaterialStore::GetMaterial(ECS::EntitySystem::GetComponent<MaterialComponent>(entity).MaterialID);
+			}
+
+			m_SceneRenderer->SubmitToDrawList(entity, meshComponent.VertexList, meshComponent.IndexList, transform, material);
 		}
 
 		m_SceneRenderer->Draw();

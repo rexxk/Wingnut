@@ -41,6 +41,10 @@ void MainLayer::OnAttach()
 		0, 1, 2, 2, 3, 0,
 	};
 
+
+//	m_TextureDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), m_ImageSampler, TextureDescriptor, 0, m_Texture);
+
+
 	ShaderStore::LoadShader("basic", "assets/shaders/Basic.shader");
 
 	auto& rendererData = Renderer::GetContext()->GetRendererData();
@@ -48,6 +52,8 @@ void MainLayer::OnAttach()
 
 
 	m_Camera = Camera::Create(glm::vec3(0.0f, 0.0f, -3.0f), extent.width, extent.height);
+
+	m_LinearSampler = Vulkan::ImageSampler::Create(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
 
 	SceneProperties sceneProperties;
@@ -60,6 +66,18 @@ void MainLayer::OnAttach()
 	Entity cameraEntity = m_Scene->CreateEntity("Camera entity");
 
 
+	Ref<Vulkan::Texture2D> selfieTexture = Vulkan::Texture2D::Create("assets/textures/selfie.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
+
+	MaterialData materialData;
+	materialData.Texture = selfieTexture;
+
+	Ref<Material> selfieMaterial = Material::Create(materialData);
+//	selfieMaterial->SetTexture(selfieTexture);
+
+	UUID newMaterialID = MaterialStore::StoreMaterial(selfieMaterial);
+	selfieMaterial->CreateDescriptor(m_Scene->GetShader(), m_LinearSampler);
+
+
 	{
 		Entity entity = m_Scene->CreateEntity("Entity");
 //		std::string tag = entity.GetComponent<TagComponent>().Tag;
@@ -67,6 +85,7 @@ void MainLayer::OnAttach()
 
 		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
 		entity.AddComponent<TransformComponent>();
+		entity.AddComponent<MaterialComponent>(newMaterialID);
 	}
 
 	{
@@ -74,6 +93,7 @@ void MainLayer::OnAttach()
 
 		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
 		entity.AddComponent<TransformComponent>();
+		entity.AddComponent<MaterialComponent>(newMaterialID);
 	}
 
 
@@ -87,6 +107,10 @@ void MainLayer::OnAttach()
 void MainLayer::OnDetach()
 {
 	Renderer::WaitForIdle();
+
+	MaterialStore::ClearMaterials();
+
+	m_LinearSampler->Release();
 
 	m_Scene->Release();
 }

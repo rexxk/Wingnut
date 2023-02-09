@@ -6,6 +6,8 @@
 #include "Platform/Vulkan/RenderPass.h"
 #include "Platform/Vulkan/Shader.h"
 
+#include "Renderer/Material.h"
+
 
 namespace Wingnut
 {
@@ -31,9 +33,11 @@ namespace Wingnut
 		void Draw();
 
 		void SubmitDescriptor(Ref<Vulkan::Descriptor> descriptor);
-		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList, const glm::mat4& transform);
+		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList, const glm::mat4& transform, Ref<Material> material);
 
 		Ref<Vulkan::Image> GetRenderImage() { return m_RenderImage; }
+
+		Ref<Vulkan::Shader> GetShader();
 
 	private:
 		void CreateRenderer();

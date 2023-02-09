@@ -2,6 +2,7 @@
 
 #include "wingnut_pch.h"
 
+#include "Assets/MaterialStore.h"
 #include "Assets/ShaderStore.h"
 
 #include "Core/Application.h"
@@ -20,10 +21,12 @@
 #include "ImGui/Panels/SceneHierarchyPanel.h"
 
 #include "Platform/Vulkan/Buffer.h"
+#include "Platform/Vulkan/Image.h"
 #include "Platform/Vulkan/Shader.h"
 #include "Platform/Vulkan/Texture.h"
 
 #include "Renderer/Camera.h"
+#include "Renderer/Material.h"
 #include "Renderer/Renderer.h"
 
 #include "Scene/Components.h"

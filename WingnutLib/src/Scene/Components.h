@@ -76,5 +76,28 @@ namespace Wingnut
 
 	};
 
+	struct MaterialComponent
+	{
+		UUID MaterialID;
+
+
+		MaterialComponent()
+		{
+
+		}
+
+		MaterialComponent(UUID materialID)
+			: MaterialID(materialID)
+		{
+
+		}
+
+		MaterialComponent(const MaterialComponent& other)
+		{
+			MaterialID = other.MaterialID;
+		}
+
+	};
+
 
 }

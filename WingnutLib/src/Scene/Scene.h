@@ -50,6 +50,7 @@ namespace Wingnut
 		void CreateUISceneImageDescriptor(Ref<Vulkan::ImageSampler> sampler);
 
 		Ref<Vulkan::Descriptor> GetSceneImageDescriptor() { return m_RendererImageDescriptor; }
+		Ref<Vulkan::Shader> GetShader() { return m_SceneRenderer->GetShader(); }
 
 		void Begin();
 		void End();
@@ -71,10 +72,6 @@ namespace Wingnut
 
 		Ref<Vulkan::UniformBuffer> m_CameraDataBuffer = nullptr;
 		Ref<Vulkan::Descriptor> m_CameraDescriptor = nullptr;
-
-		Ref<Vulkan::Texture2D> m_Texture = nullptr;
-		Ref<Vulkan::Descriptor> m_TextureDescriptor = nullptr;
-		Ref<Vulkan::ImageSampler> m_ImageSampler = nullptr;
 
 		Ref<ECS::Registry> m_EntityRegistry = nullptr;
 
