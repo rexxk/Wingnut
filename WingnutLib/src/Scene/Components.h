@@ -3,6 +3,7 @@
 #include "wingnut_pch.h"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 
 namespace Wingnut
@@ -32,11 +33,34 @@ namespace Wingnut
 
 	struct TransformComponent
 	{
+		glm::vec3 Translation;
+		glm::vec3 Rotation;
+		glm::vec3 Scale;
+
 		glm::mat4 Transform;
+
+		void CalculateTransform()
+		{
+			glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f)) *
+				glm::rotate(glm::mat4(1.0f), Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f)) *
+				glm::rotate(glm::mat4(1.0f), Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+			Transform = glm::translate(glm::mat4(1.0f), Translation) * rotation * glm::scale(glm::mat4(1.0f), Scale);
+		}
 
 		TransformComponent()
 		{
-			Transform = glm::mat4(1.0f);
+			Translation = glm::vec3(0.0f);
+			Rotation = glm::vec3(0.0f);
+			Scale = glm::vec3(1.0f);
+
+			CalculateTransform();
+		}
+
+		TransformComponent(const glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale)
+			: Translation(translation), Rotation(rotation), Scale(scale)
+		{
+			CalculateTransform();
 		}
 
 		TransformComponent(const glm::mat4& transform)
@@ -47,6 +71,10 @@ namespace Wingnut
 
 		TransformComponent(const TransformComponent& other)
 		{
+			Translation = other.Translation;
+			Rotation = other.Rotation;
+			Scale = other.Scale;
+
 			Transform = other.Transform;
 		}
 
