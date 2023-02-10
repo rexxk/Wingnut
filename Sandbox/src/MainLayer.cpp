@@ -71,8 +71,7 @@ void MainLayer::OnAttach()
 	MaterialData materialData;
 	materialData.Texture = selfieTexture;
 
-	Ref<Material> selfieMaterial = Material::Create(materialData);
-//	selfieMaterial->SetTexture(selfieTexture);
+	Ref<Material> selfieMaterial = Material::Create("selfie", materialData);
 
 	UUID newMaterialID = MaterialStore::StoreMaterial(selfieMaterial);
 	selfieMaterial->CreateDescriptor(m_Scene->GetShader(), m_LinearSampler);
@@ -83,8 +82,7 @@ void MainLayer::OnAttach()
 	MaterialData textureMaterialData;
 	textureMaterialData.Texture = texture;
 
-	Ref<Material> textureMaterial = Material::Create(textureMaterialData);
-	//	selfieMaterial->SetTexture(selfieTexture);
+	Ref<Material> textureMaterial = Material::Create("texture", textureMaterialData);
 
 	UUID nextMaterialID = MaterialStore::StoreMaterial(textureMaterial);
 	textureMaterial->CreateDescriptor(m_Scene->GetShader(), m_LinearSampler);
@@ -92,8 +90,6 @@ void MainLayer::OnAttach()
 
 	{
 		Entity entity = m_Scene->CreateEntity("Entity");
-//		std::string tag = entity.GetComponent<TagComponent>().Tag;
-//		LOG_TRACE("Entity '{}' created: {}", tag, (uint64_t)entity);
 
 		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
 		entity.AddComponent<TransformComponent>();
@@ -113,6 +109,8 @@ void MainLayer::OnAttach()
 
 	m_PropertyPanel = CreateRef<PropertyPanel>();
 	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
+	m_MaterialEditorPanel = CreateRef<MaterialEditorPanel>();
+	m_MaterialStorePanel = CreateRef<MaterialStorePanel>();
 
 }
 
@@ -155,8 +153,10 @@ void MainLayer::OnUIRender()
 
 	m_SceneHierarchyPanel->Draw();
 	m_PropertyPanel->Draw();
+	m_MaterialEditorPanel->Draw();
+	m_MaterialStorePanel->Draw();
 
-	ImGui::ShowDemoWindow();
+//	ImGui::ShowDemoWindow();
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 

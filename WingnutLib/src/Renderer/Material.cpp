@@ -8,24 +8,25 @@ namespace Wingnut
 {
 
 
-	Ref<Material> Material::Create()
+	Ref<Material> Material::Create(const std::string& name)
 	{
-		return CreateRef<Material>();
+		return CreateRef<Material>(name);
 	}
 
-	Ref<Material> Material::Create(const MaterialData& materialData)
+	Ref<Material> Material::Create(const std::string& name, const MaterialData& materialData)
 	{
-		return CreateRef<Material>(materialData);
+		return CreateRef<Material>(name, materialData);
 	}
 
 
-	Material::Material()
+	Material::Material(const std::string& name)
+		: m_Name(name)
 	{
 //		m_Descriptor = Vulkan::Descriptor::Create()
 	}
 
-	Material::Material(const MaterialData& materialData)
-		: m_MaterialData(materialData)
+	Material::Material(const std::string& name, const MaterialData& materialData)
+		: m_MaterialData(materialData), m_Name(name)
 	{
 //		CreateDescriptor();
 	}

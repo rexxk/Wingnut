@@ -12,7 +12,7 @@ namespace Wingnut
 		WindowClosed, WindowResized,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseWheel,
 		KeyPressed, KeyReleased, KeyTyped,
-		UIViewportResized, EntitySelected,
+		UIViewportResized, EntitySelected, MaterialSelected,
 	};
 
 

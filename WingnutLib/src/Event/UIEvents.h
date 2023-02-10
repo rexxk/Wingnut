@@ -4,6 +4,8 @@
 
 #include "Scene/Entity.h"
 
+#include "Renderer/Material.h"
+
 #include <cstdint>
 
 
@@ -42,6 +44,21 @@ namespace Wingnut
 
 	private:
 		Entity m_Entity;
+	};
+
+	class MaterialSelectedEvent : public Event
+	{
+	public:
+		MaterialSelectedEvent(Ref<Material> material)
+			: Event(EventType::MaterialSelected), m_Material(material)
+		{
+
+		}
+
+		Ref<Material> MaterialID() const { return m_Material; }
+
+	private:
+		Ref<Material> m_Material = nullptr;
 	};
 
 }

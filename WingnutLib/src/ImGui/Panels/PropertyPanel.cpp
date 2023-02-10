@@ -19,7 +19,7 @@
 namespace Wingnut
 {
 
-	void DrawFloat3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
+	void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
 	{
 		ImGui::PushID(label.c_str());
 
@@ -175,15 +175,13 @@ namespace Wingnut
 		{
 			TransformComponent& transformComponent = m_SelectedEntity.GetComponent<TransformComponent>();
 
-			DrawFloat3Control("Translation", transformComponent.Translation);
+			DrawVec3Control("Translation", transformComponent.Translation);
 
 			glm::vec3 rotationInDegrees = glm::degrees(transformComponent.Rotation);
-
-			DrawFloat3Control("Rotation", rotationInDegrees);
-
+			DrawVec3Control("Rotation", rotationInDegrees);
 			transformComponent.Rotation = glm::radians(rotationInDegrees);
 
-			DrawFloat3Control("Scale", transformComponent.Scale, 1.0f);
+			DrawVec3Control("Scale", transformComponent.Scale, 1.0f);
 
 			ImGui::TreePop();
 
@@ -199,6 +197,7 @@ namespace Wingnut
 			Ref<Material> material = MaterialStore::GetMaterial(materialComponent.MaterialID);
 
 			ImGui::Image((ImTextureID)material->GetDescriptor()->GetDescriptor(), ImVec2(100.0f, 100.0f));
+			
 
 			ImGui::TreePop();
 		}

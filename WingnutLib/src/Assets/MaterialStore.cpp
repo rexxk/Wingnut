@@ -41,4 +41,19 @@ namespace Wingnut
 		s_Materials.clear();
 	}
 
+	Ref<Material> MaterialStore::GetMaterialByName(const std::string& name)
+	{
+		for (auto& materialInstance : s_Materials)
+		{
+			auto& material = materialInstance.second;
+
+			if (material->GetName() == name)
+			{
+				return material;
+			}
+		}
+
+		return nullptr;
+	}
+
 }
