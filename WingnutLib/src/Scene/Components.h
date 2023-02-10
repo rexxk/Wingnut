@@ -57,7 +57,7 @@ namespace Wingnut
 			CalculateTransform();
 		}
 
-		TransformComponent(const glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale)
+		TransformComponent(const glm::vec3& translation, const glm::vec3& rotation = glm::vec3(0.0f), const glm::vec3& scale = glm::vec3(1.0f))
 			: Translation(translation), Rotation(rotation), Scale(scale)
 		{
 			CalculateTransform();

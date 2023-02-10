@@ -87,7 +87,7 @@ void MainLayer::OnAttach()
 		Entity entity = m_Scene->CreateEntity("Entity");
 
 		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
-		entity.AddComponent<TransformComponent>();
+		entity.AddComponent<TransformComponent>(glm::vec3(-0.5f, 0.0f, 0.0f));
 		entity.AddComponent<MaterialComponent>(selfieMaterial->GetID());
 	}
 
@@ -95,7 +95,7 @@ void MainLayer::OnAttach()
 		Entity entity = m_Scene->CreateEntity("Another entity");
 
 		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
-		entity.AddComponent<TransformComponent>();
+		entity.AddComponent<TransformComponent>(glm::vec3(0.5f, 0.0f, 0.0f));
 		entity.AddComponent<MaterialComponent>(textureMaterial->GetID());
 	}
 

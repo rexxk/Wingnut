@@ -191,12 +191,13 @@ namespace Wingnut
 
 	void PropertyPanel::DrawMaterialComponent()
 	{
-		if (ImGui::TreeNodeEx("MaterialComponent", ImGuiTreeNodeFlags_DefaultOpen))
+		bool opened = ImGui::TreeNodeEx("MaterialComponent", ImGuiTreeNodeFlags_DefaultOpen);
+
+		MaterialComponent& materialComponent = m_SelectedEntity.GetComponent<MaterialComponent>();
+		Ref<Material> material = MaterialStore::GetMaterial(materialComponent.MaterialID);
+
+		if (opened)
 		{
-			MaterialComponent& materialComponent = m_SelectedEntity.GetComponent<MaterialComponent>();
-			Ref<Material> material = MaterialStore::GetMaterial(materialComponent.MaterialID);
-
-
 			ImGui::Columns(2);
 			ImGui::SetColumnWidth(0, 140.0f);
 
@@ -209,7 +210,12 @@ namespace Wingnut
 			memset(inputText, 0, 255);
 			std::strcpy(inputText, material->GetName().c_str());
 
-			ImGui::InputText("", inputText, 255);
+			ImGui::LabelText("", "%s", material->GetName().c_str());
+
+//			if (ImGui::InputText("", inputText, 255, ImGuiInputTextFlags_ReadOnly))
+//			{
+//
+//			}
 
 			if (ImGui::BeginDragDropTarget())
 			{
