@@ -196,8 +196,44 @@ namespace Wingnut
 			MaterialComponent& materialComponent = m_SelectedEntity.GetComponent<MaterialComponent>();
 			Ref<Material> material = MaterialStore::GetMaterial(materialComponent.MaterialID);
 
+
+			ImGui::Columns(2);
+			ImGui::SetColumnWidth(0, 140.0f);
+
+			ImGui::Text("Material name");
+			ImGui::NextColumn();
+
+			//			ImGui::LabelText("", material->GetName().c_str());
+
+			static char inputText[255];
+			memset(inputText, 0, 255);
+			std::strcpy(inputText, material->GetName().c_str());
+
+			ImGui::InputText("", inputText, 255);
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MaterialPayload");
+
+				if (payload != nullptr)
+				{
+					uint64_t id = *(uint64_t*)payload->Data;
+
+					materialComponent.MaterialID = id;
+				}
+
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::NextColumn();
+
+			ImGui::Text("Preview");
+
+			ImGui::NextColumn();
+
 			ImGui::Image((ImTextureID)material->GetDescriptor()->GetDescriptor(), ImVec2(100.0f, 100.0f));
-			
+
+			ImGui::Columns(1);
 
 			ImGui::TreePop();
 		}

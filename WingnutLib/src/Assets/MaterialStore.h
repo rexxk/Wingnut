@@ -16,7 +16,7 @@ namespace Wingnut
 		static void LoadMaterial(const std::string& materialPath);
 
 		static Ref<Material> GetMaterial(UUID materialID);
-		static UUID StoreMaterial(Ref<Material> material);
+		static void StoreMaterial(Ref<Material> material);
 
 		static Ref<Material> GetMaterialByName(const std::string& name);
 

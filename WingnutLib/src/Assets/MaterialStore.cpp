@@ -22,13 +22,9 @@ namespace Wingnut
 		return nullptr;
 	}
 
-	UUID MaterialStore::StoreMaterial(Ref<Material> material)
+	void MaterialStore::StoreMaterial(Ref<Material> material)
 	{
-		UUID newMaterialID = UUID();
-
-		s_Materials[newMaterialID] = material;
-
-		return newMaterialID;
+		s_Materials[material->GetID()] = material;
 	}
 
 	void MaterialStore::ClearMaterials()

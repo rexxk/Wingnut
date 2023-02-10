@@ -43,7 +43,7 @@ namespace Wingnut
 
 		ImGui::Text("Material editor panel");
 
-//		ImGui::Text("ID: %llu", (uint64_t)m_SelectedMaterial->ID());
+		ImGui::Text("ID: %llu", (uint64_t)m_SelectedMaterial->GetID());
 
 		ImGui::Columns(2);
 
@@ -52,8 +52,6 @@ namespace Wingnut
 		ImGui::Text("Texture");
 
 		ImGui::NextColumn();
-
-		ImGui::Text("Texture placeholder");
 
 		if (m_SelectedMaterial->GetDescriptor() != nullptr)
 		{

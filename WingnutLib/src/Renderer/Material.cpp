@@ -8,27 +8,27 @@ namespace Wingnut
 {
 
 
-	Ref<Material> Material::Create(const std::string& name)
+	Ref<Material> Material::Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 	{
-		return CreateRef<Material>(name);
+		return CreateRef<Material>(name, shader, sampler);
 	}
 
-	Ref<Material> Material::Create(const std::string& name, const MaterialData& materialData)
+	Ref<Material> Material::Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData)
 	{
-		return CreateRef<Material>(name, materialData);
+		return CreateRef<Material>(name, shader, sampler, materialData);
 	}
 
 
-	Material::Material(const std::string& name)
+	Material::Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 		: m_Name(name)
 	{
-//		m_Descriptor = Vulkan::Descriptor::Create()
+		CreateDescriptor(shader, sampler);
 	}
 
-	Material::Material(const std::string& name, const MaterialData& materialData)
+	Material::Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData)
 		: m_MaterialData(materialData), m_Name(name)
 	{
-//		CreateDescriptor();
+		CreateDescriptor(shader, sampler);
 	}
 
 	Material::~Material()

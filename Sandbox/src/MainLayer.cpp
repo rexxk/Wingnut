@@ -71,21 +71,16 @@ void MainLayer::OnAttach()
 	MaterialData materialData;
 	materialData.Texture = selfieTexture;
 
-	Ref<Material> selfieMaterial = Material::Create("selfie", materialData);
-
-	UUID newMaterialID = MaterialStore::StoreMaterial(selfieMaterial);
-	selfieMaterial->CreateDescriptor(m_Scene->GetShader(), m_LinearSampler);
-
+	Ref<Material> selfieMaterial = Material::Create("selfie", m_Scene->GetShader(), m_LinearSampler, materialData);
+	MaterialStore::StoreMaterial(selfieMaterial);
 
 	Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
 
 	MaterialData textureMaterialData;
 	textureMaterialData.Texture = texture;
 
-	Ref<Material> textureMaterial = Material::Create("texture", textureMaterialData);
-
-	UUID nextMaterialID = MaterialStore::StoreMaterial(textureMaterial);
-	textureMaterial->CreateDescriptor(m_Scene->GetShader(), m_LinearSampler);
+	Ref<Material> textureMaterial = Material::Create("texture", m_Scene->GetShader(), m_LinearSampler, textureMaterialData);
+	MaterialStore::StoreMaterial(textureMaterial);
 
 
 	{
@@ -93,7 +88,7 @@ void MainLayer::OnAttach()
 
 		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
 		entity.AddComponent<TransformComponent>();
-		entity.AddComponent<MaterialComponent>(newMaterialID);
+		entity.AddComponent<MaterialComponent>(selfieMaterial->GetID());
 	}
 
 	{
@@ -101,7 +96,7 @@ void MainLayer::OnAttach()
 
 		entity.AddComponent<MeshComponent>(quadVertices, quadIndices);
 		entity.AddComponent<TransformComponent>();
-		entity.AddComponent<MaterialComponent>(nextMaterialID);
+		entity.AddComponent<MaterialComponent>(textureMaterial->GetID());
 	}
 
 
