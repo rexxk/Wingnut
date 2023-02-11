@@ -1,6 +1,8 @@
 #include "wingnut_pch.h"
 #include "Material.h"
 
+#include "Assets/TextureStore.h"
+
 #include "Renderer/Renderer.h"
 
 
@@ -60,6 +62,8 @@ namespace Wingnut
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		m_Descriptor = Vulkan::Descriptor::Create(rendererData.Device, shader, sampler, MaterialDescriptor, 0, m_MaterialData.Texture);
+
+		TextureStore::AddDescriptor(m_MaterialData.Texture->GetTextureID(), m_Descriptor);
 	}
 
 

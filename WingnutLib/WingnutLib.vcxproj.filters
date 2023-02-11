@@ -111,6 +111,7 @@
     <ClInclude Include="src\ImGui\Panels\MaterialEditorPanel.h" />
     <ClInclude Include="src\ImGui\Panels\MaterialStorePanel.h" />
     <ClInclude Include="src\ImGui\Panels\TexturePanel.h" />
+    <ClInclude Include="src\Assets\TextureStore.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -191,5 +192,6 @@
     <ClCompile Include="src\ImGui\Panels\MaterialEditorPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\MaterialStorePanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\TexturePanel.cpp" />
+    <ClCompile Include="src\Assets\TextureStore.cpp" />
   </ItemGroup>
 </Project>

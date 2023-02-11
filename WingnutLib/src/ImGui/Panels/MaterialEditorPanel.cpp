@@ -2,6 +2,7 @@
 #include "MaterialEditorPanel.h"
 
 #include "Assets/MaterialStore.h"
+#include "Assets/TextureStore.h"
 
 #include "Event/EventUtils.h"
 #include "Event/UIEvents.h"
@@ -86,7 +87,9 @@ namespace Wingnut
 
 				if (payload != nullptr)
 				{
-					uint64_t id = *(uint64_t*)payload->Data;
+					UUID textureID = *(UUID*)payload->Data;
+
+					m_SelectedMaterial->SetDescriptor(TextureStore::GetDescriptor(textureID));
 				}
 
 				ImGui::EndDragDropTarget();

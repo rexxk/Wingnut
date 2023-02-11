@@ -166,7 +166,7 @@ namespace Wingnut
 				ImGuiIO& io = ImGui::GetIO();
 				io.KeysDown[event.Key()] = true;
 
-				LOG_CORE_WARN("KeyDown: {}", event.Key());
+//				LOG_CORE_WARN("KeyDown: {}", event.Key());
 
 				return false;
 			});
@@ -176,7 +176,7 @@ namespace Wingnut
 				ImGuiIO& io = ImGui::GetIO();
 				io.KeysDown[event.Key()] = false;
 
-				LOG_CORE_WARN("KeyUp: {}", event.Key());
+//				LOG_CORE_WARN("KeyUp: {}", event.Key());
 
 				return false;
 			});
@@ -186,7 +186,7 @@ namespace Wingnut
 				ImGuiIO& io = ImGui::GetIO();
 				io.AddInputCharacter(event.Key());
 
-				LOG_CORE_WARN("KeyTyped: {}", event.Key());
+//				LOG_CORE_WARN("KeyTyped: {}", event.Key());
 
 				return false;
 			});

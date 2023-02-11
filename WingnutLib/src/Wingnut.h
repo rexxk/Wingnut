@@ -4,6 +4,7 @@
 
 #include "Assets/MaterialStore.h"
 #include "Assets/ShaderStore.h"
+#include "Assets/TextureStore.h"
 
 #include "Core/Application.h"
 #include "Core/Timestep.h"

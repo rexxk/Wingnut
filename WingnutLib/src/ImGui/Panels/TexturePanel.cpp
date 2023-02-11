@@ -1,6 +1,8 @@
 #include "wingnut_pch.h"
 #include "TexturePanel.h"
 
+#include "Assets/TextureStore.h"
+
 #include "Renderer/Renderer.h"
 
 #include <imgui.h>
@@ -37,11 +39,17 @@ namespace Wingnut
 
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(paddingSize, paddingSize));
 
-			for (uint32_t i = 0; i < 16; i++)
-			{
-				ImGui::Image((ImTextureID)rendererData.DefaultTextureDescriptor->GetDescriptor(), ImVec2(textureSize, textureSize));
+			uint32_t itemCount = 0;
 
-				if ((i + 1) % m_HorizontalTextureCount != 0)
+			//			for (uint32_t i = 0; i < 16; i++)
+			for (auto& textureIterator : TextureStore::GetTextureContainer())
+			{
+				UUID textureID = textureIterator.first;
+
+//				ImGui::Image((ImTextureID)rendererData.DefaultTextureDescriptor->GetDescriptor(), ImVec2(textureSize, textureSize));
+				ImGui::Image((ImTextureID)TextureStore::GetDescriptor(textureID)->GetDescriptor(), ImVec2(textureSize, textureSize));
+
+				if ((itemCount++ + 1) % m_HorizontalTextureCount != 0)
 				{
 					ImGui::SameLine();
 				}
@@ -49,7 +57,11 @@ namespace Wingnut
 				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 				{
 					// Should send texture ID, and texture ID needs to be implemented.
-//					ImGui::SetDragDropPayload("TexturePayload", rendererData.DefaultTextureDescriptor, sizeof(VkDescriptorSet));
+//					UUID textureID = rendererData.DefaultTexture->GetTextureID();
+
+					ImGui::SetDragDropPayload("TexturePayload", &textureID, sizeof(UUID));
+
+					ImGui::Text("Texture");
 
 					ImGui::EndDragDropSource();
 				}

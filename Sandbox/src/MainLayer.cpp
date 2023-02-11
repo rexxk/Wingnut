@@ -2,7 +2,6 @@
 
 #include "ImGui/ImGuiContext.h"
 
-
 #include <glm/gtc/type_ptr.hpp>
 
 
@@ -65,6 +64,7 @@ void MainLayer::OnAttach()
 
 
 	Ref<Vulkan::Texture2D> selfieTexture = Vulkan::Texture2D::Create("assets/textures/selfie.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
+	TextureStore::AddTexture(selfieTexture);
 
 	MaterialData materialData;
 	materialData.Texture = selfieTexture;
@@ -73,6 +73,7 @@ void MainLayer::OnAttach()
 	MaterialStore::StoreMaterial(selfieMaterial);
 
 	Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
+	TextureStore::AddTexture(texture);
 
 	MaterialData textureMaterialData;
 	textureMaterialData.Texture = texture;
