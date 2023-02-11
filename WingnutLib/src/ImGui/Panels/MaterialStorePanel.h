@@ -14,6 +14,9 @@ namespace Wingnut
 		void Draw();
 
 	private:
+		void UpdateMaterialList();
+
+	private:
 
 		int m_CurrentSelection = 0;
 		int m_ActiveSelection = -1;

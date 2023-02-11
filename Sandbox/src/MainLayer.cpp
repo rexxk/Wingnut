@@ -100,7 +100,7 @@ void MainLayer::OnAttach()
 	}
 
 
-	m_Scene->CreateUISceneImageDescriptor(Wingnut::ImGuiContext::Get().GetSampler());
+	m_Scene->CreateUISceneImageDescriptor(rendererData.DefaultUISampler);
 
 	m_PropertyPanel = CreateRef<PropertyPanel>();
 	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);

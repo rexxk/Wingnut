@@ -8,6 +8,11 @@ namespace Wingnut
 {
 
 
+	Ref<Material> Material::Create(const std::string& name)
+	{
+		return CreateRef<Material>(name);
+	}
+
 	Ref<Material> Material::Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 	{
 		return CreateRef<Material>(name, shader, sampler);
@@ -18,6 +23,12 @@ namespace Wingnut
 		return CreateRef<Material>(name, shader, sampler, materialData);
 	}
 
+
+	Material::Material(const std::string& name)
+		: m_Name(name)
+	{
+		m_Descriptor = Renderer::GetContext()->GetRendererData().DefaultUITextureDescriptor;
+	}
 
 	Material::Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 		: m_Name(name)

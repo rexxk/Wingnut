@@ -43,20 +43,50 @@ namespace Wingnut
 
 		ImGui::Text("Material editor panel");
 
-		ImGui::Text("ID: %llu", (uint64_t)m_SelectedMaterial->GetID());
-
 		ImGui::Columns(2);
-
 		ImGui::SetColumnWidth(0, 100.0f);
+
+		ImGui::Text("ID");
+		ImGui::NextColumn();
+
+		ImGui::Text("%llu", (uint64_t)m_SelectedMaterial->GetID());
+		ImGui::NextColumn();
+
+		ImGui::Text("Name");
+		ImGui::NextColumn();
+
+		char name[256];
+		memset(name, 0, 256);
+		std::strcpy(name, m_SelectedMaterial->GetName().c_str());
+
+		if (ImGui::InputText("##name", name, 256))
+		{
+			m_SelectedMaterial->SetName(std::string(name));
+		}
+
+		ImGui::NextColumn();
 
 		ImGui::Text("Texture");
 
 		ImGui::NextColumn();
 
-		if (m_SelectedMaterial->GetDescriptor() != nullptr)
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+
+		Ref<Vulkan::Descriptor> textureDescriptor = m_SelectedMaterial->GetDescriptor();
+		VkDescriptorSet textureSet = nullptr;
+
+		if (textureDescriptor != nullptr)
 		{
-			ImGui::Image((ImTextureID)m_SelectedMaterial->GetDescriptor()->GetDescriptor(), ImVec2(100.0f, 100.0f));
+			textureSet = textureDescriptor->GetDescriptor();
 		}
+
+		if (ImGui::ImageButton((ImTextureID)textureSet, ImVec2(64.0f, 64.0f)))
+		{
+
+		}
+
+
+		ImGui::PopStyleVar();
 
 		ImGui::Columns(1);
 

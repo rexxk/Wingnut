@@ -237,7 +237,7 @@ namespace Wingnut
 
 			ImGui::NextColumn();
 
-			ImGui::Image((ImTextureID)material->GetDescriptor()->GetDescriptor(), ImVec2(100.0f, 100.0f));
+			ImGui::Image((ImTextureID)material->GetDescriptor()->GetDescriptor(), ImVec2(64.0f, 64.0f));
 
 			ImGui::Columns(1);
 

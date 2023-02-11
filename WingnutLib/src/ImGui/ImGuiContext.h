@@ -26,8 +26,6 @@ namespace Wingnut
 		void NewFrame(Timestep ts);
 		void Render();
 
-		static Ref<Vulkan::ImageSampler> GetSampler() { return s_Instance->m_UISampler; }
-
 		static ImGuiContext& Get() { return *s_Instance; }
 
 	private:
@@ -35,14 +33,11 @@ namespace Wingnut
 
 		Ref<ImGuiRenderer> m_Renderer = nullptr;
 
-
 		Ref<Vulkan::UniformBuffer> m_CameraBuffer = nullptr;
 		Ref<Vulkan::Descriptor> m_CameraDescriptor = nullptr;
 
-		Ref<Vulkan::ImageSampler> m_UISampler = nullptr;
 		Ref<Vulkan::Texture2D> m_AtlasTexture = nullptr;
 		Ref<Vulkan::Descriptor> m_AtlasDescriptor = nullptr;
-
 
 		Ref<ECS::Registry> m_EntityRegistry;
 		UUID m_ImGuiEntity = 0;

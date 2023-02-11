@@ -15,15 +15,10 @@
 namespace Wingnut
 {
 
+
 	MaterialStorePanel::MaterialStorePanel()
 	{
-		for (auto& materialIterator : MaterialStore::GetMaterialList())
-		{
-			auto& material = materialIterator.second;
-			auto& materialID = materialIterator.first;
-
-			m_ListboxItems.emplace_back(material->GetName().c_str());
-		}
+		UpdateMaterialList();
 	}
 
 	MaterialStorePanel::~MaterialStorePanel()
@@ -35,7 +30,13 @@ namespace Wingnut
 	{
 		ImGui::Begin("Materials");
 
-		if (ImGui::ListBox("Materials", &m_CurrentSelection, m_ListboxItems.data(), (uint32_t)m_ListboxItems.size(), 10))
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, 100.0f);
+
+		ImGui::Text("Materials");
+		ImGui::NextColumn();
+
+		if (ImGui::ListBox("##materials", &m_CurrentSelection, m_ListboxItems.data(), (uint32_t)m_ListboxItems.size(), 10))
 		{
 			Ref<MaterialSelectedEvent> event = CreateRef<MaterialSelectedEvent>(MaterialStore::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection])));
 			AddEventToQueue(event);
@@ -52,7 +53,42 @@ namespace Wingnut
 			ImGui::EndDragDropSource();
 		}
 
+//		ImGui::Separator();
+
+		if (ImGui::Button("Create new"))
+		{
+			MaterialStore::StoreMaterial(Material::Create("newMaterial"));
+
+			UpdateMaterialList();
+//			LOG_CORE_TRACE("Adding material");
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Delete"))
+		{
+
+		}
+
+		ImGui::Columns(1);
+
+
 		ImGui::End();
+	}
+
+
+	void MaterialStorePanel::UpdateMaterialList()
+	{
+		m_ListboxItems.clear();
+
+		for (auto& materialIterator : MaterialStore::GetMaterialList())
+		{
+			auto& material = materialIterator.second;
+			auto& materialID = materialIterator.first;
+
+			m_ListboxItems.emplace_back(material->GetName().c_str());
+		}
+
 	}
 
 }

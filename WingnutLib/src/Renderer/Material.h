@@ -18,9 +18,11 @@ namespace Wingnut
 	class Material
 	{
 	public:
+		static Ref<Material> Create(const std::string& name);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData);
 
+		Material(const std::string& name);
 		Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData);
 		~Material();
@@ -29,6 +31,7 @@ namespace Wingnut
 
 //		void SetTexture(Ref<Vulkan::Texture2D> texture) { m_Texture = texture; }
 
+		void SetName(const std::string& name) { m_Name = name; }
 		std::string& GetName() { return m_Name; }
 		UUID GetID() const { return m_MaterialID; }
 

@@ -88,6 +88,16 @@ namespace Wingnut
 				s_VulkanData.Device->WaitForIdle();
 			}
 
+			if (s_VulkanData.DefaultUITexture)
+			{
+				s_VulkanData.DefaultUITexture->Release();
+			}
+
+			if (s_VulkanData.DefaultUISampler)
+			{
+				s_VulkanData.DefaultUISampler->Release();
+			}
+
 
 			if (s_VulkanData.DescriptorPool != nullptr)
 			{
@@ -265,6 +275,14 @@ namespace Wingnut
 
 				s_VulkanData.UIFramebuffer = Vulkan::Framebuffer::Create(s_VulkanData.Device, s_VulkanData.UIRenderPass, m_CurrentExtent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
 			}
+
+
+			ShaderStore::LoadShader("ImGui", "assets/shaders/ImGui.shader");
+
+			s_VulkanData.DefaultUISampler = Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
+
+			s_VulkanData.DefaultUITexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat(Vulkan::TextureFormat::R8G8B8A8_Normalized));
+			s_VulkanData.DefaultUITextureDescriptor = Vulkan::Descriptor::Create(s_VulkanData.Device, ShaderStore::GetShader("ImGui"), s_VulkanData.DefaultUISampler, ImGuiTextureDescriptor, 0, s_VulkanData.DefaultUITexture);
 
 		}
 

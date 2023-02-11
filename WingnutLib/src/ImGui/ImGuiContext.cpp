@@ -63,10 +63,7 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		VkExtent2D extent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
-		ShaderStore::LoadShader("ImGui", "assets/shaders/ImGui.shader");
-
 		m_Renderer = ImGuiRenderer::Create(extent);
-		m_UISampler = Vulkan::ImageSampler::Create(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -110,7 +107,7 @@ namespace Wingnut
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 
 		m_AtlasTexture = Vulkan::Texture2D::Create((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized);
-		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), m_UISampler, ImGuiTextureDescriptor, 0, m_AtlasTexture);
+		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), rendererData.DefaultUISampler, ImGuiTextureDescriptor, 0, m_AtlasTexture);
 
 		io.Fonts->SetTexID((ImTextureID)m_AtlasDescriptor->GetDescriptor());
 
@@ -216,11 +213,6 @@ namespace Wingnut
 		if (m_CameraBuffer)
 		{
 			m_CameraBuffer->Release();
-		}
-
-		if (m_UISampler)
-		{
-			m_UISampler->Release();
 		}
 
 		if (m_Renderer)
