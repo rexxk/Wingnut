@@ -27,7 +27,7 @@ namespace Wingnut
 	Material::Material(const std::string& name)
 		: m_Name(name)
 	{
-		m_Descriptor = Renderer::GetContext()->GetRendererData().DefaultUITextureDescriptor;
+		m_Descriptor = Renderer::GetContext()->GetRendererData().DefaultTextureDescriptor;
 	}
 
 	Material::Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)

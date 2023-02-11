@@ -37,6 +37,7 @@ namespace Wingnut
 
 		void CreateDescriptor(Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Ref<Vulkan::Descriptor> GetDescriptor() { return m_Descriptor; }
+		void SetDescriptor(Ref<Vulkan::Descriptor> descriptor) { m_Descriptor = descriptor; }
 
 		MaterialData& GetMaterialData() { return m_MaterialData; }
 

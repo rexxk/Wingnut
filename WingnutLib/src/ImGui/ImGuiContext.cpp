@@ -63,6 +63,7 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		VkExtent2D extent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
+		ShaderStore::LoadShader("ImGui", "assets/shaders/ImGui.shader");
 		m_Renderer = ImGuiRenderer::Create(extent);
 
 		IMGUI_CHECKVERSION();
@@ -107,7 +108,7 @@ namespace Wingnut
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 
 		m_AtlasTexture = Vulkan::Texture2D::Create((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized);
-		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), rendererData.DefaultUISampler, ImGuiTextureDescriptor, 0, m_AtlasTexture);
+		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), rendererData.DefaultSampler, ImGuiTextureDescriptor, 0, m_AtlasTexture);
 
 		io.Fonts->SetTexID((ImTextureID)m_AtlasDescriptor->GetDescriptor());
 

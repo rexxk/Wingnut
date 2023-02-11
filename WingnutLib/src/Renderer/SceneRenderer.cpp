@@ -118,7 +118,7 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
 
-		s_SceneData.StaticSceneShader = ShaderStore::GetShader("basic");
+		s_SceneData.StaticSceneShader = ShaderStore::GetShader("standard");
 
 		Vulkan::PipelineSpecification pipelineSpecification;
 		pipelineSpecification.Extent = m_Extent;

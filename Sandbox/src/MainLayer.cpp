@@ -45,8 +45,6 @@ void MainLayer::OnAttach()
 //	m_TextureDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), m_ImageSampler, TextureDescriptor, 0, m_Texture);
 
 
-	ShaderStore::LoadShader("basic", "assets/shaders/Basic.shader");
-
 	auto& rendererData = Renderer::GetContext()->GetRendererData();
 	auto extent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
@@ -100,7 +98,7 @@ void MainLayer::OnAttach()
 	}
 
 
-	m_Scene->CreateUISceneImageDescriptor(rendererData.DefaultUISampler);
+	m_Scene->CreateUISceneImageDescriptor(rendererData.DefaultSampler);
 
 	m_PropertyPanel = CreateRef<PropertyPanel>();
 	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
