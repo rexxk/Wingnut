@@ -36,6 +36,7 @@ namespace Wingnut
 			VkImageView GetImageView() { return m_Image->GetImageView(); }
 
 			UUID GetTextureID() const { return m_TextureID; }
+			std::string GetTextureName() const { return m_TextureName; }
 
 		private:
 			void CreateTextureFromFile(const std::string& texturePath);
@@ -43,12 +44,12 @@ namespace Wingnut
 
 		private:
 			Ref<Image> m_Image = nullptr;
+			Ref<Device> m_Device = nullptr;
 
 			TextureFormat m_Format;
 
-			Ref<Device> m_Device = nullptr;
-
 			UUID m_TextureID;
+			std::string m_TextureName = "<texture>";
 		};
 
 

@@ -21,8 +21,10 @@ namespace Wingnut
 		static Ref<Vulkan::Texture2D> GetTexture(UUID textureID);
 		static Ref<Vulkan::Descriptor> GetDescriptor(UUID textureID);
 
-		static std::unordered_map<UUID, Ref<Vulkan::Texture2D>> GetTextureContainer() { return m_TextureContainer; }
-		static std::unordered_map<UUID, Ref<Vulkan::Descriptor>> GetDescriptorContainer() { return m_DescriptorContainer; }
+		static std::unordered_map<UUID, Ref<Vulkan::Texture2D>>& GetTextureContainer() { return m_TextureContainer; }
+		static std::unordered_map<UUID, Ref<Vulkan::Descriptor>>& GetDescriptorContainer() { return m_DescriptorContainer; }
+
+		static void ClearTextures();
 
 	private:
 		inline static std::unordered_map<UUID, Ref<Vulkan::Texture2D>> m_TextureContainer;

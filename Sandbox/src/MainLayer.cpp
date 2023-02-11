@@ -114,6 +114,7 @@ void MainLayer::OnDetach()
 	Renderer::WaitForIdle();
 
 	MaterialStore::ClearMaterials();
+	TextureStore::ClearTextures();
 
 	m_LinearSampler->Release();
 

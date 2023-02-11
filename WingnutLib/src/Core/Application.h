@@ -40,6 +40,7 @@ namespace Wingnut
 
 		void Terminate();
 
+		std::string GetBaseDirectory() const { return m_BaseDirectory; }
 
 		Ref<EventQueue> GetEventQueue() { return m_EventQueue; }
 		Ref<EventBroker> GetEventBroker() { return m_EventBroker; }
@@ -56,6 +57,8 @@ namespace Wingnut
 
 		bool m_Running = false;
 		bool m_ApplicationMinimized = false;
+
+		std::string m_BaseDirectory = "";
 
 		LayerStack m_LayerStack;
 

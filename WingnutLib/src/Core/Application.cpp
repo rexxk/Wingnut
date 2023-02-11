@@ -23,6 +23,23 @@ namespace Wingnut
 		m_EventBroker = CreateRef<EventBroker>();
 		m_EventQueue = CreateRef<EventQueue>();
 
+#ifdef _WIN32
+
+		HMODULE module;
+		module = GetModuleHandle(NULL);
+
+		wchar_t baseDirectory[MAX_PATH] = {};
+		GetModuleFileName(module, baseDirectory, MAX_PATH);
+
+		char baseDirectoryMB[MAX_PATH] = {};
+		std::wcstombs(baseDirectoryMB, baseDirectory, MAX_PATH);
+
+		std::string executablePath = baseDirectoryMB;
+
+		m_BaseDirectory = executablePath.substr(executablePath.find_last_of("/\\") + 1);
+
+#endif
+
 
 		SubscribeToEvent<WindowClosedEvent>([&](WindowClosedEvent& event)
 			{

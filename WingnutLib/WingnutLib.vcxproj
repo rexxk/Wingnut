@@ -149,6 +149,7 @@
     <ClInclude Include="src\Scene\Components.h" />
     <ClInclude Include="src\Scene\Entity.h" />
     <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Utils\FileDialog.h" />
     <ClInclude Include="src\Utils\StringUtils.h" />
     <ClInclude Include="src\Wingnut.h" />
     <ClInclude Include="src\wingnut_pch.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
     <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Utils\FileDialog.cpp" />
     <ClCompile Include="src\Utils\stbImage.cpp" />
     <ClCompile Include="src\Utils\StringUtils.cpp" />
     <ClCompile Include="src\wingnut_pch.cpp">

@@ -66,6 +66,10 @@ namespace Wingnut
 				return;
 			}
 
+			m_TextureName = texturePath.substr(texturePath.find_last_of("/\\") + 1);
+
+			LOG_CORE_TRACE("{} - {}", texturePath, m_TextureName);
+
 			CreateTexture((uint32_t)width, (uint32_t)height, (uint32_t)channels, (void*)pixels);
 
 			stbi_image_free(pixels);
@@ -74,12 +78,6 @@ namespace Wingnut
 		void Texture2D::CreateTexture(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels)
 		{
 			m_Device = Renderer::GetContext()->GetRendererData().Device;
-
-//			if (pixels == nullptr)
-//			{
-//				LOG_CORE_ERROR("[Texture] No data for texture");
-//				return;
-//			}
 
 			VkDeviceSize size = width * height * 4;
 

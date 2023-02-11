@@ -1,9 +1,12 @@
 #include "wingnut_pch.h"
 #include "TexturePanel.h"
 
+#include "Assets/ShaderStore.h"
 #include "Assets/TextureStore.h"
 
 #include "Renderer/Renderer.h"
+
+#include "Utils/FileDialog.h"
 
 #include <imgui.h>
 
@@ -33,6 +36,20 @@ namespace Wingnut
 
 			ImGui::Text("Texture panel (%d)", m_HorizontalTextureCount);
 
+			if (ImGui::Button("Load texture"))
+			{
+				std::string filename = OpenFileDialog::Open(L"All files\0*.*\0\0", "assets/textures/");
+
+				if (!filename.empty())
+				{
+					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized);
+					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("standard"), rendererData.DefaultSampler, MaterialDescriptor, 0, newTexture);
+					TextureStore::AddTextureData(newTexture, newDescriptor);
+				}
+			}
+
+			ImGui::Separator();
+
 			ImVec2 regionSize = ImGui::GetContentRegionAvail();
 
 			m_HorizontalTextureCount = (uint32_t)(regionSize.x / (float)(textureSize + (paddingSize * 2))) + 1;
@@ -46,8 +63,14 @@ namespace Wingnut
 			{
 				UUID textureID = textureIterator.first;
 
+				ImGui::BeginGroup();
+
 //				ImGui::Image((ImTextureID)rendererData.DefaultTextureDescriptor->GetDescriptor(), ImVec2(textureSize, textureSize));
 				ImGui::Image((ImTextureID)TextureStore::GetDescriptor(textureID)->GetDescriptor(), ImVec2(textureSize, textureSize));
+
+				ImGui::Text(TextureStore::GetTexture(textureID)->GetTextureName().c_str());
+
+				ImGui::EndGroup();
 
 				if ((itemCount++ + 1) % m_HorizontalTextureCount != 0)
 				{
@@ -68,7 +91,6 @@ namespace Wingnut
 			}
 
 			ImGui::PopStyleVar();
-
 
 		ImGui::End();
 	}

@@ -54,6 +54,16 @@ namespace Wingnut
 		return nullptr;
 	}
 
+	void TextureStore::ClearTextures()
+	{
+		for (auto& texture : m_TextureContainer)
+		{
+			texture.second->Release();
+		}
+
+		m_TextureContainer.clear();
+		m_DescriptorContainer.clear();
+	}
 
 
 }
