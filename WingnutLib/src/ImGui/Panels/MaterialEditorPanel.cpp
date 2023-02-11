@@ -72,16 +72,26 @@ namespace Wingnut
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 
-		Ref<Vulkan::Descriptor> textureDescriptor = m_SelectedMaterial->GetDescriptor();
-		VkDescriptorSet textureSet = nullptr;
+//		if (ImGui::ImageButton((ImTextureID)textureSet, ImVec2(64.0f, 64.0f)))
+//		{
+//			LOG_CORE_TRACE("Image clicked, should open file dialog and load a new texture");
+//		}
 
-		if (textureDescriptor != nullptr)
 		{
-			textureSet = textureDescriptor->GetDescriptor();
-		}
+			ImGui::Image((ImTextureID)m_SelectedMaterial->GetDescriptor()->GetDescriptor(), ImVec2(64.0f, 64.0f));
 
-		if (ImGui::ImageButton((ImTextureID)textureSet, ImVec2(64.0f, 64.0f)))
-		{
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TexturePayload");
+
+				if (payload != nullptr)
+				{
+					uint64_t id = *(uint64_t*)payload->Data;
+				}
+
+				ImGui::EndDragDropTarget();
+			}
+
 
 		}
 

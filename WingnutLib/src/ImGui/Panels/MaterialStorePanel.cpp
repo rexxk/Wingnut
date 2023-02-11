@@ -57,7 +57,7 @@ namespace Wingnut
 
 		if (ImGui::Button("Create new"))
 		{
-			MaterialStore::StoreMaterial(Material::Create("newMaterial"));
+			MaterialStore::StoreMaterial(Material::Create("newMaterial_" + std::to_string((uint32_t)m_ListboxItems.size())));
 
 			UpdateMaterialList();
 //			LOG_CORE_TRACE("Adding material");

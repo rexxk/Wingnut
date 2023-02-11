@@ -30,5 +30,6 @@ private:
 	Ref<Wingnut::SceneHierarchyPanel> m_SceneHierarchyPanel = nullptr;
 	Ref<Wingnut::MaterialEditorPanel> m_MaterialEditorPanel = nullptr;
 	Ref<Wingnut::MaterialStorePanel> m_MaterialStorePanel = nullptr;
+	Ref<Wingnut::TexturePanel> m_TexturePanel = nullptr;
 
 };

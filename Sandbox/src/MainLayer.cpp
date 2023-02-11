@@ -104,6 +104,7 @@ void MainLayer::OnAttach()
 	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
 	m_MaterialEditorPanel = CreateRef<MaterialEditorPanel>();
 	m_MaterialStorePanel = CreateRef<MaterialStorePanel>();
+	m_TexturePanel = CreateRef<TexturePanel>();
 
 }
 
@@ -148,6 +149,7 @@ void MainLayer::OnUIRender()
 	m_PropertyPanel->Draw();
 	m_MaterialEditorPanel->Draw();
 	m_MaterialStorePanel->Draw();
+	m_TexturePanel->Draw();
 
 //	ImGui::ShowDemoWindow();
 

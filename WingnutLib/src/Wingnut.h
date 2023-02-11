@@ -21,6 +21,7 @@
 #include "ImGui/Panels/MaterialStorePanel.h"
 #include "ImGui/Panels/PropertyPanel.h"
 #include "ImGui/Panels/SceneHierarchyPanel.h"
+#include "ImGui/Panels/TexturePanel.h"
 
 #include "Platform/Vulkan/Buffer.h"
 #include "Platform/Vulkan/Image.h"

@@ -264,7 +264,6 @@ namespace Wingnut
 
 			{
 				std::vector<VkImageView> imageViews;
-//				imageViews.emplace_back(s_VulkanData.SceneTexture->GetImageView());
 				imageViews.emplace_back(s_VulkanData.SceneImage->GetImageView());
 
 				s_VulkanData.SceneFramebuffer = Vulkan::Framebuffer::Create(s_VulkanData.Device, s_VulkanData.SceneRenderPass, m_CurrentExtent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
