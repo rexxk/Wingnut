@@ -22,6 +22,8 @@ namespace Wingnut
 
 		static void ClearMaterials();
 
+		static void DeleteMaterial(UUID materialID);
+
 		static const std::unordered_map<UUID, Ref<Material>>& GetMaterialList() { return s_Materials; }
 
 	private:

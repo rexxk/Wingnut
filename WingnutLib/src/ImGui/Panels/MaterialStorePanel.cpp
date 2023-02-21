@@ -8,6 +8,8 @@
 
 #include "Renderer/Material.h"
 
+#include "Scene/Components.h"
+
 #include <imgui.h>
 
 
@@ -16,7 +18,8 @@ namespace Wingnut
 {
 
 
-	MaterialStorePanel::MaterialStorePanel()
+	MaterialStorePanel::MaterialStorePanel(Ref<Scene> activeScene)
+		: m_ActiveScene(activeScene)
 	{
 		UpdateMaterialList();
 	}
@@ -66,6 +69,40 @@ namespace Wingnut
 
 			if (ImGui::Button("Delete"))
 			{
+				if (std::string(m_ListboxItems[m_CurrentSelection]) != "Default")
+				{
+					UUID materialID = MaterialStore::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection]))->GetID();
+
+					for (auto& entity : m_ActiveScene->GetEntities())
+					{
+						if (entity.HasComponent<MaterialComponent>())
+						{
+							MaterialComponent& materialComponent = entity.GetComponent<MaterialComponent>();
+
+							if (materialComponent.MaterialID == materialID)
+							{
+								materialComponent.MaterialID = MaterialStore::GetMaterialByName("Default")->GetID();
+								break;
+							}
+						}
+					}
+
+					for (auto iterator = m_ListboxItems.begin(); iterator != m_ListboxItems.end(); iterator++)
+					{
+						if (*(iterator) == m_ListboxItems[m_CurrentSelection])
+						{
+							m_ListboxItems.erase(iterator);
+							break;
+						}
+					}
+
+					m_CurrentSelection = 0;
+
+					Ref<MaterialSelectedEvent> event = CreateRef<MaterialSelectedEvent>(nullptr);
+					AddEventToQueue(event);
+
+					MaterialStore::DeleteMaterial(materialID);
+				}
 
 			}
 

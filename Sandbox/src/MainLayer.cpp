@@ -62,14 +62,22 @@ void MainLayer::OnAttach()
 
 	Entity cameraEntity = m_Scene->CreateEntity("Camera entity");
 
+	Ref<Vulkan::Texture2D> defaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat::R8G8B8A8_Normalized);
+	TextureStore::AddTexture(defaultTexture);
+	MaterialData materialData;
+	materialData.Texture = defaultTexture;
+	Ref<Material> defaultMaterial = Material::Create("Default", m_Scene->GetShader(), m_LinearSampler, materialData);
+	MaterialStore::StoreMaterial(defaultMaterial);
+
+
 
 	Ref<Vulkan::Texture2D> selfieTexture = Vulkan::Texture2D::Create("assets/textures/selfie.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
 	TextureStore::AddTexture(selfieTexture);
 
-	MaterialData materialData;
-	materialData.Texture = selfieTexture;
+	MaterialData selfieMaterialData;
+	selfieMaterialData.Texture = selfieTexture;
 
-	Ref<Material> selfieMaterial = Material::Create("selfie", m_Scene->GetShader(), m_LinearSampler, materialData);
+	Ref<Material> selfieMaterial = Material::Create("selfie", m_Scene->GetShader(), m_LinearSampler, selfieMaterialData);
 	MaterialStore::StoreMaterial(selfieMaterial);
 
 	Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
@@ -104,7 +112,7 @@ void MainLayer::OnAttach()
 	m_PropertyPanel = CreateRef<PropertyPanel>();
 	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
 	m_MaterialEditorPanel = CreateRef<MaterialEditorPanel>();
-	m_MaterialStorePanel = CreateRef<MaterialStorePanel>();
+	m_MaterialStorePanel = CreateRef<MaterialStorePanel>(m_Scene);
 	m_TexturePanel = CreateRef<TexturePanel>();
 
 }

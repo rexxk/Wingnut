@@ -51,12 +51,12 @@ namespace Wingnut
 
 	void Material::Release()
 	{
-		if (m_MaterialData.Texture != nullptr)
+/*		if (m_MaterialData.Texture != nullptr)
 		{
 			m_MaterialData.Texture->Release();
 			m_MaterialData.Texture = nullptr;
 		}
-	}
+*/	}
 
 	void Material::CreateDescriptor(Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 	{

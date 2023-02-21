@@ -52,4 +52,9 @@ namespace Wingnut
 		return nullptr;
 	}
 
+	void MaterialStore::DeleteMaterial(UUID materialID)
+	{
+		s_Materials.erase(materialID);
+	}
+
 }

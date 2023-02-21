@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Scene/Scene.h"
 
 
 namespace Wingnut
@@ -8,7 +9,7 @@ namespace Wingnut
 	class MaterialStorePanel
 	{
 	public:
-		MaterialStorePanel();
+		MaterialStorePanel(Ref<Scene> activeScene);
 		~MaterialStorePanel();
 
 		void Draw();
@@ -22,6 +23,7 @@ namespace Wingnut
 		int m_ActiveSelection = -1;
 		std::vector<const char*> m_ListboxItems;
 
+		Ref<Scene> m_ActiveScene = nullptr;
 
 	};
 
