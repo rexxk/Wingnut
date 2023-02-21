@@ -71,6 +71,8 @@ namespace Wingnut
 
 		ImGuiIO& io = ImGui::GetIO();
 
+		io.IniFilename = "assets/ui.ini";
+
 		io.BackendPlatformName = "Wingnut";
 		io.BackendRendererName = "Wingnut-Vulkan";
 		io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;

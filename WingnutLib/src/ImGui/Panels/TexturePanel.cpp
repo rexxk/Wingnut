@@ -4,6 +4,8 @@
 #include "Assets/ShaderStore.h"
 #include "Assets/TextureStore.h"
 
+#include "Core/Application.h"
+
 #include "Renderer/Renderer.h"
 
 #include "Utils/FileDialog.h"
@@ -38,6 +40,12 @@ namespace Wingnut
 
 			if (ImGui::Button("Load texture"))
 			{
+#ifdef _WIN32
+				wchar_t directory[MAX_PATH];
+				std::mbstowcs(directory, Application::Get().GetBaseDirectory().c_str(), MAX_PATH);
+				SetCurrentDirectory(directory);
+#endif
+
 				std::string filename = OpenFileDialog::Open(L"All files\0*.*\0\0", "assets/textures/");
 
 				if (!filename.empty())
@@ -88,6 +96,7 @@ namespace Wingnut
 
 					ImGui::EndDragDropSource();
 				}
+
 			}
 
 			ImGui::PopStyleVar();
