@@ -114,6 +114,7 @@
     <ClInclude Include="src\Assets\TextureStore.h" />
     <ClInclude Include="src\Utils\FileDialog.h" />
     <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
+    <ClInclude Include="src\Input\KeyboardInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -197,5 +198,6 @@
     <ClCompile Include="src\Assets\TextureStore.cpp" />
     <ClCompile Include="src\Utils\FileDialog.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
+    <ClCompile Include="src\Input\KeyboardInput.cpp" />
   </ItemGroup>
 </Project>
