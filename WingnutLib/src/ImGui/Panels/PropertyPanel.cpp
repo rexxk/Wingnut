@@ -13,13 +13,15 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-#include <imgui_internal.h>
+#include "ImGui/Controls/UIVector3.h"
+
+//#include <imgui_internal.h>
 
 
 namespace Wingnut
 {
 
-	void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
+/*	void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
 	{
 		ImGui::PushID(label.c_str());
 
@@ -88,7 +90,7 @@ namespace Wingnut
 
 		ImGui::PopID();
 	}
-
+*/
 
 
 	PropertyPanel::PropertyPanel()
@@ -175,13 +177,17 @@ namespace Wingnut
 		{
 			TransformComponent& transformComponent = m_SelectedEntity.GetComponent<TransformComponent>();
 
-			DrawVec3Control("Translation", transformComponent.Translation);
+			Vec3Control translationControl("Translation", transformComponent.Translation);
+
+//			DrawVec3Control("Translation", transformComponent.Translation);
 
 			glm::vec3 rotationInDegrees = glm::degrees(transformComponent.Rotation);
-			DrawVec3Control("Rotation", rotationInDegrees);
+			Vec3Control rotationControl("Rotation", transformComponent.Rotation);
+//			DrawVec3Control("Rotation", rotationInDegrees);
 			transformComponent.Rotation = glm::radians(rotationInDegrees);
 
-			DrawVec3Control("Scale", transformComponent.Scale, 1.0f);
+			Vec3Control scaleControl("Scale", transformComponent.Scale, 1.0f);
+//			DrawVec3Control("Scale", transformComponent.Scale, 1.0f);
 
 			ImGui::TreePop();
 

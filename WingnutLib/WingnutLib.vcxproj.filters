@@ -113,6 +113,7 @@
     <ClInclude Include="src\ImGui\Panels\TexturePanel.h" />
     <ClInclude Include="src\Assets\TextureStore.h" />
     <ClInclude Include="src\Utils\FileDialog.h" />
+    <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -195,5 +196,6 @@
     <ClCompile Include="src\ImGui\Panels\TexturePanel.cpp" />
     <ClCompile Include="src\Assets\TextureStore.cpp" />
     <ClCompile Include="src\Utils\FileDialog.cpp" />
+    <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
   </ItemGroup>
 </Project>
