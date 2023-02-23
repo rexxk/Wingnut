@@ -33,6 +33,9 @@ namespace Wingnut
 
 	Ref<Vulkan::ImageSampler> SamplerStore::GetSampler(SamplerType type)
 	{
+		if (type == SamplerType::Default)
+			type = SamplerType::LinearRepeat;
+
 		if (s_Samplers.find(type) != s_Samplers.end())
 		{
 			return s_Samplers[type];

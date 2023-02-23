@@ -27,18 +27,20 @@ void MainLayer::OnAttach()
 {
 	LOG_TRACE("Attaching Main layer");
 
-	std::vector<Vertex> quadVertices =
+/*	std::vector<Vertex> quadVertices =
 	{
-		{ { -0.5f,  0.5f, 0.0f }, { 0.0, 1.0 }, { 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ { -0.5f, -0.5f, 0.0f }, { 0.0, 0.0 }, { 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ {  0.5f, -0.5f, 0.0f }, { 1.0, 0.0 }, { 1.0f, 1.0f, 1.0f, 1.0f } },
-		{ {  0.5f,  0.5f, 0.0f }, { 1.0, 1.0 }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ { -0.5f,  0.5f, 0.0f }, { 0.0, 1.0 }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ { -0.5f, -0.5f, 0.0f }, { 0.0, 0.0 }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ {  0.5f, -0.5f, 0.0f }, { 1.0, 0.0 }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ {  0.5f,  0.5f, 0.0f }, { 1.0, 1.0 }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } },
 	};
 
 	std::vector<uint32_t> quadIndices =
 	{
 		0, 1, 2, 2, 3, 0,
 	};
+*/
+
 
 
 //	m_TextureDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("basic"), m_ImageSampler, TextureDescriptor, 0, m_Texture);
@@ -49,11 +51,6 @@ void MainLayer::OnAttach()
 
 
 	m_Camera = Camera::Create(glm::vec3(0.0f, 0.0f, -3.0f), extent.width, extent.height);
-
-	m_LinearSampler = Vulkan::ImageSampler::Create(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
-
-	SamplerStore::AddSampler(SamplerType::LinearRepeat, m_LinearSampler);
-
 
 	SceneProperties sceneProperties;
 	sceneProperties.SceneExtent= rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
@@ -91,7 +88,20 @@ void MainLayer::OnAttach()
 	Ref<Material> textureMaterial = Material::Create("texture", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::LinearRepeat), textureMaterialData);
 	MaterialStore::StoreMaterial(textureMaterial);
 
+	
+	{
+		Entity cubeEntity = m_Scene->ImportOBJModel("assets/models/cube.obj");
+		cubeEntity.AddComponent<TransformComponent>(glm::vec3(-1.0f, 0.0f, 0.0f));
+		cubeEntity.AddComponent<MaterialComponent>(selfieMaterial->GetID());
+	}
 
+	{
+		Entity sphereEntity = m_Scene->ImportOBJModel("assets/models/sphere.obj");
+		sphereEntity.AddComponent<TransformComponent>(glm::vec3(1.0f, 0.0f, 0.0f));
+		sphereEntity.AddComponent<MaterialComponent>(textureMaterial->GetID());
+	}
+
+/* 
 	{
 		Entity entity = m_Scene->CreateEntity("Entity");
 
@@ -107,9 +117,9 @@ void MainLayer::OnAttach()
 		entity.AddComponent<TransformComponent>(glm::vec3(0.5f, 0.0f, 0.0f));
 		entity.AddComponent<MaterialComponent>(textureMaterial->GetID());
 	}
+*/
 
-
-	m_Scene->CreateUISceneImageDescriptor(rendererData.DefaultSampler);
+	m_Scene->CreateUISceneImageDescriptor(SamplerStore::GetSampler(SamplerType::Default));
 
 	m_PropertyPanel = CreateRef<PropertyPanel>();
 	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
@@ -125,8 +135,6 @@ void MainLayer::OnDetach()
 
 	MaterialStore::ClearMaterials();
 	TextureStore::ClearTextures();
-
-	m_LinearSampler->Release();
 
 	m_Scene->Release();
 }

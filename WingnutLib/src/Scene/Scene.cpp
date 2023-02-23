@@ -4,6 +4,8 @@
 #include "Assets/MaterialStore.h"
 #include "Assets/ShaderStore.h"
 
+#include "DataImport/Obj/ObjLoader.h"
+
 #include "Event/EventUtils.h"
 #include "Event/WindowEvents.h"
 
@@ -150,5 +152,19 @@ namespace Wingnut
 		m_SceneCamera->Update(ts);
 	}
 
+
+	Entity Scene::ImportOBJModel(const std::string& filepath)
+	{
+		ObjImportResult importResult = ObjLoader::Import(filepath);
+
+		Entity newEntity = CreateEntity(importResult.ObjectName);
+
+		if (!importResult.IndexList.empty())
+		{
+			newEntity.AddComponent<MeshComponent>(importResult.VertexList, importResult.IndexList);
+		}
+
+		return newEntity;
+	}
 
 }

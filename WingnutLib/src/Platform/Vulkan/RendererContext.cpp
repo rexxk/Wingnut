@@ -94,9 +94,9 @@ namespace Wingnut
 				s_VulkanData.DefaultTexture->Release();
 			}
 
-			if (s_VulkanData.DefaultSampler)
+			if (s_VulkanData.DefaultLinearRepeatSampler)
 			{
-				s_VulkanData.DefaultSampler->Release();
+				s_VulkanData.DefaultLinearRepeatSampler->Release();
 			}
 
 
@@ -279,11 +279,11 @@ namespace Wingnut
 
 			ShaderStore::LoadShader(ShaderType::Default, "assets/shaders/Basic.shader");
 
-			s_VulkanData.DefaultSampler = Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Nearest, Vulkan::ImageSamplerMode::Repeat);
-			SamplerStore::AddSampler(SamplerType::Default, s_VulkanData.DefaultSampler);
+			s_VulkanData.DefaultLinearRepeatSampler = Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Nearest, Vulkan::ImageSamplerMode::Repeat);
+			SamplerStore::AddSampler(SamplerType::LinearRepeat, s_VulkanData.DefaultLinearRepeatSampler);
 
 			s_VulkanData.DefaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat(Vulkan::TextureFormat::R8G8B8A8_Normalized));
-			s_VulkanData.DefaultTextureDescriptor = Vulkan::Descriptor::Create(s_VulkanData.Device, ShaderStore::GetShader(ShaderType::Default), s_VulkanData.DefaultSampler, MaterialDescriptor, 0, s_VulkanData.DefaultTexture);
+			s_VulkanData.DefaultTextureDescriptor = Vulkan::Descriptor::Create(s_VulkanData.Device, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::Default), MaterialDescriptor, 0, s_VulkanData.DefaultTexture);
 
 		}
 

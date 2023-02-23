@@ -108,6 +108,7 @@
     <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\Core\UUID.h" />
     <ClInclude Include="src\Core\Window.h" />
+    <ClInclude Include="src\DataImport\Obj\ObjLoader.h" />
     <ClInclude Include="src\ECS\ECS.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventBroker.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="src\Core\Log.cpp" />
     <ClCompile Include="src\Core\UUID.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />
+    <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp" />
     <ClCompile Include="src\Event\EventBroker.cpp" />
     <ClCompile Include="src\Event\EventQueue.cpp" />
     <ClCompile Include="src\Event\EventUtils.cpp" />

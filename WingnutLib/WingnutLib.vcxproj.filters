@@ -116,6 +116,7 @@
     <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
     <ClInclude Include="src\Input\KeyboardInput.h" />
     <ClInclude Include="src\Assets\SamplerStore.h" />
+    <ClInclude Include="src\DataImport\Obj\ObjLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -201,5 +202,6 @@
     <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
     <ClCompile Include="src\Input\KeyboardInput.cpp" />
     <ClCompile Include="src\Assets\SamplerStore.cpp" />
+    <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp" />
   </ItemGroup>
 </Project>

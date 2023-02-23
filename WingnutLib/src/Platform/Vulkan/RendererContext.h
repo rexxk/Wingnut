@@ -52,7 +52,7 @@ namespace Wingnut
 			std::vector<Ref<Vulkan::Fence>> InFlightFences;
 
 			// UI globals
-			Ref<Vulkan::ImageSampler> DefaultSampler = nullptr;
+			Ref<Vulkan::ImageSampler> DefaultLinearRepeatSampler = nullptr;
 
 			Ref<Vulkan::Texture2D> DefaultTexture = nullptr;
 			Ref<Vulkan::Descriptor> DefaultTextureDescriptor = nullptr;

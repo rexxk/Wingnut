@@ -61,6 +61,8 @@ namespace Wingnut
 
 		void EnableCamera(bool enable) { m_SceneCamera->Enable(enable);	}
 
+		Entity ImportOBJModel(const std::string& filepath);
+
 	private:
 
 		Ref<SceneRenderer> m_SceneRenderer = nullptr;

@@ -10,6 +10,8 @@
 #include "Core/Application.h"
 #include "Core/Timestep.h"
 
+#include "DataImport/Obj/ObjLoader.h"
+
 #include "Event/EventBroker.h"
 #include "Event/EventUtils.h"
 #include "Event/KeyboardEvents.h"

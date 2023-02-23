@@ -1,6 +1,7 @@
 #include "wingnut_pch.h"
 #include "ImGuiContext.h"
 
+#include "Assets/SamplerStore.h"
 #include "Assets/ShaderStore.h"
 
 #include "Event/EventUtils.h"
@@ -110,7 +111,7 @@ namespace Wingnut
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 
 		m_AtlasTexture = Vulkan::Texture2D::Create((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized);
-		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), rendererData.DefaultSampler, ImGuiTextureDescriptor, 0, m_AtlasTexture);
+		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), SamplerStore::GetSampler(SamplerType::Default), ImGuiTextureDescriptor, 0, m_AtlasTexture);
 
 		io.Fonts->SetTexID((ImTextureID)m_AtlasDescriptor->GetDescriptor());
 
