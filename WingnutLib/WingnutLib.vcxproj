@@ -95,6 +95,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Assets\MaterialStore.h" />
+    <ClInclude Include="src\Assets\SamplerStore.h" />
     <ClInclude Include="src\Assets\ShaderStore.h" />
     <ClInclude Include="src\Assets\TextureStore.h" />
     <ClInclude Include="src\Core\Application.h" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Assets\MaterialStore.cpp" />
+    <ClCompile Include="src\Assets\SamplerStore.cpp" />
     <ClCompile Include="src\Assets\ShaderStore.cpp" />
     <ClCompile Include="src\Assets\TextureStore.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />

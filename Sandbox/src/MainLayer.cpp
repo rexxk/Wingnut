@@ -52,6 +52,8 @@ void MainLayer::OnAttach()
 
 	m_LinearSampler = Vulkan::ImageSampler::Create(rendererData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat);
 
+	SamplerStore::AddSampler(SamplerType::LinearRepeat, m_LinearSampler);
+
 
 	SceneProperties sceneProperties;
 	sceneProperties.SceneExtent= rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
@@ -66,7 +68,7 @@ void MainLayer::OnAttach()
 	TextureStore::AddTexture(defaultTexture);
 	MaterialData materialData;
 	materialData.Texture = defaultTexture;
-	Ref<Material> defaultMaterial = Material::Create("Default", m_Scene->GetShader(), m_LinearSampler, materialData);
+	Ref<Material> defaultMaterial = Material::Create("Default", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::LinearRepeat), materialData);
 	MaterialStore::StoreMaterial(defaultMaterial);
 
 
@@ -77,7 +79,7 @@ void MainLayer::OnAttach()
 	MaterialData selfieMaterialData;
 	selfieMaterialData.Texture = selfieTexture;
 
-	Ref<Material> selfieMaterial = Material::Create("selfie", m_Scene->GetShader(), m_LinearSampler, selfieMaterialData);
+	Ref<Material> selfieMaterial = Material::Create("selfie", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::LinearRepeat), selfieMaterialData);
 	MaterialStore::StoreMaterial(selfieMaterial);
 
 	Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
@@ -86,7 +88,7 @@ void MainLayer::OnAttach()
 	MaterialData textureMaterialData;
 	textureMaterialData.Texture = texture;
 
-	Ref<Material> textureMaterial = Material::Create("texture", m_Scene->GetShader(), m_LinearSampler, textureMaterialData);
+	Ref<Material> textureMaterial = Material::Create("texture", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::LinearRepeat), textureMaterialData);
 	MaterialStore::StoreMaterial(textureMaterial);
 
 

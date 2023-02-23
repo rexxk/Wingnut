@@ -3,6 +3,7 @@
 #include "wingnut_pch.h"
 
 #include "Assets/MaterialStore.h"
+#include "Assets/SamplerStore.h"
 #include "Assets/ShaderStore.h"
 #include "Assets/TextureStore.h"
 

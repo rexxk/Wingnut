@@ -115,6 +115,7 @@
     <ClInclude Include="src\Utils\FileDialog.h" />
     <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
     <ClInclude Include="src\Input\KeyboardInput.h" />
+    <ClInclude Include="src\Assets\SamplerStore.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -199,5 +200,6 @@
     <ClCompile Include="src\Utils\FileDialog.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
     <ClCompile Include="src\Input\KeyboardInput.cpp" />
+    <ClCompile Include="src\Assets\SamplerStore.cpp" />
   </ItemGroup>
 </Project>
