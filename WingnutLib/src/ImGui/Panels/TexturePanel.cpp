@@ -51,7 +51,7 @@ namespace Wingnut
 				if (!filename.empty())
 				{
 					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized);
-					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("standard"), rendererData.DefaultSampler, MaterialDescriptor, 0, newTexture);
+					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), rendererData.DefaultSampler, MaterialDescriptor, 0, newTexture);
 					TextureStore::AddTextureData(newTexture, newDescriptor);
 				}
 			}

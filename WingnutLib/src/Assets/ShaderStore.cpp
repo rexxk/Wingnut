@@ -6,22 +6,34 @@
 namespace Wingnut
 {
 
-	void ShaderStore::LoadShader(const std::string& name, const std::string& shaderPath)
+	std::string ShaderTypeToString(ShaderType type)
 	{
-		if (s_Shaders.find(name) != s_Shaders.end())
+		switch (type)
 		{
-			LOG_CORE_ERROR("[ShaderStore] Shader {} already exists in ShaderStore", name);
+		case ShaderType::Default: return "Default";
+		case ShaderType::ImGui: return "ImGui";
+		}
+
+		return "<unknown>";
+	}
+
+
+	void ShaderStore::LoadShader(ShaderType type, const std::string& shaderPath)
+	{
+		if (s_Shaders.find(type) != s_Shaders.end())
+		{
+			LOG_CORE_ERROR("[ShaderStore] Shader {} already set in ShaderStore", ShaderTypeToString(type));
 			return;
 		}
 
-		s_Shaders[name] = Vulkan::Shader::Create(Renderer::GetContext()->GetRendererData().Device, shaderPath);
+		s_Shaders[type] = Vulkan::Shader::Create(Renderer::GetContext()->GetRendererData().Device, shaderPath);
 	}
 
-	Ref<Vulkan::Shader> ShaderStore::GetShader(const std::string& name)
+	Ref<Vulkan::Shader> ShaderStore::GetShader(ShaderType type)
 	{
-		if (s_Shaders.find(name) != s_Shaders.end())
+		if (s_Shaders.find(type) != s_Shaders.end())
 		{
-			return s_Shaders[name];
+			return s_Shaders[type];
 		}
 
 		return nullptr;

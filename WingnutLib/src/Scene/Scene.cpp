@@ -34,7 +34,7 @@ namespace Wingnut
 		m_SceneRenderer = SceneRenderer::Create(m_SceneExtent);
 
 		m_CameraDataBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(CameraData));
-		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("standard"), CameraDescriptor, 0, m_CameraDataBuffer);
+		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), CameraDescriptor, 0, m_CameraDataBuffer);
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 
@@ -141,7 +141,7 @@ namespace Wingnut
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 
-		m_RendererImageDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader("ImGui"), sampler, ImGuiTextureDescriptor, 0, rendererData.SceneImage);
+		m_RendererImageDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), sampler, ImGuiTextureDescriptor, 0, rendererData.SceneImage);
 	}
 
 

@@ -6,18 +6,24 @@
 namespace Wingnut
 {
 
+	enum class ShaderType
+	{
+		Default,
+		ImGui,
+	};
+
 
 	class ShaderStore
 	{
 	public:
-		static void LoadShader(const std::string& name, const std::string& shaderPath);
+		static void LoadShader(ShaderType type , const std::string& shaderPath);
 
-		static Ref<Vulkan::Shader> GetShader(const std::string& name);
+		static Ref<Vulkan::Shader> GetShader(ShaderType type);
 
 		static void Release();
 
 	private:
-		static inline std::unordered_map<std::string, Ref<Vulkan::Shader>> s_Shaders;
+		static inline std::unordered_map<ShaderType, Ref<Vulkan::Shader>> s_Shaders;
 	};
 
 
