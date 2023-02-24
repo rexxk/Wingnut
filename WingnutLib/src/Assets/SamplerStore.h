@@ -12,7 +12,7 @@ namespace Wingnut
 		Default,
 		LinearRepeat,
 		LinearClamp,
-		Nearest,
+		NearestRepeat,
 	};
 
 

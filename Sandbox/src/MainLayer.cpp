@@ -61,11 +61,12 @@ void MainLayer::OnAttach()
 
 	Entity cameraEntity = m_Scene->CreateEntity("Camera entity");
 
+
 	Ref<Vulkan::Texture2D> defaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat::R8G8B8A8_Normalized);
 	TextureStore::AddTexture(defaultTexture);
 	MaterialData materialData;
 	materialData.Texture = defaultTexture;
-	Ref<Material> defaultMaterial = Material::Create("Default", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::LinearRepeat), materialData);
+	Ref<Material> defaultMaterial = Material::Create("Default", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::Default), materialData);
 	MaterialStore::StoreMaterial(defaultMaterial);
 
 
@@ -94,7 +95,7 @@ void MainLayer::OnAttach()
 		cubeEntity.AddComponent<TransformComponent>(glm::vec3(-1.0f, 0.0f, 0.0f));
 		cubeEntity.AddComponent<MaterialComponent>(selfieMaterial->GetID());
 	}
-
+	
 	{
 		Entity sphereEntity = m_Scene->ImportOBJModel("assets/models/sphere.obj");
 		sphereEntity.AddComponent<TransformComponent>(glm::vec3(1.0f, 0.0f, 0.0f));

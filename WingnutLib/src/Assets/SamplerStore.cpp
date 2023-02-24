@@ -13,7 +13,7 @@ namespace Wingnut
 			case SamplerType::Default: return "Default";
 			case SamplerType::LinearClamp: return "LinearClamp";
 			case SamplerType::LinearRepeat: return "LinearRepeat";
-			case SamplerType::Nearest: return "Nearest";
+			case SamplerType::NearestRepeat: return "NearestRepeat";
 		}
 
 		return "<unknown>";
@@ -28,13 +28,15 @@ namespace Wingnut
 			return;
 		}
 
+		LOG_CORE_TRACE("[SamplerStore] Adding sampler {}", SamplerTypeToString(type));
+
 		s_Samplers[type] = sampler;
 	}
 
 	Ref<Vulkan::ImageSampler> SamplerStore::GetSampler(SamplerType type)
 	{
 		if (type == SamplerType::Default)
-			type = SamplerType::LinearRepeat;
+			type = SamplerType::NearestRepeat;
 
 		if (s_Samplers.find(type) != s_Samplers.end())
 		{
@@ -46,10 +48,10 @@ namespace Wingnut
 
 	void SamplerStore::Release()
 	{
-//		for (auto& shader : s_Shaders)
-//		{
-//			shader.second->Release();
-//		}
+		for (auto& sampler : s_Samplers)
+		{
+			sampler.second->Release();
+		}
 	}
 
 
