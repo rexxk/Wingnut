@@ -14,9 +14,9 @@ namespace Wingnut
 		return CreateRef<Material>(objMaterial, shader, sampler);
 	}
 
-	Ref<Material> Material::Create(const std::string& name)
+	Ref<Material> Material::Create(const std::string& name, Ref<Vulkan::Shader> shader)
 	{
-		return CreateRef<Material>(name);
+		return CreateRef<Material>(name, shader);
 	}
 
 	Ref<Material> Material::Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
@@ -48,9 +48,10 @@ namespace Wingnut
 		}
 	}
 
-	Material::Material(const std::string& name)
-		: m_Name(name)
+	Material::Material(const std::string& name, Ref<Vulkan::Shader> shader)
+		: m_Name(name), m_Shader(shader)
 	{
+		m_MaterialData.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_Descriptor = Renderer::GetContext()->GetRendererData().DefaultTextureDescriptor;
 	}
 

@@ -22,12 +22,12 @@ namespace Wingnut
 	{
 	public:
 		static Ref<Material> Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
-		static Ref<Material> Create(const std::string& name);
+		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData);
 
 		Material(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
-		Material(const std::string& name);
+		Material(const std::string& name, Ref<Vulkan::Shader> shader);
 		Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData);
 		~Material();

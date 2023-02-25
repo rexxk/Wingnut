@@ -2,6 +2,7 @@
 #include "MaterialStorePanel.h"
 
 #include "Assets/MaterialStore.h"
+#include "Assets/ShaderStore.h"
 
 #include "Event/EventUtils.h"
 #include "Event/UIEvents.h"
@@ -60,7 +61,7 @@ namespace Wingnut
 
 			if (ImGui::Button("Create new"))
 			{
-				MaterialStore::StoreMaterial(Material::Create("newMaterial_" + std::to_string((uint32_t)m_ListboxItems.size())));
+				MaterialStore::StoreMaterial(Material::Create("newMaterial_" + std::to_string((uint32_t)m_ListboxItems.size()), ShaderStore::GetShader(ShaderType::Default)));
 
 				UpdateMaterialList();
 			}

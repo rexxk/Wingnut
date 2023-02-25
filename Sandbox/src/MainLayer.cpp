@@ -91,7 +91,7 @@ void MainLayer::OnAttach()
 
 	
 	{
-		Entity cubeEntity = m_Scene->ImportOBJModel("assets/models/cube.obj");
+		Entity cubeEntity = m_Scene->ImportOBJModel("assets/models/sandcube.obj");
 		cubeEntity.AddComponent<TransformComponent>(glm::vec3(-1.0f, 0.0f, 0.0f));
 //		cubeEntity.AddComponent<MaterialComponent>(selfieMaterial->GetID());
 	}
