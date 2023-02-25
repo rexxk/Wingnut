@@ -169,7 +169,10 @@ namespace Wingnut
 
 			if (importResult.HasMaterial)
 			{
-				MaterialStore::StoreMaterial(Material::Create(importResult.Material, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::LinearRepeat)));
+				Ref<Material> material = Material::Create(importResult.Material, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::LinearRepeat));
+				MaterialStore::StoreMaterial(material);
+
+				newEntity.AddComponent<MaterialComponent>(material->GetID());
 			}
 		}
 

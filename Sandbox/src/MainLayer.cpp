@@ -50,7 +50,7 @@ void MainLayer::OnAttach()
 	auto extent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
 
-	m_Camera = Camera::Create(glm::vec3(0.0f, 0.0f, -3.0f), extent.width, extent.height);
+	m_Camera = Camera::Create(glm::vec3(0.0f, 0.0f, -8.0f), extent.width, extent.height);
 
 	SceneProperties sceneProperties;
 	sceneProperties.SceneExtent= rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
@@ -93,13 +93,18 @@ void MainLayer::OnAttach()
 	{
 		Entity cubeEntity = m_Scene->ImportOBJModel("assets/models/cube.obj");
 		cubeEntity.AddComponent<TransformComponent>(glm::vec3(-1.0f, 0.0f, 0.0f));
-		cubeEntity.AddComponent<MaterialComponent>(selfieMaterial->GetID());
+//		cubeEntity.AddComponent<MaterialComponent>(selfieMaterial->GetID());
 	}
 	
 	{
 		Entity sphereEntity = m_Scene->ImportOBJModel("assets/models/sphere.obj");
 		sphereEntity.AddComponent<TransformComponent>(glm::vec3(1.0f, 0.0f, 0.0f));
-		sphereEntity.AddComponent<MaterialComponent>(textureMaterial->GetID());
+
+		if (!sphereEntity.HasComponent<MaterialComponent>())
+		{
+			sphereEntity.AddComponent<MaterialComponent>(defaultMaterial->GetID());
+		}
+//		sphereEntity.AddComponent<MaterialComponent>(textureMaterial->GetID());
 	}
 
 /* 
