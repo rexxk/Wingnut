@@ -124,6 +124,7 @@ namespace Wingnut
 		pipelineSpecification.Extent = m_Extent;
 		pipelineSpecification.PipelineShader = s_SceneData.StaticSceneShader;
 		pipelineSpecification.CullMode = Vulkan::CullMode::Back;
+//		pipelineSpecification.CullMode = Vulkan::CullMode::None;
 		pipelineSpecification.CullingDirection = Vulkan::CullingDirection::Clockwise;
 		pipelineSpecification.RenderPass = rendererData.SceneRenderPass;
 		pipelineSpecification.DepthTestEnable = true;

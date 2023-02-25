@@ -65,7 +65,7 @@ void MainLayer::OnAttach()
 	Ref<Vulkan::Texture2D> defaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat::R8G8B8A8_Normalized);
 	TextureStore::AddTexture(defaultTexture);
 	MaterialData materialData;
-	materialData.Texture = defaultTexture;
+	materialData.AlbedoTexture = defaultTexture;
 	Ref<Material> defaultMaterial = Material::Create("Default", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::Default), materialData);
 	MaterialStore::StoreMaterial(defaultMaterial);
 
@@ -75,7 +75,7 @@ void MainLayer::OnAttach()
 	TextureStore::AddTexture(selfieTexture);
 
 	MaterialData selfieMaterialData;
-	selfieMaterialData.Texture = selfieTexture;
+	selfieMaterialData.AlbedoTexture = selfieTexture;
 
 	Ref<Material> selfieMaterial = Material::Create("selfie", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::LinearRepeat), selfieMaterialData);
 	MaterialStore::StoreMaterial(selfieMaterial);
@@ -84,28 +84,33 @@ void MainLayer::OnAttach()
 	TextureStore::AddTexture(texture);
 
 	MaterialData textureMaterialData;
-	textureMaterialData.Texture = texture;
+	textureMaterialData.AlbedoTexture = texture;
 
 	Ref<Material> textureMaterial = Material::Create("texture", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::LinearRepeat), textureMaterialData);
 	MaterialStore::StoreMaterial(textureMaterial);
 
 	
-	{
-		Entity cubeEntity = m_Scene->ImportOBJModel("assets/models/sandcube.obj");
-		cubeEntity.AddComponent<TransformComponent>(glm::vec3(-1.0f, 0.0f, 0.0f));
+//	{
+//		Entity cubeEntity = m_Scene->ImportOBJModel("assets/models/sandcube.obj");
+//		cubeEntity.AddComponent<TransformComponent>(glm::vec3(-1.0f, 0.0f, 0.0f));
 //		cubeEntity.AddComponent<MaterialComponent>(selfieMaterial->GetID());
-	}
-	
-	{
-		Entity sphereEntity = m_Scene->ImportOBJModel("assets/models/sphere.obj");
-		sphereEntity.AddComponent<TransformComponent>(glm::vec3(1.0f, 0.0f, 0.0f));
+//	}
 
-		if (!sphereEntity.HasComponent<MaterialComponent>())
-		{
-			sphereEntity.AddComponent<MaterialComponent>(defaultMaterial->GetID());
-		}
-//		sphereEntity.AddComponent<MaterialComponent>(textureMaterial->GetID());
+	{
+		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
+//		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
 	}
+
+//	{
+//		Entity sphereEntity = m_Scene->ImportOBJModel("assets/models/sphere.obj");
+//		sphereEntity.AddComponent<TransformComponent>(glm::vec3(1.0f, 0.0f, 0.0f));
+
+//		if (!sphereEntity.HasComponent<MaterialComponent>())
+//		{
+//			sphereEntity.AddComponent<MaterialComponent>(defaultMaterial->GetID());
+//		}
+//		sphereEntity.AddComponent<MaterialComponent>(textureMaterial->GetID());
+//	}
 
 /* 
 	{

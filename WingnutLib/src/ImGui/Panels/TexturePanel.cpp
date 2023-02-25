@@ -51,11 +51,15 @@ namespace Wingnut
 
 				if (!filename.empty())
 				{
-					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized);
-					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::Default), MaterialDescriptor, 0, newTexture);
+					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, m_FlipHorizontal);
+					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::Default), TextureDescriptor, AlbedoTextureBinding, newTexture);
 					TextureStore::AddTextureData(newTexture, newDescriptor);
 				}
 			}
+
+			ImGui::SameLine();
+
+			ImGui::Checkbox("Flip Horizontal", &m_FlipHorizontal);
 
 			ImGui::Separator();
 

@@ -14,7 +14,10 @@ namespace Wingnut
 
 	struct MaterialData
 	{
-		Ref<Vulkan::Texture2D> Texture;
+		glm::vec4 AlbedoColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
+
+		bool UseAlbedoTexture = false;
+		Ref<Vulkan::Texture2D> AlbedoTexture = nullptr;
 	};
 
 

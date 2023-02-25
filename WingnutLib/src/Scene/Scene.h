@@ -24,7 +24,11 @@ namespace Wingnut
 		glm::mat4 ViewProjection;
 	};
 
-
+	struct MaterialBuffer
+	{
+		glm::vec4 AlbedoColor;
+		bool UseAlbedoTexture;
+	};
 
 	struct SceneProperties
 	{
@@ -61,7 +65,7 @@ namespace Wingnut
 
 		void EnableCamera(bool enable) { m_SceneCamera->Enable(enable);	}
 
-		Entity ImportOBJModel(const std::string& filepath);
+		void ImportOBJModel(const std::string& filepath);
 
 	private:
 

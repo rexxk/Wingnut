@@ -18,10 +18,18 @@ namespace Wingnut
 
 		size_t newPosition = location + 1;
 
-		location = str.find('/', location + 1);
-		texCoordIndex = std::stoi(str.substr(newPosition, location - newPosition));
+		if (str[newPosition] != '/')
+		{
+			location = str.find('/', location + 1);
+			texCoordIndex = std::stoi(str.substr(newPosition, location - newPosition));
 
-		newPosition = location + 1;
+			newPosition = location + 1;
+		}
+		else
+		{
+			texCoordIndex = 0;
+			newPosition++;
+		}
 
 		normalIndex = std::stoi(str.substr(newPosition));
 
@@ -58,8 +66,7 @@ namespace Wingnut
 		std::vector<glm::vec2> texCoords;
 		std::vector<glm::vec3> normals;
 
-		std::vector<Vertex> vertexList;
-		std::vector<uint32_t> indexList;
+		ObjMesh newObjMesh;
 
 		uint32_t index = 0;
 
@@ -82,7 +89,20 @@ namespace Wingnut
 
 			if (command == "o")
 			{
-				ss >> importResult.ObjectName;
+				// Start reading a new object
+
+				if (newObjMesh.IndexList.size() > 0)
+				{
+					importResult.Meshes.emplace_back(newObjMesh);
+
+					newObjMesh = ObjMesh();
+
+					index = 0;
+				}
+
+				ss >> newObjMesh.ObjectName;
+
+				LOG_CORE_TRACE("[ObjLoader] Importing object {}", newObjMesh.ObjectName);
 			}
 
 			if (command == "v")
@@ -125,33 +145,41 @@ namespace Wingnut
 
 					Vertex newVertex;
 					newVertex.Position = positions[indexVector.x - 1];
-					newVertex.TexCoord = texCoords[indexVector.y - 1];
+
+					if (indexVector.y > 0)
+						newVertex.TexCoord = texCoords[indexVector.y - 1];
+
 					newVertex.Normal = normals[indexVector.z - 1];
 					newVertex.Color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-					vertexList.emplace_back(newVertex);
+					newObjMesh.VertexList.emplace_back(newVertex);
 				}
 
 				if (triangleCount == 3)
 				{
-					indexList.emplace_back(index);
-					indexList.emplace_back(index + 1);
-					indexList.emplace_back(index + 2);
+					newObjMesh.IndexList.emplace_back(index);
+					newObjMesh.IndexList.emplace_back(index + 1);
+					newObjMesh.IndexList.emplace_back(index + 2);
 
 					index += 3;
 				}
 				else if (triangleCount == 4)
 				{
-					indexList.emplace_back(index);
-					indexList.emplace_back(index + 1);
-					indexList.emplace_back(index + 2);
+					newObjMesh.IndexList.emplace_back(index);
+					newObjMesh.IndexList.emplace_back(index + 1);
+					newObjMesh.IndexList.emplace_back(index + 2);
 
-					indexList.emplace_back(index + 2);
-					indexList.emplace_back(index + 3);
-					indexList.emplace_back(index);
+					newObjMesh.IndexList.emplace_back(index + 2);
+					newObjMesh.IndexList.emplace_back(index + 3);
+					newObjMesh.IndexList.emplace_back(index);
 
 					index += 4;
 				}
+			}
+
+			if (command == "usemtl")
+			{
+				ss >> newObjMesh.MaterialName;
 			}
 		}
 
@@ -164,8 +192,8 @@ namespace Wingnut
 
 		importResult.HasMeshData = true;
 
-		importResult.VertexList = vertexList;
-		importResult.IndexList = indexList;
+		importResult.Meshes.emplace_back(newObjMesh);
+
 
 		return importResult;
 	}
@@ -180,6 +208,8 @@ namespace Wingnut
 			return;
 		}
 
+		ObjMaterial newMaterial;
+
 		while (!file.eof())
 		{
 			std::string line;
@@ -192,62 +222,71 @@ namespace Wingnut
 
 			if (command == "newmtl")
 			{
-				ss >> importResult.Material.MaterialName;
+				if (newMaterial.MaterialName != "")
+				{
+					importResult.Materials.emplace_back(newMaterial);
+					importResult.HasMaterial = true;
 
-				importResult.HasMaterial = true;
+				}
+
+				newMaterial = ObjMaterial();
+				ss >> newMaterial.MaterialName;
+
 			}
 
 			// Ambient
 			if (command == "Ka")
 			{
-				ss >> importResult.Material.Ambient.r >> importResult.Material.Ambient.g >> importResult.Material.Ambient.b;
+				ss >> newMaterial.Ambient.r >> newMaterial.Ambient.g >> newMaterial.Ambient.b;
 			}
 
 			// Diffuse
 			if (command == "Kd")
 			{
-				ss >> importResult.Material.Diffuse.r >> importResult.Material.Diffuse.g >> importResult.Material.Diffuse.b;
+				ss >> newMaterial.Diffuse.r >> newMaterial.Diffuse.g >> newMaterial.Diffuse.b;
 			}
 
 			// Specular
 			if (command == "Ks")
 			{
-				ss >> importResult.Material.Specular.r >> importResult.Material.Specular.g >> importResult.Material.Specular.b;
+				ss >> newMaterial.Specular.r >> newMaterial.Specular.g >> newMaterial.Specular.b;
 			}
 
 			// Dissolve (transparency)
 			if (command == "d")
 			{
-				ss >> importResult.Material.Transparency;
+				ss >> newMaterial.Transparency;
 			}
 
 			// Optical density (index of refraction)
 			if (command == "Ni")
 			{
-				ss >> importResult.Material.OpticalDensity;
+				ss >> newMaterial.OpticalDensity;
 			}
 
 			if (command == "map_Ka")
 			{
-				importResult.Material.HasAmbientTexture = true;
-				ss >> importResult.Material.AmbientTexture;
+				newMaterial.HasAmbientTexture = true;
+				ss >> newMaterial.AmbientTexture;
 			}
 
 			if (command == "map_Kd")
 			{
-				importResult.Material.HasDiffuseTexture = true;
-				ss >> importResult.Material.DiffuseTexture;
+				newMaterial.HasDiffuseTexture = true;
+				ss >> newMaterial.DiffuseTexture;
 			}
 
 			if (command == "map_Ks")
 			{
-				importResult.Material.HasSpecularTexture = true;
-				ss >> importResult.Material.SpecularTexture;
+				newMaterial.HasSpecularTexture = true;
+				ss >> newMaterial.SpecularTexture;
 			}
 
 		}
 
 		file.close();
+
+		importResult.Materials.emplace_back(newMaterial);
 	}
 
 

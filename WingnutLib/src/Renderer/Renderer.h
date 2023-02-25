@@ -16,8 +16,12 @@ namespace Wingnut
 	const uint32_t CameraDescriptor = 0;
 	const uint32_t TransformDescriptor = 1;
 	const uint32_t MaterialDescriptor = 2;
-	const uint32_t LightsDescriptor = 3;
+	const uint32_t TextureDescriptor = 3;
+	const uint32_t LightsDescriptor = 4;
 
+	const uint32_t AlbedoTextureBinding = 0;
+	const uint32_t ReflectionTextureBinding = 1;
+	
 
 	struct Vertex
 	{

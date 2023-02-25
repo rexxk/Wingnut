@@ -38,7 +38,8 @@ namespace Wingnut
 			Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
 			TextureStore::AddTexture(texture);
 
-			m_MaterialData.Texture = texture;
+			m_MaterialData.UseAlbedoTexture = true;
+			m_MaterialData.AlbedoTexture = texture;
 
 			CreateDescriptor(texture, shader, sampler);
 		}
@@ -51,7 +52,8 @@ namespace Wingnut
 	Material::Material(const std::string& name, Ref<Vulkan::Shader> shader)
 		: m_Name(name), m_Shader(shader)
 	{
-		m_MaterialData.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+		m_MaterialData.UseAlbedoTexture = true;
+		m_MaterialData.AlbedoTexture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_Descriptor = Renderer::GetContext()->GetRendererData().DefaultTextureDescriptor;
 	}
 
@@ -84,15 +86,15 @@ namespace Wingnut
 	void Material::CreateDescriptor(Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
-		m_Descriptor = Vulkan::Descriptor::Create(rendererData.Device, shader, sampler, MaterialDescriptor, 0, m_MaterialData.Texture);
+		m_Descriptor = Vulkan::Descriptor::Create(rendererData.Device, shader, sampler, TextureDescriptor, AlbedoTextureBinding, m_MaterialData.AlbedoTexture);
 
-		TextureStore::AddDescriptor(m_MaterialData.Texture->GetTextureID(), m_Descriptor);
+		TextureStore::AddDescriptor(m_MaterialData.AlbedoTexture->GetTextureID(), m_Descriptor);
 	}
 
 	void Material::CreateDescriptor(Ref<Vulkan::Texture2D> texture, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
-		m_Descriptor = Vulkan::Descriptor::Create(rendererData.Device, shader, sampler, MaterialDescriptor, 0, texture);
+		m_Descriptor = Vulkan::Descriptor::Create(rendererData.Device, shader, sampler, TextureDescriptor, AlbedoTextureBinding, texture);
 
 		TextureStore::AddDescriptor(texture->GetTextureID(), m_Descriptor);
 	}
@@ -106,9 +108,9 @@ namespace Wingnut
 
 		m_SamplerType = type;
 
-		CreateDescriptor(m_MaterialData.Texture, m_Shader, SamplerStore::GetSampler(m_SamplerType));
+		CreateDescriptor(m_MaterialData.AlbedoTexture, m_Shader, SamplerStore::GetSampler(m_SamplerType));
 
-		TextureStore::SetDescriptor(m_MaterialData.Texture->GetTextureID(), m_Descriptor);
+		TextureStore::SetDescriptor(m_MaterialData.AlbedoTexture->GetTextureID(), m_Descriptor);
 //		TextureStore::GetDescriptor(m_MaterialData.Texture->GetTextureID())->SetSampler(SamplerStore::GetSampler(m_SamplerType));
 	}
 

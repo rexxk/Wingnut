@@ -40,9 +40,15 @@ layout(location = 0) in vec2 v_TexCoord;
 layout(location = 1) in vec3 v_Normal;
 layout(location = 2) in vec4 v_Color;
 
-layout(set = 2, binding = 0) uniform sampler2D u_Texture;
+layout(set = 2, binding = 0) uniform UBMaterial{
+	vec4 AlbedoColor;
+	bool UseAlbedoTexture;
+} ubMaterial;
 
-layout(set = 3, binding = 0) uniform Light{
+layout(set = 3, binding = 0) uniform sampler2D u_AlbedoTexture;
+//layout(set = 3, binding = 1) usniform sampler2D u_ReflectionTexture;
+
+layout(set = 4, binding = 0) uniform Light{
 	mat3 LightDirection;
 } light;
 
@@ -50,5 +56,6 @@ layout(set = 3, binding = 0) uniform Light{
 void main()
 {
 //	o_Color = vec4(0.5); // v_Color;
-	o_Color = texture(u_Texture, v_TexCoord) * v_Color;
+
+	o_Color = texture(u_AlbedoTexture, v_TexCoord) * v_Color;
 }

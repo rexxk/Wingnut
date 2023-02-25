@@ -6,6 +6,16 @@
 namespace Wingnut
 {
 
+	struct ObjMesh
+	{
+		std::string ObjectName = "";
+
+		std::vector<Vertex> VertexList;
+		std::vector<uint32_t> IndexList;
+
+		std::string MaterialName = "";
+	};
+
 	struct ObjMaterial
 	{
 		std::string MaterialName = "";
@@ -29,16 +39,11 @@ namespace Wingnut
 	struct ObjImportResult
 	{
 		bool HasMeshData = false;
-
-		std::string ObjectName = "";
-
-		std::vector<Vertex> VertexList;
-		std::vector<uint32_t> IndexList;
+		std::vector<ObjMesh> Meshes;
 
 		// Material data
 		bool HasMaterial = false;
-
-		ObjMaterial Material;
+		std::vector<ObjMaterial> Materials;
 	};
 
 

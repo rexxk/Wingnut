@@ -504,6 +504,7 @@ namespace Wingnut
 
 		void Descriptor::Bind(Ref<CommandBuffer> commandBuffer, VkPipelineLayout pipelineLayout)
 		{
+			//TODO: Fix this - should be two sets if there are two bindings..?
 			vkCmdBindDescriptorSets(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, m_Set, 1, &m_Descriptor, 0, nullptr);
 		}
 

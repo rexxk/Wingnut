@@ -16,6 +16,7 @@ namespace Wingnut
 
 		uint32_t m_HorizontalTextureCount = 1;
 
+		bool m_FlipHorizontal = false;
 	};
 
 

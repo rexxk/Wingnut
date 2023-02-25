@@ -154,29 +154,30 @@ namespace Wingnut
 	}
 
 
-	Entity Scene::ImportOBJModel(const std::string& filepath)
+	void Scene::ImportOBJModel(const std::string& filepath)
 	{
 		ObjImportResult importResult = ObjLoader::Import(filepath);
 
-		Entity newEntity = CreateEntity(importResult.ObjectName);
-
-		if (!importResult.IndexList.empty())
+		if (!importResult.HasMeshData)
 		{
-			if (importResult.HasMeshData)
-			{
-				newEntity.AddComponent<MeshComponent>(importResult.VertexList, importResult.IndexList);
-			}
-
-			if (importResult.HasMaterial)
-			{
-				Ref<Material> material = Material::Create(importResult.Material, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::LinearRepeat));
-				MaterialStore::StoreMaterial(material);
-
-				newEntity.AddComponent<MaterialComponent>(material->GetID());
-			}
+			return;
 		}
 
-		return newEntity;
+		for (auto& material : importResult.Materials)
+		{
+			Ref<Material> newMaterial = Material::Create(material, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::LinearRepeat));
+			MaterialStore::StoreMaterial(newMaterial);
+		}
+
+		for (auto& mesh : importResult.Meshes)
+		{
+			Entity newEntity = CreateEntity(mesh.ObjectName);
+			newEntity.AddComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f));
+
+			newEntity.AddComponent<MeshComponent>(mesh.VertexList, mesh.IndexList);
+			newEntity.AddComponent<MaterialComponent>(MaterialStore::GetMaterialByName(mesh.MaterialName)->GetID());
+		}
+
 	}
 
 }
