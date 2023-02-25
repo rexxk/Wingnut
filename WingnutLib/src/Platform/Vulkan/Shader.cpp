@@ -431,11 +431,11 @@ namespace Wingnut
 		}
 
 		Descriptor::Descriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture)
-			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::Texture), m_Set(set), m_Binding(binding), m_Sampler(sampler)
+			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::Texture), m_Set(set), m_Binding(binding), m_Sampler(sampler), m_Texture(texture)
 		{
 			Allocate();
 
-			CreateDescriptor(device, shader, sampler, set, binding, texture);
+			CreateDescriptor(device, shader, sampler, set, binding);
 		}
 
 		Descriptor::~Descriptor()
@@ -484,12 +484,12 @@ namespace Wingnut
 
 		}
 
-		void Descriptor::CreateDescriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture)
+		void Descriptor::CreateDescriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding)
 		{
 			VkDescriptorImageInfo imageInfo = {};
 			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = texture->GetImageView();
-			imageInfo.sampler = sampler->Sampler();
+			imageInfo.imageView = m_Texture->GetImageView();
+			imageInfo.sampler = m_Sampler->Sampler();
 
 			VkWriteDescriptorSet writeSet = {};
 			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -509,6 +509,8 @@ namespace Wingnut
 
 		void Descriptor::UpdateDescriptor(Ref<Texture2D> texture)
 		{
+			m_Texture = texture;
+
 			VkDescriptorImageInfo imageInfo = {};
 			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			imageInfo.imageView = texture->GetImageView();
@@ -524,7 +526,6 @@ namespace Wingnut
 
 			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
 		}
-
 
 	}
 

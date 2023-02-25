@@ -6,7 +6,7 @@
 namespace Wingnut
 {
 
-	std::string SamplerTypeToString(SamplerType type)
+	std::string SamplerStore::SamplerTypeToString(SamplerType type)
 	{
 		switch (type)
 		{
@@ -19,6 +19,15 @@ namespace Wingnut
 		return "<unknown>";
 	}
 
+	SamplerType SamplerStore::GetSamplerTypeByName(const std::string& samplerName)
+	{
+		if (samplerName == "Default") return SamplerType::Default;
+		if (samplerName == "LinearClamp") return SamplerType::LinearClamp;
+		if (samplerName == "LinearRepeat") return SamplerType::LinearRepeat;
+		if (samplerName == "NearestRepeat") return SamplerType::NearestRepeat;
+
+		return SamplerType::Default;
+	}
 
 	void SamplerStore::AddSampler(SamplerType type, Ref<Vulkan::ImageSampler> sampler)
 	{

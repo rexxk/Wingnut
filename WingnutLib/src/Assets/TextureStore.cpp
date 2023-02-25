@@ -29,6 +29,14 @@ namespace Wingnut
 		m_DescriptorContainer[texture->GetTextureID()] = descriptor;
 	}
 
+	void TextureStore::SetDescriptor(UUID textureID, Ref<Vulkan::Descriptor> descriptor)
+	{
+		if (m_DescriptorContainer.find(textureID) != m_DescriptorContainer.end())
+		{
+			m_DescriptorContainer[textureID] = descriptor;
+		}
+	}
+
 	std::pair<Ref<Vulkan::Texture2D>, Ref<Vulkan::Descriptor>> TextureStore::GetTextureData(UUID textureID)
 	{
 		return std::make_pair(GetTexture(textureID), GetDescriptor(textureID));

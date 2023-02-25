@@ -17,6 +17,8 @@ namespace Wingnut
 		static void AddDescriptor(UUID textureID, Ref<Vulkan::Descriptor> descriptor);
 		static void AddTextureData(Ref<Vulkan::Texture2D> texture, Ref<Vulkan::Descriptor> descriptor);
 
+		static void SetDescriptor(UUID textureID, Ref<Vulkan::Descriptor> descriptor);
+
 		static std::pair<Ref<Vulkan::Texture2D>, Ref<Vulkan::Descriptor>> GetTextureData(UUID textureID);
 		static Ref<Vulkan::Texture2D> GetTexture(UUID textureID);
 		static Ref<Vulkan::Descriptor> GetDescriptor(UUID textureID);

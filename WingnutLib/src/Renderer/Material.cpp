@@ -31,12 +31,14 @@ namespace Wingnut
 
 
 	Material::Material(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
-		: m_Name(objMaterial.MaterialName)
+		: m_Name(objMaterial.MaterialName), m_Shader(shader)
 	{
 		if (objMaterial.HasDiffuseTexture)
 		{
 			Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
 			TextureStore::AddTexture(texture);
+
+			m_MaterialData.Texture = texture;
 
 			CreateDescriptor(texture, shader, sampler);
 		}
@@ -53,13 +55,13 @@ namespace Wingnut
 	}
 
 	Material::Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
-		: m_Name(name)
+		: m_Name(name), m_Shader(shader)
 	{
 		CreateDescriptor(shader, sampler);
 	}
 
 	Material::Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData)
-		: m_MaterialData(materialData), m_Name(name)
+		: m_MaterialData(materialData), m_Name(name), m_Shader(shader)
 	{
 		CreateDescriptor(shader, sampler);
 	}
@@ -94,6 +96,19 @@ namespace Wingnut
 		TextureStore::AddDescriptor(texture->GetTextureID(), m_Descriptor);
 	}
 
+	void Material::SetSamplerType(SamplerType type)
+	{
+		if (type == m_SamplerType)
+		{
+			return;
+		}
 
+		m_SamplerType = type;
+
+		CreateDescriptor(m_MaterialData.Texture, m_Shader, SamplerStore::GetSampler(m_SamplerType));
+
+		TextureStore::SetDescriptor(m_MaterialData.Texture->GetTextureID(), m_Descriptor);
+//		TextureStore::GetDescriptor(m_MaterialData.Texture->GetTextureID())->SetSampler(SamplerStore::GetSampler(m_SamplerType));
+	}
 
 }

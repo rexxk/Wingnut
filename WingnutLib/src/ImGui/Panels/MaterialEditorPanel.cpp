@@ -15,6 +15,7 @@
 namespace Wingnut
 {
 
+
 	MaterialEditorPanel::MaterialEditorPanel()
 	{
 		SubscribeToEvent<MaterialSelectedEvent>([&](MaterialSelectedEvent& event)
@@ -64,6 +65,36 @@ namespace Wingnut
 		{
 			m_SelectedMaterial->SetName(std::string(name));
 		}
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Sampler");
+
+		ImGui::NextColumn();
+
+		std::string previewString = SamplerStore::SamplerTypeToString(m_SelectedMaterial->GetSamplerType());
+
+		if (ImGui::BeginCombo("##SamplerTypeCombo", previewString.c_str()))
+		{
+			for (auto& sampler : SamplerStore::GetSamplerMap())
+			{
+				bool isSelected = m_SelectedMaterial->GetSamplerType() == sampler.first;
+
+				if (ImGui::Selectable(SamplerStore::SamplerTypeToString(sampler.first).c_str(), &isSelected))
+				{
+					m_SelectedMaterial->SetSamplerType(sampler.first);
+				}
+
+				if (isSelected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+
+			ImGui::EndCombo();
+		}
+
+
 
 		ImGui::NextColumn();
 

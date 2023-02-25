@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Assets/SamplerStore.h"
+
 
 namespace Wingnut
 {
@@ -19,6 +21,7 @@ namespace Wingnut
 	private:
 		Ref<Material> m_SelectedMaterial = nullptr;
 
+		int m_CurrentSamplerSelection = 0;
 	};
 
 
