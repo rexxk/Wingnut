@@ -25,9 +25,9 @@ namespace Wingnut
 		}
 
 
-		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format)
+		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format, bool flip)
 		{
-			return CreateRef<Texture2D>(texturePath, format);
+			return CreateRef<Texture2D>(texturePath, format, flip);
 		}
 
 		Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format)
@@ -36,10 +36,10 @@ namespace Wingnut
 		}
 
 
-		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format)
+		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, bool flip)
 			: m_Format(format)
 		{
-			CreateTextureFromFile(texturePath);
+			CreateTextureFromFile(texturePath, flip);
 		}
 		
 		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, TextureFormat format)
@@ -53,9 +53,11 @@ namespace Wingnut
 			Release();
 		}
 
-		void Texture2D::CreateTextureFromFile(const std::string& texturePath)
+		void Texture2D::CreateTextureFromFile(const std::string& texturePath, bool flip)
 		{
 			m_Device = Renderer::GetContext()->GetRendererData().Device;
+
+			stbi_set_flip_vertically_on_load(flip);
 
 			int width, height, channels;
 			stbi_uc* pixels = stbi_load(texturePath.c_str(), &width, &height, &channels, STBI_rgb_alpha);

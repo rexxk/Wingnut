@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 #include "Assets/MaterialStore.h"
+#include "Assets/SamplerStore.h"
 #include "Assets/ShaderStore.h"
 
 #include "DataImport/Obj/ObjLoader.h"
@@ -161,7 +162,15 @@ namespace Wingnut
 
 		if (!importResult.IndexList.empty())
 		{
-			newEntity.AddComponent<MeshComponent>(importResult.VertexList, importResult.IndexList);
+			if (importResult.HasMeshData)
+			{
+				newEntity.AddComponent<MeshComponent>(importResult.VertexList, importResult.IndexList);
+			}
+
+			if (importResult.HasMaterial)
+			{
+				MaterialStore::StoreMaterial(Material::Create(importResult.Material, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::LinearRepeat)));
+			}
 		}
 
 		return newEntity;

@@ -162,6 +162,8 @@ namespace Wingnut
 			LoadMaterialFile(filePath + materialFilename, importResult);
 		}
 
+		importResult.HasMeshData = true;
+
 		importResult.VertexList = vertexList;
 		importResult.IndexList = indexList;
 
@@ -190,53 +192,57 @@ namespace Wingnut
 
 			if (command == "newmtl")
 			{
-				std::string materialName;
-				ss >> importResult.MaterialName;
+				ss >> importResult.Material.MaterialName;
+
+				importResult.HasMaterial = true;
 			}
 
 			// Ambient
 			if (command == "Ka")
 			{
-				ss >> importResult.Ambient.r >> importResult.Ambient.g >> importResult.Ambient.b;
+				ss >> importResult.Material.Ambient.r >> importResult.Material.Ambient.g >> importResult.Material.Ambient.b;
 			}
 
 			// Diffuse
 			if (command == "Kd")
 			{
-				ss >> importResult.Diffuse.r >> importResult.Diffuse.g >> importResult.Diffuse.b;
+				ss >> importResult.Material.Diffuse.r >> importResult.Material.Diffuse.g >> importResult.Material.Diffuse.b;
 			}
 
 			// Specular
 			if (command == "Ks")
 			{
-				ss >> importResult.Specular.r >> importResult.Specular.g >> importResult.Specular.b;
+				ss >> importResult.Material.Specular.r >> importResult.Material.Specular.g >> importResult.Material.Specular.b;
 			}
 
 			// Dissolve (transparency)
 			if (command == "d")
 			{
-				ss >> importResult.Transparency;
+				ss >> importResult.Material.Transparency;
 			}
 
 			// Optical density (index of refraction)
 			if (command == "Ni")
 			{
-				ss >> importResult.OpticalDensity;
+				ss >> importResult.Material.OpticalDensity;
 			}
 
 			if (command == "map_Ka")
 			{
-				ss >> importResult.AmbientTexture;
+				importResult.Material.HasAmbientTexture = true;
+				ss >> importResult.Material.AmbientTexture;
 			}
 
 			if (command == "map_Kd")
 			{
-				ss >> importResult.DiffuseTexture;
+				importResult.Material.HasDiffuseTexture = true;
+				ss >> importResult.Material.DiffuseTexture;
 			}
 
 			if (command == "map_Ks")
 			{
-				ss >> importResult.SpecularTexture;
+				importResult.Material.HasSpecularTexture = true;
+				ss >> importResult.Material.SpecularTexture;
 			}
 
 		}

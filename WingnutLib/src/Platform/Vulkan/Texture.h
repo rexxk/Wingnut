@@ -23,10 +23,10 @@ namespace Wingnut
 		class Texture2D
 		{
 		public:
-			static Ref<Texture2D> Create(const std::string& texturePath, TextureFormat format);
+			static Ref<Texture2D> Create(const std::string& texturePath, TextureFormat format, bool flip = false);
 			static Ref<Texture2D> Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format);
 
-			Texture2D(const std::string& texturePath, TextureFormat format);
+			Texture2D(const std::string& texturePath, TextureFormat format, bool flip);
 			Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format);
 			~Texture2D();
 
@@ -39,7 +39,7 @@ namespace Wingnut
 			std::string GetTextureName() const { return m_TextureName; }
 
 		private:
-			void CreateTextureFromFile(const std::string& texturePath);
+			void CreateTextureFromFile(const std::string& texturePath, bool flip);
 			void CreateTexture(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels);
 
 		private:

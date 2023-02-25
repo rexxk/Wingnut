@@ -1,6 +1,8 @@
 #pragma once
 
 
+#include "DataImport/Obj/ObjLoader.h"
+
 #include "Platform/Vulkan/Image.h"
 #include "Platform/Vulkan/Shader.h"
 #include "Platform/Vulkan/Texture.h"
@@ -18,10 +20,12 @@ namespace Wingnut
 	class Material
 	{
 	public:
+		static Ref<Material> Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		static Ref<Material> Create(const std::string& name);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData);
 
+		Material(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Material(const std::string& name);
 		Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData);
@@ -36,6 +40,7 @@ namespace Wingnut
 		UUID GetID() const { return m_MaterialID; }
 
 		void CreateDescriptor(Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
+		void CreateDescriptor(Ref<Vulkan::Texture2D> texture, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Ref<Vulkan::Descriptor> GetDescriptor() { return m_Descriptor; }
 		void SetDescriptor(Ref<Vulkan::Descriptor> descriptor) { m_Descriptor = descriptor; }
 

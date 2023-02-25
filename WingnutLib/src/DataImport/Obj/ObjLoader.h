@@ -6,29 +6,39 @@
 namespace Wingnut
 {
 
-
-	struct ObjImportResult
+	struct ObjMaterial
 	{
-		std::string ObjectName;
-
-		std::vector<Vertex> VertexList;
-		std::vector<uint32_t> IndexList;
-
-		// Material data
-
-		std::string MaterialName;
+		std::string MaterialName = "";
 
 		glm::vec3 Ambient;
 		glm::vec3 Diffuse;
 		glm::vec3 Specular;
 
-		float Transparency;
-		float OpticalDensity;
+		float Transparency = 1.0f;
+		float OpticalDensity = 0.0f;
 
 		// Texture paths
+		bool HasAmbientTexture = false;
 		std::string AmbientTexture;
+		bool HasDiffuseTexture = false;
 		std::string DiffuseTexture;
+		bool HasSpecularTexture = false;
 		std::string SpecularTexture;
+	};
+
+	struct ObjImportResult
+	{
+		bool HasMeshData = false;
+
+		std::string ObjectName = "";
+
+		std::vector<Vertex> VertexList;
+		std::vector<uint32_t> IndexList;
+
+		// Material data
+		bool HasMaterial = false;
+
+		ObjMaterial Material;
 	};
 
 
