@@ -9,6 +9,8 @@
 
 #include "Renderer/Material.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <imgui.h>
 
 
@@ -98,7 +100,31 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		ImGui::Text("Texture");
+		ImGui::Text("Albedo Color");
+
+		ImGui::NextColumn();
+
+//		glm::vec4& albedoColor = ;
+//		ImGui::ColorButton("##colorButton", glm::value_ptr(albedoColor));
+		if (ImGui::ColorEdit4("##albedoColor", glm::value_ptr(m_SelectedMaterial->GetMaterialData().Properties.AlbedoColor)))
+		{
+			m_SelectedMaterial->Update();
+		}
+
+		ImGui::NextColumn();
+		
+		ImGui::Text("Use Albedo texture");
+
+		ImGui::NextColumn();
+
+		if (ImGui::Checkbox("##useAlbedoTexture", &m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture))
+		{
+			m_SelectedMaterial->Update();
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Albedo Texture");
 
 		ImGui::NextColumn();
 

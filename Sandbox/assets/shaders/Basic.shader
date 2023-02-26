@@ -57,5 +57,14 @@ void main()
 {
 //	o_Color = vec4(0.5); // v_Color;
 
-	o_Color = texture(u_AlbedoTexture, v_TexCoord) * v_Color;
+	if (ubMaterial.UseAlbedoTexture)
+	{
+		o_Color = texture(u_AlbedoTexture, v_TexCoord) * v_Color;
+	}
+	else
+	{
+		o_Color = ubMaterial.AlbedoColor * v_Color;
+	}
+
+//	o_Color = texture(u_AlbedoTexture, v_TexCoord) * v_Color;
 }

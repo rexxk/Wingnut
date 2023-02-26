@@ -113,11 +113,13 @@ namespace Wingnut
 			{
 				m_MaterialData.AlbedoTexture.Texture = texture;
 				m_Descriptor->SetImageBinding(AlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, m_MaterialData.Sampler);
-				m_Descriptor->UpdateBindings();
 
 				break;
 			}
 		}
+
+
+		m_Descriptor->UpdateBindings();
 
 	}
 
