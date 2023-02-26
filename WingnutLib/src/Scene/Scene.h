@@ -24,12 +24,6 @@ namespace Wingnut
 		glm::mat4 ViewProjection;
 	};
 
-	struct MaterialBuffer
-	{
-		glm::vec4 AlbedoColor;
-		bool UseAlbedoTexture;
-	};
-
 	struct SceneProperties
 	{
 		VkExtent2D SceneExtent;

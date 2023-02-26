@@ -64,7 +64,7 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		VkExtent2D extent = rendererData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
-		ShaderStore::LoadShader(ShaderType::ImGui, "assets/shaders/ImGui.shader");
+//		ShaderStore::LoadShader(ShaderType::ImGui, "assets/shaders/ImGui.shader");
 		m_Renderer = ImGuiRenderer::Create(extent);
 
 		IMGUI_CHECKVERSION();
@@ -111,7 +111,9 @@ namespace Wingnut
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 
 		m_AtlasTexture = Vulkan::Texture2D::Create((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized);
-		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), SamplerStore::GetSampler(SamplerType::Default), ImGuiTextureDescriptor, 0, m_AtlasTexture);
+		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+		m_AtlasDescriptor->SetImageBinding(0, m_AtlasTexture, SamplerStore::GetSampler(SamplerType::Default));
+		m_AtlasDescriptor->UpdateBindings();
 
 		io.Fonts->SetTexID((ImTextureID)m_AtlasDescriptor->GetDescriptor());
 
@@ -120,7 +122,9 @@ namespace Wingnut
 		ECS::EntitySystem::AddComponent<TagComponent>(m_ImGuiEntity, "ImGui");
 
 		m_CameraBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(ImGuiScaleTranslate));
-		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiCameraDescriptor, 0, m_CameraBuffer);
+		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiCameraDescriptor);
+		m_CameraDescriptor->SetBufferBinding(0, m_CameraBuffer);
+		m_CameraDescriptor->UpdateBindings();
 
 		LOG_CORE_TRACE("[ImGui] Context created");
 

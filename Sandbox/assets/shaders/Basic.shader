@@ -45,10 +45,10 @@ layout(set = 2, binding = 0) uniform UBMaterial{
 	bool UseAlbedoTexture;
 } ubMaterial;
 
-layout(set = 3, binding = 0) uniform sampler2D u_AlbedoTexture;
-//layout(set = 3, binding = 1) usniform sampler2D u_ReflectionTexture;
+layout(set = 2, binding = 1) uniform sampler2D u_AlbedoTexture;
+// layout(set = 2, binding = 2) usniform sampler2D u_ReflectionTexture;
 
-layout(set = 4, binding = 0) uniform Light{
+layout(set = 3, binding = 0) uniform Light{
 	mat3 LightDirection;
 } light;
 

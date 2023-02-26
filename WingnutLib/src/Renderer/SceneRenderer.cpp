@@ -225,7 +225,9 @@ namespace Wingnut
 			Ref<Vulkan::IndexBuffer> indexBuffer = Vulkan::IndexBuffer::Create(device, indexList.data(), (uint32_t)indexList.size() * sizeof(uint32_t), (uint32_t)indexList.size());
 
 			Ref<Vulkan::UniformBuffer> transformBuffer = Vulkan::UniformBuffer::Create(device, sizeof(glm::mat4));
-			Ref<Vulkan::Descriptor> transformDescriptor = Vulkan::Descriptor::Create(device, s_SceneData.StaticSceneShader, TransformDescriptor, 0, transformBuffer);
+			Ref<Vulkan::Descriptor> transformDescriptor = Vulkan::Descriptor::Create(device, s_SceneData.StaticSceneShader, TransformDescriptor);
+			transformDescriptor->SetBufferBinding(0, transformBuffer);
+			transformDescriptor->UpdateBindings();
 
 //			s_SceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
 			s_SceneData.DrawCache[entityID] = { vertexBuffer, indexBuffer, transformDescriptor, transformBuffer, material };

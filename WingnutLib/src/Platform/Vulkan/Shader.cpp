@@ -409,33 +409,20 @@ namespace Wingnut
 
 		///////////////////////////////////////////////////
 
-		Ref<Descriptor> Descriptor::Create(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer)
+		Ref<Descriptor> Descriptor::Create(Ref<Device> device, Ref<Shader> shader, uint32_t set)
 		{
-			return CreateRef<Descriptor>(device, shader, set, binding, buffer);
-		}
-
-		Ref<Descriptor> Descriptor::Create(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture)
-		{
-			return CreateRef<Descriptor>(device, shader, sampler, set, binding, texture);
+			return CreateRef<Descriptor>(device, shader, set);
 		}
 
 
-
-
-		Descriptor::Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer)
-			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::DataBuffer), m_Set(set), m_Binding(binding)
+		Descriptor::Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set)
+			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::DataBuffer), m_Set(set)
 		{
+			m_BindingCount = (uint32_t)m_Shader->m_DescriptorSetLayoutBindings[set].size();
+			m_WriteInfo.resize(m_BindingCount);
+
 			Allocate();
-
-			CreateDescriptor(device, shader, set, binding, buffer);
-		}
-
-		Descriptor::Descriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture)
-			: m_Device(device), m_Shader(shader), m_Type(DescriptorType::Texture), m_Set(set), m_Binding(binding), m_Sampler(sampler), m_Texture(texture)
-		{
-			Allocate();
-
-			CreateDescriptor(device, shader, sampler, set, binding);
+			SetupBindingLayout();
 		}
 
 		Descriptor::~Descriptor()
@@ -465,67 +452,77 @@ namespace Wingnut
 			}
 		}
 
-		void Descriptor::CreateDescriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer)
+		void Descriptor::SetupBindingLayout()
 		{
-			VkDescriptorBufferInfo bufferInfo = {};
+			uint32_t index = 0;
+
+			for (auto& binding : m_Shader->m_DescriptorSetLayoutBindings[m_Set])
+			{
+				if (binding.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+				{
+					VkDescriptorImageInfo imageInfo = {};
+					m_ImageInfoMap[binding.binding] = imageInfo;
+				}
+				else if (binding.descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+				{
+					VkDescriptorBufferInfo bufferInfo = {};
+					m_BufferInfoMap[binding.binding] = bufferInfo;
+				}
+
+				m_WriteInfo[index].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				m_WriteInfo[index].dstBinding = binding.binding;
+				m_WriteInfo[index].dstSet = m_Descriptor;
+				m_WriteInfo[index].descriptorCount = binding.descriptorCount;
+				m_WriteInfo[index].descriptorType = binding.descriptorType;
+				m_WriteInfo[index].pBufferInfo = nullptr;
+
+				index++;
+			}
+			
+		}
+
+		void Descriptor::SetBufferBinding(uint32_t binding, Ref<UniformBuffer> buffer)
+		{
+			if (binding >= m_BindingCount)
+			{
+				return;
+			}
+
+			VkDescriptorBufferInfo& bufferInfo = m_BufferInfoMap[binding];
 			bufferInfo.buffer = buffer->GetBuffer(Renderer::GetContext()->GetCurrentFrame());
 			bufferInfo.offset = 0;
 			bufferInfo.range = buffer->GetBufferSize();
 
-			VkWriteDescriptorSet writeSet = {};
-			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			writeSet.dstBinding = m_Binding;
-			writeSet.dstSet = m_Descriptor;
-			writeSet.descriptorCount = 1;
-			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			writeSet.pBufferInfo = &bufferInfo;
-
-			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
+			m_WriteInfo[binding].pBufferInfo = &bufferInfo;
 
 		}
 
-		void Descriptor::CreateDescriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding)
+		void Descriptor::SetImageBinding(uint32_t binding, Ref<Texture2D> texture, Ref<ImageSampler> sampler)
 		{
-			VkDescriptorImageInfo imageInfo = {};
+			if (binding >= m_BindingCount)
+			{
+				return;
+			}
+
+			VkDescriptorImageInfo& imageInfo = m_ImageInfoMap[binding];
 			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = m_Texture->GetImageView();
-			imageInfo.sampler = m_Sampler->Sampler();
+			imageInfo.imageView = texture->GetImageView();
+			imageInfo.sampler = sampler->Sampler();
 
-			VkWriteDescriptorSet writeSet = {};
-			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			writeSet.dstBinding = m_Binding;
-			writeSet.dstSet = m_Descriptor;
-			writeSet.descriptorCount = 1;
-			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			writeSet.pImageInfo = &imageInfo;
+			m_WriteInfo[binding].pImageInfo = &imageInfo;
 
-			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
+//			vkUpdateDescriptorSets(m_Device->GetDevice(), (uint32_t)m_WriteInfo.size(), m_WriteInfo.data(), 0, nullptr);
+		}
+
+		void Descriptor::UpdateBindings()
+		{
+			vkUpdateDescriptorSets(m_Device->GetDevice(), (uint32_t)m_WriteInfo.size(), m_WriteInfo.data(), 0, nullptr);
 		}
 
 		void Descriptor::Bind(Ref<CommandBuffer> commandBuffer, VkPipelineLayout pipelineLayout)
 		{
-			//TODO: Fix this - should be two sets if there are two bindings..?
+
 			vkCmdBindDescriptorSets(commandBuffer->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, m_Set, 1, &m_Descriptor, 0, nullptr);
-		}
-
-		void Descriptor::UpdateDescriptor(Ref<Texture2D> texture)
-		{
-			m_Texture = texture;
-
-			VkDescriptorImageInfo imageInfo = {};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = texture->GetImageView();
-			imageInfo.sampler = m_Sampler->Sampler();
-
-			VkWriteDescriptorSet writeSet = {};
-			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			writeSet.dstBinding = m_Binding;
-			writeSet.dstSet = m_Descriptor;
-			writeSet.descriptorCount = 1;
-			writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			writeSet.pImageInfo = &imageInfo;
-
-			vkUpdateDescriptorSets(m_Device->GetDevice(), 1, &writeSet, 0, nullptr);
 		}
 
 	}

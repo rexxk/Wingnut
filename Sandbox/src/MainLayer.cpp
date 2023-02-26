@@ -62,33 +62,35 @@ void MainLayer::OnAttach()
 	Entity cameraEntity = m_Scene->CreateEntity("Camera entity");
 
 
-	Ref<Vulkan::Texture2D> defaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat::R8G8B8A8_Normalized);
-	TextureStore::AddTexture(defaultTexture);
-	MaterialData materialData;
-	materialData.AlbedoTexture = defaultTexture;
-	Ref<Material> defaultMaterial = Material::Create("Default", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::Default), materialData);
-	MaterialStore::StoreMaterial(defaultMaterial);
+//	Ref<Vulkan::Texture2D> defaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat::R8G8B8A8_Normalized);
+//	TextureStore::AddTexture(defaultTexture);
+
+//	MaterialData materialData;
+//	materialData.AlbedoTexture.Texture = defaultTexture;
+
+//	Ref<Material> defaultMaterial = Material::Create("Default", m_Scene->GetShader());
+//	MaterialStore::StoreMaterial(defaultMaterial);
 
 
-
+/*
 	Ref<Vulkan::Texture2D> selfieTexture = Vulkan::Texture2D::Create("assets/textures/selfie.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
 	TextureStore::AddTexture(selfieTexture);
 
 	MaterialData selfieMaterialData;
-	selfieMaterialData.AlbedoTexture = selfieTexture;
+	selfieMaterialData.AlbedoTexture.Texture = selfieTexture;
 
-	Ref<Material> selfieMaterial = Material::Create("selfie", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::LinearRepeat), selfieMaterialData);
+	Ref<Material> selfieMaterial = Material::Create("selfie", m_Scene->GetShader());
 	MaterialStore::StoreMaterial(selfieMaterial);
 
 	Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create("assets/textures/texture.jpg", Vulkan::TextureFormat::R8G8B8A8_Normalized);
 	TextureStore::AddTexture(texture);
 
 	MaterialData textureMaterialData;
-	textureMaterialData.AlbedoTexture = texture;
+	textureMaterialData.AlbedoTexture.Texture = texture;
 
-	Ref<Material> textureMaterial = Material::Create("texture", m_Scene->GetShader(), SamplerStore::GetSampler(SamplerType::LinearRepeat), textureMaterialData);
+	Ref<Material> textureMaterial = Material::Create("texture", m_Scene->GetShader());
 	MaterialStore::StoreMaterial(textureMaterial);
-
+*/
 	
 //	{
 //		Entity cubeEntity = m_Scene->ImportOBJModel("assets/models/sandcube.obj");

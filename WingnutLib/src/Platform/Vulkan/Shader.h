@@ -36,6 +36,8 @@ namespace Wingnut
 
 		class Shader
 		{
+			friend class Descriptor;
+
 		public:
 			static Ref<Shader> Create(Ref<Device> device, const std::string& shaderPath);
 
@@ -101,33 +103,29 @@ namespace Wingnut
 		class Descriptor
 		{
 		public:
-			static Ref<Descriptor> Create(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer);
-			static Ref<Descriptor> Create(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture);
+			static Ref<Descriptor> Create(Ref<Device> device, Ref<Shader> shader, uint32_t set);
 
-
-			Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer);
-			Descriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding, Ref<Texture2D> texture);
+			Descriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set);
 			~Descriptor();
 
 			void Release();
 
 			void Bind(Ref<CommandBuffer> commandBuffer, VkPipelineLayout pipelineLayout);
+			void UpdateBindings();
 
-			void UpdateDescriptor(Ref<Texture2D> texture);
+			void SetBufferBinding(uint32_t binding, Ref<UniformBuffer> buffer);
+			void SetImageBinding(uint32_t binding, Ref<Texture2D> texture, Ref<ImageSampler> sampler);
 
 			VkDescriptorSet GetDescriptor() { return m_Descriptor; }
 
 		private:
 			void Allocate();
-
-			void CreateDescriptor(Ref<Device> device, Ref<Shader> shader, uint32_t set, uint32_t binding, Ref<UniformBuffer> buffer);
-			void CreateDescriptor(Ref<Device> device, Ref<Shader> shader, Ref<ImageSampler> sampler, uint32_t set, uint32_t binding);
-
+			void SetupBindingLayout();
 
 		private:
 
 			uint32_t m_Set = 0;
-			uint32_t m_Binding = 0;
+			uint32_t m_BindingCount = 0;
 
 			VkDescriptorSet m_Descriptor = nullptr;
 
@@ -135,9 +133,11 @@ namespace Wingnut
 
 			Ref<Device> m_Device = nullptr;
 			Ref<Shader> m_Shader = nullptr;
-			Ref<ImageSampler> m_Sampler = nullptr;
 
-			Ref<Texture2D> m_Texture = nullptr;
+			std::unordered_map<uint32_t, VkDescriptorBufferInfo> m_BufferInfoMap;
+			std::unordered_map<uint32_t, VkDescriptorImageInfo> m_ImageInfoMap;
+
+			std::vector<VkWriteDescriptorSet> m_WriteInfo;
 		};
 
 

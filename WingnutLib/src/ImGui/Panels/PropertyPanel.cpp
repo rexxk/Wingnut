@@ -2,6 +2,7 @@
 #include "PropertyPanel.h"
 
 #include "Assets/MaterialStore.h"
+#include "Assets/TextureStore.h"
 
 #include "Event/EventUtils.h"
 #include "Event/UIEvents.h"
@@ -243,7 +244,7 @@ namespace Wingnut
 
 			ImGui::NextColumn();
 
-			ImGui::Image((ImTextureID)material->GetDescriptor()->GetDescriptor(), ImVec2(64.0f, 64.0f));
+			ImGui::Image((ImTextureID)TextureStore::GetDescriptor(material->GetMaterialData().AlbedoTexture.Texture->GetTextureID())->GetDescriptor(), ImVec2(64.0f, 64.0f));
 
 			ImGui::Columns(1);
 

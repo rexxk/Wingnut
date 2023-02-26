@@ -12,12 +12,31 @@
 namespace Wingnut
 {
 
-	struct MaterialData
+
+	struct MaterialTexture
+	{
+		Ref<Vulkan::Texture2D> Texture;
+	};
+
+	struct MaterialProperties
 	{
 		glm::vec4 AlbedoColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
-
 		bool UseAlbedoTexture = false;
-		Ref<Vulkan::Texture2D> AlbedoTexture = nullptr;
+	};
+
+	struct MaterialData
+	{
+		MaterialProperties Properties;
+
+		MaterialTexture AlbedoTexture;
+		MaterialTexture ShininessTexture;
+
+		Ref<Vulkan::ImageSampler> Sampler;
+	};
+
+	enum class MaterialType
+	{
+		AlbedoTexture,
 	};
 
 
@@ -26,18 +45,16 @@ namespace Wingnut
 	public:
 		static Ref<Material> Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader);
-		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
-		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData);
 
 		Material(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Material(const std::string& name, Ref<Vulkan::Shader> shader);
-		Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
-		Material(const std::string& name, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler, const MaterialData& materialData);
 		~Material();
 
 		void Release();
 
-//		void SetTexture(Ref<Vulkan::Texture2D> texture) { m_Texture = texture; }
+		void Update();
+
+		void SetTexture(MaterialType type, Ref<Vulkan::Texture2D> texture);
 
 		void SetName(const std::string& name) { m_Name = name; }
 		std::string& GetName() { return m_Name; }
@@ -47,11 +64,12 @@ namespace Wingnut
 		SamplerType GetSamplerType() const { return m_SamplerType; }
 
 		void CreateDescriptor(Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
-		void CreateDescriptor(Ref<Vulkan::Texture2D> texture, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Ref<Vulkan::Descriptor> GetDescriptor() { return m_Descriptor; }
-		void SetDescriptor(Ref<Vulkan::Descriptor> descriptor) { m_Descriptor = descriptor; }
 
 		MaterialData& GetMaterialData() { return m_MaterialData; }
+
+	private:
+		void CreateUniformBuffer();
 
 	private:
 		MaterialData m_MaterialData;
@@ -61,6 +79,7 @@ namespace Wingnut
 
 		Ref<Vulkan::Descriptor> m_Descriptor = nullptr;
 		Ref<Vulkan::Shader> m_Shader = nullptr;
+		Ref<Vulkan::UniformBuffer> m_MaterialUB = nullptr;
 
 		std::string m_Name;
 	};

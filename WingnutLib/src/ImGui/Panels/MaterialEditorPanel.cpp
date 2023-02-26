@@ -110,7 +110,8 @@ namespace Wingnut
 //		}
 
 		{
-			ImGui::Image((ImTextureID)m_SelectedMaterial->GetDescriptor()->GetDescriptor(), ImVec2(64.0f, 64.0f));
+
+			ImGui::Image((ImTextureID)TextureStore::GetDescriptor(m_SelectedMaterial->GetMaterialData().AlbedoTexture.Texture->GetTextureID())->GetDescriptor(), ImVec2(64.0f, 64.0f));
 
 			if (ImGui::BeginDragDropTarget())
 			{
@@ -120,7 +121,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetDescriptor(TextureStore::GetDescriptor(textureID));
+					m_SelectedMaterial->SetTexture(MaterialType::AlbedoTexture, TextureStore::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();
