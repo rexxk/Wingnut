@@ -42,6 +42,7 @@ namespace Wingnut
 	{
 		std::string filePath;
 		std::string materialFilename = "";
+		std::string objectName = "";
 
 		size_t location = filename.find_last_of('/');
 
@@ -67,6 +68,8 @@ namespace Wingnut
 		std::vector<glm::vec3> normals;
 
 		ObjMesh newObjMesh;
+
+		uint32_t meshMaterialCount = 0;
 
 		uint32_t index = 0;
 
@@ -98,11 +101,15 @@ namespace Wingnut
 					newObjMesh = ObjMesh();
 
 					index = 0;
+					meshMaterialCount = 0;
 				}
 
-				ss >> newObjMesh.ObjectName;
+				ss >> objectName;
+				
+				newObjMesh.ObjectName = objectName;
 
 				LOG_CORE_TRACE("[ObjLoader] Importing object {}", newObjMesh.ObjectName);
+
 			}
 
 			if (command == "v")
@@ -179,7 +186,20 @@ namespace Wingnut
 
 			if (command == "usemtl")
 			{
+				if (meshMaterialCount >= 1)
+				{
+					importResult.Meshes.emplace_back(newObjMesh);
+
+					newObjMesh = ObjMesh();
+					newObjMesh.ObjectName = objectName + "_" + std::to_string(meshMaterialCount);
+
+					index = 0;
+				}
+
 				ss >> newObjMesh.MaterialName;
+				LOG_CORE_TRACE(" - Use material {}", newObjMesh.MaterialName);
+
+				meshMaterialCount++;
 			}
 		}
 

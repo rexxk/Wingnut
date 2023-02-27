@@ -42,6 +42,8 @@ namespace Wingnut
 
 		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
 
+		m_MaterialData.Properties.AlbedoColor = glm::vec4(objMaterial.Diffuse, objMaterial.Transparency);
+
 		CreateDescriptor(m_Shader, sampler);
 
 		Update();
