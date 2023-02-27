@@ -71,7 +71,7 @@ namespace Wingnut
 		else if (MouseInput::IsButtonPressed(MouseButton::Middle))
 		{
 			m_LookAt += -GetRightDirection() * (float)MouseInput::DeltaX() * m_MouseSpeed * m_Distance * (float)ts;
-			m_LookAt += GetUpDirection() * (float)MouseInput::DeltaY() * m_MouseSpeed * m_Distance * (float)ts;
+			m_LookAt -= GetUpDirection() * (float)MouseInput::DeltaY() * m_MouseSpeed * m_Distance * (float)ts;
 		}
 
 		int32_t wheelDelta = MouseInput::WheelDelta();
