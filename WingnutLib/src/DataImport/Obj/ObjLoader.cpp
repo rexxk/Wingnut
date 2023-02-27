@@ -293,7 +293,35 @@ namespace Wingnut
 			if (command == "map_Kd")
 			{
 				newMaterial.HasDiffuseTexture = true;
-				ss >> newMaterial.DiffuseTexture;
+
+				std::string parameter;
+
+				while (newMaterial.DiffuseTexture == "")
+				{
+					ss >> parameter;
+
+					if (parameter == "-o" || parameter == "-s")
+					{
+						float x, y, z;
+						ss >> x >> y >> z;
+
+						if (parameter == "-o")
+						{
+							newMaterial.OriginOffset = glm::vec3(x, y, z);
+						}
+						if (parameter == "-s")
+						{
+							newMaterial.Scale = glm::vec3(x, y, z);
+						}
+					}
+					else
+					{
+						newMaterial.DiffuseTexture = parameter;
+					}
+
+				}
+
+				newMaterial.DiffuseTexture = parameter;
 			}
 
 			if (command == "map_Ks")

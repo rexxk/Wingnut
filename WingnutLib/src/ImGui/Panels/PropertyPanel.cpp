@@ -183,7 +183,7 @@ namespace Wingnut
 //			DrawVec3Control("Translation", transformComponent.Translation);
 
 			glm::vec3 rotationInDegrees = glm::degrees(transformComponent.Rotation);
-			Vec3Control rotationControl("Rotation", transformComponent.Rotation);
+			Vec3Control rotationControl("Rotation", rotationInDegrees);
 //			DrawVec3Control("Rotation", rotationInDegrees);
 			transformComponent.Rotation = glm::radians(rotationInDegrees);
 

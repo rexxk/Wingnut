@@ -27,6 +27,9 @@ namespace Wingnut
 		float Transparency = 1.0f;
 		float OpticalDensity = 0.0f;
 
+		glm::vec3 OriginOffset = glm::vec3(0.0f);
+		glm::vec3 Scale = glm::vec3(1.0f);
+
 		// Texture paths
 		bool HasAmbientTexture = false;
 		std::string AmbientTexture;

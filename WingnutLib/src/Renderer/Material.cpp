@@ -1,6 +1,7 @@
 #include "wingnut_pch.h"
 #include "Material.h"
 
+#include "Assets/ShaderStore.h"
 #include "Assets/TextureStore.h"
 
 #include "Renderer/Renderer.h"
@@ -31,7 +32,11 @@ namespace Wingnut
 		if (objMaterial.HasDiffuseTexture)
 		{
 			m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
-			TextureStore::AddTexture(m_MaterialData.AlbedoTexture.Texture);
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			uiTextureDescriptor->SetImageBinding(0, m_MaterialData.AlbedoTexture.Texture, SamplerStore::GetSampler(SamplerType::Default));
+			uiTextureDescriptor->UpdateBindings();
+
+			TextureStore::AddTextureData(m_MaterialData.AlbedoTexture.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseAlbedoTexture = true;
 		}

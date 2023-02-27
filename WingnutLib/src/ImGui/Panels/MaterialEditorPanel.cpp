@@ -117,17 +117,17 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		static bool useAlbedoTexture = false;
+		auto& properties = m_SelectedMaterial->GetMaterialData().Properties;
 
-		if (ImGui::Checkbox("##useAlbedoTexture", &useAlbedoTexture))
+		if (ImGui::Checkbox("##useAlbedoTexture", (bool*)&properties.UseAlbedoTexture))
 		{
-			if (useAlbedoTexture)
+//			if (useAlbedoTexture)
 			{
-				m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture = 1;
+//				m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture = 1;
 			}
-			else
+//			else
 			{
-				m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture = 0;
+//				m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture = 0;
 			}
 
 			m_SelectedMaterial->Update();

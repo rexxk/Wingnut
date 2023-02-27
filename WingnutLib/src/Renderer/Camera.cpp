@@ -23,8 +23,12 @@ namespace Wingnut
 	Camera::Camera(const glm::vec3& position, uint32_t width, uint32_t height)
 		: m_Position(position), m_Rotation(0.0f), m_LookAt(0.0f)
 	{
-		m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 10000.0f);
+		m_ProjectionMatrix = glm::perspectiveFovLH(glm::radians(45.0f), (float)width, (float)height, 0.1f, 10000.0f);
+//		m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 10000.0f);
 		m_Distance = glm::distance(m_Position, m_LookAt);
+
+		m_Yaw = glm::pi<float>();
+		m_Pitch = glm::pi<float>();
 
 		CalculateViewMatrix();
 
@@ -34,7 +38,8 @@ namespace Wingnut
 				if (event.Width() == 0 || event.Height() == 0)
 					return false;
 
-				m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), (float)event.Width() / (float)event.Height(), 0.1f, 10000.0f);
+				m_ProjectionMatrix = glm::perspectiveFovLH(glm::radians(45.0f), (float)event.Width(), (float)event.Height(), 0.1f, 10000.0f);
+//				m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), (float)event.Width() / (float)event.Height(), 0.1f, 10000.0f);
 
 				CalculateViewMatrix();
 
@@ -59,8 +64,8 @@ namespace Wingnut
 //			LOG_CORE_TRACE("[Right button] - Position: {},{} - Delta: {},{}", MouseInput::PositionX(), MouseInput::PositionY(), MouseInput::DeltaX(), MouseInput::DeltaY());
 
 			float yawSign = GetUpDirection().y < 0 ? -1.0f : 1.0f;
-			m_Yaw += yawSign * MouseInput::DeltaX() * (m_MouseSpeed * 10) * ts;
-			m_Pitch += MouseInput::DeltaY() * (m_MouseSpeed * 10) * ts;
+			m_Yaw -= yawSign * MouseInput::DeltaX() * (m_MouseSpeed /* * 10 */) * ts;
+			m_Pitch += MouseInput::DeltaY() * (m_MouseSpeed /* * 10 */) * ts;
 
 		}
 		else if (MouseInput::IsButtonPressed(MouseButton::Middle))
@@ -105,12 +110,12 @@ namespace Wingnut
 
 	glm::vec3 Camera::GetForwardDirection()
 	{
-		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
+		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 
 	glm::vec3 Camera::GetUpDirection()
 	{
-		return glm::rotate(GetOrientation(), glm::vec3(0.0f, -1.0f, 0.0f));
+		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	glm::vec3 Camera::GetRightDirection()
