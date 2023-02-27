@@ -43,6 +43,8 @@ namespace Wingnut
 		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
 
 		CreateDescriptor(m_Shader, sampler);
+
+		Update();
 	}
 
 	Material::Material(const std::string& name, Ref<Vulkan::Shader> shader)
@@ -62,6 +64,8 @@ namespace Wingnut
 
 //		m_Descriptor->SetBufferBinding(MaterialDataBinding, m_MaterialUB);
 //		m_Descriptor->SetImageBinding(AlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, SamplerStore::GetSampler(SamplerType::Default));
+
+		Update();
 	}
 
 	Material::~Material()

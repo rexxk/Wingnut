@@ -117,8 +117,19 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		if (ImGui::Checkbox("##useAlbedoTexture", &m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture))
+		static bool useAlbedoTexture = false;
+
+		if (ImGui::Checkbox("##useAlbedoTexture", &useAlbedoTexture))
 		{
+			if (useAlbedoTexture)
+			{
+				m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture = 1;
+			}
+			else
+			{
+				m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture = 0;
+			}
+
 			m_SelectedMaterial->Update();
 		}
 

@@ -21,7 +21,7 @@ namespace Wingnut
 	struct MaterialProperties
 	{
 		glm::vec4 AlbedoColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
-		bool UseAlbedoTexture = false;
+		uint32_t UseAlbedoTexture = 0;
 	};
 
 	struct MaterialData

@@ -42,7 +42,7 @@ layout(location = 2) in vec4 v_Color;
 
 layout(set = 2, binding = 0) uniform UBMaterial{
 	vec4 AlbedoColor;
-	bool UseAlbedoTexture;
+	uint UseAlbedoTexture;
 } ubMaterial;
 
 layout(set = 2, binding = 1) uniform sampler2D u_AlbedoTexture;
@@ -57,7 +57,7 @@ void main()
 {
 //	o_Color = vec4(0.5); // v_Color;
 
-	if (ubMaterial.UseAlbedoTexture)
+	if (ubMaterial.UseAlbedoTexture == 1)
 	{
 		o_Color = texture(u_AlbedoTexture, v_TexCoord) * v_Color;
 	}
