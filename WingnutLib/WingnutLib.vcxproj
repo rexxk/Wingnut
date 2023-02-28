@@ -122,7 +122,6 @@
     <ClInclude Include="src\ImGui\ImGuiContext.h" />
     <ClInclude Include="src\ImGui\Panels\MaterialEditorPanel.h" />
     <ClInclude Include="src\ImGui\Panels\MaterialStorePanel.h" />
-    <ClInclude Include="src\ImGui\Panels\MetricsPanel.h" />
     <ClInclude Include="src\ImGui\Panels\PropertyPanel.h" />
     <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h" />
     <ClInclude Include="src\ImGui\Panels\TexturePanel.h" />
@@ -178,7 +177,6 @@
     <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
     <ClCompile Include="src\ImGui\Panels\MaterialEditorPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\MaterialStorePanel.cpp" />
-    <ClCompile Include="src\ImGui\Panels\MetricsPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\PropertyPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\TexturePanel.cpp" />

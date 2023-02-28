@@ -23,7 +23,7 @@ namespace Wingnut
 		{
 			std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 
-			return std::chrono::duration_cast<std::chrono::microseconds>(t2 - m_StartTime).count() / 1000.0; // / 1000.0 * 1000.0;
+			return std::chrono::duration_cast<std::chrono::milliseconds>(t2 - m_StartTime).count() / 1000.0 * 1000.0;
 		}
 
 	private:

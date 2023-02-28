@@ -117,7 +117,6 @@
     <ClInclude Include="src\Input\KeyboardInput.h" />
     <ClInclude Include="src\Assets\SamplerStore.h" />
     <ClInclude Include="src\DataImport\Obj\ObjLoader.h" />
-    <ClInclude Include="src\ImGui\Panels\MetricsPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -204,6 +203,5 @@
     <ClCompile Include="src\Input\KeyboardInput.cpp" />
     <ClCompile Include="src\Assets\SamplerStore.cpp" />
     <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp" />
-    <ClCompile Include="src\ImGui\Panels\MetricsPanel.cpp" />
   </ItemGroup>
 </Project>
