@@ -83,8 +83,6 @@ namespace Wingnut
 
 			bool CreateInstance();
 
-			void AcquireImage();
-
 			std::vector<std::string> FindInstanceLayers();
 			std::vector<std::string> FindInstanceExtensions();
 

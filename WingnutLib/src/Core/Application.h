@@ -34,7 +34,7 @@ namespace Wingnut
 		float SceneDrawTime = 0.0f;
 		float RenderingTime = 0.0f;
 		float UIRenderingTime = 0.0f;
-		float PresentSceneTime = 0.0f;
+		float GPUTime = 0.0f;
 
 		uint32_t PolygonCount = 0;
 	};

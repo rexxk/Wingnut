@@ -213,6 +213,10 @@ namespace Wingnut
 			s_VulkanData.Surface = Surface::Create(m_Instance, windowHandle);
 			s_VulkanData.Device = Device::Create(m_Instance, s_VulkanData.Surface->GetSurface());
 
+			Renderer::GetRendererSettings().FramesInFlight = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.minImageCount;
+
+			LOG_CORE_TRACE("Frames in flight: {}", Renderer::GetRendererSettings().FramesInFlight);
+
 			m_CurrentExtent = s_VulkanData.Device->GetDeviceProperties().SurfaceCapabilities.currentExtent;
 
 			RenderPassSpecification renderPassSpecification = {};
@@ -418,18 +422,8 @@ namespace Wingnut
 			return foundProperties;
 		}
 
-
-		void VulkanContext::AcquireImage()
-		{
-			auto& rendererData = Renderer::GetContext()->GetRendererData();
-
-			vkAcquireNextImageKHR(rendererData.Device->GetDevice(), rendererData.Swapchain->GetSwapchain(), UINT64_MAX, s_VulkanData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore(), VK_NULL_HANDLE, &m_ImageIndex);
-		}
-
-
 		void VulkanContext::Present()
 		{
-			Timer presentSceneMetrics;
 
 			auto& rendererData = Renderer::GetContext()->GetRendererData();
 			uint32_t framesInFlight = Renderer::GetRendererSettings().FramesInFlight;
@@ -446,6 +440,9 @@ namespace Wingnut
 			presentInfo.pSwapchains = swapchains;
 			presentInfo.pImageIndices = &m_ImageIndex;
 
+
+			Timer gpuMetrics;
+
 			if (vkQueuePresentKHR(rendererData.Device->GetQueue(Vulkan::QueueType::Graphics), &presentInfo) != VK_SUCCESS)
 			{
 				//			LOG_CORE_ERROR("[Renderer] Failed to present queue");
@@ -454,10 +451,9 @@ namespace Wingnut
 
 			m_CurrentFrame = (m_CurrentFrame++) & framesInFlight;
 
-			Application::Get().GetMetrics().PresentSceneTime = (float)presentSceneMetrics.ElapsedTime();
+			Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
 
-			// TODO: Performance killer, how to solve this?
-//			Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
+			Application::Get().GetMetrics().GPUTime = (float)gpuMetrics.ElapsedTime();
 		}
 
 		void VulkanContext::BeginScene()
@@ -467,7 +463,7 @@ namespace Wingnut
 			s_VulkanData.InFlightFences[m_CurrentFrame]->Wait(UINT64_MAX);
 			s_VulkanData.InFlightFences[m_CurrentFrame]->Reset();
 
-			AcquireImage();
+			vkAcquireNextImageKHR(s_VulkanData.Device->GetDevice(), s_VulkanData.Swapchain->GetSwapchain(), UINT64_MAX, s_VulkanData.ImageAvailableSemaphores[m_CurrentFrame]->GetSemaphore(), VK_NULL_HANDLE, &m_ImageIndex);
 
 
 			VkCommandBufferBeginInfo beginInfo = {};

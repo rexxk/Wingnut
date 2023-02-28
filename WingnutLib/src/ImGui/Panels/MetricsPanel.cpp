@@ -32,7 +32,7 @@ namespace Wingnut
 		ImGui::Text("Scene draw time: %.3f ms", metrics.SceneDrawTime);
 		ImGui::Text("Rendering time: %.3f ms", metrics.RenderingTime);
 		ImGui::Text("UI Rendering time: %.3f ms", metrics.UIRenderingTime);
-		ImGui::Text("Present scene time: %.3f ms", metrics.PresentSceneTime);
+		ImGui::Text("GPU time: %.3f ms", metrics.GPUTime);
 		ImGui::Text("Polygon count: %d", metrics.PolygonCount);
 
 		ImGui::End();
