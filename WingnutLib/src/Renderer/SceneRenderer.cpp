@@ -233,7 +233,7 @@ namespace Wingnut
 //			s_SceneData.DrawCache[entityID] = std::make_pair(vertexBuffer, indexBuffer);
 			s_SceneData.DrawCache[entityID] = { vertexBuffer, indexBuffer, transformDescriptor, transformBuffer, material };
 
-			Application::Get().GetMetrics().PolygonCount += indexBuffer->IndexCount();
+			Application::Get().GetMetrics().PolygonCount += indexBuffer->IndexCount() / 3;
 		}
 		else
 		{
