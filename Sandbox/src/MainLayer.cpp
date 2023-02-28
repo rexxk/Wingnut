@@ -100,7 +100,8 @@ void MainLayer::OnAttach()
 
 	{
 //		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
- 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
+// 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
+		m_Scene->ImportOBJModel("assets/models/gameroom.obj");
 //		m_Scene->ImportOBJModel("assets/models/Room1.obj");
 //		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
 //		m_Scene->ImportOBJModel("assets/models/watchtower.obj");
@@ -137,7 +138,6 @@ void MainLayer::OnAttach()
 
 	m_Scene->CreateUISceneImageDescriptor(SamplerStore::GetSampler(SamplerType::Default));
 
-	m_LogPanel = CreateRef<LogPanel>();
 	m_MaterialEditorPanel = CreateRef<MaterialEditorPanel>();
 	m_MaterialStorePanel = CreateRef<MaterialStorePanel>(m_Scene);
 	m_MetricsPanel = CreateRef<MetricsPanel>();
@@ -162,7 +162,7 @@ void MainLayer::OnUpdate(Timestep ts)
 
 	m_Scene->Update(ts);
 
-	
+
 
 	// Draw
 
@@ -183,7 +183,6 @@ void MainLayer::OnUIRender()
 	ImGui::DockSpaceOverViewport(nullptr); //, ImGuiDockNodeFlags_AutoHideTabBar);
 
 
-	m_LogPanel->Draw();
 	m_MaterialEditorPanel->Draw();
 	m_MaterialStorePanel->Draw();
 	m_MetricsPanel->Draw();

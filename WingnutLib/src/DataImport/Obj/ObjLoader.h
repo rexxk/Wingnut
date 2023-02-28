@@ -13,7 +13,7 @@ namespace Wingnut
 		std::vector<Vertex> VertexList;
 		std::vector<uint32_t> IndexList;
 
-		std::string MaterialName = "";
+		std::string MaterialName = "material";
 	};
 
 	struct ObjMaterial

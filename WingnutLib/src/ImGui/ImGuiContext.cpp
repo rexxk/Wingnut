@@ -9,8 +9,6 @@
 #include "Event/MouseEvents.h"
 #include "Event/WindowEvents.h"
 
-#include "Panels/LogPanel.h"
-
 #include "Scene/Components.h"
 
 #include <imgui.h>
@@ -196,7 +194,6 @@ namespace Wingnut
 				io.AddInputCharacter(event.Key());
 
 //				LOG_CORE_WARN("KeyTyped: {}", event.Key());
-				LogPanel::AddLogText("Key typed");
 
 				return false;
 			});

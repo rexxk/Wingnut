@@ -48,7 +48,7 @@ namespace Wingnut
 		ImGui::Text("Material editor panel");
 
 		ImGui::Columns(2);
-		ImGui::SetColumnWidth(0, 100.0f);
+		ImGui::SetColumnWidth(0, 180.0f);
 
 		ImGui::Text("ID");
 		ImGui::NextColumn();
