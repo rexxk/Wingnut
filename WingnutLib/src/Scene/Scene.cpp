@@ -5,6 +5,8 @@
 #include "Assets/SamplerStore.h"
 #include "Assets/ShaderStore.h"
 
+#include "Core/Timer.h"
+
 #include "DataImport/Obj/ObjLoader.h"
 
 #include "Event/EventUtils.h"
@@ -106,6 +108,8 @@ namespace Wingnut
 
 		auto& entities = ECS::EntitySystem::GetView<MeshComponent>();
 
+		Timer drawSceneMetrics;
+
 		for (auto entity : entities)
 		{
 			auto& meshComponent = ECS::EntitySystem::GetComponent<MeshComponent>(entity);
@@ -127,7 +131,13 @@ namespace Wingnut
 			m_SceneRenderer->SubmitToDrawList(entity, meshComponent.VertexList, meshComponent.IndexList, transform, material);
 		}
 
+		Application::Get().GetMetrics().SceneDrawTime = (float)drawSceneMetrics.ElapsedTime();
+
+		Timer renderTimeMetrics;
+
 		m_SceneRenderer->Draw();
+
+		Application::Get().GetMetrics().RenderingTime = (float)renderTimeMetrics.ElapsedTime();
 
 	}
 

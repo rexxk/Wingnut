@@ -24,6 +24,22 @@ namespace Wingnut
 	};
 
 
+	struct ApplicationMetrics
+	{
+		uint32_t FPS;
+
+		float TotalFrameTime = 0.0f;
+		float MessageHandlingTime = 0.0f;
+		float LayerUpdateTime = 0.0f;
+		float SceneDrawTime = 0.0f;
+		float RenderingTime = 0.0f;
+		float UIRenderingTime = 0.0f;
+		float PresentSceneTime = 0.0f;
+
+		uint32_t PolygonCount = 0;
+	};
+
+
 	class Application
 	{
 	public:
@@ -50,6 +66,8 @@ namespace Wingnut
 
 		Ref<Window> GetWindow() { return m_MainWindow; }
 		Ref<ImGuiContext> GetUIContext() { return m_ImGuiContext; }
+
+		ApplicationMetrics& GetMetrics();
 
 		static Application& Get() { return *s_Instance; }
 
