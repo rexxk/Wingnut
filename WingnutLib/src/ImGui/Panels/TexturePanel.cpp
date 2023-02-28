@@ -73,6 +73,7 @@ namespace Wingnut
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(paddingSize, paddingSize));
 
 			uint32_t itemCount = 0;
+			uint32_t rowItem = 0;
 
 			//			for (uint32_t i = 0; i < 16; i++)
 			for (auto& textureIterator : TextureStore::GetTextureContainer())
@@ -81,16 +82,30 @@ namespace Wingnut
 
 				ImGui::BeginGroup();
 
-//				ImGui::Image((ImTextureID)rendererData.DefaultTextureDescriptor->GetDescriptor(), ImVec2(textureSize, textureSize));
-				ImGui::Image((ImTextureID)TextureStore::GetDescriptor(textureID)->GetDescriptor(), ImVec2(textureSize, textureSize));
+				{
 
-				ImGui::Text(TextureStore::GetTexture(textureID)->GetTextureName().c_str());
+					ImGui::Image((ImTextureID)TextureStore::GetDescriptor(textureID)->GetDescriptor(), ImVec2(textureSize, textureSize));
+
+					ImGui::PushItemWidth(textureSize + (paddingSize * 2));
+
+					ImGui::PushTextWrapPos((rowItem++ + 1) * (textureSize + (paddingSize * 2)));
+					ImGui::TextWrapped("%s", TextureStore::GetTexture(textureID)->GetTextureName().c_str());
+//					ImGui::Text("%s", TextureStore::GetTexture(textureID)->GetTextureName().c_str());
+					ImGui::PopTextWrapPos();
+
+					ImGui::PopItemWidth();
+				}
+
 
 				ImGui::EndGroup();
 
 				if ((itemCount++ + 1) % m_HorizontalTextureCount != 0)
 				{
 					ImGui::SameLine();
+				}
+				else
+				{
+					rowItem = 0;
 				}
 
 				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))

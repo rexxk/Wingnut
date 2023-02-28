@@ -100,9 +100,9 @@ void MainLayer::OnAttach()
 
 	{
 //		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
-// 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
+ 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
 //		m_Scene->ImportOBJModel("assets/models/Room1.obj");
-		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
+//		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
 //		m_Scene->ImportOBJModel("assets/models/watchtower.obj");
 	}
 
