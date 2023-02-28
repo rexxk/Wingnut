@@ -23,6 +23,7 @@
 
 #include "ImGui/Panels/MaterialEditorPanel.h"
 #include "ImGui/Panels/MaterialStorePanel.h"
+#include "ImGui/Panels/MetricsPanel.h"
 #include "ImGui/Panels/PropertyPanel.h"
 #include "ImGui/Panels/SceneHierarchyPanel.h"
 #include "ImGui/Panels/TexturePanel.h"

@@ -7,6 +7,8 @@
 #include "Assets/ShaderStore.h"
 #include "Assets/TextureStore.h"
 
+#include "Core/Timer.h"
+
 #include "Event/EventUtils.h"
 #include "Event/WindowEvents.h"
 
@@ -427,6 +429,8 @@ namespace Wingnut
 
 		void VulkanContext::Present()
 		{
+			Timer presentSceneMetrics;
+
 			auto& rendererData = Renderer::GetContext()->GetRendererData();
 			uint32_t framesInFlight = Renderer::GetRendererSettings().FramesInFlight;
 
@@ -442,7 +446,6 @@ namespace Wingnut
 			presentInfo.pSwapchains = swapchains;
 			presentInfo.pImageIndices = &m_ImageIndex;
 
-
 			if (vkQueuePresentKHR(rendererData.Device->GetQueue(Vulkan::QueueType::Graphics), &presentInfo) != VK_SUCCESS)
 			{
 				//			LOG_CORE_ERROR("[Renderer] Failed to present queue");
@@ -451,7 +454,10 @@ namespace Wingnut
 
 			m_CurrentFrame = (m_CurrentFrame++) & framesInFlight;
 
-			Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
+			Application::Get().GetMetrics().PresentSceneTime = (float)presentSceneMetrics.ElapsedTime();
+
+			// TODO: Performance killer, how to solve this?
+//			Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
 		}
 
 		void VulkanContext::BeginScene()

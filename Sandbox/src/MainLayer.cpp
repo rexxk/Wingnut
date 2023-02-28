@@ -99,9 +99,10 @@ void MainLayer::OnAttach()
 //	}
 
 	{
-		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
-//		m_Scene->ImportOBJModel("assets/models/Room1.obj");
 //		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
+// 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
+		m_Scene->ImportOBJModel("assets/models/Room1.obj");
+//		m_Scene->ImportOBJModel("assets/models/watchtower.obj");
 	}
 
 //	{
@@ -135,10 +136,11 @@ void MainLayer::OnAttach()
 
 	m_Scene->CreateUISceneImageDescriptor(SamplerStore::GetSampler(SamplerType::Default));
 
-	m_PropertyPanel = CreateRef<PropertyPanel>();
-	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
 	m_MaterialEditorPanel = CreateRef<MaterialEditorPanel>();
 	m_MaterialStorePanel = CreateRef<MaterialStorePanel>(m_Scene);
+	m_MetricsPanel = CreateRef<MetricsPanel>();
+	m_PropertyPanel = CreateRef<PropertyPanel>();
+	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
 	m_TexturePanel = CreateRef<TexturePanel>();
 
 }
@@ -179,10 +181,11 @@ void MainLayer::OnUIRender()
 	ImGui::DockSpaceOverViewport(nullptr); //, ImGuiDockNodeFlags_AutoHideTabBar);
 
 
-	m_SceneHierarchyPanel->Draw();
-	m_PropertyPanel->Draw();
 	m_MaterialEditorPanel->Draw();
 	m_MaterialStorePanel->Draw();
+	m_MetricsPanel->Draw();
+	m_SceneHierarchyPanel->Draw();
+	m_PropertyPanel->Draw();
 	m_TexturePanel->Draw();
 
 //	ImGui::ShowDemoWindow();
