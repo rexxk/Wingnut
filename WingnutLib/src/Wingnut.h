@@ -21,6 +21,7 @@
 
 #include "ImGui/ImGuiContext.h"
 
+#include "ImGui/Panels/LogPanel.h"
 #include "ImGui/Panels/MaterialEditorPanel.h"
 #include "ImGui/Panels/MaterialStorePanel.h"
 #include "ImGui/Panels/MetricsPanel.h"

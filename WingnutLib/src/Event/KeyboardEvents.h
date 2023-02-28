@@ -14,7 +14,7 @@ namespace Wingnut
 		KeyPressedEvent(uint32_t scancode, uint32_t repeat)
 			: Event(EventType::KeyPressed), m_Scancode(scancode), m_Repeat(repeat)
 		{
-			LOG_CORE_TRACE("KeyPressedEvent");
+
 		}
 
 		uint32_t Key() const { return m_Scancode; }
@@ -49,7 +49,7 @@ namespace Wingnut
 		KeyTypedEvent(uint32_t scancode)
 			: Event(EventType::KeyTyped), m_Scancode(scancode)
 		{
-			LOG_CORE_TRACE("KeyTypedEvent");
+
 		}
 
 		uint32_t Key() const { return m_Scancode; }

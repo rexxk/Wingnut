@@ -120,6 +120,7 @@
     <ClInclude Include="src\Event\WindowEvents.h" />
     <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
     <ClInclude Include="src\ImGui\ImGuiContext.h" />
+    <ClInclude Include="src\ImGui\Panels\LogPanel.h" />
     <ClInclude Include="src\ImGui\Panels\MaterialEditorPanel.h" />
     <ClInclude Include="src\ImGui\Panels\MaterialStorePanel.h" />
     <ClInclude Include="src\ImGui\Panels\MetricsPanel.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="src\Event\EventUtils.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
     <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
+    <ClCompile Include="src\ImGui\Panels\LogPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\MaterialEditorPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\MaterialStorePanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\MetricsPanel.cpp" />
