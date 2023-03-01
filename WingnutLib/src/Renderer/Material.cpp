@@ -43,11 +43,13 @@ namespace Wingnut
 		else
 		{
 			m_MaterialData.AlbedoTexture.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+			m_MaterialData.NormalMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		}
 
 		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
 
 		m_MaterialData.Properties.AlbedoColor = glm::vec4(objMaterial.Diffuse, objMaterial.Transparency);
+		m_MaterialData.Properties.Metallic = 0.04f;
 
 		CreateDescriptor(m_Shader, sampler);
 
@@ -63,7 +65,9 @@ namespace Wingnut
 		m_MaterialData.Properties.UseAlbedoTexture = true;
 
 		m_MaterialData.AlbedoTexture.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+		m_MaterialData.NormalMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
+
 
 //		m_Descriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, m_Shader, MaterialDescriptor);
 
@@ -110,8 +114,9 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		m_Descriptor = Vulkan::Descriptor::Create(rendererData.Device, shader, MaterialDescriptor);
 
-		m_Descriptor->SetBufferBinding(MaterialDataBinding, m_MaterialUB);
-		m_Descriptor->SetImageBinding(AlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, sampler);
+		m_Descriptor->SetBufferBinding(PBRMaterialDataBinding, m_MaterialUB);
+		m_Descriptor->SetImageBinding(PBRAlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, sampler);
+		m_Descriptor->SetImageBinding(PBRNormalMapBinding, m_MaterialData.NormalMap.Texture, sampler);
 
 		m_Descriptor->UpdateBindings();
 	}
@@ -123,7 +128,15 @@ namespace Wingnut
 			case MaterialType::AlbedoTexture:
 			{
 				m_MaterialData.AlbedoTexture.Texture = texture;
-				m_Descriptor->SetImageBinding(AlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, m_MaterialData.Sampler);
+				m_Descriptor->SetImageBinding(PBRAlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, m_MaterialData.Sampler);
+
+				break;
+			}
+
+			case MaterialType::NormalMap:
+			{
+				m_MaterialData.NormalMap.Texture = texture;
+				m_Descriptor->SetImageBinding(PBRNormalMapBinding, m_MaterialData.NormalMap.Texture, m_MaterialData.Sampler);
 
 				break;
 			}

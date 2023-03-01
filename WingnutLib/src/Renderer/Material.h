@@ -22,6 +22,9 @@ namespace Wingnut
 	{
 		glm::vec4 AlbedoColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 		uint32_t UseAlbedoTexture = 0;
+		uint32_t UseNormalMap = 0;
+		float Metallic = 0.04f;
+		float Roughness = 0.0f;
 	};
 
 	struct MaterialData
@@ -29,7 +32,7 @@ namespace Wingnut
 		MaterialProperties Properties;
 
 		MaterialTexture AlbedoTexture;
-		MaterialTexture ShininessTexture;
+		MaterialTexture NormalMap;
 
 		Ref<Vulkan::ImageSampler> Sampler;
 	};
@@ -37,6 +40,7 @@ namespace Wingnut
 	enum class MaterialType
 	{
 		AlbedoTexture,
+		NormalMap,
 	};
 
 

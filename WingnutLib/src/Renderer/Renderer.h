@@ -18,9 +18,9 @@ namespace Wingnut
 	const uint32_t MaterialDescriptor = 2;
 	const uint32_t LightsDescriptor = 3;
 
-	const uint32_t MaterialDataBinding = 0;
-	const uint32_t AlbedoTextureBinding = 1;
-	const uint32_t ReflectionTextureBinding = 2;
+	const uint32_t PBRMaterialDataBinding = 0;
+	const uint32_t PBRAlbedoTextureBinding = 1;
+	const uint32_t PBRNormalMapBinding = 2;
 	
 
 	struct Vertex

@@ -43,10 +43,13 @@ layout(location = 2) in vec4 v_Color;
 layout(set = 2, binding = 0) uniform UBMaterial{
 	vec4 AlbedoColor;
 	uint UseAlbedoTexture;
+	uint UseNormalMap;
+	float Metallic;
+	float Roughness;
 } ubMaterial;
 
 layout(set = 2, binding = 1) uniform sampler2D u_AlbedoTexture;
-// layout(set = 2, binding = 2) usniform sampler2D u_ReflectionTexture;
+layout(set = 2, binding = 2) uniform sampler2D u_NormalMap;
 
 layout(set = 3, binding = 0) uniform Light{
 	mat3 LightDirection;

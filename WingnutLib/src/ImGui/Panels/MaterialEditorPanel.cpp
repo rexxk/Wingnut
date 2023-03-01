@@ -45,6 +45,8 @@ namespace Wingnut
 			return;
 		}
 
+		auto& properties = m_SelectedMaterial->GetMaterialData().Properties;
+
 		ImGui::Text("Material editor panel");
 
 		ImGui::Columns(2);
@@ -96,7 +98,27 @@ namespace Wingnut
 			ImGui::EndCombo();
 		}
 
+		ImGui::NextColumn();
 
+		ImGui::Text("Metallness");
+
+		ImGui::NextColumn();
+
+		if (ImGui::DragFloat("##metallness", &properties.Metallic, 0.01f, 0.0f, 1.0f))
+		{
+			m_SelectedMaterial->Update();
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Roughness");
+
+		ImGui::NextColumn();
+
+		if (ImGui::DragFloat("##roughness", &properties.Roughness, 0.01f, 0.0f, 1.0f))
+		{
+			m_SelectedMaterial->Update();
+		}
 
 		ImGui::NextColumn();
 
@@ -117,19 +139,8 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		auto& properties = m_SelectedMaterial->GetMaterialData().Properties;
-
 		if (ImGui::Checkbox("##useAlbedoTexture", (bool*)&properties.UseAlbedoTexture))
 		{
-//			if (useAlbedoTexture)
-			{
-//				m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture = 1;
-			}
-//			else
-			{
-//				m_SelectedMaterial->GetMaterialData().Properties.UseAlbedoTexture = 0;
-			}
-
 			m_SelectedMaterial->Update();
 		}
 
@@ -141,12 +152,9 @@ namespace Wingnut
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 
-//		if (ImGui::ImageButton((ImTextureID)textureSet, ImVec2(64.0f, 64.0f)))
-//		{
-//			LOG_CORE_TRACE("Image clicked, should open file dialog and load a new texture");
-//		}
-
 		{
+
+			ImGui::PushID("##AlbedoImage");
 
 			ImGui::Image((ImTextureID)TextureStore::GetDescriptor(m_SelectedMaterial->GetMaterialData().AlbedoTexture.Texture->GetTextureID())->GetDescriptor(), ImVec2(64.0f, 64.0f));
 
@@ -164,7 +172,51 @@ namespace Wingnut
 				ImGui::EndDragDropTarget();
 			}
 
+			ImGui::PopID();
 
+		}
+
+		ImGui::PopStyleVar();
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Use Normal map");
+
+		ImGui::NextColumn();
+
+		if (ImGui::Checkbox("##useNormalMap", (bool*)&properties.UseNormalMap))
+		{
+			m_SelectedMaterial->Update();
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Normal Map");
+
+		ImGui::NextColumn();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+
+		{
+			ImGui::PushID("##NormalMapImage");
+
+			ImGui::Image((ImTextureID)TextureStore::GetDescriptor(m_SelectedMaterial->GetMaterialData().NormalMap.Texture->GetTextureID())->GetDescriptor(), ImVec2(64.0f, 64.0f));
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TexturePayload");
+
+				if (payload != nullptr)
+				{
+					UUID textureID = *(UUID*)payload->Data;
+
+					m_SelectedMaterial->SetTexture(MaterialType::NormalMap, TextureStore::GetTexture(textureID));
+				}
+
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::PopID();
 		}
 
 
