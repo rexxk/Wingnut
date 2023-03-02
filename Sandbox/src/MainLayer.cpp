@@ -57,9 +57,12 @@ void MainLayer::OnAttach()
 	sceneProperties.SceneCamera = m_Camera;
 
 	m_Scene = Scene::Create(sceneProperties);
-
-
 	Entity cameraEntity = m_Scene->CreateEntity("Camera entity");
+
+	{
+		Entity light = m_Scene->CreateEntity("Light");
+		light.AddComponent<LightComponent>(glm::vec3(0.5f));
+	}
 
 
 //	Ref<Vulkan::Texture2D> defaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat::R8G8B8A8_Normalized);
@@ -102,8 +105,8 @@ void MainLayer::OnAttach()
 //		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
 // 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
 //		m_Scene->ImportOBJModel("assets/models/gameroom.obj");
-		m_Scene->ImportOBJModel("assets/models/Room1.obj");
-//		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
+//		m_Scene->ImportOBJModel("assets/models/Room1.obj");
+		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
 //		m_Scene->ImportOBJModel("assets/models/watchtower.obj");
 	}
 
@@ -136,10 +139,6 @@ void MainLayer::OnAttach()
 	}
 */
 
-	{
-		Entity light = m_Scene->CreateEntity("Light");
-		light.AddComponent<LightComponent>(glm::vec3(-0.5f, 0.5f, -0.5f));
-	}
 
 	m_Scene->CreateUISceneImageDescriptor(SamplerStore::GetSampler(SamplerType::Default));
 

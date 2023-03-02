@@ -345,7 +345,9 @@ namespace Wingnut
 		{
 			std::vector<std::string> wantedLayerProperties =
 			{
+#ifdef _DEBUG
 				"VK_LAYER_KHRONOS_validation",
+#endif
 			};
 
 			uint32_t propertyCount = 0;
