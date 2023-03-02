@@ -127,5 +127,27 @@ namespace Wingnut
 
 	};
 
+	struct LightComponent
+	{
+		glm::vec3 Direction;
+
+
+		LightComponent()
+		{
+
+		}
+
+		LightComponent(const glm::vec3& lightDirection)
+			: Direction(lightDirection)
+		{
+
+		}
+
+		LightComponent(const LightComponent& other)
+		{
+			Direction = other.Direction;
+		}
+
+	};
 
 }

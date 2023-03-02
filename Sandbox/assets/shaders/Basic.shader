@@ -52,22 +52,35 @@ layout(set = 2, binding = 1) uniform sampler2D u_AlbedoTexture;
 layout(set = 2, binding = 2) uniform sampler2D u_NormalMap;
 
 layout(set = 3, binding = 0) uniform Light{
-	mat3 LightDirection;
-} light;
+	vec3 LightDirection;
+} ubLight;
 
 
 void main()
 {
 //	o_Color = vec4(0.5); // v_Color;
 
+	vec3 lightDirection = ubLight.LightDirection;
+
+	vec3 normal = v_Normal;
+
+	if (ubMaterial.UseNormalMap == 1)
+	{
+		normal = texture(u_NormalMap, v_TexCoord).rgb;
+		normal = normalize(normal * 2.0 - 1.0);
+	}
+
+	float diffuse = max(dot(normal, lightDirection), 0.0);
+	vec3 diffuseLight = diffuse * vec3(1.0, 1.0, 1.0);
+
+	vec4 albedoColor = ubMaterial.AlbedoColor;
+
 	if (ubMaterial.UseAlbedoTexture == 1)
 	{
-		o_Color = texture(u_AlbedoTexture, v_TexCoord) * v_Color;
+		albedoColor = texture(u_AlbedoTexture, v_TexCoord) * v_Color;
 	}
-	else
-	{
-		o_Color = ubMaterial.AlbedoColor * v_Color;
-	}
+
+	o_Color = albedoColor * vec4(diffuseLight, 1.0); // *v_Color;
 
 //	o_Color = texture(u_AlbedoTexture, v_TexCoord) * v_Color;
 }

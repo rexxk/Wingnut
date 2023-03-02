@@ -17,6 +17,7 @@ namespace Wingnut
 
 	private:
 		void DrawTagComponent();
+		void DrawLightComponent();
 		void DrawMeshComponent();
 		void DrawTransformComponent();
 		void DrawMaterialComponent();

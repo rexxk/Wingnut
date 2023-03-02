@@ -125,6 +125,11 @@ namespace Wingnut
 					DrawMeshComponent();
 				}
 
+				if (m_SelectedEntity.HasComponent<LightComponent>())
+				{
+					DrawLightComponent();
+				}
+
 				if (m_SelectedEntity.HasComponent<TransformComponent>())
 				{
 					DrawTransformComponent();
@@ -159,6 +164,18 @@ namespace Wingnut
 
 	}
 
+	void PropertyPanel::DrawLightComponent()
+	{
+		if (ImGui::TreeNodeEx("LightComponent", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			LightComponent& lightComponent = m_SelectedEntity.GetComponent<LightComponent>();
+
+			Vec3Control directionControl("Direction", lightComponent.Direction, -1.0f, 1.0f, 0.01f);
+
+			ImGui::TreePop();
+		}
+	}
+
 	void PropertyPanel::DrawMeshComponent()
 	{
 		if (ImGui::TreeNodeEx("MeshComponent", ImGuiTreeNodeFlags_DefaultOpen))
@@ -187,7 +204,7 @@ namespace Wingnut
 //			DrawVec3Control("Rotation", rotationInDegrees);
 			transformComponent.Rotation = glm::radians(rotationInDegrees);
 
-			Vec3Control scaleControl("Scale", transformComponent.Scale, 1.0f);
+			Vec3Control scaleControl("Scale", transformComponent.Scale, 0.0f, 0.0f, 0.1f, 1.0f);
 //			DrawVec3Control("Scale", transformComponent.Scale, 1.0f);
 
 			ImGui::TreePop();

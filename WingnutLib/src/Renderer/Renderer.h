@@ -13,6 +13,8 @@ namespace Wingnut
 	const uint32_t ImGuiCameraDescriptor = 0;
 	const uint32_t ImGuiTextureDescriptor = 1;
 
+	const uint32_t ImGuiTextureBinding = 0;
+
 	const uint32_t CameraDescriptor = 0;
 	const uint32_t TransformDescriptor = 1;
 	const uint32_t MaterialDescriptor = 2;

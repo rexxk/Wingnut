@@ -38,10 +38,15 @@ namespace Wingnut
 
 		m_SceneRenderer = SceneRenderer::Create(m_SceneExtent);
 
-		m_CameraDataBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(CameraData));
+		m_CameraUB = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(CameraData));
 		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), CameraDescriptor);
-		m_CameraDescriptor->SetBufferBinding(0, m_CameraDataBuffer);
+		m_CameraDescriptor->SetBufferBinding(0, m_CameraUB);
 		m_CameraDescriptor->UpdateBindings();
+
+		m_LightUB = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(LightData));
+		m_LightDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), LightsDescriptor);
+		m_LightDescriptor->SetBufferBinding(0, m_LightUB);
+		m_LightDescriptor->UpdateBindings();
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 
@@ -66,9 +71,14 @@ namespace Wingnut
 	void Scene::Release()
 	{
 
-		if (m_CameraDataBuffer)
+		if (m_LightUB)
 		{
-			m_CameraDataBuffer->Release();
+			m_LightUB->Release();
+		}
+
+		if (m_CameraUB)
+		{
+			m_CameraUB->Release();
 		}
 
 		if (m_SceneRenderer)
@@ -88,9 +98,19 @@ namespace Wingnut
 		CameraData cameraData = {};
 		cameraData.ViewProjection = m_SceneCamera->GetViewProjectionMatrix();
 
-		m_CameraDataBuffer->Update(&cameraData, sizeof(CameraData), currentFrame);
+		m_CameraUB->Update(&cameraData, sizeof(CameraData), currentFrame);
+
+		LightData lightData;
+
+		for (auto& lightEntity : ECS::EntitySystem::GetView<LightComponent>())
+		{
+			lightData.LightDirection = ECS::EntitySystem::GetComponent<LightComponent>(lightEntity).Direction;
+		}
+
+		m_LightUB->Update(&lightData, sizeof(LightData), currentFrame);
 
 		m_SceneRenderer->SubmitDescriptor(m_CameraDescriptor);
+		m_SceneRenderer->SubmitDescriptor(m_LightDescriptor);
 
 	}
 

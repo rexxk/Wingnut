@@ -100,9 +100,9 @@ void MainLayer::OnAttach()
 
 	{
 //		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
- 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
+// 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
 //		m_Scene->ImportOBJModel("assets/models/gameroom.obj");
-//		m_Scene->ImportOBJModel("assets/models/Room1.obj");
+		m_Scene->ImportOBJModel("assets/models/Room1.obj");
 //		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
 //		m_Scene->ImportOBJModel("assets/models/watchtower.obj");
 	}
@@ -135,6 +135,11 @@ void MainLayer::OnAttach()
 		entity.AddComponent<MaterialComponent>(textureMaterial->GetID());
 	}
 */
+
+	{
+		Entity light = m_Scene->CreateEntity("Light");
+		light.AddComponent<LightComponent>(glm::vec3(-0.5f, 0.5f, -0.5f));
+	}
 
 	m_Scene->CreateUISceneImageDescriptor(SamplerStore::GetSampler(SamplerType::Default));
 

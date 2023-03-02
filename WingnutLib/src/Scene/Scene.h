@@ -24,6 +24,11 @@ namespace Wingnut
 		glm::mat4 ViewProjection;
 	};
 
+	struct LightData
+	{
+		glm::vec3 LightDirection;
+	};
+
 	struct SceneProperties
 	{
 		VkExtent2D SceneExtent;
@@ -70,8 +75,11 @@ namespace Wingnut
 		Ref<Camera> m_SceneCamera = nullptr;
 		VkExtent2D m_SceneExtent;
 
-		Ref<Vulkan::UniformBuffer> m_CameraDataBuffer = nullptr;
+		Ref<Vulkan::UniformBuffer> m_CameraUB = nullptr;
 		Ref<Vulkan::Descriptor> m_CameraDescriptor = nullptr;
+
+		Ref<Vulkan::UniformBuffer> m_LightUB = nullptr;
+		Ref<Vulkan::Descriptor> m_LightDescriptor = nullptr;
 
 		Ref<ECS::Registry> m_EntityRegistry = nullptr;
 

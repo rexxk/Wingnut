@@ -9,8 +9,8 @@ namespace Wingnut
 {
 
 
-	Vec3Control::Vec3Control(const std::string& label, glm::vec3& value, float resetValue, float columnWidth)
-		: m_Label(label), m_Value(value), m_ResetValue(resetValue), m_ColumnWidth(columnWidth)
+	Vec3Control::Vec3Control(const std::string& label, glm::vec3& value, float minValue, float maxValue, float step, float resetValue, float columnWidth)
+		: m_Label(label), m_Value(value), m_MinValue(minValue), m_MaxValue(maxValue), m_Step(step), m_ResetValue(resetValue), m_ColumnWidth(columnWidth)
 	{
 		Draw();
 	}
@@ -43,7 +43,7 @@ namespace Wingnut
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
-		ImGui::DragFloat("##X", &m_Value.x, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("##X", &m_Value.x, m_Step, m_MinValue, m_MaxValue, "%.2f");
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 
@@ -59,7 +59,7 @@ namespace Wingnut
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
-		ImGui::DragFloat("##Y", &m_Value.y, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("##Y", &m_Value.y, m_Step, m_MinValue, m_MaxValue, "%.2f");
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 
@@ -75,7 +75,7 @@ namespace Wingnut
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
-		ImGui::DragFloat("##Z", &m_Value.z, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("##Z", &m_Value.z, m_Step, m_MinValue, m_MaxValue, "%.2f");
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 

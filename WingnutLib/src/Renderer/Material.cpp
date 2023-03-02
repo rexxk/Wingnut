@@ -32,8 +32,10 @@ namespace Wingnut
 		if (objMaterial.HasDiffuseTexture)
 		{
 			m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+
 			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
-			uiTextureDescriptor->SetImageBinding(0, m_MaterialData.AlbedoTexture.Texture, SamplerStore::GetSampler(SamplerType::Default));
+
+			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.AlbedoTexture.Texture, sampler);
 			uiTextureDescriptor->UpdateBindings();
 
 			TextureStore::AddTextureData(m_MaterialData.AlbedoTexture.Texture, uiTextureDescriptor);
@@ -43,13 +45,15 @@ namespace Wingnut
 		else
 		{
 			m_MaterialData.AlbedoTexture.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
-			m_MaterialData.NormalMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		}
+
 
 		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
 
 		m_MaterialData.Properties.AlbedoColor = glm::vec4(objMaterial.Diffuse, objMaterial.Transparency);
 		m_MaterialData.Properties.Metallic = 0.04f;
+
+		m_MaterialData.NormalMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 
 		CreateDescriptor(m_Shader, sampler);
 
