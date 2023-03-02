@@ -5,11 +5,14 @@
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec2 a_TexCoord;
 layout(location = 2) in vec3 a_Normal;
-layout(location = 3) in vec4 a_Color;
+layout(location = 3) in vec3 a_Tangent;
+layout(location = 4) in vec3 a_Bitangent;
+layout(location = 5) in vec4 a_Color;
 
 layout(location = 0) out vec2 v_TexCoord;
 layout(location = 1) out vec3 v_Normal;
 layout(location = 2) out vec4 v_Color;
+layout(location = 3) out mat3 v_TBNMatrix;
 
 layout(set = 0, binding = 0) uniform UBWorld {
 	mat4 ViewProjection;
@@ -27,6 +30,12 @@ void main()
 	v_Color = a_Color;
 	v_Normal = a_Normal;
 	v_TexCoord = a_TexCoord;
+
+	v_Normal = vec3(ubTransform.ModelMatrix * vec4(a_Normal, 0.0));
+	vec3 tangent = vec3(ubTransform.ModelMatrix * vec4(a_Tangent, 0.0));
+	vec3 bitangent = vec3(ubTransform.ModelMatrix * vec4(a_Bitangent, 0.0));
+
+	v_TBNMatrix = mat3(tangent, bitangent, v_Normal);
 }
 
 ///////////////////////////////////////
@@ -39,6 +48,7 @@ layout(location = 0) out vec4 o_Color;
 layout(location = 0) in vec2 v_TexCoord;
 layout(location = 1) in vec3 v_Normal;
 layout(location = 2) in vec4 v_Color;
+layout(location = 3) in mat3 v_TBNMatrix;
 
 layout(set = 2, binding = 0) uniform UBMaterial{
 	vec4 AlbedoColor;
@@ -67,7 +77,7 @@ void main()
 	if (ubMaterial.UseNormalMap == 1)
 	{
 		normal = texture(u_NormalMap, v_TexCoord).rgb;
-		normal = normalize(normal * 2.0 - 1.0);
+		normal = normalize(v_TBNMatrix * (normal * 2.0 - 1.0));
 	}
 
 	float diffuse = max(dot(normal, lightDirection), 0.0);

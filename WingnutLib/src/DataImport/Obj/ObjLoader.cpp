@@ -168,6 +168,8 @@ namespace Wingnut
 					newObjMesh.IndexList.emplace_back(index + 1);
 					newObjMesh.IndexList.emplace_back(index + 2);
 
+					CalculateTangentAndBitangent(newObjMesh, index, index + 1, index + 2);
+
 					index += 3;
 				}
 				else if (triangleCount == 4)
@@ -176,12 +178,19 @@ namespace Wingnut
 					newObjMesh.IndexList.emplace_back(index + 1);
 					newObjMesh.IndexList.emplace_back(index + 2);
 
+					CalculateTangentAndBitangent(newObjMesh, index, index + 1, index + 2);
+
 					newObjMesh.IndexList.emplace_back(index + 2);
 					newObjMesh.IndexList.emplace_back(index + 3);
 					newObjMesh.IndexList.emplace_back(index);
 
+					CalculateTangentAndBitangent(newObjMesh, index + 2, index + 3, index + 0);
+
 					index += 4;
 				}
+
+				// Calculate tangent and bitangent
+
 			}
 
 			if (command == "usemtl")
@@ -337,5 +346,31 @@ namespace Wingnut
 		importResult.Materials.emplace_back(newMaterial);
 	}
 
+	void ObjLoader::CalculateTangentAndBitangent(ObjMesh& mesh, uint32_t index0, uint32_t index1, uint32_t index2)
+	{
+		Vertex& v1 = mesh.VertexList[index0];
+		Vertex& v2 = mesh.VertexList[index1];
+		Vertex& v3 = mesh.VertexList[index2];
+
+		glm::vec3 edge1 = v2.Position - v1.Position;
+		glm::vec3 edge2 = v3.Position - v1.Position;
+		glm::vec2 dUV1 = v2.TexCoord - v1.TexCoord;
+		glm::vec2 dUV2 = v3.TexCoord - v1.TexCoord;
+
+		float f = 1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y);
+
+		glm::vec3 tangent;
+		tangent.x = f * (dUV2.y * edge1.x - dUV1.y * edge2.x);
+		tangent.y = f * (dUV2.y * edge1.y - dUV1.y * edge2.y);
+		tangent.z = f * (dUV2.y * edge1.z - dUV1.y * edge2.z);
+
+		glm::vec3 bitangent;
+		bitangent.x = f * (-dUV2.x * edge1.x + dUV1.x * edge2.x);
+		bitangent.y = f * (-dUV2.x * edge1.y + dUV1.x * edge2.y);
+		bitangent.z = f * (-dUV2.x * edge1.z + dUV1.x * edge2.z);
+
+		v1.Tangent = v2.Tangent = v3.Tangent = tangent;
+		v1.Bitangent = v2.Bitangent = v3.Bitangent = bitangent;
+	}
 
 }
