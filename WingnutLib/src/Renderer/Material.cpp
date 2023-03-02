@@ -48,12 +48,15 @@ namespace Wingnut
 		}
 
 
-		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
+//		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
+		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::LinearRepeat);
 
 		m_MaterialData.Properties.AlbedoColor = glm::vec4(objMaterial.Diffuse, objMaterial.Transparency);
 		m_MaterialData.Properties.Metallic = 0.04f;
 
 		m_MaterialData.NormalMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+		m_MaterialData.MetalnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+		m_MaterialData.RoughnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 
 		CreateDescriptor(m_Shader, sampler);
 
@@ -70,6 +73,8 @@ namespace Wingnut
 
 		m_MaterialData.AlbedoTexture.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_MaterialData.NormalMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+		m_MaterialData.MetalnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+		m_MaterialData.RoughnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
 
 
@@ -121,6 +126,8 @@ namespace Wingnut
 		m_Descriptor->SetBufferBinding(PBRMaterialDataBinding, m_MaterialUB);
 		m_Descriptor->SetImageBinding(PBRAlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, sampler);
 		m_Descriptor->SetImageBinding(PBRNormalMapBinding, m_MaterialData.NormalMap.Texture, sampler);
+		m_Descriptor->SetImageBinding(PBRMetalnessMapBinding, m_MaterialData.MetalnessMap.Texture, sampler);
+		m_Descriptor->SetImageBinding(PBRRoughnessMapBinding, m_MaterialData.RoughnessMap.Texture, sampler);
 
 		m_Descriptor->UpdateBindings();
 	}
@@ -141,6 +148,22 @@ namespace Wingnut
 			{
 				m_MaterialData.NormalMap.Texture = texture;
 				m_Descriptor->SetImageBinding(PBRNormalMapBinding, m_MaterialData.NormalMap.Texture, m_MaterialData.Sampler);
+
+				break;
+			}
+
+			case MaterialType::MetalnessMap:
+			{
+				m_MaterialData.MetalnessMap.Texture = texture;
+				m_Descriptor->SetImageBinding(PBRMetalnessMapBinding, m_MaterialData.MetalnessMap.Texture, m_MaterialData.Sampler);
+
+				break;
+			}
+
+			case MaterialType::RoughnessMap:
+			{
+				m_MaterialData.RoughnessMap.Texture = texture;
+				m_Descriptor->SetImageBinding(PBRRoughnessMapBinding, m_MaterialData.RoughnessMap.Texture, m_MaterialData.Sampler);
 
 				break;
 			}

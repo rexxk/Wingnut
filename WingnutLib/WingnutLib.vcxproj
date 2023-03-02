@@ -118,6 +118,7 @@
     <ClInclude Include="src\Event\MouseEvents.h" />
     <ClInclude Include="src\Event\UIEvents.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
+    <ClInclude Include="src\ImGui\Controls\UIImageButton.h" />
     <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
     <ClInclude Include="src\ImGui\ImGuiContext.h" />
     <ClInclude Include="src\ImGui\Panels\MaterialEditorPanel.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\Event\EventBroker.cpp" />
     <ClCompile Include="src\Event\EventQueue.cpp" />
     <ClCompile Include="src\Event\EventUtils.cpp" />
+    <ClCompile Include="src\ImGui\Controls\UIImageButton.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
     <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
     <ClCompile Include="src\ImGui\Panels\MaterialEditorPanel.cpp" />

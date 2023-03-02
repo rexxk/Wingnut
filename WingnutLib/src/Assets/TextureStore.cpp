@@ -25,9 +25,23 @@ namespace Wingnut
 
 	void TextureStore::AddTextureData(Ref<Vulkan::Texture2D> texture, Ref<Vulkan::Descriptor> descriptor)
 	{
-		m_TextureContainer[texture->GetTextureID()] = texture;
-		m_DescriptorContainer[texture->GetTextureID()] = descriptor;
+		AddTexture(texture);
+		AddDescriptor(texture->GetTextureID(), descriptor);
 	}
+
+	bool TextureStore::FindTexture(const std::string& textureName)
+	{
+		for (auto& containerIterator : m_TextureContainer)
+		{
+			if (containerIterator.second->GetTextureName() == textureName)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 	void TextureStore::SetDescriptor(UUID textureID, Ref<Vulkan::Descriptor> descriptor)
 	{

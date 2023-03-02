@@ -7,7 +7,11 @@
 #include "Event/EventUtils.h"
 #include "Event/UIEvents.h"
 
+#include "ImGui/Controls/UIImageButton.h"
+
 #include "Renderer/Material.h"
+
+#include "Utils/FileDialog.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -154,9 +158,8 @@ namespace Wingnut
 
 		{
 
-			ImGui::PushID("##AlbedoImage");
+			UIImageButton albedoImageButton(MaterialType::AlbedoTexture, m_SelectedMaterial);
 
-			ImGui::Image((ImTextureID)TextureStore::GetDescriptor(m_SelectedMaterial->GetMaterialData().AlbedoTexture.Texture->GetTextureID())->GetDescriptor(), ImVec2(64.0f, 64.0f));
 
 			if (ImGui::BeginDragDropTarget())
 			{
@@ -171,8 +174,6 @@ namespace Wingnut
 
 				ImGui::EndDragDropTarget();
 			}
-
-			ImGui::PopID();
 
 		}
 
@@ -198,9 +199,7 @@ namespace Wingnut
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 
 		{
-			ImGui::PushID("##NormalMapImage");
-
-			ImGui::Image((ImTextureID)TextureStore::GetDescriptor(m_SelectedMaterial->GetMaterialData().NormalMap.Texture->GetTextureID())->GetDescriptor(), ImVec2(64.0f, 64.0f));
+			UIImageButton(MaterialType::NormalMap, m_SelectedMaterial);
 
 			if (ImGui::BeginDragDropTarget())
 			{
@@ -216,9 +215,88 @@ namespace Wingnut
 				ImGui::EndDragDropTarget();
 			}
 
-			ImGui::PopID();
 		}
 
+
+		ImGui::PopStyleVar();
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Use Metalness map");
+
+		ImGui::NextColumn();
+
+		if (ImGui::Checkbox("##useMetalnessMap", (bool*)&properties.UseMetalnessMap))
+		{
+			m_SelectedMaterial->Update();
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Metalness Map");
+
+		ImGui::NextColumn();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+
+		{
+			UIImageButton(MaterialType::MetalnessMap, m_SelectedMaterial);
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TexturePayload");
+
+				if (payload != nullptr)
+				{
+					UUID textureID = *(UUID*)payload->Data;
+
+					m_SelectedMaterial->SetTexture(MaterialType::MetalnessMap, TextureStore::GetTexture(textureID));
+				}
+
+				ImGui::EndDragDropTarget();
+			}
+
+		}
+
+		ImGui::PopStyleVar();
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Use Roughness map");
+
+		ImGui::NextColumn();
+
+		if (ImGui::Checkbox("##useRoughnessMap", (bool*)&properties.UseRoughnessMap))
+		{
+			m_SelectedMaterial->Update();
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Roughness Map");
+
+		ImGui::NextColumn();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+
+		{
+			UIImageButton(MaterialType::RoughnessMap , m_SelectedMaterial);
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TexturePayload");
+
+				if (payload != nullptr)
+				{
+					UUID textureID = *(UUID*)payload->Data;
+
+					m_SelectedMaterial->SetTexture(MaterialType::RoughnessMap, TextureStore::GetTexture(textureID));
+				}
+
+				ImGui::EndDragDropTarget();
+			}
+
+		}
 
 		ImGui::PopStyleVar();
 

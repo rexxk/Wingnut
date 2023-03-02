@@ -55,6 +55,7 @@ namespace Wingnut
 //					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::Default), TextureDescriptor, AlbedoTextureBinding, newTexture);
 					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 					newDescriptor->SetImageBinding(0, newTexture, SamplerStore::GetSampler(SamplerType::Default));
+//					newDescriptor->SetImageBinding(0, newTexture, SamplerStore::GetSampler(SamplerType::NearestRepeat));
 					newDescriptor->UpdateBindings();
 					TextureStore::AddTextureData(newTexture, newDescriptor);
 				}
