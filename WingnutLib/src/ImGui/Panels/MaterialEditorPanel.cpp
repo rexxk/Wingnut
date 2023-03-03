@@ -300,6 +300,46 @@ namespace Wingnut
 
 		ImGui::PopStyleVar();
 
+		ImGui::NextColumn();
+
+		ImGui::Text("Use Ambient Occlusion map");
+
+		ImGui::NextColumn();
+
+		if (ImGui::Checkbox("##useAmbientOcclusionMap", (bool*)&properties.UseAmbientOcclusionMap))
+		{
+			m_SelectedMaterial->Update();
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::Text("Ambient Occlusion Map");
+
+		ImGui::NextColumn();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+
+		{
+			UIImageButton(MaterialType::AmbientOcclusionMap, m_SelectedMaterial);
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TexturePayload");
+
+				if (payload != nullptr)
+				{
+					UUID textureID = *(UUID*)payload->Data;
+
+					m_SelectedMaterial->SetTexture(MaterialType::AmbientOcclusionMap, TextureStore::GetTexture(textureID));
+				}
+
+				ImGui::EndDragDropTarget();
+			}
+
+		}
+
+		ImGui::PopStyleVar();
+
 		ImGui::Columns(1);
 
 

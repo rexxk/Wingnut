@@ -352,8 +352,70 @@ namespace Wingnut
 
 			if (command == "map_Ks")
 			{
-				newMaterial.HasSpecularTexture = true;
-				ss >> newMaterial.SpecularTexture;
+				newMaterial.HasMetalnessMap = true;
+
+				std::string parameter;
+
+				while (newMaterial.MetalnessMap == "")
+				{
+					ss >> parameter;
+
+					if (parameter == "-o" || parameter == "-s")
+					{
+						float x, y, z;
+						ss >> x >> y >> z;
+
+						if (parameter == "-o")
+						{
+							newMaterial.OriginOffset = glm::vec3(x, y, z);
+						}
+						if (parameter == "-s")
+						{
+							newMaterial.Scale = glm::vec3(x, y, z);
+						}
+					}
+					else
+					{
+						newMaterial.MetalnessMap = parameter;
+					}
+
+				}
+
+				newMaterial.MetalnessMap = parameter;
+			}
+
+			if (command == "map_Pr")
+			{
+				newMaterial.HasRoughnessMap = true;
+
+				std::string parameter;
+
+				while (newMaterial.RoughnessMap == "")
+				{
+					ss >> parameter;
+
+					if (parameter == "-o" || parameter == "-s")
+					{
+						float x, y, z;
+						ss >> x >> y >> z;
+
+						if (parameter == "-o")
+						{
+							newMaterial.OriginOffset = glm::vec3(x, y, z);
+						}
+						if (parameter == "-s")
+						{
+							newMaterial.Scale = glm::vec3(x, y, z);
+						}
+					}
+					else
+					{
+						newMaterial.RoughnessMap = parameter;
+					}
+
+				}
+
+				newMaterial.RoughnessMap = parameter;
 			}
 
 			if (command == "map_Bump")

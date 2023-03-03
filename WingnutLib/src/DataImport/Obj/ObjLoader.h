@@ -32,8 +32,9 @@ namespace Wingnut
 
 		bool HasPBRValues = false;
 
-		float Roughness = 0.0f;
-		float Metalness = 0.0f;
+		float Roughness = 1.0f;
+		float Metalness = 0.04f;
+		float AmbientOcclusion = 1.0f;
 
 
 		// Texture paths
@@ -41,11 +42,17 @@ namespace Wingnut
 		std::string AmbientTexture;
 		bool HasDiffuseTexture = false;
 		std::string DiffuseTexture;
-		bool HasSpecularTexture = false;
-		std::string SpecularTexture;
 
 		bool HasNormalMap = false;
 		std::string NormalMap;
+
+		bool HasMetalnessMap = false;
+		std::string MetalnessMap;
+		bool HasRoughnessMap = false;
+		std::string RoughnessMap;
+
+		bool HasAmbientOcclusionMap = false;
+		std::string AmbientOcclusionMap;
 	};
 
 	struct ObjImportResult

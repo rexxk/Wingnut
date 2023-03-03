@@ -25,6 +25,7 @@ namespace Wingnut
 	const uint32_t PBRNormalMapBinding = 2;
 	const uint32_t PBRMetalnessMapBinding = 3;
 	const uint32_t PBRRoughnessMapBinding = 4;
+	const uint32_t PBRAmbientOcclusionMapBinding = 5;
 	
 
 	struct Vertex

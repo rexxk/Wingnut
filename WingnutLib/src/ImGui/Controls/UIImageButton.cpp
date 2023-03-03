@@ -48,6 +48,10 @@ namespace Wingnut
 		{
 			textureID = m_Material->GetMaterialData().RoughnessMap.Texture->GetTextureID();
 		}
+		else if (m_MaterialType == MaterialType::AmbientOcclusionMap)
+		{
+			textureID = m_Material->GetMaterialData().AmbientOcclusionMap.Texture->GetTextureID();
+		}
 
 		if (ImGui::ImageButton((ImTextureID)TextureStore::GetDescriptor(textureID)->GetDescriptor(), ImVec2(64.0f, 64.0f)))
 		{

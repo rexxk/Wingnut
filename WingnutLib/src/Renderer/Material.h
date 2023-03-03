@@ -24,11 +24,13 @@ namespace Wingnut
 
 		float Metallic = 0.04f;
 		float Roughness = 0.0f;
+		float AmbientOcclusion = 1.0f;
 
 		uint32_t UseAlbedoTexture = 0;
 		uint32_t UseNormalMap = 0;
 		uint32_t UseMetalnessMap = 0;
 		uint32_t UseRoughnessMap = 0;
+		uint32_t UseAmbientOcclusionMap = 0;
 	};
 
 	struct MaterialData
@@ -39,6 +41,7 @@ namespace Wingnut
 		MaterialTexture NormalMap;
 		MaterialTexture MetalnessMap;
 		MaterialTexture RoughnessMap;
+		MaterialTexture AmbientOcclusionMap;
 
 
 		Ref<Vulkan::ImageSampler> Sampler;
@@ -50,6 +53,7 @@ namespace Wingnut
 		NormalMap,
 		MetalnessMap,
 		RoughnessMap,
+		AmbientOcclusionMap,
 	};
 
 

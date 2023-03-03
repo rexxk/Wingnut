@@ -102,11 +102,15 @@ void MainLayer::OnAttach()
 //	}
 
 	{
-		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
+//		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
 // 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
+//		m_Scene->ImportOBJModel("assets/models/fnscarl.obj");
+//		m_Scene->ImportOBJModel("assets/models/holidaybeach.obj");
+//		m_Scene->ImportOBJModel("assets/models/leeenfieldmk1.obj");
 //		m_Scene->ImportOBJModel("assets/models/Room1.obj");
 //		m_Scene->ImportOBJModel("assets/models/Room_pbr.obj");
 //		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
+		m_Scene->ImportOBJModel("assets/models/SpaceStation.obj");
 //		m_Scene->ImportOBJModel("assets/models/watchtower.obj");
 	}
 

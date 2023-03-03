@@ -35,6 +35,7 @@ namespace Wingnut
 		m_MaterialData.NormalMap.Texture = defaultTexture;
 		m_MaterialData.MetalnessMap.Texture = defaultTexture;
 		m_MaterialData.RoughnessMap.Texture = defaultTexture;
+		m_MaterialData.AmbientOcclusionMap.Texture = defaultTexture;
 
 		if (objMaterial.HasDiffuseTexture)
 		{
@@ -64,6 +65,48 @@ namespace Wingnut
 			m_MaterialData.Properties.UseNormalMap = true;
 		}
 
+		if (objMaterial.HasMetalnessMap)
+		{
+			m_MaterialData.MetalnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.MetalnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+
+			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.MetalnessMap.Texture, sampler);
+			uiTextureDescriptor->UpdateBindings();
+
+			TextureStore::AddTextureData(m_MaterialData.MetalnessMap.Texture, uiTextureDescriptor);
+
+			m_MaterialData.Properties.UseMetalnessMap = true;
+		}
+
+		if (objMaterial.HasRoughnessMap)
+		{
+			m_MaterialData.RoughnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.RoughnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+
+			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.RoughnessMap.Texture, sampler);
+			uiTextureDescriptor->UpdateBindings();
+
+			TextureStore::AddTextureData(m_MaterialData.RoughnessMap.Texture, uiTextureDescriptor);
+
+			m_MaterialData.Properties.UseRoughnessMap = true;
+		}
+
+		if (objMaterial.HasAmbientOcclusionMap)
+		{
+			m_MaterialData.AmbientOcclusionMap.Texture = Vulkan::Texture2D::Create(objMaterial.AmbientOcclusionMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+
+			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.AmbientOcclusionMap.Texture, sampler);
+			uiTextureDescriptor->UpdateBindings();
+
+			TextureStore::AddTextureData(m_MaterialData.AmbientOcclusionMap.Texture, uiTextureDescriptor);
+
+			m_MaterialData.Properties.UseAmbientOcclusionMap = true;
+		}
+
 
 //		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
 		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::LinearRepeat);
@@ -72,11 +115,13 @@ namespace Wingnut
 		{
 			m_MaterialData.Properties.Metallic = objMaterial.Metalness;
 			m_MaterialData.Properties.Roughness = objMaterial.Roughness;
+			m_MaterialData.Properties.AmbientOcclusion = objMaterial.AmbientOcclusion;
 		}
 		else
 		{
 			m_MaterialData.Properties.Metallic = 0.04f;
 			m_MaterialData.Properties.Roughness = 1.0f;
+			m_MaterialData.Properties.AmbientOcclusion = 1.0f;
 		}
 
 		m_MaterialData.Properties.AlbedoColor = glm::vec4(objMaterial.Diffuse, objMaterial.Transparency);
@@ -98,6 +143,7 @@ namespace Wingnut
 		m_MaterialData.NormalMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_MaterialData.MetalnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_MaterialData.RoughnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+		m_MaterialData.AmbientOcclusionMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
 
 
@@ -151,6 +197,7 @@ namespace Wingnut
 		m_Descriptor->SetImageBinding(PBRNormalMapBinding, m_MaterialData.NormalMap.Texture, sampler);
 		m_Descriptor->SetImageBinding(PBRMetalnessMapBinding, m_MaterialData.MetalnessMap.Texture, sampler);
 		m_Descriptor->SetImageBinding(PBRRoughnessMapBinding, m_MaterialData.RoughnessMap.Texture, sampler);
+		m_Descriptor->SetImageBinding(PBRAmbientOcclusionMapBinding, m_MaterialData.AmbientOcclusionMap.Texture, sampler);
 
 		m_Descriptor->UpdateBindings();
 	}
@@ -187,6 +234,14 @@ namespace Wingnut
 			{
 				m_MaterialData.RoughnessMap.Texture = texture;
 				m_Descriptor->SetImageBinding(PBRRoughnessMapBinding, m_MaterialData.RoughnessMap.Texture, m_MaterialData.Sampler);
+
+				break;
+			}
+
+			case MaterialType::AmbientOcclusionMap:
+			{
+				m_MaterialData.AmbientOcclusionMap.Texture = texture;
+				m_Descriptor->SetImageBinding(PBRAmbientOcclusionMapBinding, m_MaterialData.AmbientOcclusionMap.Texture, m_MaterialData.Sampler);
 
 				break;
 			}

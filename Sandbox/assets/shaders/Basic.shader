@@ -58,17 +58,20 @@ layout(set = 2, binding = 0) uniform UBMaterial{
 	
 	float Metallic;
 	float Roughness;
-	
+	float AmbientOcclusion;
+
 	uint UseAlbedoTexture;
 	uint UseNormalMap;
 	uint UseMetalnessMap;
 	uint UseRoughnessMap;
+	uint UseAmbientOcclusionMap;
 } ubMaterial;
 
 layout(set = 2, binding = 1) uniform sampler2D u_AlbedoTexture;
 layout(set = 2, binding = 2) uniform sampler2D u_NormalMap;
 layout(set = 2, binding = 3) uniform sampler2D u_MetalnessMap;
 layout(set = 2, binding = 4) uniform sampler2D u_RoughnessMap;
+layout(set = 2, binding = 5) uniform sampler2D u_AmbientOcclusionMap;
 
 layout(set = 3, binding = 0) uniform Light{
 	vec3 LightPosition;
@@ -160,6 +163,13 @@ void main()
 		roughness = texture(u_RoughnessMap, v_TexCoord).r;
 	}
 
+	float ambientOcclusion = ubMaterial.AmbientOcclusion;
+
+	if (ubMaterial.UseAmbientOcclusionMap == 1)
+	{
+		ambientOcclusion = texture(u_AmbientOcclusionMap, v_TexCoord).r;
+	}
+
 	vec3 N = normalize(normal);
 	vec3 V = normalize(ubLight.CameraPosition - v_WorldPosition);
 
@@ -192,7 +202,7 @@ void main()
 		Lo += (kD * albedoColor / 3.1415926 + specular) * radiance * NdotL;
 	}
 
-	vec3 ambient = vec3(0.03) * albedoColor; // *ao;
+	vec3 ambient = vec3(0.03) * albedoColor * ambientOcclusion; // *ao;
 	vec3 color = ambient + Lo;
 
 	color = color / (color + vec3(1.0));
