@@ -104,7 +104,11 @@ namespace Wingnut
 
 		for (auto& lightEntity : ECS::EntitySystem::GetView<LightComponent>())
 		{
-			lightData.LightDirection = ECS::EntitySystem::GetComponent<LightComponent>(lightEntity).Direction;
+			LightComponent& lightComponent = ECS::EntitySystem::GetComponent<LightComponent>(lightEntity);
+			lightData.LightPosition = lightComponent.Position;
+			lightData.LightColor = lightComponent.Color;
+
+			lightData.CameraPosition = m_SceneCamera->GetPosition();
 		}
 
 		m_LightUB->Update(&lightData, sizeof(LightData), currentFrame);

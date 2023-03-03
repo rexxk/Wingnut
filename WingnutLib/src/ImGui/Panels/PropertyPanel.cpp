@@ -96,7 +96,9 @@ namespace Wingnut
 		{
 			LightComponent& lightComponent = m_SelectedEntity.GetComponent<LightComponent>();
 
-			Vec3Control directionControl("Direction", lightComponent.Direction, -1.0f, 1.0f, 0.01f);
+			Vec3Control positionControl("Position", lightComponent.Position);
+
+			Vec3Control colorControl("Color", lightComponent.Color, 0.0f, 255.0f, 0.1f);
 
 			ImGui::TreePop();
 		}

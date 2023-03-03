@@ -293,6 +293,23 @@ namespace Wingnut
 				ss >> newMaterial.OpticalDensity;
 			}
 
+			// PBR extensions
+
+			if (command == "Pr")
+			{
+				ss >> newMaterial.Roughness;
+				newMaterial.HasPBRValues = true;
+			}
+
+			if (command == "Pm")
+			{
+				ss >> newMaterial.Metalness;
+				newMaterial.HasPBRValues = true;
+			}
+
+
+			// Texture maps
+
 			if (command == "map_Ka")
 			{
 				newMaterial.HasAmbientTexture = true;
@@ -339,6 +356,44 @@ namespace Wingnut
 				ss >> newMaterial.SpecularTexture;
 			}
 
+			if (command == "map_Bump")
+			{
+				newMaterial.HasNormalMap = true;
+
+				std::string parameter;
+
+				while (newMaterial.NormalMap == "")
+				{
+					ss >> parameter;
+					float x, y, z;
+
+					if (parameter == "-bm" || parameter == "-o" || parameter == "-s")
+					{
+						if (parameter == "-o")
+						{
+							ss >> x >> y >> z;
+							newMaterial.OriginOffset = glm::vec3(x, y, z);
+						}
+						if (parameter == "-s")
+						{
+							ss >> x >> y >> z;
+							newMaterial.Scale = glm::vec3(x, y, z);
+						}
+						if (parameter == "-bm")
+						{
+							ss >> x;
+						}
+					}
+					else
+					{
+						newMaterial.NormalMap = parameter;
+					}
+
+				}
+
+				newMaterial.NormalMap = parameter;
+
+			}
 		}
 
 		file.close();

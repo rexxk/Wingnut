@@ -34,6 +34,7 @@
 #include "Platform/Vulkan/Texture.h"
 
 #include "Renderer/Camera.h"
+#include "Renderer/Light.h"
 #include "Renderer/Material.h"
 #include "Renderer/Renderer.h"
 

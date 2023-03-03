@@ -129,23 +129,24 @@ namespace Wingnut
 
 	struct LightComponent
 	{
-		glm::vec3 Direction;
-
+		glm::vec3 Position = glm::vec3(0.0f);
+		glm::vec3 Color = glm::vec3(1.0f);
 
 		LightComponent()
 		{
 
 		}
 
-		LightComponent(const glm::vec3& lightDirection)
-			: Direction(lightDirection)
+		LightComponent(const glm::vec3& position, const glm::vec3& color)
+			: Position(position), Color(color)
 		{
 
 		}
 
 		LightComponent(const LightComponent& other)
 		{
-			Direction = other.Direction;
+			Position = other.Position;
+			Color = other.Color;
 		}
 
 	};

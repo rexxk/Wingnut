@@ -26,7 +26,12 @@ namespace Wingnut
 
 	struct LightData
 	{
-		glm::vec3 LightDirection;
+		glm::vec3 LightPosition;
+		float padding;
+		glm::vec3 LightColor;
+		float padding2;
+
+		glm::vec3 CameraPosition;
 	};
 
 	struct SceneProperties

@@ -61,7 +61,7 @@ void MainLayer::OnAttach()
 
 	{
 		Entity light = m_Scene->CreateEntity("Light");
-		light.AddComponent<LightComponent>(glm::vec3(0.5f));
+		light.AddComponent<LightComponent>(glm::vec3(0.0f, 15.0f, 0.0f), glm::vec3(210.0f, 235.0f, 205.0f));
 	}
 
 
@@ -102,10 +102,11 @@ void MainLayer::OnAttach()
 //	}
 
 	{
-//		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
+		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
 // 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
 //		m_Scene->ImportOBJModel("assets/models/Room1.obj");
-		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
+//		m_Scene->ImportOBJModel("assets/models/Room_pbr.obj");
+//		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
 //		m_Scene->ImportOBJModel("assets/models/watchtower.obj");
 	}
 

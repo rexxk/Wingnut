@@ -145,6 +145,7 @@
     <ClInclude Include="src\Platform\Vulkan\Texture.h" />
     <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Renderer\ImGuiRenderer.h" />
+    <ClInclude Include="src\Renderer\Light.h" />
     <ClInclude Include="src\Renderer\Material.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="src\Platform\Vulkan\Texture.cpp" />
     <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Renderer\ImGuiRenderer.cpp" />
+    <ClCompile Include="src\Renderer\Light.cpp" />
     <ClCompile Include="src\Renderer\Material.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />

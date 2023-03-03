@@ -119,6 +119,7 @@
     <ClInclude Include="src\DataImport\Obj\ObjLoader.h" />
     <ClInclude Include="src\ImGui\Panels\MetricsPanel.h" />
     <ClInclude Include="src\ImGui\Controls\UIImageButton.h" />
+    <ClInclude Include="src\Renderer\Light.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -207,5 +208,6 @@
     <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp" />
     <ClCompile Include="src\ImGui\Panels\MetricsPanel.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIImageButton.cpp" />
+    <ClCompile Include="src\Renderer\Light.cpp" />
   </ItemGroup>
 </Project>

@@ -29,6 +29,13 @@ namespace Wingnut
 	{
 		CreateUniformBuffer();
 
+		Ref<Vulkan::Texture2D> defaultTexture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+
+		m_MaterialData.AlbedoTexture.Texture = defaultTexture;
+		m_MaterialData.NormalMap.Texture = defaultTexture;
+		m_MaterialData.MetalnessMap.Texture = defaultTexture;
+		m_MaterialData.RoughnessMap.Texture = defaultTexture;
+
 		if (objMaterial.HasDiffuseTexture)
 		{
 			m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
@@ -42,21 +49,37 @@ namespace Wingnut
 
 			m_MaterialData.Properties.UseAlbedoTexture = true;
 		}
-		else
+
+		if (objMaterial.HasNormalMap)
 		{
-			m_MaterialData.AlbedoTexture.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+			m_MaterialData.NormalMap.Texture = Vulkan::Texture2D::Create(objMaterial.NormalMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+
+			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.NormalMap.Texture, sampler);
+			uiTextureDescriptor->UpdateBindings();
+
+			TextureStore::AddTextureData(m_MaterialData.NormalMap.Texture, uiTextureDescriptor);
+
+			m_MaterialData.Properties.UseNormalMap = true;
 		}
 
 
 //		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
 		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::LinearRepeat);
 
-		m_MaterialData.Properties.AlbedoColor = glm::vec4(objMaterial.Diffuse, objMaterial.Transparency);
-		m_MaterialData.Properties.Metallic = 0.04f;
+		if (objMaterial.HasPBRValues)
+		{
+			m_MaterialData.Properties.Metallic = objMaterial.Metalness;
+			m_MaterialData.Properties.Roughness = objMaterial.Roughness;
+		}
+		else
+		{
+			m_MaterialData.Properties.Metallic = 0.04f;
+			m_MaterialData.Properties.Roughness = 1.0f;
+		}
 
-		m_MaterialData.NormalMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
-		m_MaterialData.MetalnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
-		m_MaterialData.RoughnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
+		m_MaterialData.Properties.AlbedoColor = glm::vec4(objMaterial.Diffuse, objMaterial.Transparency);
 
 		CreateDescriptor(m_Shader, sampler);
 

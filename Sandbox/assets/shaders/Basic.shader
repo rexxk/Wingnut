@@ -12,7 +12,8 @@ layout(location = 5) in vec4 a_Color;
 layout(location = 0) out vec2 v_TexCoord;
 layout(location = 1) out vec3 v_Normal;
 layout(location = 2) out vec4 v_Color;
-layout(location = 3) out mat3 v_TBNMatrix;
+layout(location = 3) out vec3 v_WorldPosition;
+layout(location = 4) out mat3 v_TBNMatrix;
 
 layout(set = 0, binding = 0) uniform UBWorld {
 	mat4 ViewProjection;
@@ -28,14 +29,15 @@ void main()
 //	gl_Position = vec4(a_Position, 1.0);
 
 	v_Color = a_Color;
-	v_Normal = a_Normal;
 	v_TexCoord = a_TexCoord;
 
-	v_Normal = normalize(vec3(ubTransform.ModelMatrix * vec4(a_Normal, 0.0)));
-	vec3 tangent = normalize(vec3(ubTransform.ModelMatrix * vec4(a_Tangent, 0.0)));
-	vec3 bitangent = normalize(vec3(ubTransform.ModelMatrix * vec4(a_Bitangent, 0.0)));
+	v_WorldPosition = normalize(vec3(ubTransform.ModelMatrix * vec4(a_Position, 1.0)));
+	v_Normal = vec3(ubTransform.ModelMatrix * vec4(a_Normal, 0.0));
 
-	v_TBNMatrix = mat3(tangent, bitangent, v_Normal);
+	vec3 tangent = vec3(ubTransform.ModelMatrix * vec4(a_Tangent, 0.0));
+	vec3 bitangent = vec3(ubTransform.ModelMatrix * vec4(a_Bitangent, 0.0));
+
+	v_TBNMatrix = mat3(normalize(tangent), normalize(bitangent), normalize(v_Normal));
 }
 
 ///////////////////////////////////////
@@ -48,7 +50,8 @@ layout(location = 0) out vec4 o_Color;
 layout(location = 0) in vec2 v_TexCoord;
 layout(location = 1) in vec3 v_Normal;
 layout(location = 2) in vec4 v_Color;
-layout(location = 3) in mat3 v_TBNMatrix;
+layout(location = 3) in vec3 v_WorldPosition;
+layout(location = 4) in mat3 v_TBNMatrix;
 
 layout(set = 2, binding = 0) uniform UBMaterial{
 	vec4 AlbedoColor;
@@ -68,7 +71,11 @@ layout(set = 2, binding = 3) uniform sampler2D u_MetalnessMap;
 layout(set = 2, binding = 4) uniform sampler2D u_RoughnessMap;
 
 layout(set = 3, binding = 0) uniform Light{
-	vec3 LightDirection;
+	vec3 LightPosition;
+	float padding;
+	vec3 LightColor;
+	float padding2;
+	vec3 CameraPosition;
 } ubLight;
 
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
@@ -117,7 +124,7 @@ void main()
 {
 //	o_Color = vec4(0.5); // v_Color;
 
-	vec3 lightDirection = ubLight.LightDirection;
+//	vec3 lightDirection = ubLight.LightDirection;
 
 	vec3 normal = v_Normal;
 
@@ -153,8 +160,8 @@ void main()
 		roughness = texture(u_RoughnessMap, v_TexCoord).r;
 	}
 
-	vec3 N = normal;
-	vec3 V = vec3(1.0);
+	vec3 N = normalize(normal);
+	vec3 V = normalize(ubLight.CameraPosition - v_WorldPosition);
 
 	vec3 F0 = vec3(0.04);
 	F0 = mix(F0, albedoColor, metalness);
@@ -162,16 +169,16 @@ void main()
 	vec3 Lo = vec3(0.0);
 
 	{
-		vec3 L = normalize(lightDirection);
+		vec3 L = normalize(ubLight.LightPosition - v_WorldPosition);
 		vec3 H = normalize(V + L);
 
-		float distance = 1.0f; // length();
+		float distance = length(ubLight.LightPosition - v_WorldPosition);
 		float attenuation = 1.0 / (distance * distance);
-		vec3 radiance = vec3(1.0) * attenuation; //lightColors[i] * attenuation;
+		vec3 radiance = ubLight.LightColor * attenuation; //lightColors[i] * attenuation;
 
 		float NDF = DistributionGGX(N, H, roughness);
 		float G = GeometrySmith(N, V, L, roughness);
-		vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+		vec3 F = fresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
 		vec3 kS = F;
 		vec3 kD = vec3(1.0) - kS;

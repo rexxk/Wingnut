@@ -30,6 +30,12 @@ namespace Wingnut
 		glm::vec3 OriginOffset = glm::vec3(0.0f);
 		glm::vec3 Scale = glm::vec3(1.0f);
 
+		bool HasPBRValues = false;
+
+		float Roughness = 0.0f;
+		float Metalness = 0.0f;
+
+
 		// Texture paths
 		bool HasAmbientTexture = false;
 		std::string AmbientTexture;
@@ -37,6 +43,9 @@ namespace Wingnut
 		std::string DiffuseTexture;
 		bool HasSpecularTexture = false;
 		std::string SpecularTexture;
+
+		bool HasNormalMap = false;
+		std::string NormalMap;
 	};
 
 	struct ObjImportResult
