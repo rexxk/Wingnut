@@ -1,8 +1,7 @@
 #include "wingnut_pch.h"
 #include "MaterialStorePanel.h"
 
-#include "Assets/MaterialStore.h"
-#include "Assets/ShaderStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Event/EventUtils.h"
 #include "Event/UIEvents.h"
@@ -42,14 +41,14 @@ namespace Wingnut
 
 			if (ImGui::ListBox("##materials", &m_CurrentSelection, m_ListboxItems.data(), (uint32_t)m_ListboxItems.size(), 10))
 			{
-				Ref<MaterialSelectedEvent> event = CreateRef<MaterialSelectedEvent>(MaterialStore::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection])));
+				Ref<MaterialSelectedEvent> event = CreateRef<MaterialSelectedEvent>(ResourceManager::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection])));
 				AddEventToQueue(event);
 				m_ActiveSelection = m_CurrentSelection;
 			}
 
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 			{
-				UUID materialID = MaterialStore::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection]))->GetID();
+				UUID materialID = ResourceManager::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection]))->GetID();
 				ImGui::SetDragDropPayload("MaterialPayload", &materialID, sizeof(uint64_t));
 
 				ImGui::Text("Material");
@@ -61,7 +60,7 @@ namespace Wingnut
 
 			if (ImGui::Button("Create new"))
 			{
-				MaterialStore::StoreMaterial(Material::Create("newMaterial_" + std::to_string((uint32_t)m_ListboxItems.size()), ShaderStore::GetShader(ShaderType::Default)));
+				ResourceManager::StoreMaterial(Material::Create("newMaterial_" + std::to_string((uint32_t)m_ListboxItems.size()), ResourceManager::GetShader(ShaderType::Default)));
 
 				UpdateMaterialList();
 			}
@@ -72,7 +71,7 @@ namespace Wingnut
 			{
 				if (std::string(m_ListboxItems[m_CurrentSelection]) != "Default")
 				{
-					UUID materialID = MaterialStore::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection]))->GetID();
+					UUID materialID = ResourceManager::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection]))->GetID();
 
 					for (auto& entity : m_ActiveScene->GetEntities())
 					{
@@ -82,7 +81,7 @@ namespace Wingnut
 
 							if (materialComponent.MaterialID == materialID)
 							{
-								materialComponent.MaterialID = MaterialStore::GetMaterialByName("Default")->GetID();
+								materialComponent.MaterialID = ResourceManager::GetMaterialByName("Default")->GetID();
 								break;
 							}
 						}
@@ -102,7 +101,7 @@ namespace Wingnut
 					Ref<MaterialSelectedEvent> event = CreateRef<MaterialSelectedEvent>(nullptr);
 					AddEventToQueue(event);
 
-					MaterialStore::DeleteMaterial(materialID);
+					ResourceManager::DeleteMaterial(materialID);
 				}
 
 			}
@@ -117,7 +116,7 @@ namespace Wingnut
 	{
 		m_ListboxItems.clear();
 
-		for (auto& materialIterator : MaterialStore::GetMaterialList())
+		for (auto& materialIterator : ResourceManager::GetMaterialList())
 		{
 			auto& material = materialIterator.second;
 			auto& materialID = materialIterator.first;

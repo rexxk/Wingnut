@@ -2,7 +2,7 @@
 #include "SceneRenderer.h"
 
 
-#include "Assets/ShaderStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Event/EventUtils.h"
 #include "Event/WindowEvents.h"
@@ -118,7 +118,7 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
 
-		s_SceneData.StaticSceneShader = ShaderStore::GetShader(ShaderType::Default);
+		s_SceneData.StaticSceneShader = ResourceManager::GetShader(ShaderType::Default);
 
 		Vulkan::PipelineSpecification pipelineSpecification;
 		pipelineSpecification.Extent = m_Extent;

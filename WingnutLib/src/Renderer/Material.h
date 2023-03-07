@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Assets/SamplerStore.h"
-
 #include "DataImport/Obj/ObjLoader.h"
 
 #include "Platform/Vulkan/Image.h"

@@ -10,6 +10,15 @@
 namespace Wingnut
 {
 
+	enum class SamplerType
+	{
+		Default = 0,
+		LinearRepeat,
+		LinearClamp,
+		NearestRepeat,
+	};
+
+
 	namespace Vulkan
 	{
 

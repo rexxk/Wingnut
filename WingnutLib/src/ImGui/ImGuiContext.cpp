@@ -1,8 +1,7 @@
 #include "wingnut_pch.h"
 #include "ImGuiContext.h"
 
-#include "Assets/SamplerStore.h"
-#include "Assets/ShaderStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Event/EventUtils.h"
 #include "Event/KeyboardEvents.h"
@@ -111,8 +110,8 @@ namespace Wingnut
 		io.Fonts->GetTexDataAsRGBA32(&pixels, &atlasWidth, &atlasHeight, &bytesPerPixel);
 
 		m_AtlasTexture = Vulkan::Texture2D::Create((uint32_t)atlasWidth, (uint32_t)atlasHeight, (uint32_t)bytesPerPixel, pixels, Vulkan::TextureFormat::R8G8B8A8_Normalized);
-		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
-		m_AtlasDescriptor->SetImageBinding(0, m_AtlasTexture, SamplerStore::GetSampler(SamplerType::Default));
+		m_AtlasDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+		m_AtlasDescriptor->SetImageBinding(0, m_AtlasTexture, ResourceManager::GetSampler(SamplerType::Default));
 		m_AtlasDescriptor->UpdateBindings();
 
 		io.Fonts->SetTexID((ImTextureID)m_AtlasDescriptor->GetDescriptor());
@@ -122,7 +121,7 @@ namespace Wingnut
 		ECS::EntitySystem::AddComponent<TagComponent>(m_ImGuiEntity, "ImGui");
 
 		m_CameraBuffer = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(ImGuiScaleTranslate));
-		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiCameraDescriptor);
+		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiCameraDescriptor);
 		m_CameraDescriptor->SetBufferBinding(0, m_CameraBuffer);
 		m_CameraDescriptor->UpdateBindings();
 

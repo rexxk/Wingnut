@@ -104,13 +104,13 @@ void MainLayer::OnAttach()
 	{
 //		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
 // 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
-//		m_Scene->ImportOBJModel("assets/models/fnscarl.obj");
+		m_Scene->ImportOBJModel("assets/models/fnscarl.obj");
 //		m_Scene->ImportOBJModel("assets/models/holidaybeach.obj");
 //		m_Scene->ImportOBJModel("assets/models/leeenfieldmk1.obj");
 //		m_Scene->ImportOBJModel("assets/models/Room1.obj");
 //		m_Scene->ImportOBJModel("assets/models/Room_pbr.obj");
 //		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
-		m_Scene->ImportOBJModel("assets/models/SpaceStation.obj");
+//		m_Scene->ImportOBJModel("assets/models/SpaceStation.obj");
 //		m_Scene->ImportOBJModel("assets/models/watchtower.obj");
 	}
 
@@ -144,7 +144,7 @@ void MainLayer::OnAttach()
 */
 
 
-	m_Scene->CreateUISceneImageDescriptor(SamplerStore::GetSampler(SamplerType::Default));
+	m_Scene->CreateUISceneImageDescriptor(ResourceManager::GetSampler(SamplerType::Default));
 
 	m_MaterialEditorPanel = CreateRef<MaterialEditorPanel>();
 	m_MaterialStorePanel = CreateRef<MaterialStorePanel>(m_Scene);
@@ -159,8 +159,8 @@ void MainLayer::OnDetach()
 {
 	Renderer::WaitForIdle();
 
-	MaterialStore::ClearMaterials();
-	TextureStore::ClearTextures();
+	ResourceManager::ClearMaterials();
+	ResourceManager::ClearTextures();
 
 	m_Scene->Release();
 }

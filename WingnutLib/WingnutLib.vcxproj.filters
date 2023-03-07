@@ -83,7 +83,6 @@
     <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
     <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
     <ClInclude Include="src\Platform\Vulkan\Shader.h" />
-    <ClInclude Include="src\Assets\ShaderStore.h" />
     <ClInclude Include="src\Utils\StringUtils.h" />
     <ClInclude Include="src\Platform\Vulkan\DescriptorPool.h" />
     <ClInclude Include="src\Scene\Scene.h" />
@@ -107,19 +106,17 @@
     <ClInclude Include="src\Scene\Entity.h" />
     <ClInclude Include="src\ImGui\Panels\PropertyPanel.h" />
     <ClInclude Include="src\Renderer\Material.h" />
-    <ClInclude Include="src\Assets\MaterialStore.h" />
     <ClInclude Include="src\ImGui\Panels\MaterialEditorPanel.h" />
     <ClInclude Include="src\ImGui\Panels\MaterialStorePanel.h" />
     <ClInclude Include="src\ImGui\Panels\TexturePanel.h" />
-    <ClInclude Include="src\Assets\TextureStore.h" />
     <ClInclude Include="src\Utils\FileDialog.h" />
     <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
     <ClInclude Include="src\Input\KeyboardInput.h" />
-    <ClInclude Include="src\Assets\SamplerStore.h" />
     <ClInclude Include="src\DataImport\Obj\ObjLoader.h" />
     <ClInclude Include="src\ImGui\Panels\MetricsPanel.h" />
     <ClInclude Include="src\ImGui\Controls\UIImageButton.h" />
     <ClInclude Include="src\Renderer\Light.h" />
+    <ClInclude Include="src\Assets\ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -180,7 +177,6 @@
     <ClCompile Include="src\Platform\Vulkan\Buffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Shader.cpp" />
-    <ClCompile Include="src\Assets\ShaderStore.cpp" />
     <ClCompile Include="src\Utils\StringUtils.cpp" />
     <ClCompile Include="src\Platform\Vulkan\DescriptorPool.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
@@ -196,18 +192,16 @@
     <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\PropertyPanel.cpp" />
     <ClCompile Include="src\Renderer\Material.cpp" />
-    <ClCompile Include="src\Assets\MaterialStore.cpp" />
     <ClCompile Include="src\ImGui\Panels\MaterialEditorPanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\MaterialStorePanel.cpp" />
     <ClCompile Include="src\ImGui\Panels\TexturePanel.cpp" />
-    <ClCompile Include="src\Assets\TextureStore.cpp" />
     <ClCompile Include="src\Utils\FileDialog.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
     <ClCompile Include="src\Input\KeyboardInput.cpp" />
-    <ClCompile Include="src\Assets\SamplerStore.cpp" />
     <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp" />
     <ClCompile Include="src\ImGui\Panels\MetricsPanel.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIImageButton.cpp" />
     <ClCompile Include="src\Renderer\Light.cpp" />
+    <ClCompile Include="src\Assets\ResourceManager.cpp" />
   </ItemGroup>
 </Project>

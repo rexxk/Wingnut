@@ -1,8 +1,7 @@
 #include "wingnut_pch.h"
 #include "PropertyPanel.h"
 
-#include "Assets/MaterialStore.h"
-#include "Assets/TextureStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Event/EventUtils.h"
 #include "Event/UIEvents.h"
@@ -146,7 +145,7 @@ namespace Wingnut
 		bool opened = ImGui::TreeNodeEx("MaterialComponent", ImGuiTreeNodeFlags_DefaultOpen);
 
 		MaterialComponent& materialComponent = m_SelectedEntity.GetComponent<MaterialComponent>();
-		Ref<Material> material = MaterialStore::GetMaterial(materialComponent.MaterialID);
+		Ref<Material> material = ResourceManager::GetMaterial(materialComponent.MaterialID);
 
 		if (opened)
 		{
@@ -189,7 +188,7 @@ namespace Wingnut
 
 			ImGui::NextColumn();
 
-			ImGui::Image((ImTextureID)TextureStore::GetDescriptor(material->GetMaterialData().AlbedoTexture.Texture->GetTextureID())->GetDescriptor(), ImVec2(64.0f, 64.0f));
+			ImGui::Image((ImTextureID)ResourceManager::GetDescriptor(material->GetMaterialData().AlbedoTexture.Texture->GetTextureID())->GetDescriptor(), ImVec2(64.0f, 64.0f));
 
 			ImGui::Columns(1);
 

@@ -2,7 +2,7 @@
 #include "ImGuiRenderer.h"
 
 
-#include "Assets/ShaderStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Event/EventUtils.h"
 #include "Event/WindowEvents.h"
@@ -105,7 +105,7 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		uint32_t framesInflight = Renderer::GetRendererSettings().FramesInFlight;
 
-		s_ImGuiSceneData.Shader = ShaderStore::GetShader(ShaderType::ImGui);
+		s_ImGuiSceneData.Shader = ResourceManager::GetShader(ShaderType::ImGui);
 
 		Vulkan::PipelineSpecification pipelineSpecification;
 		pipelineSpecification.Extent = m_Extent;

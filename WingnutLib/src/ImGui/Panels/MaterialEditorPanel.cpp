@@ -1,8 +1,7 @@
 #include "wingnut_pch.h"
 #include "MaterialEditorPanel.h"
 
-#include "Assets/MaterialStore.h"
-#include "Assets/TextureStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Event/EventUtils.h"
 #include "Event/UIEvents.h"
@@ -80,15 +79,15 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		std::string previewString = SamplerStore::SamplerTypeToString(m_SelectedMaterial->GetSamplerType());
+		std::string previewString = ResourceManager::SamplerTypeToString(m_SelectedMaterial->GetSamplerType());
 
 		if (ImGui::BeginCombo("##SamplerTypeCombo", previewString.c_str()))
 		{
-			for (auto& sampler : SamplerStore::GetSamplerMap())
+			for (auto& sampler : ResourceManager::GetSamplerMap())
 			{
 				bool isSelected = m_SelectedMaterial->GetSamplerType() == sampler.first;
 
-				if (ImGui::Selectable(SamplerStore::SamplerTypeToString(sampler.first).c_str(), &isSelected))
+				if (ImGui::Selectable(ResourceManager::SamplerTypeToString(sampler.first).c_str(), &isSelected))
 				{
 					m_SelectedMaterial->SetSamplerType(sampler.first);
 				}
@@ -169,7 +168,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::AlbedoTexture, TextureStore::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialType::AlbedoTexture, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();
@@ -209,7 +208,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::NormalMap, TextureStore::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialType::NormalMap, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();
@@ -250,7 +249,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::MetalnessMap, TextureStore::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialType::MetalnessMap, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();
@@ -290,7 +289,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::RoughnessMap, TextureStore::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialType::RoughnessMap, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();
@@ -330,7 +329,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::AmbientOcclusionMap, TextureStore::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialType::AmbientOcclusionMap, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();

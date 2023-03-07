@@ -1,9 +1,7 @@
 #include "wingnut_pch.h"
 #include "Scene.h"
 
-#include "Assets/MaterialStore.h"
-#include "Assets/SamplerStore.h"
-#include "Assets/ShaderStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Core/Timer.h"
 
@@ -39,12 +37,12 @@ namespace Wingnut
 		m_SceneRenderer = SceneRenderer::Create(m_SceneExtent);
 
 		m_CameraUB = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(CameraData));
-		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), CameraDescriptor);
+		m_CameraDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::Default), CameraDescriptor);
 		m_CameraDescriptor->SetBufferBinding(0, m_CameraUB);
 		m_CameraDescriptor->UpdateBindings();
 
 		m_LightUB = Vulkan::UniformBuffer::Create(rendererData.Device, sizeof(LightData));
-		m_LightDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), LightsDescriptor);
+		m_LightDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::Default), LightsDescriptor);
 		m_LightDescriptor->SetBufferBinding(0, m_LightUB);
 		m_LightDescriptor->UpdateBindings();
 
@@ -54,7 +52,7 @@ namespace Wingnut
 		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
 			{
 				auto& rendererData = Renderer::GetContext()->GetRendererData();
-				m_RendererImageDescriptor->SetImageBinding(0, rendererData.SceneImage, SamplerStore::GetSampler(SamplerType::Default));
+				m_RendererImageDescriptor->SetImageBinding(0, rendererData.SceneImage, ResourceManager::GetSampler(SamplerType::Default));
 				m_RendererImageDescriptor->UpdateBindings();
 
 				return false;
@@ -149,7 +147,7 @@ namespace Wingnut
 
 			if (ECS::EntitySystem::HasComponent<MaterialComponent>(entity))
 			{
-				material = MaterialStore::GetMaterial(ECS::EntitySystem::GetComponent<MaterialComponent>(entity).MaterialID);
+				material = ResourceManager::GetMaterial(ECS::EntitySystem::GetComponent<MaterialComponent>(entity).MaterialID);
 			}
 
 			m_SceneRenderer->SubmitToDrawList(entity, meshComponent.VertexList, meshComponent.IndexList, transform, material);
@@ -181,8 +179,8 @@ namespace Wingnut
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 
-		m_RendererImageDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
-		m_RendererImageDescriptor->SetImageBinding(0, rendererData.SceneImage, SamplerStore::GetSampler(SamplerType::Default));
+		m_RendererImageDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+		m_RendererImageDescriptor->SetImageBinding(0, rendererData.SceneImage, ResourceManager::GetSampler(SamplerType::Default));
 		m_RendererImageDescriptor->UpdateBindings();
 	}
 
@@ -204,8 +202,8 @@ namespace Wingnut
 
 		for (auto& material : importResult.Materials)
 		{
-			Ref<Material> newMaterial = Material::Create(material, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::LinearRepeat));
-			MaterialStore::StoreMaterial(newMaterial);
+			Ref<Material> newMaterial = Material::Create(material, ResourceManager::GetShader(ShaderType::Default), ResourceManager::GetSampler(SamplerType::LinearRepeat));
+			ResourceManager::StoreMaterial(newMaterial);
 		}
 
 		for (auto& mesh : importResult.Meshes)
@@ -214,7 +212,7 @@ namespace Wingnut
 			newEntity.AddComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f));
 
 			newEntity.AddComponent<MeshComponent>(mesh.VertexList, mesh.IndexList);
-			newEntity.AddComponent<MaterialComponent>(MaterialStore::GetMaterialByName(mesh.MaterialName)->GetID());
+			newEntity.AddComponent<MaterialComponent>(ResourceManager::GetMaterialByName(mesh.MaterialName)->GetID());
 		}
 
 	}

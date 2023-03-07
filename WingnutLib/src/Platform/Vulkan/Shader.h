@@ -13,6 +13,12 @@
 namespace Wingnut
 {
 
+	enum class ShaderType
+	{
+		Default,
+		ImGui,
+	};
+
 	namespace Vulkan
 	{
 

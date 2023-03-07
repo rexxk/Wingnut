@@ -89,6 +89,10 @@ d 1.000000
 illum 2
 Pr 0.500000
 Pm 0.000000
+map_Kd assets/textures/SpaceStation/texture_3_UVMap_color.jpg
+map_Ks assets/textures/SpaceStation/texture_3_UVMap_metalness.jpg
+map_Pr assets/textures/SpaceStation/texture_3_UVMap_rough.jpg
+map_Bump assets/textures/SpaceStation/texture_3_UVMap_nmap.jpg
 
 newmtl Star_Fighter_Fire
 Kd 0.800000 0.207723 0.000000
@@ -119,6 +123,10 @@ d 1.000000
 illum 2
 Pr 0.500000
 Pm 0.000000
+map_Kd assets/textures/SpaceStation/t1_UVMap_color.jpg
+map_Ks assets/textures/SpaceStation/t1_UVMap_metalness.jpg
+map_Pr assets/textures/SpaceStation/t1_UVMap_rough.jpg
+map_Bump assets/textures/SpaceStation/t1_UVMap_nmap.jpg
 
 newmtl Station-Outside
 Kd 1.000000 1.000000 1.000000
@@ -129,6 +137,10 @@ d 1.000000
 illum 2
 Pr 0.500000
 Pm 0.000000
+map_Kd assets/textures/SpaceStation/out_side_UVMap_color.jpg
+map_Ks assets/textures/SpaceStation/out_side_UVMap_metalness.jpg
+map_Pr assets/textures/SpaceStation/out_side_UVMap_rough.jpg
+map_Bump assets/textures/SpaceStation/out_side_UVMap_nmap.jpg
 
 newmtl Windows
 Kd 0.800000 0.800000 0.800000

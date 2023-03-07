@@ -3,9 +3,7 @@
 
 #include "ShaderCompiler.h"
 
-#include "Assets/SamplerStore.h"
-#include "Assets/ShaderStore.h"
-#include "Assets/TextureStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Core/Timer.h"
 
@@ -103,8 +101,7 @@ namespace Wingnut
 				s_VulkanData.DescriptorPool->Release();
 			}
 
-			SamplerStore::Release();
-			ShaderStore::Release();
+			ResourceManager::Release();
 
 			for (auto& inFlightFence : s_VulkanData.InFlightFences)
 			{
@@ -280,18 +277,18 @@ namespace Wingnut
 			}
 
 
-			ShaderStore::LoadShader(ShaderType::Default, "assets/shaders/Basic.shader");
-			ShaderStore::LoadShader(ShaderType::ImGui, "assets/shaders/ImGui.shader");
+			ResourceManager::LoadShader(ShaderType::Default, "assets/shaders/Basic.shader");
+			ResourceManager::LoadShader(ShaderType::ImGui, "assets/shaders/ImGui.shader");
 
-			SamplerStore::AddSampler(SamplerType::LinearRepeat, Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat));
-			SamplerStore::AddSampler(SamplerType::NearestRepeat, Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Nearest, Vulkan::ImageSamplerMode::Repeat));
+			ResourceManager::AddSampler(SamplerType::LinearRepeat, Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat));
+			ResourceManager::AddSampler(SamplerType::NearestRepeat, Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Nearest, Vulkan::ImageSamplerMode::Repeat));
 
 			s_VulkanData.DefaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat(Vulkan::TextureFormat::R8G8B8A8_Normalized));
-			s_VulkanData.DefaultTextureDescriptor = Vulkan::Descriptor::Create(s_VulkanData.Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
-			s_VulkanData.DefaultTextureDescriptor->SetImageBinding(0, s_VulkanData.DefaultTexture, SamplerStore::GetSampler(SamplerType::Default));
+			s_VulkanData.DefaultTextureDescriptor = Vulkan::Descriptor::Create(s_VulkanData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			s_VulkanData.DefaultTextureDescriptor->SetImageBinding(0, s_VulkanData.DefaultTexture, ResourceManager::GetSampler(SamplerType::Default));
 			s_VulkanData.DefaultTextureDescriptor->UpdateBindings();
 
-			TextureStore::AddTextureData(s_VulkanData.DefaultTexture, s_VulkanData.DefaultTextureDescriptor);
+			ResourceManager::AddTextureData(s_VulkanData.DefaultTexture, s_VulkanData.DefaultTextureDescriptor);
 		}
 
 		bool VulkanContext::CreateInstance()

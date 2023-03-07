@@ -1,9 +1,7 @@
 #include "wingnut_pch.h"
 #include "TexturePanel.h"
 
-#include "Assets/SamplerStore.h"
-#include "Assets/ShaderStore.h"
-#include "Assets/TextureStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Core/Application.h"
 
@@ -53,11 +51,11 @@ namespace Wingnut
 				{
 					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, m_FlipHorizontal);
 //					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::Default), TextureDescriptor, AlbedoTextureBinding, newTexture);
-					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
-					newDescriptor->SetImageBinding(0, newTexture, SamplerStore::GetSampler(SamplerType::Default));
+					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+					newDescriptor->SetImageBinding(0, newTexture, ResourceManager::GetSampler(SamplerType::Default));
 //					newDescriptor->SetImageBinding(0, newTexture, SamplerStore::GetSampler(SamplerType::NearestRepeat));
 					newDescriptor->UpdateBindings();
-					TextureStore::AddTextureData(newTexture, newDescriptor);
+					ResourceManager::AddTextureData(newTexture, newDescriptor);
 				}
 			}
 
@@ -77,7 +75,7 @@ namespace Wingnut
 			uint32_t rowItem = 0;
 
 			//			for (uint32_t i = 0; i < 16; i++)
-			for (auto& textureIterator : TextureStore::GetTextureContainer())
+			for (auto& textureIterator : ResourceManager::GetTextureContainer())
 			{
 				UUID textureID = textureIterator.first;
 
@@ -85,12 +83,12 @@ namespace Wingnut
 
 				{
 
-					ImGui::Image((ImTextureID)TextureStore::GetDescriptor(textureID)->GetDescriptor(), ImVec2(textureSize, textureSize));
+					ImGui::Image((ImTextureID)ResourceManager::GetDescriptor(textureID)->GetDescriptor(), ImVec2(textureSize, textureSize));
 
 					ImGui::PushItemWidth(textureSize + (paddingSize * 2));
 
 					ImGui::PushTextWrapPos((rowItem++ + 1) * (textureSize + (paddingSize * 2)));
-					ImGui::TextWrapped("%s", TextureStore::GetTexture(textureID)->GetTextureName().c_str());
+					ImGui::TextWrapped("%s", ResourceManager::GetTexture(textureID)->GetTextureName().c_str());
 //					ImGui::Text("%s", TextureStore::GetTexture(textureID)->GetTextureName().c_str());
 					ImGui::PopTextWrapPos();
 

@@ -1,8 +1,7 @@
 #include "wingnut_pch.h"
 #include "Material.h"
 
-#include "Assets/ShaderStore.h"
-#include "Assets/TextureStore.h"
+#include "Assets/ResourceManager.h"
 
 #include "Renderer/Renderer.h"
 
@@ -41,12 +40,12 @@ namespace Wingnut
 		{
 			m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
 			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.AlbedoTexture.Texture, sampler);
 			uiTextureDescriptor->UpdateBindings();
 
-			TextureStore::AddTextureData(m_MaterialData.AlbedoTexture.Texture, uiTextureDescriptor);
+			ResourceManager::AddTextureData(m_MaterialData.AlbedoTexture.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseAlbedoTexture = true;
 		}
@@ -55,12 +54,12 @@ namespace Wingnut
 		{
 			m_MaterialData.NormalMap.Texture = Vulkan::Texture2D::Create(objMaterial.NormalMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
 			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.NormalMap.Texture, sampler);
 			uiTextureDescriptor->UpdateBindings();
 
-			TextureStore::AddTextureData(m_MaterialData.NormalMap.Texture, uiTextureDescriptor);
+			ResourceManager::AddTextureData(m_MaterialData.NormalMap.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseNormalMap = true;
 		}
@@ -69,12 +68,12 @@ namespace Wingnut
 		{
 			m_MaterialData.MetalnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.MetalnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
 			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.MetalnessMap.Texture, sampler);
 			uiTextureDescriptor->UpdateBindings();
 
-			TextureStore::AddTextureData(m_MaterialData.MetalnessMap.Texture, uiTextureDescriptor);
+			ResourceManager::AddTextureData(m_MaterialData.MetalnessMap.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseMetalnessMap = true;
 		}
@@ -83,12 +82,12 @@ namespace Wingnut
 		{
 			m_MaterialData.RoughnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.RoughnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
 			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.RoughnessMap.Texture, sampler);
 			uiTextureDescriptor->UpdateBindings();
 
-			TextureStore::AddTextureData(m_MaterialData.RoughnessMap.Texture, uiTextureDescriptor);
+			ResourceManager::AddTextureData(m_MaterialData.RoughnessMap.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseRoughnessMap = true;
 		}
@@ -97,19 +96,19 @@ namespace Wingnut
 		{
 			m_MaterialData.AmbientOcclusionMap.Texture = Vulkan::Texture2D::Create(objMaterial.AmbientOcclusionMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ShaderStore::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
 			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.AmbientOcclusionMap.Texture, sampler);
 			uiTextureDescriptor->UpdateBindings();
 
-			TextureStore::AddTextureData(m_MaterialData.AmbientOcclusionMap.Texture, uiTextureDescriptor);
+			ResourceManager::AddTextureData(m_MaterialData.AmbientOcclusionMap.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseAmbientOcclusionMap = true;
 		}
 
 
 //		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
-		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::LinearRepeat);
+		m_MaterialData.Sampler = ResourceManager::GetSampler(SamplerType::LinearRepeat);
 
 		if (objMaterial.HasPBRValues)
 		{
@@ -144,12 +143,12 @@ namespace Wingnut
 		m_MaterialData.MetalnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_MaterialData.RoughnessMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
 		m_MaterialData.AmbientOcclusionMap.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
-		m_MaterialData.Sampler = SamplerStore::GetSampler(SamplerType::Default);
+		m_MaterialData.Sampler = ResourceManager::GetSampler(SamplerType::Default);
 
 
 //		m_Descriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, m_Shader, MaterialDescriptor);
 
-		CreateDescriptor(shader, SamplerStore::GetSampler(SamplerType::Default));
+		CreateDescriptor(shader, ResourceManager::GetSampler(SamplerType::Default));
 
 //		m_Descriptor->SetBufferBinding(MaterialDataBinding, m_MaterialUB);
 //		m_Descriptor->SetImageBinding(AlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, SamplerStore::GetSampler(SamplerType::Default));
@@ -261,7 +260,7 @@ namespace Wingnut
 
 		m_SamplerType = type;
 
-		m_MaterialData.Sampler = SamplerStore::GetSampler(type);
+		m_MaterialData.Sampler = ResourceManager::GetSampler(type);
 
 //		TextureStore::SetDescriptor(m_MaterialData.AlbedoTexture.Texture->GetTextureID(), m_Descriptor);
 //		TextureStore::GetDescriptor(m_MaterialData.Texture->GetTextureID())->SetSampler(SamplerStore::GetSampler(m_SamplerType));
