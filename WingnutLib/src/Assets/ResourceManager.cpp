@@ -14,9 +14,33 @@ namespace Wingnut
 
 	Ref<Material> ResourceManager::GetMaterial(UUID materialID)
 	{
-		if (s_Materials.find(materialID) != s_Materials.end())
+
+		for (auto& materialIterator : s_Materials)
 		{
-			return s_Materials[materialID];
+			auto& materialVector = materialIterator.second;
+
+			for (auto& material : materialVector)
+			{
+				if (material->GetID() == materialID)
+				{
+					return material;
+				}
+			}
+		}
+
+		return nullptr;
+	}
+
+	Ref<Material> ResourceManager::GetMaterial(MaterialType type, UUID materialID)
+	{
+		auto& materialVector = s_Materials[type];
+
+		for (auto& material : materialVector)
+		{
+			if (material->GetID() == materialID)
+			{
+				return material;
+			}
 		}
 
 		return nullptr;
@@ -24,14 +48,28 @@ namespace Wingnut
 
 	void ResourceManager::StoreMaterial(Ref<Material> material)
 	{
-		s_Materials[material->GetID()] = material;
+		auto& materialVector = s_Materials[material->GetType()];
+
+		for (auto& iterator : materialVector)
+		{
+			if (iterator->GetID() == material->GetID())
+			{
+				LOG_CORE_TRACE("[ResourceManager] Material {} already exists in store", material->GetName());
+				return;
+			}
+		}
+
+		s_Materials[material->GetType()].emplace_back(material);
 	}
 
 	void ResourceManager::ClearMaterials()
 	{
-		for (auto& material : s_Materials)
+		for (auto& materialType : s_Materials)
 		{
-			material.second->Release();
+			for (auto& material : materialType.second)
+			{
+				material->Release();
+			}
 		}
 
 		s_Materials.clear();
@@ -41,8 +79,27 @@ namespace Wingnut
 	{
 		for (auto& materialInstance : s_Materials)
 		{
-			auto& material = materialInstance.second;
+			auto& materialVector = materialInstance.second;
 
+			for (auto& material : materialVector)
+			{
+				if (material->GetName() == name)
+				{
+					return material;
+				}
+			}
+
+		}
+
+		return nullptr;
+	}
+
+	Ref<Material> ResourceManager::GetMaterialByName(MaterialType type, const std::string& name)
+	{
+		auto& materialVector = s_Materials[type];
+
+		for (auto& material : materialVector)
+		{
 			if (material->GetName() == name)
 			{
 				return material;
@@ -52,9 +109,17 @@ namespace Wingnut
 		return nullptr;
 	}
 
-	void ResourceManager::DeleteMaterial(UUID materialID)
+	void ResourceManager::DeleteMaterial(MaterialType type, const std::string& materialName)
 	{
-		s_Materials.erase(materialID);
+		for (auto iterator = s_Materials[type].begin(); iterator != s_Materials[type].end(); iterator++)
+		{
+			if ((*iterator)->GetName() == materialName)
+			{
+				s_Materials[type].erase(iterator);
+				return;
+			}
+		}
+
 	}
 
 	std::string ResourceManager::SamplerTypeToString(SamplerType type)
@@ -160,20 +225,6 @@ namespace Wingnut
 		}
 	}
 
-	void ResourceManager::AddDescriptor(UUID textureID, Ref<Vulkan::Descriptor> descriptor)
-	{
-		if (m_UITextureDescriptors.find(textureID) == m_UITextureDescriptors.end())
-		{
-			m_UITextureDescriptors[textureID] = descriptor;
-		}
-	}
-
-	void ResourceManager::AddTextureData(Ref<Vulkan::Texture2D> texture, Ref<Vulkan::Descriptor> descriptor)
-	{
-		AddTexture(texture);
-		AddDescriptor(texture->GetTextureID(), descriptor);
-	}
-
 	bool ResourceManager::FindTexture(const std::string& textureName)
 	{
 		for (auto& containerIterator : m_Textures)
@@ -188,34 +239,11 @@ namespace Wingnut
 	}
 
 
-	void ResourceManager::SetDescriptor(UUID textureID, Ref<Vulkan::Descriptor> descriptor)
-	{
-		if (m_UITextureDescriptors.find(textureID) != m_UITextureDescriptors.end())
-		{
-			m_UITextureDescriptors[textureID] = descriptor;
-		}
-	}
-
-	std::pair<Ref<Vulkan::Texture2D>, Ref<Vulkan::Descriptor>> ResourceManager::GetTextureData(UUID textureID)
-	{
-		return std::make_pair(GetTexture(textureID), GetDescriptor(textureID));
-	}
-
 	Ref<Vulkan::Texture2D> ResourceManager::GetTexture(UUID textureID)
 	{
 		if (m_Textures.find(textureID) != m_Textures.end())
 		{
 			return m_Textures[textureID];
-		}
-
-		return nullptr;
-	}
-
-	Ref<Vulkan::Descriptor> ResourceManager::GetDescriptor(UUID textureID)
-	{
-		if (m_UITextureDescriptors.find(textureID) != m_UITextureDescriptors.end())
-		{
-			return m_UITextureDescriptors[textureID];
 		}
 
 		return nullptr;
@@ -229,7 +257,6 @@ namespace Wingnut
 		}
 
 		m_Textures.clear();
-		m_UITextureDescriptors.clear();
 	}
 
 

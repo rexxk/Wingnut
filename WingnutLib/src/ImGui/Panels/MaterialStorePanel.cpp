@@ -71,7 +71,8 @@ namespace Wingnut
 			{
 				if (std::string(m_ListboxItems[m_CurrentSelection]) != "Default")
 				{
-					UUID materialID = ResourceManager::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection]))->GetID();
+					Ref<Material> material = ResourceManager::GetMaterialByName(std::string(m_ListboxItems[m_CurrentSelection]));
+					UUID materialID = material->GetID();
 
 					for (auto& entity : m_ActiveScene->GetEntities())
 					{
@@ -101,7 +102,7 @@ namespace Wingnut
 					Ref<MaterialSelectedEvent> event = CreateRef<MaterialSelectedEvent>(nullptr);
 					AddEventToQueue(event);
 
-					ResourceManager::DeleteMaterial(materialID);
+					ResourceManager::DeleteMaterial(material->GetType(), material->GetName());
 				}
 
 			}
@@ -118,10 +119,13 @@ namespace Wingnut
 
 		for (auto& materialIterator : ResourceManager::GetMaterialList())
 		{
-			auto& material = materialIterator.second;
-			auto& materialID = materialIterator.first;
+			auto& materialVector = materialIterator.second;
+//			auto& materialID = materialIterator.first;
 
-			m_ListboxItems.emplace_back(material->GetName().c_str());
+			for (auto& material : materialVector)
+			{
+				m_ListboxItems.emplace_back(material->GetName().c_str());
+			}
 		}
 
 	}

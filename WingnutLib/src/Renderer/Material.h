@@ -11,42 +11,22 @@ namespace Wingnut
 {
 
 
+	enum class MaterialType
+	{
+		UI,
+		StaticPBR,
+		DynamicPBR,
+	};
+
+
 	struct MaterialTexture
 	{
 		Ref<Vulkan::Texture2D> Texture;
 	};
 
-	struct MaterialProperties
+	enum class MaterialTextureType
 	{
-		glm::vec4 AlbedoColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
-
-		float Metallic = 0.04f;
-		float Roughness = 0.0f;
-		float AmbientOcclusion = 1.0f;
-
-		uint32_t UseAlbedoTexture = 0;
-		uint32_t UseNormalMap = 0;
-		uint32_t UseMetalnessMap = 0;
-		uint32_t UseRoughnessMap = 0;
-		uint32_t UseAmbientOcclusionMap = 0;
-	};
-
-	struct MaterialData
-	{
-		MaterialProperties Properties;
-
-		MaterialTexture AlbedoTexture;
-		MaterialTexture NormalMap;
-		MaterialTexture MetalnessMap;
-		MaterialTexture RoughnessMap;
-		MaterialTexture AmbientOcclusionMap;
-
-
-		Ref<Vulkan::ImageSampler> Sampler;
-	};
-
-	enum class MaterialType
-	{
+		ThumbnailTexture,
 		AlbedoTexture,
 		NormalMap,
 		MetalnessMap,
@@ -63,38 +43,37 @@ namespace Wingnut
 
 		Material(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Material(const std::string& name, Ref<Vulkan::Shader> shader);
-		~Material();
+		virtual ~Material();
 
-		void Release();
+		virtual void Release();
 
-		void Update();
+		virtual void Update();
 
-		void SetTexture(MaterialType type, Ref<Vulkan::Texture2D> texture);
+		virtual void SetTexture(MaterialTextureType type, Ref<Vulkan::Texture2D> texture);
 
 		void SetName(const std::string& name) { m_Name = name; }
 		std::string& GetName() { return m_Name; }
 		UUID GetID() const { return m_MaterialID; }
+		MaterialType GetType() const { return m_MaterialType; }
 
-		void SetSamplerType(SamplerType type);
+//		void SetSamplerType(SamplerType type);
 		SamplerType GetSamplerType() const { return m_SamplerType; }
 
-		void CreateDescriptor(Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
+		void SetSampler(Ref<Vulkan::ImageSampler> sampler) { m_Sampler = sampler; }
+
+		virtual void CreateDescriptor(Ref<Vulkan::Shader> shader);
 		Ref<Vulkan::Descriptor> GetDescriptor() { return m_Descriptor; }
 
-		MaterialData& GetMaterialData() { return m_MaterialData; }
-
-	private:
-		void CreateUniformBuffer();
-
-	private:
-		MaterialData m_MaterialData;
-
+	protected:
 		UUID m_MaterialID;
+		MaterialType m_MaterialType = MaterialType::StaticPBR;
+
 		SamplerType m_SamplerType = SamplerType::LinearRepeat;
 
 		Ref<Vulkan::Descriptor> m_Descriptor = nullptr;
 		Ref<Vulkan::Shader> m_Shader = nullptr;
-		Ref<Vulkan::UniformBuffer> m_MaterialUB = nullptr;
+
+		Ref<Vulkan::ImageSampler> m_Sampler = nullptr;
 
 		std::string m_Name;
 	};

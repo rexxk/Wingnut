@@ -16,8 +16,8 @@ namespace Wingnut
 {
 
 
-	UIImageButton::UIImageButton(MaterialType materialType, Ref<Material> material)
-		: m_MaterialType(materialType), m_Material(material)
+	UIImageButton::UIImageButton(MaterialTextureType materialTextureType, Ref<Material> material)
+		: m_MaterialTextureType(materialTextureType), m_Material(material)
 	{
 		Draw();
 	}
@@ -27,27 +27,27 @@ namespace Wingnut
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 
-		ImGui::PushID((uint32_t)m_MaterialType);
+		ImGui::PushID((uint32_t)m_MaterialTextureType);
 
 		UUID textureID;
 
-		if (m_MaterialType == MaterialType::AlbedoTexture)
+		if (m_MaterialTextureType == MaterialTextureType::AlbedoTexture)
 		{
 			textureID = m_Material->GetMaterialData().AlbedoTexture.Texture->GetTextureID();
 		}
-		else if (m_MaterialType == MaterialType::NormalMap)
+		else if (m_MaterialTextureType == MaterialTextureType::NormalMap)
 		{
 			textureID = m_Material->GetMaterialData().NormalMap.Texture->GetTextureID();
 		}
-		else if (m_MaterialType == MaterialType::MetalnessMap)
+		else if (m_MaterialTextureType == MaterialTextureType::MetalnessMap)
 		{
 			textureID = m_Material->GetMaterialData().MetalnessMap.Texture->GetTextureID();
 		}
-		else if (m_MaterialType == MaterialType::RoughnessMap)
+		else if (m_MaterialTextureType == MaterialTextureType::RoughnessMap)
 		{
 			textureID = m_Material->GetMaterialData().RoughnessMap.Texture->GetTextureID();
 		}
-		else if (m_MaterialType == MaterialType::AmbientOcclusionMap)
+		else if (m_MaterialTextureType == MaterialTextureType::AmbientOcclusionMap)
 		{
 			textureID = m_Material->GetMaterialData().AmbientOcclusionMap.Texture->GetTextureID();
 		}
@@ -74,7 +74,7 @@ namespace Wingnut
 
 					ResourceManager::AddTextureData(newTexture, newDescriptor);
 
-					m_Material->SetTexture(m_MaterialType, newTexture);
+					m_Material->SetTexture(m_MaterialTextureType, newTexture);
 				}
 
 			}

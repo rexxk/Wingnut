@@ -10,12 +10,12 @@ namespace Wingnut
 	class UIImageButton
 	{
 	public:
-		UIImageButton(MaterialType type, Ref<Material> material);
+		UIImageButton(MaterialTextureType materialTextureType, Ref<Material> material);
 
 		void Draw();
 
 	private:
-		MaterialType m_MaterialType;
+		MaterialTextureType m_MaterialTextureType;
 
 		Ref<Material> m_Material = nullptr;
 	};

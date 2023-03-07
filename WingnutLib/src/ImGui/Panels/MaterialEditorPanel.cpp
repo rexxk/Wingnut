@@ -157,7 +157,7 @@ namespace Wingnut
 
 		{
 
-			UIImageButton albedoImageButton(MaterialType::AlbedoTexture, m_SelectedMaterial);
+			UIImageButton albedoImageButton(MaterialTextureType::AlbedoTexture, m_SelectedMaterial);
 
 
 			if (ImGui::BeginDragDropTarget())
@@ -168,7 +168,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::AlbedoTexture, ResourceManager::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialTextureType::AlbedoTexture, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();
@@ -198,7 +198,7 @@ namespace Wingnut
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 
 		{
-			UIImageButton(MaterialType::NormalMap, m_SelectedMaterial);
+			UIImageButton(MaterialTextureType::NormalMap, m_SelectedMaterial);
 
 			if (ImGui::BeginDragDropTarget())
 			{
@@ -208,7 +208,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::NormalMap, ResourceManager::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialTextureType::NormalMap, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();
@@ -239,7 +239,7 @@ namespace Wingnut
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 
 		{
-			UIImageButton(MaterialType::MetalnessMap, m_SelectedMaterial);
+			UIImageButton(MaterialTextureType::MetalnessMap, m_SelectedMaterial);
 
 			if (ImGui::BeginDragDropTarget())
 			{
@@ -249,7 +249,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::MetalnessMap, ResourceManager::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialTextureType::MetalnessMap, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();
@@ -279,7 +279,7 @@ namespace Wingnut
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 
 		{
-			UIImageButton(MaterialType::RoughnessMap , m_SelectedMaterial);
+			UIImageButton(MaterialTextureType::RoughnessMap , m_SelectedMaterial);
 
 			if (ImGui::BeginDragDropTarget())
 			{
@@ -289,7 +289,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::RoughnessMap, ResourceManager::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialTextureType::RoughnessMap, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();
@@ -319,7 +319,7 @@ namespace Wingnut
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 
 		{
-			UIImageButton(MaterialType::AmbientOcclusionMap, m_SelectedMaterial);
+			UIImageButton(MaterialTextureType::AmbientOcclusionMap, m_SelectedMaterial);
 
 			if (ImGui::BeginDragDropTarget())
 			{
@@ -329,7 +329,7 @@ namespace Wingnut
 				{
 					UUID textureID = *(UUID*)payload->Data;
 
-					m_SelectedMaterial->SetTexture(MaterialType::AmbientOcclusionMap, ResourceManager::GetTexture(textureID));
+					m_SelectedMaterial->SetTexture(MaterialTextureType::AmbientOcclusionMap, ResourceManager::GetTexture(textureID));
 				}
 
 				ImGui::EndDragDropTarget();

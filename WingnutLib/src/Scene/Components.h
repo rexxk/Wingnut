@@ -107,15 +107,15 @@ namespace Wingnut
 	struct MaterialComponent
 	{
 		UUID MaterialID;
-
+		MaterialType Type;
 
 		MaterialComponent()
 		{
 
 		}
 
-		MaterialComponent(UUID materialID)
-			: MaterialID(materialID)
+		MaterialComponent(UUID materialID, MaterialType type = MaterialType::StaticPBR)
+			: MaterialID(materialID), Type(type)
 		{
 
 		}
@@ -123,6 +123,7 @@ namespace Wingnut
 		MaterialComponent(const MaterialComponent& other)
 		{
 			MaterialID = other.MaterialID;
+			Type = other.Type;
 		}
 
 	};

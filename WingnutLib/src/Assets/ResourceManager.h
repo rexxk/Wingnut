@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Renderer/Material.h"
-
+#include "Renderer/PBRMaterial.h"
+#include "Renderer/UIMaterial.h"
 
 
 namespace Wingnut
@@ -18,15 +18,17 @@ namespace Wingnut
 		static void LoadMaterial(const std::string& materialPath);
 
 		static Ref<Material> GetMaterial(UUID materialID);
+		static Ref<Material> GetMaterial(MaterialType type, UUID materialID);
 		static void StoreMaterial(Ref<Material> material);
 
 		static Ref<Material> GetMaterialByName(const std::string& name);
+		static Ref<Material> GetMaterialByName(MaterialType type, const std::string& name);
 
 		static void ClearMaterials();
 
-		static void DeleteMaterial(UUID materialID);
+		static void DeleteMaterial(MaterialType type, const std::string& materialName);
 
-		static const std::unordered_map<UUID, Ref<Material>>& GetMaterialList() { return s_Materials; }
+		static const std::unordered_map<MaterialType, std::vector<Ref<Material>>>& GetMaterialList() { return s_Materials; }
 
 
 //		Sampler
@@ -46,19 +48,11 @@ namespace Wingnut
 
 //		Texture
 		static void AddTexture(Ref<Vulkan::Texture2D> texture);
-		static void AddDescriptor(UUID textureID, Ref<Vulkan::Descriptor> descriptor);
-		static void AddTextureData(Ref<Vulkan::Texture2D> texture, Ref<Vulkan::Descriptor> descriptor);
-
 		static bool FindTexture(const std::string& textureName);
 
-		static void SetDescriptor(UUID textureID, Ref<Vulkan::Descriptor> descriptor);
-
-		static std::pair<Ref<Vulkan::Texture2D>, Ref<Vulkan::Descriptor>> GetTextureData(UUID textureID);
 		static Ref<Vulkan::Texture2D> GetTexture(UUID textureID);
-		static Ref<Vulkan::Descriptor> GetDescriptor(UUID textureID);
 
 		static std::unordered_map<UUID, Ref<Vulkan::Texture2D>>& GetTextureContainer() { return m_Textures; }
-		static std::unordered_map<UUID, Ref<Vulkan::Descriptor>>& GetUITextureDescriptor() { return m_UITextureDescriptors; }
 
 		static void ClearTextures();
 
@@ -66,14 +60,13 @@ namespace Wingnut
 
 	private:
 
-		inline static std::unordered_map<UUID, Ref<Material>> s_Materials;
+		inline static std::unordered_map<MaterialType, std::vector<Ref<Material>>> s_Materials;
 
 		inline static std::unordered_map<SamplerType, Ref<Vulkan::ImageSampler>> s_Samplers;
 
 		inline static std::unordered_map<ShaderType, Ref<Vulkan::Shader>> s_Shaders;
 
 		inline static std::unordered_map<UUID, Ref<Vulkan::Texture2D>> m_Textures;
-		inline static std::unordered_map<UUID, Ref<Vulkan::Descriptor>> m_UITextureDescriptors;
 
 	};
 

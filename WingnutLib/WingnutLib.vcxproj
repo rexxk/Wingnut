@@ -144,12 +144,14 @@
     <ClInclude Include="src\Renderer\ImGuiRenderer.h" />
     <ClInclude Include="src\Renderer\Light.h" />
     <ClInclude Include="src\Renderer\Material.h" />
+    <ClInclude Include="src\Renderer\PBRMaterial.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
     <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h" />
     <ClInclude Include="src\Platform\Vulkan\Surface.h" />
     <ClInclude Include="src\Platform\Vulkan\Swapchain.h" />
     <ClInclude Include="src\Renderer\SceneRenderer.h" />
+    <ClInclude Include="src\Renderer\UIMaterial.h" />
     <ClInclude Include="src\Scene\Components.h" />
     <ClInclude Include="src\Scene\Entity.h" />
     <ClInclude Include="src\Scene\Scene.h" />
@@ -197,6 +199,7 @@
     <ClCompile Include="src\Renderer\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Renderer\Light.cpp" />
     <ClCompile Include="src\Renderer\Material.cpp" />
+    <ClCompile Include="src\Renderer\PBRMaterial.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />
     <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp" />
@@ -204,6 +207,7 @@
     <ClCompile Include="src\Platform\Vulkan\Swapchain.cpp" />
     <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
     <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
+    <ClCompile Include="src\Renderer\UIMaterial.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Utils\FileDialog.cpp" />
     <ClCompile Include="src\Utils\stbImage.cpp" />
