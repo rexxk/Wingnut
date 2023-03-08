@@ -144,8 +144,6 @@ void MainLayer::OnAttach()
 */
 
 
-	m_Scene->CreateUISceneImageDescriptor(ResourceManager::GetSampler(SamplerType::Default));
-
 	m_MaterialEditorPanel = CreateRef<MaterialEditorPanel>();
 	m_MaterialStorePanel = CreateRef<MaterialStorePanel>(m_Scene);
 	m_MetricsPanel = CreateRef<MetricsPanel>();
@@ -215,7 +213,7 @@ void MainLayer::OnUIRender()
 			viewportHeight = (uint32_t)windowSize.y;
 		}
 
-		ImGui::Image((ImTextureID)m_Scene->GetSceneImageDescriptor()->GetDescriptor(), windowSize);
+		ImGui::Image((ImTextureID)Renderer::GetContext()->GetRendererData().SceneImage->GetDescriptor(), windowSize);
 
 		if (ImGui::IsWindowHovered())
 		{

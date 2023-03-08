@@ -55,9 +55,6 @@ namespace Wingnut
 		Entity CreateEntity(const std::string& tag);
 		std::vector<Entity>& GetEntities() { return m_SceneEntities; }
 
-		void CreateUISceneImageDescriptor(Ref<Vulkan::ImageSampler> sampler);
-
-		Ref<Vulkan::Descriptor> GetSceneImageDescriptor() { return m_RendererImageDescriptor; }
 		Ref<Vulkan::Shader> GetShader() { return m_SceneRenderer->GetShader(); }
 
 		void Begin();
@@ -75,8 +72,6 @@ namespace Wingnut
 
 		Ref<SceneRenderer> m_SceneRenderer = nullptr;
 		
-		Ref<Vulkan::Descriptor> m_RendererImageDescriptor = nullptr;
-
 		Ref<Camera> m_SceneCamera = nullptr;
 		VkExtent2D m_SceneExtent;
 

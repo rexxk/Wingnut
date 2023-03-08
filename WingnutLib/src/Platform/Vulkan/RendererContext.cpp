@@ -55,7 +55,7 @@ namespace Wingnut
 						VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT);
 
 					rendererData.SceneImage->Release();
-					rendererData.SceneImage = Texture2D::Create(extent.width, extent.height, 4, nullptr, TextureFormat::RenderTarget);
+					rendererData.SceneImage = Texture2D::Create(extent.width, extent.height, 4, nullptr, TextureFormat::RenderTarget, true);
 
 					{
 						std::vector<VkImageView> imageViews;
@@ -261,7 +261,13 @@ namespace Wingnut
 			std::vector<VkImageView> imageViews = s_VulkanData.Swapchain->GetImageViews();
 			imageViews.emplace_back(s_VulkanData.DepthStencilImage->GetImageView());
 
-			s_VulkanData.SceneImage = Texture2D::Create(m_CurrentExtent.width, m_CurrentExtent.height, 4, nullptr, TextureFormat::RenderTarget);
+			ResourceManager::LoadShader(ShaderType::Default, "assets/shaders/Basic.shader");
+			ResourceManager::LoadShader(ShaderType::ImGui, "assets/shaders/ImGui.shader");
+
+			ResourceManager::AddSampler(SamplerType::LinearRepeat, Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat));
+			ResourceManager::AddSampler(SamplerType::NearestRepeat, Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Nearest, Vulkan::ImageSamplerMode::Repeat));
+
+			s_VulkanData.SceneImage = Texture2D::Create(m_CurrentExtent.width, m_CurrentExtent.height, 4, nullptr, TextureFormat::RenderTarget, true);
 
 			{
 				std::vector<VkImageView> imageViews;
@@ -275,13 +281,6 @@ namespace Wingnut
 
 				s_VulkanData.UIFramebuffer = Vulkan::Framebuffer::Create(s_VulkanData.Device, s_VulkanData.UIRenderPass, m_CurrentExtent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
 			}
-
-
-			ResourceManager::LoadShader(ShaderType::Default, "assets/shaders/Basic.shader");
-			ResourceManager::LoadShader(ShaderType::ImGui, "assets/shaders/ImGui.shader");
-
-			ResourceManager::AddSampler(SamplerType::LinearRepeat, Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Linear, Vulkan::ImageSamplerMode::Repeat));
-			ResourceManager::AddSampler(SamplerType::NearestRepeat, Vulkan::ImageSampler::Create(s_VulkanData.Device, Vulkan::ImageSamplerFilter::Nearest, Vulkan::ImageSamplerMode::Repeat));
 
 			s_VulkanData.DefaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat(Vulkan::TextureFormat::R8G8B8A8_Normalized), true, true);
 

@@ -49,15 +49,6 @@ namespace Wingnut
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 
 
-		SubscribeToEvent<WindowResizedEvent>([&](WindowResizedEvent& event)
-			{
-				auto& rendererData = Renderer::GetContext()->GetRendererData();
-				m_RendererImageDescriptor->SetImageBinding(0, rendererData.SceneImage, ResourceManager::GetSampler(SamplerType::Default));
-				m_RendererImageDescriptor->UpdateBindings();
-
-				return false;
-			});
-
 
 	}
 
@@ -173,17 +164,6 @@ namespace Wingnut
 
 		return entity;
 	}
-
-
-	void Scene::CreateUISceneImageDescriptor(Ref<Vulkan::ImageSampler> sampler)
-	{
-		auto& rendererData = Renderer::GetContext()->GetRendererData();
-
-		m_RendererImageDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
-		m_RendererImageDescriptor->SetImageBinding(0, rendererData.SceneImage, ResourceManager::GetSampler(SamplerType::Default));
-		m_RendererImageDescriptor->UpdateBindings();
-	}
-
 
 	void Scene::Update(Timestep ts)
 	{

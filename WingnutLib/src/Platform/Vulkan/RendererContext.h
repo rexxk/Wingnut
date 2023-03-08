@@ -44,7 +44,6 @@ namespace Wingnut
 
 			Ref<Image> DepthStencilImage = nullptr;
 			
-//			Ref<Image> SceneTexture = nullptr;
 			Ref<Texture2D> SceneImage = nullptr;
 
 			std::vector<Ref<Vulkan::Semaphore>> ImageAvailableSemaphores;
