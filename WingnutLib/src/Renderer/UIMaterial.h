@@ -16,7 +16,7 @@ namespace Wingnut
 	class UIMaterial : public Material
 	{
 	public:
-		static Ref<UIMaterial> Create(const std::string& name, Ref<Vulkan::Shader> shader);
+		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader);
 
 		UIMaterial(const std::string& name, Ref<Vulkan::Shader> shader);
 		virtual ~UIMaterial();
@@ -25,7 +25,7 @@ namespace Wingnut
 
 		virtual void CreateDescriptor(Ref<Vulkan::Shader> shader) override;
 
-		UIMaterialData& GetMaterialData() { return m_MaterialData; }
+		void* GetMaterialData() { return (void*)&m_MaterialData; }
 
 	protected:
 		UIMaterialData m_MaterialData;

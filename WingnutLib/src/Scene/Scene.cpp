@@ -202,7 +202,7 @@ namespace Wingnut
 
 		for (auto& material : importResult.Materials)
 		{
-			Ref<Material> newMaterial = Material::Create(material, ResourceManager::GetShader(ShaderType::Default), ResourceManager::GetSampler(SamplerType::LinearRepeat));
+			Ref<Material> newMaterial = PBRMaterial::Create(material, ResourceManager::GetShader(ShaderType::Default), ResourceManager::GetSampler(SamplerType::LinearRepeat));
 			ResourceManager::StoreMaterial(newMaterial);
 		}
 

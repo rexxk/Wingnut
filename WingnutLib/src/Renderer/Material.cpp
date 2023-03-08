@@ -12,10 +12,6 @@
 namespace Wingnut
 {
 
-	Ref<Material> Material::Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
-	{
-		return CreateRef<Material>(objMaterial, shader, sampler);
-	}
 
 	Ref<Material> Material::Create(const std::string& name, Ref<Vulkan::Shader> shader)
 	{

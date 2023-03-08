@@ -4,6 +4,8 @@
 #include "ShaderCompiler.h"
 
 #include "Buffer.h"
+#include "Image.h"
+#include "Texture.h"
 
 #include "Renderer/Renderer.h"
 #include "Utils/StringUtils.h"
@@ -512,6 +514,23 @@ namespace Wingnut
 			m_WriteInfo[binding].pImageInfo = &imageInfo;
 
 //			vkUpdateDescriptorSets(m_Device->GetDevice(), (uint32_t)m_WriteInfo.size(), m_WriteInfo.data(), 0, nullptr);
+		}
+
+		void Descriptor::SetImageBinding(uint32_t binding, VkImageView imageView, Ref<ImageSampler> sampler)
+		{
+			if (binding >= m_BindingCount)
+			{
+				return;
+			}
+
+			VkDescriptorImageInfo& imageInfo = m_ImageInfoMap[binding];
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = imageView;
+			imageInfo.sampler = sampler->Sampler();
+
+			m_WriteInfo[binding].pImageInfo = &imageInfo;
+
+			//			vkUpdateDescriptorSets(m_Device->GetDevice(), (uint32_t)m_WriteInfo.size(), m_WriteInfo.data(), 0, nullptr);
 		}
 
 		void Descriptor::UpdateBindings()

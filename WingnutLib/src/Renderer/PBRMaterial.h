@@ -37,8 +37,8 @@ namespace Wingnut
 	class PBRMaterial : public Material
 	{
 	public:
-		static Ref<PBRMaterial> Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
-		static Ref<PBRMaterial> Create(const std::string& name, Ref<Vulkan::Shader> shader);
+		static Ref<Material> Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
+		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader);
 
 		PBRMaterial(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		PBRMaterial(const std::string& name, Ref<Vulkan::Shader> shader);
@@ -52,7 +52,7 @@ namespace Wingnut
 
 		virtual void CreateDescriptor(Ref<Vulkan::Shader> shader) override;
 
-		PBRMaterialData& GetMaterialData() { return m_MaterialData; }
+		void* GetMaterialData() { return (void*)&m_MaterialData; }
 
 	private:
 		void CreateUniformBuffer();

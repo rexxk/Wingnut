@@ -53,9 +53,11 @@ namespace Wingnut
 //					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::Default), TextureDescriptor, AlbedoTextureBinding, newTexture);
 					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 					newDescriptor->SetImageBinding(0, newTexture, ResourceManager::GetSampler(SamplerType::Default));
-//					newDescriptor->SetImageBinding(0, newTexture, SamplerStore::GetSampler(SamplerType::NearestRepeat));
 					newDescriptor->UpdateBindings();
-					ResourceManager::AddTextureData(newTexture, newDescriptor);
+
+					ResourceManager::AddTexture(newTexture);
+
+//					ResourceManager::AddTextureData(newTexture, newDescriptor);
 				}
 			}
 
@@ -83,7 +85,8 @@ namespace Wingnut
 
 				{
 
-					ImGui::Image((ImTextureID)ResourceManager::GetDescriptor(textureID)->GetDescriptor(), ImVec2(textureSize, textureSize));
+					ImGui::Image((ImTextureID)ResourceManager::GetTexture(textureID)->GetDescriptor(), ImVec2(textureSize, textureSize));
+//					ImGui::Image((ImTextureID)ResourceManager::GetDescriptor(textureID)->GetDescriptor(), ImVec2(textureSize, textureSize));
 
 					ImGui::PushItemWidth(textureSize + (paddingSize * 2));
 

@@ -38,10 +38,8 @@ namespace Wingnut
 	class Material
 	{
 	public:
-		static Ref<Material> Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader);
 
-		Material(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		Material(const std::string& name, Ref<Vulkan::Shader> shader);
 		virtual ~Material();
 
@@ -63,6 +61,8 @@ namespace Wingnut
 
 		virtual void CreateDescriptor(Ref<Vulkan::Shader> shader);
 		Ref<Vulkan::Descriptor> GetDescriptor() { return m_Descriptor; }
+
+		virtual void* GetMaterialData() { return nullptr; }
 
 	protected:
 		UUID m_MaterialID;

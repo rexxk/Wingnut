@@ -2,6 +2,9 @@
 #include "Texture.h"
 
 #include "Buffer.h"
+#include "Shader.h"
+
+#include "Assets/ResourceManager.h"
 
 #include <stb_image.h>
 
@@ -25,27 +28,37 @@ namespace Wingnut
 		}
 
 
-		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format, bool flip)
+		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor)
 		{
-			return CreateRef<Texture2D>(texturePath, format, flip);
+			return CreateRef<Texture2D>(texturePath, format, flip, createDescriptor);
 		}
 
-		Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format)
+		Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, bool createDescriptor)
 		{
-			return CreateRef<Texture2D>(width, height, bitsPerPixel, pixels, format);
+			return CreateRef<Texture2D>(width, height, bitsPerPixel, pixels, format, createDescriptor);
 		}
 
 
-		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, bool flip)
+		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor)
 			: m_Format(format)
 		{
 			CreateTextureFromFile(texturePath, flip);
+
+			if (createDescriptor)
+			{
+				CreateDescriptor();
+			}
 		}
 		
-		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, TextureFormat format)
+		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, TextureFormat format, bool createDescriptor)
 			: m_Format(format)
 		{
 			CreateTexture(width, height, bitsPerPixel, data);
+
+			if (createDescriptor)
+			{
+				CreateDescriptor();
+			}
 		}
 
 		Texture2D::~Texture2D()
@@ -132,6 +145,15 @@ namespace Wingnut
 				m_Image->Release();
 			}
 
+		}
+
+		void Texture2D::CreateDescriptor()
+		{
+			auto& rendererData = Renderer::GetContext()->GetRendererData();
+			m_Descriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+
+			m_Descriptor->SetImageBinding(ImGuiTextureBinding, m_Image->GetImageView(), ResourceManager::GetSampler(SamplerType::Default));
+			m_Descriptor->UpdateBindings();
 		}
 
 	}

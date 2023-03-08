@@ -4,8 +4,6 @@
 #include "Device.h"
 #include "DescriptorPool.h"
 
-#include "Texture.h"
-
 #include <vulkan/vulkan.h>
 
 
@@ -104,6 +102,8 @@ namespace Wingnut
 			Texture,
 		};
 
+		class ImageSampler;
+		class Texture2D;
 		class UniformBuffer;
 
 		class Descriptor
@@ -121,6 +121,7 @@ namespace Wingnut
 
 			void SetBufferBinding(uint32_t binding, Ref<UniformBuffer> buffer);
 			void SetImageBinding(uint32_t binding, Ref<Texture2D> texture, Ref<ImageSampler> sampler);
+			void SetImageBinding(uint32_t binding, VkImageView imageView, Ref<ImageSampler> sampler);
 
 			VkDescriptorSet GetDescriptor() { return m_Descriptor; }
 

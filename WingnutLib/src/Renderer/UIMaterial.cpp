@@ -7,7 +7,7 @@
 namespace Wingnut
 {
 
-	Ref<UIMaterial> UIMaterial::Create(const std::string& name, Ref<Vulkan::Shader> shader)
+	Ref<Material> UIMaterial::Create(const std::string& name, Ref<Vulkan::Shader> shader)
 	{
 		return CreateRef<UIMaterial>(name, shader);
 	}
@@ -19,7 +19,7 @@ namespace Wingnut
 		m_MaterialType = MaterialType::UI;
 
 		m_MaterialData.Texture.Texture = Renderer::GetContext()->GetRendererData().DefaultTexture;
-		m_MaterialData.Sampler = ResourceManager::GetSampler(SamplerType::Default);
+		m_Sampler = ResourceManager::GetSampler(SamplerType::Default);
 
 		CreateDescriptor(shader);
 
@@ -45,7 +45,7 @@ namespace Wingnut
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		m_Descriptor = Vulkan::Descriptor::Create(rendererData.Device, shader, ImGuiTextureDescriptor);
 
-		m_Descriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.Texture.Texture, m_MaterialData.Sampler);
+		m_Descriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.Texture.Texture, m_Sampler);
 		m_Descriptor->UpdateBindings();
 	}
 

@@ -187,8 +187,9 @@ namespace Wingnut
 			ImGui::Text("Preview");
 
 			ImGui::NextColumn();
-
-			ImGui::Image((ImTextureID)ResourceManager::GetDescriptor(material->GetMaterialData().AlbedoTexture.Texture->GetTextureID())->GetDescriptor(), ImVec2(64.0f, 64.0f));
+			
+//			PBRMaterialData* materialData = (PBRMaterialData*)material->GetMaterialData();
+//			ImGui::Image((ImTextureID)materialData->AlbedoTexture.Texture, ImVec2(64.0f, 64.0f));
 
 			ImGui::Columns(1);
 

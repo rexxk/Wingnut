@@ -31,28 +31,32 @@ namespace Wingnut
 
 		UUID textureID;
 
+		PBRMaterialData* materialData = (PBRMaterialData*)m_Material->GetMaterialData();
+
 		if (m_MaterialTextureType == MaterialTextureType::AlbedoTexture)
 		{
-			textureID = m_Material->GetMaterialData().AlbedoTexture.Texture->GetTextureID();
+			textureID = materialData->AlbedoTexture.Texture->GetTextureID();
 		}
 		else if (m_MaterialTextureType == MaterialTextureType::NormalMap)
 		{
-			textureID = m_Material->GetMaterialData().NormalMap.Texture->GetTextureID();
+			textureID = materialData->NormalMap.Texture->GetTextureID();
 		}
 		else if (m_MaterialTextureType == MaterialTextureType::MetalnessMap)
 		{
-			textureID = m_Material->GetMaterialData().MetalnessMap.Texture->GetTextureID();
+			textureID = materialData->MetalnessMap.Texture->GetTextureID();
 		}
 		else if (m_MaterialTextureType == MaterialTextureType::RoughnessMap)
 		{
-			textureID = m_Material->GetMaterialData().RoughnessMap.Texture->GetTextureID();
+			textureID = materialData->RoughnessMap.Texture->GetTextureID();
 		}
 		else if (m_MaterialTextureType == MaterialTextureType::AmbientOcclusionMap)
 		{
-			textureID = m_Material->GetMaterialData().AmbientOcclusionMap.Texture->GetTextureID();
+			textureID = materialData->AmbientOcclusionMap.Texture->GetTextureID();
 		}
 
-		if (ImGui::ImageButton((ImTextureID)ResourceManager::GetDescriptor(textureID)->GetDescriptor(), ImVec2(64.0f, 64.0f)))
+		Ref<Vulkan::Texture2D> texture = ResourceManager::GetTexture(textureID);
+
+		if (ImGui::ImageButton((ImTextureID)texture->GetDescriptor(), ImVec2(64.0f, 64.0f)))
 		{
 #ifdef _WIN32
 			wchar_t directory[MAX_PATH];
@@ -64,17 +68,15 @@ namespace Wingnut
 
 			if (!filename.empty())
 			{
-				if (!ResourceManager::FindTexture(filename.substr(filename.find_last_of("/\\") + 1)))
+				std::string textureName = filename.substr(filename.find_last_of("/\\") + 1);
+
+				if (!ResourceManager::FindTexture(textureName))
 				{
-					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
-
-					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
-					newDescriptor->SetImageBinding(0, newTexture, ResourceManager::GetSampler(SamplerType::Default));
-					newDescriptor->UpdateBindings();
-
-					ResourceManager::AddTextureData(newTexture, newDescriptor);
+					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
 
 					m_Material->SetTexture(m_MaterialTextureType, newTexture);
+
+					ResourceManager::AddTexture(newTexture);
 				}
 
 			}

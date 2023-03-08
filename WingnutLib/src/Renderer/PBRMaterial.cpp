@@ -7,12 +7,12 @@
 namespace Wingnut
 {
 
-	Ref<PBRMaterial> PBRMaterial::Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
+	Ref<Material> PBRMaterial::Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 	{
 		return CreateRef<PBRMaterial>(objMaterial, shader, sampler);
 	}
 
-	Ref<PBRMaterial> PBRMaterial::Create(const std::string& name, Ref<Vulkan::Shader> shader)
+	Ref<Material> PBRMaterial::Create(const std::string& name, Ref<Vulkan::Shader> shader)
 	{
 		return CreateRef<PBRMaterial>(name, shader);
 	}
@@ -34,70 +34,80 @@ namespace Wingnut
 
 		if (objMaterial.HasDiffuseTexture)
 		{
-			m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+			m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			ResourceManager::AddTexture(m_MaterialData.AlbedoTexture.Texture);
 
-			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.AlbedoTexture.Texture, sampler);
-			uiTextureDescriptor->UpdateBindings();
+//			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
-			ResourceManager::AddTextureData(m_MaterialData.AlbedoTexture.Texture, uiTextureDescriptor);
+//			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.AlbedoTexture.Texture, sampler);
+//			uiTextureDescriptor->UpdateBindings();
+
+//			ResourceManager::AddTextureData(m_MaterialData.AlbedoTexture.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseAlbedoTexture = true;
 		}
 
 		if (objMaterial.HasNormalMap)
 		{
-			m_MaterialData.NormalMap.Texture = Vulkan::Texture2D::Create(objMaterial.NormalMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+			m_MaterialData.NormalMap.Texture = Vulkan::Texture2D::Create(objMaterial.NormalMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			ResourceManager::AddTexture(m_MaterialData.NormalMap.Texture);
 
-			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.NormalMap.Texture, sampler);
-			uiTextureDescriptor->UpdateBindings();
+//			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
-			ResourceManager::AddTextureData(m_MaterialData.NormalMap.Texture, uiTextureDescriptor);
+//			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.NormalMap.Texture, sampler);
+//			uiTextureDescriptor->UpdateBindings();
+
+//			ResourceManager::AddTextureData(m_MaterialData.NormalMap.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseNormalMap = true;
 		}
 
 		if (objMaterial.HasMetalnessMap)
 		{
-			m_MaterialData.MetalnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.MetalnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+			m_MaterialData.MetalnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.MetalnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			ResourceManager::AddTexture(m_MaterialData.MetalnessMap.Texture);
 
-			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.MetalnessMap.Texture, sampler);
-			uiTextureDescriptor->UpdateBindings();
+//			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
-			ResourceManager::AddTextureData(m_MaterialData.MetalnessMap.Texture, uiTextureDescriptor);
+//			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.MetalnessMap.Texture, sampler);
+//			uiTextureDescriptor->UpdateBindings();
+
+//			ResourceManager::AddTextureData(m_MaterialData.MetalnessMap.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseMetalnessMap = true;
 		}
 
 		if (objMaterial.HasRoughnessMap)
 		{
-			m_MaterialData.RoughnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.RoughnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+			m_MaterialData.RoughnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.RoughnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			ResourceManager::AddTexture(m_MaterialData.RoughnessMap.Texture);
 
-			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.RoughnessMap.Texture, sampler);
-			uiTextureDescriptor->UpdateBindings();
+//			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
-			ResourceManager::AddTextureData(m_MaterialData.RoughnessMap.Texture, uiTextureDescriptor);
+//			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.RoughnessMap.Texture, sampler);
+//			uiTextureDescriptor->UpdateBindings();
+
+//			ResourceManager::AddTextureData(m_MaterialData.RoughnessMap.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseRoughnessMap = true;
 		}
 
 		if (objMaterial.HasAmbientOcclusionMap)
 		{
-			m_MaterialData.AmbientOcclusionMap.Texture = Vulkan::Texture2D::Create(objMaterial.AmbientOcclusionMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true);
+			m_MaterialData.AmbientOcclusionMap.Texture = Vulkan::Texture2D::Create(objMaterial.AmbientOcclusionMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
 
-			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
+			ResourceManager::AddTexture(m_MaterialData.AmbientOcclusionMap.Texture);
 
-			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.AmbientOcclusionMap.Texture, sampler);
-			uiTextureDescriptor->UpdateBindings();
+//			Ref<Vulkan::Descriptor> uiTextureDescriptor = Vulkan::Descriptor::Create(Renderer::GetContext()->GetRendererData().Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
 
-			ResourceManager::AddTextureData(m_MaterialData.AmbientOcclusionMap.Texture, uiTextureDescriptor);
+//			uiTextureDescriptor->SetImageBinding(ImGuiTextureBinding, m_MaterialData.AmbientOcclusionMap.Texture, sampler);
+//			uiTextureDescriptor->UpdateBindings();
+
+//			ResourceManager::AddTextureData(m_MaterialData.AmbientOcclusionMap.Texture, uiTextureDescriptor);
 
 			m_MaterialData.Properties.UseAmbientOcclusionMap = true;
 		}

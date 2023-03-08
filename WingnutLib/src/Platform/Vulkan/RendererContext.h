@@ -53,7 +53,6 @@ namespace Wingnut
 
 			// UI globals
 			Ref<Vulkan::Texture2D> DefaultTexture = nullptr;
-			Ref<Vulkan::Descriptor> DefaultTextureDescriptor = nullptr;
 
 		};
 

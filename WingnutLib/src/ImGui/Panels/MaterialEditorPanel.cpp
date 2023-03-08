@@ -48,7 +48,19 @@ namespace Wingnut
 			return;
 		}
 
-		auto& properties = m_SelectedMaterial->GetMaterialData().Properties;
+		switch (m_SelectedMaterial->GetType())
+		{
+			case MaterialType::StaticPBR: DrawPBRMaterial(); break;
+			case MaterialType::UI: DrawUIMaterial(); break;
+		}
+
+		ImGui::End();
+	}
+
+	void MaterialEditorPanel::DrawPBRMaterial()
+	{
+
+		PBRMaterialData* materialData = (PBRMaterialData*)m_SelectedMaterial->GetMaterialData();
 
 		ImGui::Text("Material editor panel");
 
@@ -89,7 +101,7 @@ namespace Wingnut
 
 				if (ImGui::Selectable(ResourceManager::SamplerTypeToString(sampler.first).c_str(), &isSelected))
 				{
-					m_SelectedMaterial->SetSamplerType(sampler.first);
+//					m_SelectedMaterial->SetSamplerType(sampler.first);
 				}
 
 				if (isSelected)
@@ -107,7 +119,7 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		if (ImGui::DragFloat("##metallness", &properties.Metallic, 0.01f, 0.0f, 1.0f))
+		if (ImGui::DragFloat("##metallness", &materialData->Properties.Metallic, 0.01f, 0.0f, 1.0f))
 		{
 			m_SelectedMaterial->Update();
 		}
@@ -118,7 +130,7 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		if (ImGui::DragFloat("##roughness", &properties.Roughness, 0.01f, 0.0f, 1.0f))
+		if (ImGui::DragFloat("##roughness", &materialData->Properties.Roughness, 0.01f, 0.0f, 1.0f))
 		{
 			m_SelectedMaterial->Update();
 		}
@@ -129,20 +141,20 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-//		glm::vec4& albedoColor = ;
-//		ImGui::ColorButton("##colorButton", glm::value_ptr(albedoColor));
-		if (ImGui::ColorEdit4("##albedoColor", glm::value_ptr(m_SelectedMaterial->GetMaterialData().Properties.AlbedoColor)))
+		//		glm::vec4& albedoColor = ;
+		//		ImGui::ColorButton("##colorButton", glm::value_ptr(albedoColor));
+		if (ImGui::ColorEdit4("##albedoColor", glm::value_ptr(materialData->Properties.AlbedoColor)))
 		{
 			m_SelectedMaterial->Update();
 		}
 
 		ImGui::NextColumn();
-		
+
 		ImGui::Text("Use Albedo texture");
 
 		ImGui::NextColumn();
 
-		if (ImGui::Checkbox("##useAlbedoTexture", (bool*)&properties.UseAlbedoTexture))
+		if (ImGui::Checkbox("##useAlbedoTexture", (bool*)&materialData->Properties.UseAlbedoTexture))
 		{
 			m_SelectedMaterial->Update();
 		}
@@ -184,7 +196,7 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		if (ImGui::Checkbox("##useNormalMap", (bool*)&properties.UseNormalMap))
+		if (ImGui::Checkbox("##useNormalMap", (bool*)&materialData->Properties.UseNormalMap))
 		{
 			m_SelectedMaterial->Update();
 		}
@@ -225,7 +237,7 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		if (ImGui::Checkbox("##useMetalnessMap", (bool*)&properties.UseMetalnessMap))
+		if (ImGui::Checkbox("##useMetalnessMap", (bool*)&materialData->Properties.UseMetalnessMap))
 		{
 			m_SelectedMaterial->Update();
 		}
@@ -265,7 +277,7 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		if (ImGui::Checkbox("##useRoughnessMap", (bool*)&properties.UseRoughnessMap))
+		if (ImGui::Checkbox("##useRoughnessMap", (bool*)&materialData->Properties.UseRoughnessMap))
 		{
 			m_SelectedMaterial->Update();
 		}
@@ -279,7 +291,7 @@ namespace Wingnut
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 
 		{
-			UIImageButton(MaterialTextureType::RoughnessMap , m_SelectedMaterial);
+			UIImageButton(MaterialTextureType::RoughnessMap, m_SelectedMaterial);
 
 			if (ImGui::BeginDragDropTarget())
 			{
@@ -305,7 +317,7 @@ namespace Wingnut
 
 		ImGui::NextColumn();
 
-		if (ImGui::Checkbox("##useAmbientOcclusionMap", (bool*)&properties.UseAmbientOcclusionMap))
+		if (ImGui::Checkbox("##useAmbientOcclusionMap", (bool*)&materialData->Properties.UseAmbientOcclusionMap))
 		{
 			m_SelectedMaterial->Update();
 		}
@@ -342,7 +354,11 @@ namespace Wingnut
 		ImGui::Columns(1);
 
 
-		ImGui::End();
+	}
+
+	void MaterialEditorPanel::DrawUIMaterial()
+	{
+
 	}
 
 }
