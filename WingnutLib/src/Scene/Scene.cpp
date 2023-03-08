@@ -48,7 +48,7 @@ namespace Wingnut
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 
-
+		ClearScene();
 
 	}
 
@@ -74,6 +74,51 @@ namespace Wingnut
 		{
 			m_SceneRenderer->Release();
 		}
+
+	}
+
+	void Scene::ClearScene()
+	{
+		for (auto& entity : m_SceneEntities)
+		{
+			if (entity.HasComponent<TagComponent>())
+			{
+				entity.RemoveComponent<TagComponent>();
+			}
+
+			if (entity.HasComponent<TransformComponent>())
+			{
+				entity.RemoveComponent<TransformComponent>();
+			}
+
+			if (entity.HasComponent<MeshComponent>())
+			{
+				entity.RemoveComponent<MeshComponent>();
+			}
+
+			if (entity.HasComponent<MaterialComponent>())
+			{
+				entity.RemoveComponent<MaterialComponent>();
+			}
+
+			if (entity.HasComponent<LightComponent>())
+			{
+				entity.RemoveComponent<LightComponent>();
+			}
+		}
+
+		m_SceneEntities.clear();
+
+		m_SceneRenderer->Clear();
+
+		{
+			Entity light = CreateEntity("Light");
+			light.AddComponent<LightComponent>(glm::vec3(0.0f, 15.0f, 0.0f), glm::vec3(210.0f, 235.0f, 205.0f));
+		}
+
+		m_SceneCamera->SetPosition(glm::vec3(0.0f, 0.0f, -8.0f));
+		m_SceneCamera->SetLookAt(glm::vec3(0.0f));
+		m_SceneCamera->SetRotation(glm::vec3(0.0f));
 
 	}
 

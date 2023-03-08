@@ -52,6 +52,8 @@ namespace Wingnut
 
 		void Release();
 
+		void ClearScene();
+
 		Entity CreateEntity(const std::string& tag);
 		std::vector<Entity>& GetEntities() { return m_SceneEntities; }
 

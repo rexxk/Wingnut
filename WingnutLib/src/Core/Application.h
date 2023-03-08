@@ -46,6 +46,8 @@ namespace Wingnut
 		Application(const ApplicationProperties& properties);
 		virtual ~Application();
 
+		void Exit();
+
 		void Run();
 
 		void AttachLayer(Ref<Layer> layer);

@@ -14,7 +14,6 @@ namespace Wingnut
 
 		void Draw();
 
-	private:
 		void UpdateMaterialList();
 
 	private:

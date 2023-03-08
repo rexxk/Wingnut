@@ -30,6 +30,7 @@ namespace Wingnut
 		ofn.nMaxFile = MAX_PATH;
 		ofn.lpstrInitialDir = initialPath;
 		ofn.lpstrFilter = filter;
+		ofn.Flags = OFN_NOCHANGEDIR;
 
 		if (GetOpenFileName(&ofn))
 		{

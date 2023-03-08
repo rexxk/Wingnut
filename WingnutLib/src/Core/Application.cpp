@@ -94,6 +94,11 @@ namespace Wingnut
 		m_Renderer->Release();
 	}
 
+	void Application::Exit()
+	{
+		m_Running = false;
+	}
+
 	void Application::Run() 
 	{
 

@@ -30,6 +30,8 @@ namespace Wingnut
 		void BeginScene(uint32_t currentFrame);
 		void EndScene();
 
+		void Clear();
+
 		void Draw();
 
 		void SubmitDescriptor(Ref<Vulkan::Descriptor> descriptor);

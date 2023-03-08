@@ -111,6 +111,13 @@ namespace Wingnut
 
 	}
 
+	void SceneRenderer::Clear()
+	{
+		s_SceneData.DrawList.clear();
+
+		Application::Get().GetMetrics().PolygonCount = 0;
+	}
+
 	void SceneRenderer::CreateRenderer()
 	{
 		LOG_CORE_TRACE("[SceneRenderer] Creating renderer");
@@ -246,12 +253,20 @@ namespace Wingnut
 
 	void SceneRenderer::UpdateEntityCache()
 	{
+		std::vector<UUID> eraseList;
+
 		for (auto& entity : s_SceneData.DrawCache)
 		{
 			if (std::find(s_SceneData.DrawList.begin(), s_SceneData.DrawList.end(), entity) == s_SceneData.DrawList.end())
 			{
-				s_SceneData.DrawCache.erase(s_SceneData.DrawCache.find(entity.first));
+//				s_SceneData.DrawCache.erase(s_SceneData.DrawCache.find(entity.first));
+				eraseList.emplace_back(entity.first);
 			}
+		}
+
+		for (auto& erasePosition : eraseList)
+		{
+			s_SceneData.DrawCache.erase(erasePosition);
 		}
 	}
 

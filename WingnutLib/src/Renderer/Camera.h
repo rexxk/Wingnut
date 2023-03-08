@@ -28,6 +28,10 @@ namespace Wingnut
 
 		void Enable(bool enable) { m_Enabled = enable; }
 
+		void SetPosition(const glm::vec3& position) { m_Position = position; CalculateViewMatrix(); }
+		void SetLookAt(const glm::vec3& lookAt) { m_LookAt = lookAt; CalculateViewMatrix(); }
+		void SetRotation(const glm::vec3& rotation) { m_Rotation = rotation; CalculateViewMatrix(); }
+
 	private:
 		void CalculateViewMatrix();
 		glm::vec3 CalculatePosition();

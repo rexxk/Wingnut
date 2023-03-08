@@ -44,7 +44,7 @@ namespace Wingnut
 		std::string materialFilename = "";
 		std::string objectName = "";
 
-		size_t location = filename.find_last_of('/');
+		size_t location = filename.find_last_of("/\\");
 
 		if (location != std::string::npos)
 		{

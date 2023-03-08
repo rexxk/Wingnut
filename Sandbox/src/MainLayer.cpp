@@ -57,12 +57,8 @@ void MainLayer::OnAttach()
 	sceneProperties.SceneCamera = m_Camera;
 
 	m_Scene = Scene::Create(sceneProperties);
-	Entity cameraEntity = m_Scene->CreateEntity("Camera entity");
+//	Entity cameraEntity = m_Scene->CreateEntity("Camera entity");
 
-	{
-		Entity light = m_Scene->CreateEntity("Light");
-		light.AddComponent<LightComponent>(glm::vec3(0.0f, 15.0f, 0.0f), glm::vec3(210.0f, 235.0f, 205.0f));
-	}
 
 
 //	Ref<Vulkan::Texture2D> defaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat::R8G8B8A8_Normalized);
@@ -101,10 +97,10 @@ void MainLayer::OnAttach()
 //		cubeEntity.AddComponent<MaterialComponent>(selfieMaterial->GetID());
 //	}
 
-	{
+//	{
 //		m_Scene->ImportOBJModel("assets/models/bugatti.obj");
 // 		m_Scene->ImportOBJModel("assets/models/cottage_obj.obj");
-		m_Scene->ImportOBJModel("assets/models/fnscarl.obj");
+//		m_Scene->ImportOBJModel("assets/models/fnscarl.obj");
 //		m_Scene->ImportOBJModel("assets/models/holidaybeach.obj");
 //		m_Scene->ImportOBJModel("assets/models/leeenfieldmk1.obj");
 //		m_Scene->ImportOBJModel("assets/models/Room1.obj");
@@ -112,7 +108,7 @@ void MainLayer::OnAttach()
 //		m_Scene->ImportOBJModel("assets/models/sniperrifle.obj");
 //		m_Scene->ImportOBJModel("assets/models/SpaceStation.obj");
 //		m_Scene->ImportOBJModel("assets/models/watchtower.obj");
-	}
+//	}
 
 //	{
 //		Entity sphereEntity = m_Scene->ImportOBJModel("assets/models/sphere.obj");
@@ -183,10 +179,50 @@ void MainLayer::OnUpdate(Timestep ts)
 
 void MainLayer::OnUIRender()
 {
+	auto& rendererData = Renderer::GetContext()->GetRendererData();
+
 	static uint32_t viewportWidth = 0;
 	static uint32_t viewportHeight = 0;
 
 	ImGui::DockSpaceOverViewport(nullptr); //, ImGuiDockNodeFlags_AutoHideTabBar);
+
+
+
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("New scene"))
+			{
+				m_Scene->ClearScene();
+			}
+
+			if (ImGui::MenuItem("Import model..."))
+			{
+				std::string filename = OpenFileDialog::Open(L"Wavefront OBJ file\0*.obj\0\0", "assets/models/");
+
+				if (!filename.empty())
+				{
+					m_Scene->ClearScene();
+
+					m_Scene->ImportOBJModel(filename);
+
+					m_MaterialStorePanel->UpdateMaterialList();
+				}
+			}
+
+			ImGui::Separator();
+			
+			if (ImGui::MenuItem("Exit"))
+			{
+				Application::Get().Exit();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
 
 
 	m_MaterialEditorPanel->Draw();
@@ -195,6 +231,7 @@ void MainLayer::OnUIRender()
 	m_SceneHierarchyPanel->Draw();
 	m_PropertyPanel->Draw();
 	m_TexturePanel->Draw();
+
 
 //	ImGui::ShowDemoWindow();
 
