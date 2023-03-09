@@ -16,6 +16,16 @@ namespace Wingnut
 		std::string MaterialName = "material";
 	};
 
+	struct ObjTexture
+	{
+		std::string TextureName = "";
+
+		glm::vec3 OriginOffset = glm::vec3(0.0f);
+		glm::vec3 Scale = glm::vec3(1.0f);
+		
+		float BumpMultiplier = 1.0f;
+	};
+
 	struct ObjMaterial
 	{
 		std::string MaterialName = "";
@@ -27,9 +37,6 @@ namespace Wingnut
 		float Transparency = 1.0f;
 		float OpticalDensity = 0.0f;
 
-		glm::vec3 OriginOffset = glm::vec3(0.0f);
-		glm::vec3 Scale = glm::vec3(1.0f);
-
 		bool HasPBRValues = false;
 
 		float Roughness = 1.0f;
@@ -38,21 +45,16 @@ namespace Wingnut
 
 
 		// Texture paths
-		bool HasAmbientTexture = false;
-		std::string AmbientTexture;
 		bool HasDiffuseTexture = false;
-		std::string DiffuseTexture;
-
+		ObjTexture DiffuseTexture;
 		bool HasNormalMap = false;
-		std::string NormalMap;
-
+		ObjTexture NormalMap;
 		bool HasMetalnessMap = false;
-		std::string MetalnessMap;
+		ObjTexture MetalnessMap;
 		bool HasRoughnessMap = false;
-		std::string RoughnessMap;
-
+		ObjTexture RoughnessMap;
 		bool HasAmbientOcclusionMap = false;
-		std::string AmbientOcclusionMap;
+		ObjTexture AmbientOcclusionMap;
 	};
 
 	struct ObjImportResult

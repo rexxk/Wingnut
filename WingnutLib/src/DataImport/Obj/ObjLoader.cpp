@@ -312,8 +312,36 @@ namespace Wingnut
 
 			if (command == "map_Ka")
 			{
-				newMaterial.HasAmbientTexture = true;
-				ss >> newMaterial.AmbientTexture;
+				newMaterial.HasAmbientOcclusionMap = true;
+
+				std::string parameter;
+
+				while (newMaterial.AmbientOcclusionMap.TextureName == "")
+				{
+					ss >> parameter;
+
+					if (parameter == "-o" || parameter == "-s")
+					{
+						float x, y, z;
+						ss >> x >> y >> z;
+
+						if (parameter == "-o")
+						{
+							newMaterial.AmbientOcclusionMap.OriginOffset = glm::vec3(x, y, z);
+						}
+						if (parameter == "-s")
+						{
+							newMaterial.AmbientOcclusionMap.Scale = glm::vec3(x, y, z);
+						}
+					}
+					else
+					{
+						newMaterial.AmbientOcclusionMap.TextureName = parameter;
+					}
+
+				}
+
+				newMaterial.AmbientOcclusionMap.TextureName = parameter;
 			}
 
 			if (command == "map_Kd")
@@ -322,7 +350,7 @@ namespace Wingnut
 
 				std::string parameter;
 
-				while (newMaterial.DiffuseTexture == "")
+				while (newMaterial.DiffuseTexture.TextureName == "")
 				{
 					ss >> parameter;
 
@@ -333,21 +361,21 @@ namespace Wingnut
 
 						if (parameter == "-o")
 						{
-							newMaterial.OriginOffset = glm::vec3(x, y, z);
+							newMaterial.DiffuseTexture.OriginOffset = glm::vec3(x, y, z);
 						}
 						if (parameter == "-s")
 						{
-							newMaterial.Scale = glm::vec3(x, y, z);
+							newMaterial.DiffuseTexture.Scale = glm::vec3(x, y, z);
 						}
 					}
 					else
 					{
-						newMaterial.DiffuseTexture = parameter;
+						newMaterial.DiffuseTexture.TextureName = parameter;
 					}
 
 				}
 
-				newMaterial.DiffuseTexture = parameter;
+				newMaterial.DiffuseTexture.TextureName = parameter;
 			}
 
 			if (command == "map_Ks")
@@ -356,7 +384,7 @@ namespace Wingnut
 
 				std::string parameter;
 
-				while (newMaterial.MetalnessMap == "")
+				while (newMaterial.MetalnessMap.TextureName == "")
 				{
 					ss >> parameter;
 
@@ -367,21 +395,21 @@ namespace Wingnut
 
 						if (parameter == "-o")
 						{
-							newMaterial.OriginOffset = glm::vec3(x, y, z);
+							newMaterial.MetalnessMap.OriginOffset = glm::vec3(x, y, z);
 						}
 						if (parameter == "-s")
 						{
-							newMaterial.Scale = glm::vec3(x, y, z);
+							newMaterial.MetalnessMap.Scale = glm::vec3(x, y, z);
 						}
 					}
 					else
 					{
-						newMaterial.MetalnessMap = parameter;
+						newMaterial.MetalnessMap.TextureName = parameter;
 					}
 
 				}
 
-				newMaterial.MetalnessMap = parameter;
+				newMaterial.MetalnessMap.TextureName = parameter;
 			}
 
 			if (command == "map_Pr")
@@ -390,7 +418,7 @@ namespace Wingnut
 
 				std::string parameter;
 
-				while (newMaterial.RoughnessMap == "")
+				while (newMaterial.RoughnessMap.TextureName == "")
 				{
 					ss >> parameter;
 
@@ -401,21 +429,21 @@ namespace Wingnut
 
 						if (parameter == "-o")
 						{
-							newMaterial.OriginOffset = glm::vec3(x, y, z);
+							newMaterial.RoughnessMap.OriginOffset = glm::vec3(x, y, z);
 						}
 						if (parameter == "-s")
 						{
-							newMaterial.Scale = glm::vec3(x, y, z);
+							newMaterial.RoughnessMap.Scale = glm::vec3(x, y, z);
 						}
 					}
 					else
 					{
-						newMaterial.RoughnessMap = parameter;
+						newMaterial.RoughnessMap.TextureName = parameter;
 					}
 
 				}
 
-				newMaterial.RoughnessMap = parameter;
+				newMaterial.RoughnessMap.TextureName = parameter;
 			}
 
 			if (command == "map_Bump")
@@ -424,7 +452,7 @@ namespace Wingnut
 
 				std::string parameter;
 
-				while (newMaterial.NormalMap == "")
+				while (newMaterial.NormalMap.TextureName == "")
 				{
 					ss >> parameter;
 					float x, y, z;
@@ -434,26 +462,27 @@ namespace Wingnut
 						if (parameter == "-o")
 						{
 							ss >> x >> y >> z;
-							newMaterial.OriginOffset = glm::vec3(x, y, z);
+							newMaterial.NormalMap.OriginOffset = glm::vec3(x, y, z);
 						}
 						if (parameter == "-s")
 						{
 							ss >> x >> y >> z;
-							newMaterial.Scale = glm::vec3(x, y, z);
+							newMaterial.NormalMap.Scale = glm::vec3(x, y, z);
 						}
 						if (parameter == "-bm")
 						{
 							ss >> x;
+							newMaterial.NormalMap.BumpMultiplier = x;
 						}
 					}
 					else
 					{
-						newMaterial.NormalMap = parameter;
+						newMaterial.NormalMap.TextureName = parameter;
 					}
 
 				}
 
-				newMaterial.NormalMap = parameter;
+				newMaterial.NormalMap.TextureName = parameter;
 
 			}
 		}

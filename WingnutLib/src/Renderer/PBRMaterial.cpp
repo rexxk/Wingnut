@@ -34,7 +34,14 @@ namespace Wingnut
 
 		if (objMaterial.HasDiffuseTexture)
 		{
-			m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
+			bool flipTexture = true;
+
+			if (objMaterial.DiffuseTexture.Scale.y == -1)
+			{
+				flipTexture = false;
+			}
+
+			m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
 
 			ResourceManager::AddTexture(m_MaterialData.AlbedoTexture.Texture);
 
@@ -50,7 +57,14 @@ namespace Wingnut
 
 		if (objMaterial.HasNormalMap)
 		{
-			m_MaterialData.NormalMap.Texture = Vulkan::Texture2D::Create(objMaterial.NormalMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
+			bool flipTexture = true;
+
+			if (objMaterial.NormalMap.Scale.y == -1)
+			{
+				flipTexture = false;
+			}
+
+			m_MaterialData.NormalMap.Texture = Vulkan::Texture2D::Create(objMaterial.NormalMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
 
 			ResourceManager::AddTexture(m_MaterialData.NormalMap.Texture);
 
@@ -66,7 +80,14 @@ namespace Wingnut
 
 		if (objMaterial.HasMetalnessMap)
 		{
-			m_MaterialData.MetalnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.MetalnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
+			bool flipTexture = true;
+
+			if (objMaterial.MetalnessMap.Scale.y == -1)
+			{
+				flipTexture = false;
+			}
+
+			m_MaterialData.MetalnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.MetalnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
 
 			ResourceManager::AddTexture(m_MaterialData.MetalnessMap.Texture);
 
@@ -82,7 +103,14 @@ namespace Wingnut
 
 		if (objMaterial.HasRoughnessMap)
 		{
-			m_MaterialData.RoughnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.RoughnessMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
+			bool flipTexture = true;
+
+			if (objMaterial.RoughnessMap.Scale.y == -1)
+			{
+				flipTexture = false;
+			}
+
+			m_MaterialData.RoughnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.RoughnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
 
 			ResourceManager::AddTexture(m_MaterialData.RoughnessMap.Texture);
 
@@ -98,7 +126,14 @@ namespace Wingnut
 
 		if (objMaterial.HasAmbientOcclusionMap)
 		{
-			m_MaterialData.AmbientOcclusionMap.Texture = Vulkan::Texture2D::Create(objMaterial.AmbientOcclusionMap, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
+			bool flipTexture = true;
+
+			if (objMaterial.AmbientOcclusionMap.Scale.y == -1)
+			{
+				flipTexture = false;
+			}
+
+			m_MaterialData.AmbientOcclusionMap.Texture = Vulkan::Texture2D::Create(objMaterial.AmbientOcclusionMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
 
 			ResourceManager::AddTexture(m_MaterialData.AmbientOcclusionMap.Texture);
 

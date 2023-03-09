@@ -1,0 +1,447 @@
+# Blender 3.4.1 MTL File: 'None'
+# www.blender.org
+
+newmtl Material_0
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/5061699253647017043.png
+map_Pr -s 1 -1 1 assets/textures/sponza/11872827283454512094.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/8773302468495022225.jpeg
+
+newmtl Material_1
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/7268504077753552595.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/8503262930880235456.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/4477655471536070370.jpeg
+
+newmtl Material_10
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/7441062115984513793.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/8114461559286000061.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/6667038893015345571.jpeg
+
+newmtl Material_11
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/11490520546946913238.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/3455394979645218238.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/3628158980083700836.jpeg
+
+newmtl Material_12
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/6151467286084645207.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/8783994986360286082.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/7645212358685992005.jpeg
+
+newmtl Material_13
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/4975155472559461469.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/3371964815757888145.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/2299742237651021498.jpeg
+
+newmtl Material_14
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/2775690330959970771.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/7815564343179553343.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/7056944414013900257.jpeg
+
+newmtl Material_15
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/4675343432951571524.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/7815564343179553343.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/2374361008830720677.jpeg
+
+newmtl Material_16
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/2185409758123873465.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/7815564343179553343.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/332936164838540657.jpeg
+
+newmtl Material_17
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/9288698199695299068.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/466164707995436622.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/6593109234861095314.jpeg
+
+newmtl Material_18
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/2185409758123873465.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/466164707995436622.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/4601176305987539675.jpeg
+
+newmtl Material_19
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/2775690330959970771.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/466164707995436622.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/4910669866631290573.jpeg
+
+newmtl Material_2
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 1.000000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/white.png
+
+newmtl Material_20
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/16275776544635328252.png
+map_Pr -s 1 -1 1 assets/textures/sponza/1219024358953944284.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/14170708867020035030.jpeg
+
+newmtl Material_21
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/755318871556304029.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/2411100444841994089.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/3827035219084910048.jpeg
+
+newmtl Material_22
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/8481240838833932244.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/17556969131407844942.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/10381718147657362067.jpeg
+
+newmtl Material_23
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/6772804448157695701.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/13196865903111448057.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/759203620573749278.jpeg
+
+newmtl Material_24
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/2969916736137545357.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/8747919177698443163.jpeg
+map_Bump -bm 1.000000 assets/textures/sponza/14118779221266351425.jpeg
+
+newmtl Material_3
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd assets/textures/sponza/8006627369776289000.png
+map_Pr -s 1 -1 1 assets/textures/sponza/715093869573992647.jpeg
+map_Bump -bm 1.000000 assets/textures/sponza/12501374198249454378.jpeg
+
+newmtl Material_4
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/8750083169368950601.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/16885566240357350108.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/13982482287905699490.jpeg
+
+newmtl Material_5
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/5792855332885324923.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/11968150294050148237.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/16299174074766089871.jpeg
+
+newmtl Material_6
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/14650633544276105767.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/4871783166746854860.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/2051777328469649772.jpeg
+
+newmtl Material_7
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/15295713303328085182.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/9916269861720640319.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/10388182081421875623.jpeg
+
+newmtl Material_8
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/6047387724914829168.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/8051790464816141987.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/15722799267630235092.jpeg
+
+newmtl Material_9
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd -s 1 -1 1 assets/textures/sponza/5823059166183034438.jpeg
+map_Pr -s 1 -1 1 assets/textures/sponza/13824894030729245199.jpeg
+map_Bump -bm 1.000000 -s 1 -1 1 assets/textures/sponza/14267839433702832875.jpeg
