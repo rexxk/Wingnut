@@ -153,14 +153,16 @@ void main()
 
 	if (ubMaterial.UseMetalnessMap == 1)
 	{
-		metalness = texture(u_MetalnessMap, v_TexCoord).r;
+//		metalness = texture(u_MetalnessMap, v_TexCoord).r;
+		metalness = texture(u_MetalnessMap, v_TexCoord).b;
 	}
 
 	float roughness = ubMaterial.Roughness;
 
 	if (ubMaterial.UseRoughnessMap == 1)
 	{
-		roughness = texture(u_RoughnessMap, v_TexCoord).r;
+//		roughness = texture(u_RoughnessMap, v_TexCoord).r;
+		roughness = texture(u_RoughnessMap, v_TexCoord).g;
 	}
 
 	float ambientOcclusion = ubMaterial.AmbientOcclusion;
