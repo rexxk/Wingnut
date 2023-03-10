@@ -1,6 +1,8 @@
 #include "wingnut_pch.h"
 #include "CommandBuffer.h"
 
+#include "Fence.h"
+
 
 namespace Wingnut
 {
@@ -65,8 +67,14 @@ namespace Wingnut
 			submitInfo.commandBufferCount = 1;
 			submitInfo.pCommandBuffers = &m_CommandBuffer;
 
-			vkQueueSubmit(m_Device->GetQueue(QueueType::Graphics), 1, &submitInfo, VK_NULL_HANDLE);
-			vkQueueWaitIdle(m_Device->GetQueue(QueueType::Graphics));
+			Ref<Fence> waitForSubmitFence = Fence::Create(m_Device);
+			waitForSubmitFence->Reset();
+
+			vkQueueSubmit(m_Device->GetQueue(QueueType::Graphics), 1, &submitInfo, waitForSubmitFence->GetFence());
+//			vkQueueWaitIdle(m_Device->GetQueue(QueueType::Graphics));
+
+			VkFence waitFences = { waitForSubmitFence->GetFence()};
+			vkWaitForFences(m_Device->GetDevice(), 1, &waitFences, VK_TRUE, 10000000000);
 		}
 
 	}
