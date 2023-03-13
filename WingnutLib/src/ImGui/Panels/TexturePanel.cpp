@@ -7,7 +7,7 @@
 
 #include "Renderer/Renderer.h"
 
-#include "Utils/FileDialog.h"
+#include "File/FileDialog.h"
 
 #include <imgui.h>
 
@@ -45,7 +45,7 @@ namespace Wingnut
 				SetCurrentDirectory(directory);
 #endif
 
-				std::string filename = OpenFileDialog::Open(L"All files\0*.*\0\0", "assets/textures/");
+				std::string filename = FileDialog::Load(L"All files\0*.*\0\0", "assets/textures/");
 
 				if (!filename.empty())
 				{

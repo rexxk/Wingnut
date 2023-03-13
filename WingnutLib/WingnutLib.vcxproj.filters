@@ -1,17 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{3824E0A7-24C6-0A7E-0D81-1ED2F9C191CE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataImport">
+      <UniqueIdentifier>{1A0F8556-06C7-C6A3-6FCE-9FFF5BA56194}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataImport\Obj">
+      <UniqueIdentifier>{042F6622-F0FC-5928-D990-CA4EC5FD358D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS">
+      <UniqueIdentifier>{60E1870B-CCEA-877C-5566-9E7CC16E937C}</UniqueIdentifier>
     </Filter>
     <Filter Include="Event">
       <UniqueIdentifier>{E70B220D-5320-4ABE-1CA2-ED1D887546EF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{C0FF640D-2C14-8DBE-F595-301E616989EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Controls">
+      <UniqueIdentifier>{E37EFF8D-CF4C-F393-B8E0-63BAA44DCFF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Panels">
+      <UniqueIdentifier>{12F8F63C-FE5A-86E1-A7E0-BE9793225264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{953A660D-014F-8EBE-CAD0-311E36A48AEF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Vulkan">
+      <UniqueIdentifier>{6AE1DE2D-D66C-4CF2-DF7D-CFE64B88A8F2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Renderer">
       <UniqueIdentifier>{7CCE658F-689B-C09A-91B4-AE427DE0F528}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{B3F7140E-1F0C-3DBF-E88D-E01E546139F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Assets\ResourceManager.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Application.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -30,8 +69,23 @@
     <ClInclude Include="src\Core\Log.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Timer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Timestep.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\UUID.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Window.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataImport\Obj\ObjLoader.h">
+      <Filter>DataImport\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ECS.h">
+      <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Event\Event.h">
       <Filter>Event</Filter>
@@ -45,82 +99,152 @@
     <ClInclude Include="src\Event\EventUtils.h">
       <Filter>Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\Event\KeyboardEvents.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\MouseEvents.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\UIEvents.h">
+      <Filter>Event</Filter>
+    </ClInclude>
     <ClInclude Include="src\Event\WindowEvents.h">
       <Filter>Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\ImGui\Controls\UIImageButton.h">
+      <Filter>ImGui\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\Controls\UIVector3.h">
+      <Filter>ImGui\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\ImGuiContext.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\Panels\MaterialEditorPanel.h">
+      <Filter>ImGui\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\Panels\MaterialStorePanel.h">
+      <Filter>ImGui\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\Panels\MetricsPanel.h">
+      <Filter>ImGui\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\Panels\PropertyPanel.h">
+      <Filter>ImGui\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h">
+      <Filter>ImGui\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\Panels\TexturePanel.h">
+      <Filter>ImGui\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input\KeyDefs.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input\KeyboardInput.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input\MouseInput.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Buffer.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\CommandBuffer.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\CommandPool.h">
-      <Filter>Renderer</Filter>
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\DescriptorPool.h">
+      <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\Device.h">
-      <Filter>Renderer</Filter>
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Fence.h">
+      <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\Framebuffer.h">
-      <Filter>Renderer</Filter>
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Image.h">
+      <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\Pipeline.h">
-      <Filter>Renderer</Filter>
+      <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\RenderPass.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\RendererContext.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Semaphore.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Shader.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Surface.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Swapchain.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Texture.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Camera.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\ImGuiRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Light.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Material.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\PBRMaterial.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\Renderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h">
+    <ClInclude Include="src\Renderer\SceneRenderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Surface.h">
+    <ClInclude Include="src\Renderer\UIMaterial.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Swapchain.h">
-      <Filter>Renderer</Filter>
+    <ClInclude Include="src\Scene\Components.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Entity.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\File\FileDialog.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\StringUtils.h">
+      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Wingnut.h" />
     <ClInclude Include="src\wingnut_pch.h" />
-    <ClInclude Include="src\Platform\Vulkan\CommandBuffer.h" />
-    <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
-    <ClInclude Include="src\Platform\Vulkan\Fence.h" />
-    <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
-    <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
-    <ClInclude Include="src\Platform\Vulkan\Shader.h" />
-    <ClInclude Include="src\Utils\StringUtils.h" />
-    <ClInclude Include="src\Platform\Vulkan\DescriptorPool.h" />
-    <ClInclude Include="src\Scene\Scene.h" />
-    <ClInclude Include="src\Renderer\Camera.h" />
-    <ClInclude Include="src\Platform\Vulkan\Texture.h" />
-    <ClInclude Include="src\Core\Timer.h" />
-    <ClInclude Include="src\Renderer\SceneRenderer.h" />
-    <ClInclude Include="src\ECS\ECS.h" />
-    <ClInclude Include="src\Core\UUID.h" />
-    <ClInclude Include="src\Scene\Components.h" />
-    <ClInclude Include="src\Platform\Vulkan\Image.h" />
-    <ClInclude Include="src\Renderer\ImGuiRenderer.h" />
-    <ClInclude Include="src\ImGui\ImGuiContext.h" />
-    <ClInclude Include="src\Event\MouseEvents.h" />
-    <ClInclude Include="src\Input\KeyDefs.h" />
-    <ClInclude Include="src\Event\KeyboardEvents.h" />
-    <ClInclude Include="src\Core\Timestep.h" />
-    <ClInclude Include="src\Event\UIEvents.h" />
-    <ClInclude Include="src\Input\MouseInput.h" />
-    <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h" />
-    <ClInclude Include="src\Scene\Entity.h" />
-    <ClInclude Include="src\ImGui\Panels\PropertyPanel.h" />
-    <ClInclude Include="src\Renderer\Material.h" />
-    <ClInclude Include="src\ImGui\Panels\MaterialEditorPanel.h" />
-    <ClInclude Include="src\ImGui\Panels\MaterialStorePanel.h" />
-    <ClInclude Include="src\ImGui\Panels\TexturePanel.h" />
-    <ClInclude Include="src\Utils\FileDialog.h" />
-    <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
-    <ClInclude Include="src\Input\KeyboardInput.h" />
-    <ClInclude Include="src\DataImport\Obj\ObjLoader.h" />
-    <ClInclude Include="src\ImGui\Panels\MetricsPanel.h" />
-    <ClInclude Include="src\ImGui\Controls\UIImageButton.h" />
-    <ClInclude Include="src\Renderer\Light.h" />
-    <ClInclude Include="src\Assets\ResourceManager.h" />
-    <ClInclude Include="src\Renderer\UIMaterial.h" />
-    <ClInclude Include="src\Renderer\PBRMaterial.h" />
+    <ClInclude Include="src\File\Serializer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Assets\ResourceManager.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\Application.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -133,8 +257,14 @@
     <ClCompile Include="src\Core\Log.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\UUID.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\Window.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp">
+      <Filter>DataImport\Obj</Filter>
     </ClCompile>
     <ClCompile Include="src\Event\EventBroker.cpp">
       <Filter>Event</Filter>
@@ -145,67 +275,127 @@
     <ClCompile Include="src\Event\EventUtils.cpp">
       <Filter>Event</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImGui\Controls\UIImageButton.cpp">
+      <Filter>ImGui\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\Controls\UIVector3.cpp">
+      <Filter>ImGui\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\ImGuiContext.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\Panels\MaterialEditorPanel.cpp">
+      <Filter>ImGui\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\Panels\MaterialStorePanel.cpp">
+      <Filter>ImGui\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\Panels\MetricsPanel.cpp">
+      <Filter>ImGui\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\Panels\PropertyPanel.cpp">
+      <Filter>ImGui\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp">
+      <Filter>ImGui\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\Panels\TexturePanel.cpp">
+      <Filter>ImGui\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\KeyboardInput.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\MouseInput.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Buffer.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\CommandBuffer.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\CommandPool.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\DescriptorPool.cpp">
+      <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\Device.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Fence.cpp">
+      <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\Framebuffer.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Image.cpp">
+      <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\Pipeline.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\RenderPass.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Shader.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Surface.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Swapchain.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Texture.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Camera.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\ImGuiRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Light.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Material.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\PBRMaterial.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\Renderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp">
+    <ClCompile Include="src\Renderer\SceneRenderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Vulkan\Surface.cpp">
+    <ClCompile Include="src\Renderer\UIMaterial.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Vulkan\Swapchain.cpp">
-      <Filter>Renderer</Filter>
+    <ClCompile Include="src\Scene\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File\FileDialog.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\StringUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\stbImage.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\wingnut_pch.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\CommandBuffer.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Fence.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Buffer.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Shader.cpp" />
-    <ClCompile Include="src\Utils\StringUtils.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\DescriptorPool.cpp" />
-    <ClCompile Include="src\Scene\Scene.cpp" />
-    <ClCompile Include="src\Renderer\Camera.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Texture.cpp" />
-    <ClCompile Include="src\Utils\stbImage.cpp" />
-    <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
-    <ClCompile Include="src\Core\UUID.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Image.cpp" />
-    <ClCompile Include="src\Renderer\ImGuiRenderer.cpp" />
-    <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
-    <ClCompile Include="src\Input\MouseInput.cpp" />
-    <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp" />
-    <ClCompile Include="src\ImGui\Panels\PropertyPanel.cpp" />
-    <ClCompile Include="src\Renderer\Material.cpp" />
-    <ClCompile Include="src\ImGui\Panels\MaterialEditorPanel.cpp" />
-    <ClCompile Include="src\ImGui\Panels\MaterialStorePanel.cpp" />
-    <ClCompile Include="src\ImGui\Panels\TexturePanel.cpp" />
-    <ClCompile Include="src\Utils\FileDialog.cpp" />
-    <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
-    <ClCompile Include="src\Input\KeyboardInput.cpp" />
-    <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp" />
-    <ClCompile Include="src\ImGui\Panels\MetricsPanel.cpp" />
-    <ClCompile Include="src\ImGui\Controls\UIImageButton.cpp" />
-    <ClCompile Include="src\Renderer\Light.cpp" />
-    <ClCompile Include="src\Assets\ResourceManager.cpp" />
-    <ClCompile Include="src\Renderer\UIMaterial.cpp" />
-    <ClCompile Include="src\Renderer\PBRMaterial.cpp" />
+    <ClCompile Include="src\File\Serializer.cpp" />
   </ItemGroup>
 </Project>

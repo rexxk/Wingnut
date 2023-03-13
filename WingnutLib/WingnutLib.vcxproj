@@ -115,6 +115,7 @@
     <ClInclude Include="src\Event\MouseEvents.h" />
     <ClInclude Include="src\Event\UIEvents.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
+    <ClInclude Include="src\File\Serializer.h" />
     <ClInclude Include="src\ImGui\Controls\UIImageButton.h" />
     <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
     <ClInclude Include="src\ImGui\ImGuiContext.h" />
@@ -124,8 +125,8 @@
     <ClInclude Include="src\ImGui\Panels\PropertyPanel.h" />
     <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h" />
     <ClInclude Include="src\ImGui\Panels\TexturePanel.h" />
-    <ClInclude Include="src\Input\KeyboardInput.h" />
     <ClInclude Include="src\Input\KeyDefs.h" />
+    <ClInclude Include="src\Input\KeyboardInput.h" />
     <ClInclude Include="src\Input\MouseInput.h" />
     <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
     <ClInclude Include="src\Platform\Vulkan\CommandBuffer.h" />
@@ -136,9 +137,13 @@
     <ClInclude Include="src\Platform\Vulkan\Framebuffer.h" />
     <ClInclude Include="src\Platform\Vulkan\Image.h" />
     <ClInclude Include="src\Platform\Vulkan\Pipeline.h" />
-    <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
     <ClInclude Include="src\Platform\Vulkan\RenderPass.h" />
+    <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
+    <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
     <ClInclude Include="src\Platform\Vulkan\Shader.h" />
+    <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h" />
+    <ClInclude Include="src\Platform\Vulkan\Surface.h" />
+    <ClInclude Include="src\Platform\Vulkan\Swapchain.h" />
     <ClInclude Include="src\Platform\Vulkan\Texture.h" />
     <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Renderer\ImGuiRenderer.h" />
@@ -146,16 +151,12 @@
     <ClInclude Include="src\Renderer\Material.h" />
     <ClInclude Include="src\Renderer\PBRMaterial.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
-    <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
-    <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h" />
-    <ClInclude Include="src\Platform\Vulkan\Surface.h" />
-    <ClInclude Include="src\Platform\Vulkan\Swapchain.h" />
     <ClInclude Include="src\Renderer\SceneRenderer.h" />
     <ClInclude Include="src\Renderer\UIMaterial.h" />
     <ClInclude Include="src\Scene\Components.h" />
     <ClInclude Include="src\Scene\Entity.h" />
     <ClInclude Include="src\Scene\Scene.h" />
-    <ClInclude Include="src\Utils\FileDialog.h" />
+    <ClInclude Include="src\File\FileDialog.h" />
     <ClInclude Include="src\Utils\StringUtils.h" />
     <ClInclude Include="src\Wingnut.h" />
     <ClInclude Include="src\wingnut_pch.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="src\Event\EventBroker.cpp" />
     <ClCompile Include="src\Event\EventQueue.cpp" />
     <ClCompile Include="src\Event\EventUtils.cpp" />
+    <ClCompile Include="src\File\Serializer.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIImageButton.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
     <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
@@ -193,7 +195,12 @@
     <ClCompile Include="src\Platform\Vulkan\Image.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Pipeline.cpp" />
     <ClCompile Include="src\Platform\Vulkan\RenderPass.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Shader.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Surface.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Swapchain.cpp" />
     <ClCompile Include="src\Platform\Vulkan\Texture.cpp" />
     <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Renderer\ImGuiRenderer.cpp" />
@@ -201,17 +208,12 @@
     <ClCompile Include="src\Renderer\Material.cpp" />
     <ClCompile Include="src\Renderer\PBRMaterial.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Surface.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\Swapchain.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
     <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
     <ClCompile Include="src\Renderer\UIMaterial.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
-    <ClCompile Include="src\Utils\FileDialog.cpp" />
-    <ClCompile Include="src\Utils\stbImage.cpp" />
+    <ClCompile Include="src\File\FileDialog.cpp" />
     <ClCompile Include="src\Utils\StringUtils.cpp" />
+    <ClCompile Include="src\Utils\stbImage.cpp" />
     <ClCompile Include="src\wingnut_pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

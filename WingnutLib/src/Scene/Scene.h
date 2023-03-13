@@ -70,6 +70,8 @@ namespace Wingnut
 
 		void ImportOBJModel(const std::string& filepath);
 
+		void SaveScene(const std::string& sceneFilepath);
+
 	private:
 
 		Ref<SceneRenderer> m_SceneRenderer = nullptr;

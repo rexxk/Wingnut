@@ -197,9 +197,24 @@ void MainLayer::OnUIRender()
 				m_Scene->ClearScene();
 			}
 
+			if (ImGui::MenuItem("Load scene"))
+			{
+//				m_Scene->LoadScene();
+			}
+
+			if (ImGui::MenuItem("Save scene"))
+			{
+				std::string filename = FileDialog::Save(L"Wingnut Scene file\0*.wscene\0\0", "assets/scenes/");
+
+				if (!filename.empty())
+				{
+					m_Scene->SaveScene(filename);
+				}
+			}
+
 			if (ImGui::MenuItem("Import model..."))
 			{
-				std::string filename = OpenFileDialog::Open(L"Wavefront OBJ file\0*.obj\0\0", "assets/models/");
+				std::string filename = FileDialog::Load(L"Wavefront OBJ file\0*.obj\0\0", "assets/models/");
 
 				if (!filename.empty())
 				{

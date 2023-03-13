@@ -16,6 +16,9 @@
 #include "Event/UIEvents.h"
 #include "Event/WindowEvents.h"
 
+#include "File/FileDialog.h"
+#include "File/Serializer.h"
+
 #include "ImGui/ImGuiContext.h"
 
 #include "ImGui/Panels/MaterialEditorPanel.h"
@@ -38,7 +41,5 @@
 #include "Scene/Components.h"
 #include "Scene/Entity.h"
 #include "Scene/Scene.h"
-
-#include "Utils/FileDialog.h"
 
 #include <imgui.h>

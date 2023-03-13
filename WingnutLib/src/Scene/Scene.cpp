@@ -10,6 +10,8 @@
 #include "Event/EventUtils.h"
 #include "Event/WindowEvents.h"
 
+#include "File/Serializer.h"
+
 #include "Components.h"
 #include "Entity.h"
 
@@ -240,6 +242,19 @@ namespace Wingnut
 			newEntity.AddComponent<MaterialComponent>(ResourceManager::GetMaterialByName(mesh.MaterialName)->GetID());
 		}
 
+	}
+
+	void Scene::SaveScene(const std::string& sceneFilepath)
+	{
+		Serializer sceneSerializer(sceneFilepath);
+
+		SerializerTag tag = SerializerTag::EndOfFile;
+
+		sceneSerializer.Write<std::string>("WScene", 6);
+
+
+
+		sceneSerializer.Write<SerializerTag>((const char*)&tag);
 	}
 
 }

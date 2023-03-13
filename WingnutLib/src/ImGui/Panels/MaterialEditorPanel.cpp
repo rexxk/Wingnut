@@ -10,8 +10,6 @@
 
 #include "Renderer/Material.h"
 
-#include "Utils/FileDialog.h"
-
 #include <glm/gtc/type_ptr.hpp>
 
 #include <imgui.h>
