@@ -40,7 +40,7 @@ namespace Wingnut
 
 
 		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor)
-			: m_Format(format)
+			: m_Format(format), m_TexturePath(texturePath)
 		{
 			CreateTextureFromFile(texturePath, flip);
 

@@ -8,7 +8,7 @@ namespace Wingnut
 
 	Serializer::Serializer(const std::string& filepath)
 	{
-		m_Stream = std::ofstream(filepath, std::ios::out | std::ios::binary);
+		m_Stream = std::ofstream(filepath, std::ios::binary);
 
 		if (!m_Stream.is_open())
 		{
@@ -20,6 +20,8 @@ namespace Wingnut
 	{
 		if (m_Stream.is_open())
 		{
+			m_Stream.flush();
+
 			m_Stream.close();
 		}
 	}
@@ -27,7 +29,7 @@ namespace Wingnut
 
 	Deserializer::Deserializer(const std::string& filepath)
 	{
-		m_Stream = std::ifstream(filepath, std::ios::in | std::ios::binary);
+		m_Stream = std::ifstream(filepath, std::ios::binary);
 
 		if (!m_Stream.is_open())
 		{

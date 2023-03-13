@@ -5,13 +5,27 @@
 namespace Wingnut
 {
 
-	enum class SerializerTag
+	enum class SerializerTag : uint8_t
 	{
 		Entity = 0x10,
 		Mesh = 0x20,
+		Material = 0x30,
 		Texture = 0x40,
 
+		TagComponent = 0xA0,
+		TransformComponent = 0xA1,
+		MeshComponent = 0xA2,
+		MaterialComponent = 0xA3,
+		LightComponent = 0xA4,
+
 		EndOfFile = 0xFF,
+	};
+
+
+	enum class SerializerMagic : uint32_t
+	{
+		Scene = 0x80085,
+		Material = 0x7175,
 	};
 
 

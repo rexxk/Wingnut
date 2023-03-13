@@ -2,6 +2,8 @@
 
 #include "DataImport/Obj/ObjLoader.h"
 
+#include "File/Serializer.h"
+
 #include "Platform/Vulkan/Image.h"
 #include "Platform/Vulkan/Shader.h"
 #include "Platform/Vulkan/Texture.h"
@@ -22,6 +24,7 @@ namespace Wingnut
 	struct MaterialTexture
 	{
 		Ref<Vulkan::Texture2D> Texture;
+		std::string TextureName;
 	};
 
 	enum class MaterialTextureType
@@ -63,6 +66,9 @@ namespace Wingnut
 		Ref<Vulkan::Descriptor> GetDescriptor() { return m_Descriptor; }
 
 		virtual void* GetMaterialData() { return nullptr; }
+
+		virtual void Serialize(Serializer& serializer) {}
+		virtual void Deserialize(Deserializer& deserializer) {}
 
 	protected:
 		UUID m_MaterialID;

@@ -43,7 +43,7 @@ namespace Wingnut
 		return filename;
 	}
 
-	std::string FileDialog::Save(const TCHAR* filter, const std::string& path)
+	std::string FileDialog::Save(const TCHAR* filter, const std::string& path, const TCHAR* extension)
 	{
 		std::string filename;
 
@@ -63,6 +63,7 @@ namespace Wingnut
 		ofn.nMaxFile = MAX_PATH;
 		ofn.lpstrInitialDir = initialPath;
 		ofn.lpstrFilter = filter;
+		ofn.lpstrDefExt = extension;
 		ofn.Flags = OFN_NOCHANGEDIR;
 
 		if (GetSaveFileName(&ofn))

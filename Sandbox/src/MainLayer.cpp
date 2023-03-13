@@ -204,13 +204,15 @@ void MainLayer::OnUIRender()
 
 			if (ImGui::MenuItem("Save scene"))
 			{
-				std::string filename = FileDialog::Save(L"Wingnut Scene file\0*.wscene\0\0", "assets/scenes/");
+				std::string filename = FileDialog::Save(L"Wingnut Scene file\0*.wscene\0\0", "assets/scenes/", L"wscene");
 
 				if (!filename.empty())
 				{
 					m_Scene->SaveScene(filename);
 				}
 			}
+
+			ImGui::Separator();
 
 			if (ImGui::MenuItem("Import model..."))
 			{

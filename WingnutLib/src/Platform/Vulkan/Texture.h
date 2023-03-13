@@ -40,6 +40,7 @@ namespace Wingnut
 
 			UUID GetTextureID() const { return m_TextureID; }
 			std::string GetTextureName() const { return m_TextureName; }
+			std::string GetTexturePath() const { return m_TexturePath; }
 
 		private:
 			void CreateTextureFromFile(const std::string& texturePath, bool flip);
@@ -55,6 +56,8 @@ namespace Wingnut
 
 			UUID m_TextureID;
 			std::string m_TextureName = "<texture>";
+
+			std::string m_TexturePath = "";
 
 			Ref<Descriptor> m_Descriptor = nullptr;
 		};

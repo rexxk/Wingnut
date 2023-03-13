@@ -54,6 +54,9 @@ namespace Wingnut
 
 		void* GetMaterialData() { return (void*)&m_MaterialData; }
 
+		virtual void Serialize(Serializer& serializer) override;
+		virtual void Deserialize(Deserializer& deserializer) override;
+
 	private:
 		void CreateUniformBuffer();
 

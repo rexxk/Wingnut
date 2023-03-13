@@ -15,6 +15,8 @@
 #include "Components.h"
 #include "Entity.h"
 
+#include "Platform/Vulkan/Texture.h"
+
 #include "Renderer/Material.h"
 #include "Renderer/Renderer.h"
 
@@ -246,14 +248,111 @@ namespace Wingnut
 
 	void Scene::SaveScene(const std::string& sceneFilepath)
 	{
+		std::unordered_map<UUID, Ref<Material>> materialsToWrite;
+		std::unordered_map<std::string, Ref<Vulkan::Texture2D>> texturesToWrite;
+
 		Serializer sceneSerializer(sceneFilepath);
 
+		SerializerMagic magic = SerializerMagic::Scene;
+		sceneSerializer.Write<SerializerMagic>((const char*)&magic);
+
+		{
+			for (auto& entity : m_SceneEntities)
+			{
+				SerializerTag tag = SerializerTag::Entity;
+				sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+				TagComponent& tagComponent = entity.GetComponent<TagComponent>();
+				sceneSerializer.Write<std::string>(tagComponent.Tag.c_str(), (uint32_t)tagComponent.Tag.size());
+
+				if (entity.HasComponent<TransformComponent>())
+				{
+					tag = SerializerTag::TransformComponent;
+					sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+					TransformComponent& transformComponent = entity.GetComponent<TransformComponent>();
+					sceneSerializer.Write<glm::vec3>((const char*)&transformComponent.Translation);
+					sceneSerializer.Write<glm::vec3>((const char*)&transformComponent.Rotation);
+					sceneSerializer.Write<glm::vec3>((const char*)&transformComponent.Scale);
+				}
+
+				if (entity.HasComponent<LightComponent>())
+				{
+					tag = SerializerTag::LightComponent;
+					sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+					LightComponent& lightComponent = entity.GetComponent<LightComponent>();
+					sceneSerializer.Write<glm::vec3>((const char*)&lightComponent.Position);
+					sceneSerializer.Write<glm::vec3>((const char*)&lightComponent.Color);
+				}
+
+				if (entity.HasComponent<MaterialComponent>())
+				{
+					tag = SerializerTag::MaterialComponent;
+					sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+					MaterialComponent& materialComponent = entity.GetComponent<MaterialComponent>();
+					sceneSerializer.Write<MaterialType>((const char*)&materialComponent.Type);
+					sceneSerializer.Write<UUID>((const char*)&materialComponent.MaterialID);
+
+					materialsToWrite[materialComponent.MaterialID] = ResourceManager::GetMaterial(materialComponent.MaterialID);
+				}
+
+				if (entity.HasComponent<MeshComponent>())
+				{
+					tag = SerializerTag::Mesh;
+					sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+					MeshComponent& meshComponent = entity.GetComponent<MeshComponent>();
+					sceneSerializer.WriteVector<std::vector<Vertex>>((const char*)meshComponent.VertexList.data(), (uint32_t)meshComponent.VertexList.size() * sizeof(Vertex));
+					sceneSerializer.WriteVector<std::vector<uint32_t>>((const char*)meshComponent.IndexList.data(), (uint32_t)meshComponent.IndexList.size() * sizeof(uint32_t));
+				}
+			}
+
+
+		}
+
+
+		{
+
+			for (auto& material : materialsToWrite)
+			{
+				LOG_CORE_TRACE("Writing material {}", material.second->GetName());
+
+				SerializerTag tag = SerializerTag::Material;
+				sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+				material.second->Serialize(sceneSerializer);
+
+				if (material.second->GetType() == MaterialType::StaticPBR)
+				{
+					PBRMaterialData* materialData = (PBRMaterialData*)material.second->GetMaterialData();
+
+					texturesToWrite[materialData->AlbedoTexture.TextureName] = materialData->AlbedoTexture.Texture;
+					texturesToWrite[materialData->NormalMap.TextureName] = materialData->NormalMap.Texture;
+					texturesToWrite[materialData->MetalnessMap.TextureName] = materialData->MetalnessMap.Texture;
+					texturesToWrite[materialData->RoughnessMap.TextureName] = materialData->RoughnessMap.Texture;
+					texturesToWrite[materialData->AmbientOcclusionMap.TextureName] = materialData->AmbientOcclusionMap.Texture;
+				}
+			}
+		}
+
+		{
+			for (auto& texture : texturesToWrite)
+			{
+				LOG_CORE_TRACE("Writing texture {}  ({})", texture.second->GetTextureName(), texture.second->GetTexturePath());
+
+				SerializerTag tag = SerializerTag::Texture;
+				sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+				sceneSerializer.Write<std::string>((const char*)texture.first.c_str(), (uint32_t)texture.first.size());
+
+
+			}
+		}
+
+
 		SerializerTag tag = SerializerTag::EndOfFile;
-
-		sceneSerializer.Write<std::string>("WScene", 6);
-
-
-
 		sceneSerializer.Write<SerializerTag>((const char*)&tag);
 	}
 
