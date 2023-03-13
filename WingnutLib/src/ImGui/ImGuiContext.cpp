@@ -97,6 +97,7 @@ namespace Wingnut
 		io.KeyMap[ImGuiKey_UpArrow] = WK_UP;
 		io.KeyMap[ImGuiKey_RightArrow] = WK_RIGHT;
 		io.KeyMap[ImGuiKey_DownArrow] = WK_DOWN;
+		io.KeyMap[ImGuiKey_Enter] = WK_ENTER;
 
 		uint8_t* pixels;
 		int32_t atlasWidth;
