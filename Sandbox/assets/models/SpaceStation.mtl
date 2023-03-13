@@ -1,0 +1,217 @@
+# Blender 3.4.1 MTL File: 'Space Station Scene.blend'
+# www.blender.org
+
+newmtl Drohn_1
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+
+newmtl Holo_Green
+Kd 0.115438 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl Laser-Tower
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl Panic_Bot.001
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+map_Kd assets/textures/SpaceStation/InfoBot_Panic_Bot_color.jpg
+map_Ks assets/textures/SpaceStation/InfoBot_Panic_Bot_metalness.jpg
+map_Pr assets/textures/SpaceStation/InfoBot_Panic_Bot_rough.jpg
+map_Bump assets/textures/SpaceStation/InfoBot_Panic_Bot_nmap.jpg
+
+newmtl Railing
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+map_Kd assets/textures/SpaceStation/Railings_texture_UVMap_color.jpg
+map_Ks assets/textures/SpaceStation/Railings_texture_UVMap_metalness.jpg
+map_Pr assets/textures/SpaceStation/Railings_texture_UVMap_rough.jpg
+map_Bump assets/textures/SpaceStation/Railings_texture_UVMap_nmap.jpg
+
+newmtl Red_Laser
+Kd 0.800000 0.018441 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl Red_Text
+Kd 0.800000 0.018441 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl Sartfighter
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+map_Kd assets/textures/SpaceStation/texture_3_UVMap_color.jpg
+map_Ks assets/textures/SpaceStation/texture_3_UVMap_metalness.jpg
+map_Pr assets/textures/SpaceStation/texture_3_UVMap_rough.jpg
+map_Bump assets/textures/SpaceStation/texture_3_UVMap_nmap.jpg
+
+newmtl Star_Fighter_Fire
+Kd 0.800000 0.207723 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl Starfighter_Laser
+Kd 0.000000 0.051011 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl Station-Inside
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+map_Kd assets/textures/SpaceStation/t1_UVMap_color.jpg
+map_Ks assets/textures/SpaceStation/t1_UVMap_metalness.jpg
+map_Pr assets/textures/SpaceStation/t1_UVMap_rough.jpg
+map_Bump assets/textures/SpaceStation/t1_UVMap_nmap.jpg
+
+newmtl Station-Outside
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+map_Kd assets/textures/SpaceStation/out_side_UVMap_color.jpg
+map_Ks assets/textures/SpaceStation/out_side_UVMap_metalness.jpg
+map_Pr assets/textures/SpaceStation/out_side_UVMap_rough.jpg
+map_Bump assets/textures/SpaceStation/out_side_UVMap_nmap.jpg
+
+newmtl Windows
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl door
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl hologram
+Kd 0.320949 0.800000 0.732435
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl hologram_ground
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl hologram_radar-blue
+Kd 0.072971 0.567791 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+
+newmtl scifi_column
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+map_Kd assets/textures/SpaceStation/column_UVMap_color.jpg
+map_Ks assets/textures/SpaceStation/column_UVMap_metalness.jpg
+map_Pr assets/textures/SpaceStation/column_UVMap_rough.jpg
+map_Bump assets/textures/SpaceStation/column_UVMap_nmap.jpg
+
+newmtl window_shutter
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000

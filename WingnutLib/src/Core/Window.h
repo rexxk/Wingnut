@@ -25,6 +25,8 @@ namespace Wingnut
 		Window(const WindowProperties& windowProperties);
 		~Window();
 
+		void* WindowHandle() { return m_WindowHandle; }
+
 		void HandleMessages();
 
 	private:

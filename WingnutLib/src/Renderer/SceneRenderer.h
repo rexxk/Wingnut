@@ -1,0 +1,58 @@
+#pragma once
+
+
+#include "Platform/Vulkan/Buffer.h"
+#include "Platform/Vulkan/Pipeline.h"
+#include "Platform/Vulkan/RenderPass.h"
+#include "Platform/Vulkan/Shader.h"
+
+#include "Renderer/Material.h"
+
+
+namespace Wingnut
+{
+
+
+
+
+
+
+	class SceneRenderer
+	{
+	public:
+		static Ref<SceneRenderer> Create(VkExtent2D extent);
+
+		SceneRenderer(VkExtent2D extent);
+		~SceneRenderer();
+
+		void Release();
+
+		void BeginScene(uint32_t currentFrame);
+		void EndScene();
+
+		void Clear();
+
+		void Draw();
+
+		void SubmitDescriptor(Ref<Vulkan::Descriptor> descriptor);
+		void SubmitToDrawList(UUID entityID, const std::vector<Vertex>& vertexList, const std::vector<uint32_t>& indexList, const glm::mat4& transform, Ref<Material> material);
+
+		Ref<Vulkan::Image> GetRenderImage() { return m_RenderImage; }
+
+		Ref<Vulkan::Shader> GetShader();
+
+	private:
+		void CreateRenderer();
+		void UpdateEntityCache();
+
+	private:
+
+		Ref<Vulkan::Image> m_RenderImage = nullptr;
+
+		VkExtent2D m_Extent;
+
+		uint32_t m_CurrentFrame;
+	};
+
+
+}

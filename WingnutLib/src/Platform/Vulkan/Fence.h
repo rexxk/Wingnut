@@ -1,0 +1,37 @@
+#pragma once
+
+#include "Device.h"
+
+#include <vulkan/vulkan.h>
+
+
+namespace Wingnut
+{
+
+	namespace Vulkan
+	{
+
+		class Fence
+		{
+		public:
+
+			static Ref<Fence> Create(Ref<Device> device);
+
+			Fence(Ref<Device> device);
+			~Fence();
+
+			void Release();
+
+			void Wait(uint64_t timeout);
+			void Reset();
+
+			VkFence GetFence() { return m_Fence; }
+
+		private:
+			VkFence m_Fence = nullptr;
+
+			Ref<Device> m_Device = nullptr;
+		};
+
+	}
+}

@@ -11,6 +11,7 @@ workspace "Wingnut"
 	IncludeDir["spdlog"] = "vendor/spdlog/include"
 	IncludeDir["imgui"] = "vendor/imgui"
 	IncludeDir["stbimage"] = "vendor/stb-image"
+	IncludeDir["vulkan"] = "vendor/vulkan/1.3.231.1/Include"
 
 	targetdir "%{wks.location}/bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
 	objdir "%{wks.location}/bin-int/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
@@ -42,11 +43,13 @@ project "WingnutLib"
 		"%{prj.location}/%{IncludeDir.glm}",
 		"%{prj.location}/%{IncludeDir.imgui}",
 		"%{prj.location}/%{IncludeDir.stbimage}",
+		"%{prj.location}/%{IncludeDir.vulkan}",
 	}
 
 	links
 	{
 		"ImGui",
+		"WingnutLib/vendor/vulkan/1.3.231.1/Lib/vulkan-1.lib",
 	}
 
 	pchheader "wingnut_pch.h"
@@ -63,7 +66,13 @@ project "WingnutLib"
 
 		links
 		{
-			"WingnutLib/vendor/assimp/lib/assimp-vc142-mtd.lib"
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/shaderc_combinedd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/MachineIndependentd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/OSDependentd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRVd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Toolsd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-optd.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-sharedd.lib",
 		}
 	
 	filter "configurations:Release"
@@ -71,7 +80,13 @@ project "WingnutLib"
 
 		links
 		{
-			"WingnutLib/vendor/assimp/lib/assimp-vc142-mt.lib"
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/shaderc_combined.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/MachineIndependent.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/OSDependent.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-opt.lib",
+			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-shared.lib",
 		}
 	
 
@@ -101,6 +116,7 @@ project "Sandbox"
 		"%{wks.location}/WingnutLib/%{IncludeDir.Glad}",
 		"%{wks.location}/WingnutLib/%{IncludeDir.glm}",
 		"%{wks.location}/WingnutLib/%{IncludeDir.imgui}",
+		"%{wks.location}/WingnutLib/%{IncludeDir.vulkan}",
 	}
 	
 	links 

@@ -7,6 +7,13 @@
 #include "LayerStack.h"
 #include "Window.h"
 
+#include "ImGui/ImGuiContext.h"
+
+#include "Input/KeyboardInput.h"
+#include "Input/MouseInput.h"
+
+#include "Renderer/Renderer.h"
+
 
 namespace Wingnut
 {
@@ -17,10 +24,29 @@ namespace Wingnut
 	};
 
 
+	struct ApplicationMetrics
+	{
+		uint32_t FPS;
+
+		float TotalFrameTime = 0.0f;
+		float MessageHandlingTime = 0.0f;
+		float LayerUpdateTime = 0.0f;
+		float SceneDrawTime = 0.0f;
+		float RenderingTime = 0.0f;
+		float UIRenderingTime = 0.0f;
+		float GPUTime = 0.0f;
+
+		uint32_t PolygonCount = 0;
+	};
+
+
 	class Application
 	{
 	public:
 		Application(const ApplicationProperties& properties);
+		virtual ~Application();
+
+		void Exit();
 
 		void Run();
 
@@ -33,10 +59,17 @@ namespace Wingnut
 
 		void Terminate();
 
+		std::string GetBaseDirectory() const { return m_BaseDirectory; }
 
 		Ref<EventQueue> GetEventQueue() { return m_EventQueue; }
 		Ref<EventBroker> GetEventBroker() { return m_EventBroker; }
 
+		Ref<Renderer> GetRenderer() { return m_Renderer; }
+
+		Ref<Window> GetWindow() { return m_MainWindow; }
+		Ref<ImGuiContext> GetUIContext() { return m_ImGuiContext; }
+
+		ApplicationMetrics& GetMetrics();
 
 		static Application& Get() { return *s_Instance; }
 
@@ -44,6 +77,9 @@ namespace Wingnut
 	private:
 
 		bool m_Running = false;
+		bool m_ApplicationMinimized = false;
+
+		std::string m_BaseDirectory = "";
 
 		LayerStack m_LayerStack;
 
@@ -52,6 +88,12 @@ namespace Wingnut
 		Ref<EventBroker> m_EventBroker = nullptr;
 		Ref<EventQueue> m_EventQueue = nullptr;
 
+		Ref<Renderer> m_Renderer = nullptr;
+
+		Ref<ImGuiContext> m_ImGuiContext = nullptr;
+
+		Ref<KeyboardInput> m_KeyboardInput = nullptr;
+		Ref<MouseInput> m_MouseInput = nullptr;
 
 		inline static Application* s_Instance = nullptr;
 

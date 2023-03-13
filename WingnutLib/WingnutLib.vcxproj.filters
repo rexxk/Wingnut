@@ -1,30 +1,211 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="src\wingnut_pch.h" />
-    <ClInclude Include="src\Core\Entry.h" />
-    <ClInclude Include="src\Core\Application.h" />
-    <ClInclude Include="src\Wingnut.h" />
-    <ClInclude Include="src\Core\Log.h" />
-    <ClInclude Include="src\Core\Base.h" />
-    <ClInclude Include="src\Core\Layer.h" />
-    <ClInclude Include="src\Core\LayerStack.h" />
-    <ClInclude Include="src\Core\Window.h" />
-    <ClInclude Include="src\Event\Event.h" />
-    <ClInclude Include="src\Event\EventQueue.h" />
-    <ClInclude Include="src\Event\EventBroker.h" />
-    <ClInclude Include="src\Event\WindowEvents.h" />
-    <ClInclude Include="src\Event\EventUtils.h" />
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{E70B220D-5320-4ABE-1CA2-ED1D887546EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{7CCE658F-689B-C09A-91B4-AE427DE0F528}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\Application.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Base.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Entry.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Layer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\LayerStack.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Log.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Window.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\Event.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\EventBroker.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\EventQueue.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\EventUtils.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\WindowEvents.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\CommandPool.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Device.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Framebuffer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Pipeline.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\RenderPass.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\ShaderCompiler.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Surface.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Swapchain.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wingnut.h" />
+    <ClInclude Include="src\wingnut_pch.h" />
+    <ClInclude Include="src\Platform\Vulkan\CommandBuffer.h" />
+    <ClInclude Include="src\Platform\Vulkan\Semaphore.h" />
+    <ClInclude Include="src\Platform\Vulkan\Fence.h" />
+    <ClInclude Include="src\Platform\Vulkan\Buffer.h" />
+    <ClInclude Include="src\Platform\Vulkan\RendererContext.h" />
+    <ClInclude Include="src\Platform\Vulkan\Shader.h" />
+    <ClInclude Include="src\Utils\StringUtils.h" />
+    <ClInclude Include="src\Platform\Vulkan\DescriptorPool.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Renderer\Camera.h" />
+    <ClInclude Include="src\Platform\Vulkan\Texture.h" />
+    <ClInclude Include="src\Core\Timer.h" />
+    <ClInclude Include="src\Renderer\SceneRenderer.h" />
+    <ClInclude Include="src\ECS\ECS.h" />
+    <ClInclude Include="src\Core\UUID.h" />
+    <ClInclude Include="src\Scene\Components.h" />
+    <ClInclude Include="src\Platform\Vulkan\Image.h" />
+    <ClInclude Include="src\Renderer\ImGuiRenderer.h" />
+    <ClInclude Include="src\ImGui\ImGuiContext.h" />
+    <ClInclude Include="src\Event\MouseEvents.h" />
+    <ClInclude Include="src\Input\KeyDefs.h" />
+    <ClInclude Include="src\Event\KeyboardEvents.h" />
+    <ClInclude Include="src\Core\Timestep.h" />
+    <ClInclude Include="src\Event\UIEvents.h" />
+    <ClInclude Include="src\Input\MouseInput.h" />
+    <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h" />
+    <ClInclude Include="src\Scene\Entity.h" />
+    <ClInclude Include="src\ImGui\Panels\PropertyPanel.h" />
+    <ClInclude Include="src\Renderer\Material.h" />
+    <ClInclude Include="src\ImGui\Panels\MaterialEditorPanel.h" />
+    <ClInclude Include="src\ImGui\Panels\MaterialStorePanel.h" />
+    <ClInclude Include="src\ImGui\Panels\TexturePanel.h" />
+    <ClInclude Include="src\Utils\FileDialog.h" />
+    <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
+    <ClInclude Include="src\Input\KeyboardInput.h" />
+    <ClInclude Include="src\DataImport\Obj\ObjLoader.h" />
+    <ClInclude Include="src\ImGui\Panels\MetricsPanel.h" />
+    <ClInclude Include="src\ImGui\Controls\UIImageButton.h" />
+    <ClInclude Include="src\Renderer\Light.h" />
+    <ClInclude Include="src\Assets\ResourceManager.h" />
+    <ClInclude Include="src\Renderer\UIMaterial.h" />
+    <ClInclude Include="src\Renderer\PBRMaterial.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Core\Application.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Layer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\LayerStack.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Log.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Window.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Event\EventBroker.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Event\EventQueue.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Event\EventUtils.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\CommandPool.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Device.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Framebuffer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Pipeline.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\RenderPass.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Renderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\ShaderCompiler.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Surface.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Swapchain.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\wingnut_pch.cpp" />
-    <ClCompile Include="src\Core\Application.cpp" />
-    <ClCompile Include="src\Core\Log.cpp" />
-    <ClCompile Include="src\Core\Layer.cpp" />
-    <ClCompile Include="src\Core\LayerStack.cpp" />
-    <ClCompile Include="src\Core\Window.cpp" />
-    <ClCompile Include="src\Event\EventQueue.cpp" />
-    <ClCompile Include="src\Event\EventBroker.cpp" />
-    <ClCompile Include="src\Event\EventUtils.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\CommandBuffer.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Semaphore.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Fence.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Buffer.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\RendererContext.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Shader.cpp" />
+    <ClCompile Include="src\Utils\StringUtils.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\DescriptorPool.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Texture.cpp" />
+    <ClCompile Include="src\Utils\stbImage.cpp" />
+    <ClCompile Include="src\Renderer\SceneRenderer.cpp" />
+    <ClCompile Include="src\Core\UUID.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\Image.cpp" />
+    <ClCompile Include="src\Renderer\ImGuiRenderer.cpp" />
+    <ClCompile Include="src\ImGui\ImGuiContext.cpp" />
+    <ClCompile Include="src\Input\MouseInput.cpp" />
+    <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp" />
+    <ClCompile Include="src\ImGui\Panels\PropertyPanel.cpp" />
+    <ClCompile Include="src\Renderer\Material.cpp" />
+    <ClCompile Include="src\ImGui\Panels\MaterialEditorPanel.cpp" />
+    <ClCompile Include="src\ImGui\Panels\MaterialStorePanel.cpp" />
+    <ClCompile Include="src\ImGui\Panels\TexturePanel.cpp" />
+    <ClCompile Include="src\Utils\FileDialog.cpp" />
+    <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
+    <ClCompile Include="src\Input\KeyboardInput.cpp" />
+    <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp" />
+    <ClCompile Include="src\ImGui\Panels\MetricsPanel.cpp" />
+    <ClCompile Include="src\ImGui\Controls\UIImageButton.cpp" />
+    <ClCompile Include="src\Renderer\Light.cpp" />
+    <ClCompile Include="src\Assets\ResourceManager.cpp" />
+    <ClCompile Include="src\Renderer\UIMaterial.cpp" />
+    <ClCompile Include="src\Renderer\PBRMaterial.cpp" />
   </ItemGroup>
 </Project>

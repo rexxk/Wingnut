@@ -5,8 +5,13 @@
 #include <Windows.h>
 
 #include "Application.h"
+
 #include "Event/EventUtils.h"
+#include "Event/KeyboardEvents.h"
+#include "Event/MouseEvents.h"
 #include "Event/WindowEvents.h"
+
+#include "Input/KeyDefs.h"
 
 
 namespace Wingnut
@@ -115,6 +120,119 @@ namespace Wingnut
 
 			return 0;
 		}
+
+		case WM_LBUTTONDOWN:
+		{
+			Ref<MouseButtonPressedEvent> event = CreateRef<MouseButtonPressedEvent>(MouseButton::Left, (uint32_t)LOWORD(lParam), (uint32_t)HIWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_RBUTTONDOWN:
+		{
+			Ref<MouseButtonPressedEvent> event = CreateRef<MouseButtonPressedEvent>(MouseButton::Right, (uint32_t)LOWORD(lParam), (uint32_t)HIWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_MBUTTONDOWN:
+		{
+			Ref<MouseButtonPressedEvent> event = CreateRef<MouseButtonPressedEvent>(MouseButton::Middle, (uint32_t)LOWORD(lParam), (uint32_t)HIWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_LBUTTONUP:
+		{
+			Ref<MouseButtonReleasedEvent> event = CreateRef<MouseButtonReleasedEvent>(MouseButton::Left, (uint32_t)LOWORD(lParam), (uint32_t)HIWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_RBUTTONUP:
+		{
+			Ref<MouseButtonReleasedEvent> event = CreateRef<MouseButtonReleasedEvent>(MouseButton::Right, (uint32_t)LOWORD(lParam), (uint32_t)HIWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_MBUTTONUP:
+		{
+			Ref<MouseButtonReleasedEvent> event = CreateRef<MouseButtonReleasedEvent>(MouseButton::Middle, (uint32_t)LOWORD(lParam), (uint32_t)HIWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_MOUSEMOVE:
+		{
+			Ref<MouseMovedEvent> event = CreateRef<MouseMovedEvent>((uint32_t)LOWORD(lParam), (uint32_t)HIWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_MOUSEWHEEL:
+		{
+			Ref<MouseWheelEvent> event = CreateRef<MouseWheelEvent>((int32_t)GET_WHEEL_DELTA_WPARAM(wParam) / 120, (uint32_t)LOWORD(lParam), (uint32_t)HIWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_KEYDOWN:
+		{
+			Ref<KeyPressedEvent> event = CreateRef<KeyPressedEvent>((uint32_t)wParam, (uint32_t)LOWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_SYSKEYDOWN:
+		{
+			Ref<KeyPressedEvent> event = CreateRef<KeyPressedEvent>((uint32_t)wParam, (uint32_t)LOWORD(lParam));
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_KEYUP:
+		{
+			Ref<KeyReleasedEvent> event = CreateRef<KeyReleasedEvent>((uint32_t)wParam);
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_SYSKEYUP:
+		{
+			Ref<KeyReleasedEvent> event = CreateRef<KeyReleasedEvent>((uint32_t)wParam);
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_CHAR:
+		{
+			Ref<KeyTypedEvent> event = CreateRef<KeyTypedEvent>((uint32_t)wParam);
+			AddEventToQueue(event);
+
+			break;
+		}
+
+		case WM_SYSCHAR:
+		{
+			Ref<KeyTypedEvent> event = CreateRef<KeyTypedEvent>((uint32_t)wParam);
+			AddEventToQueue(event);
+
+			break;
+		}
+
 		}
 
 		return DefWindowProc(hWnd, msg, wParam, lParam);

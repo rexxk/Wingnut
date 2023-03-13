@@ -58,7 +58,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NUT_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\WingnutLib\src;..\WingnutLib\vendor\spdlog\include;..\WingnutLib;..\WingnutLib\vendor\glm;..\WingnutLib\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\WingnutLib\src;..\WingnutLib\vendor\spdlog\include;..\WingnutLib;..\WingnutLib\vendor\glm;..\WingnutLib\vendor\imgui;..\WingnutLib\vendor\vulkan\1.3.231.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -66,13 +66,14 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Win64|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\WingnutLib\src;..\WingnutLib\vendor\spdlog\include;..\WingnutLib;..\WingnutLib\vendor\glm;..\WingnutLib\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\WingnutLib\src;..\WingnutLib\vendor\spdlog\include;..\WingnutLib;..\WingnutLib\vendor\glm;..\WingnutLib\vendor\imgui;..\WingnutLib\vendor\vulkan\1.3.231.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -87,16 +88,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WingnutLib\WingnutLib.vcxproj">
-      <Project>{880A65E2-74C2-A62F-DDC9-7F8BC9A04120}</Project>
-    </ProjectReference>
+    <ClInclude Include="src\MainLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MainLayer.cpp" />
     <ClCompile Include="src\Sandbox.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\MainLayer.h" />
+    <ProjectReference Include="..\WingnutLib\WingnutLib.vcxproj">
+      <Project>{880A65E2-74C2-A62F-DDC9-7F8BC9A04120}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\Basic.shader" />
+    <None Include="assets\shaders\flat.shader" />
+    <None Include="assets\shaders\ImGui.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
