@@ -6,6 +6,8 @@
 
 #include "Assets/ResourceManager.h"
 
+#include "File/VirtualFileSystem.h"
+
 #include <stb_image.h>
 
 #include <vulkan/vulkan.h>
@@ -69,6 +71,8 @@ namespace Wingnut
 		void Texture2D::CreateTextureFromFile(const std::string& texturePath, bool flip)
 		{
 			m_Device = Renderer::GetContext()->GetRendererData().Device;
+
+			VirtualFileSystem::AddFile(texturePath);
 
 			stbi_set_flip_vertically_on_load(flip);
 

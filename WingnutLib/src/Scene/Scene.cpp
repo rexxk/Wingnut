@@ -11,6 +11,7 @@
 #include "Event/WindowEvents.h"
 
 #include "File/Serializer.h"
+#include "File/VirtualFileSystem.h"
 
 #include "Components.h"
 #include "Entity.h"
@@ -244,6 +245,7 @@ namespace Wingnut
 			newEntity.AddComponent<MaterialComponent>(ResourceManager::GetMaterialByName(mesh.MaterialName)->GetID());
 		}
 
+		VirtualFileSystem::PrintDirectoryStructure(VirtualFileSystem::GetRootDirectory());
 	}
 
 	void Scene::SaveScene(const std::string& sceneFilepath)

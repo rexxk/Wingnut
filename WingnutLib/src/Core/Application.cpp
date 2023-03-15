@@ -71,11 +71,14 @@ namespace Wingnut
 				return false;
 			});
 
+		m_VirtualFileSystem = CreateRef<VirtualFileSystem>();
 
 		WindowProperties windowProps;
 		windowProps.Width = 1280;
 		windowProps.Height = 720;
 		windowProps.Title = properties.Title;
+
+		windowProps.StartMaximized = true;
 
 		m_MainWindow = Window::Create(windowProps);
 
@@ -86,7 +89,6 @@ namespace Wingnut
 		m_KeyboardInput = CreateRef<KeyboardInput>();
 		m_MouseInput = CreateRef<MouseInput>();
 
-		m_VirtualFileSystem = CreateRef<VirtualFileSystem>();
 	}
 
 	Application::~Application()

@@ -9,6 +9,11 @@ namespace Wingnut
 
 	VirtualFileSystem::VirtualFileSystem()
 	{
+		if (s_Instance == nullptr)
+		{
+			s_Instance = this;
+		}
+
 		m_RootDirectory.Name = "/";
 
 	}
@@ -28,23 +33,44 @@ namespace Wingnut
 		}
 		if (tokens.size() == 1)
 		{
-			m_RootDirectory.Files.emplace_back(tokens[tokens.size() - 1]);
+			s_Instance->m_RootDirectory.Files.emplace_back(tokens[tokens.size() - 1]);
 			return;
 		}
 
-		if (!FindDirectory(m_RootDirectory, tokens, (uint32_t)tokens.size() - 1))
+		if (!FindDirectory(s_Instance->m_RootDirectory, tokens, (uint32_t)tokens.size() - 1))
 		{
-			AddDirectories(m_RootDirectory, tokens, (uint32_t)tokens.size() - 1);
+			AddDirectories(s_Instance->m_RootDirectory, tokens, (uint32_t)tokens.size() - 1);
 		}
 
 		FileSystemDirectory* workingDirectory;
 
-		if (FindDirectory(m_RootDirectory, tokens, (uint32_t)tokens.size() - 1, &workingDirectory))
+		if (FindDirectory(s_Instance->m_RootDirectory, tokens, (uint32_t)tokens.size() - 1, &workingDirectory))
 		{
 			workingDirectory->Files.emplace_back(tokens[tokens.size() - 1]);
 		}
 
 	}
+
+	bool VirtualFileSystem::FindFile(const std::string& filepath)
+	{
+		std::vector<std::string> tokens = Tokenize(filepath, '/');
+
+		FileSystemDirectory* workingDirectory;
+
+		if (FindDirectory(s_Instance->m_RootDirectory, tokens, (uint32_t)tokens.size() - 1, &workingDirectory))
+		{
+			for (auto& file : workingDirectory->Files)
+			{
+				if (file.Name == tokens[tokens.size() - 1])
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 
 	void VirtualFileSystem::AddDirectories(FileSystemDirectory& directory, const std::vector<std::string>& paths, uint32_t levels, uint32_t actualLevel)
 	{

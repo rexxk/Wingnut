@@ -13,6 +13,7 @@ namespace Wingnut
 		uint32_t Height;
 		std::string Title;
 
+		bool StartMaximized = false;
 
 	};
 

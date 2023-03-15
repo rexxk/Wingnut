@@ -81,8 +81,14 @@ namespace Wingnut
 
 		SetWindowPos((HWND)m_WindowHandle, 0, 0, 0, rect.right - rect.left, rect.bottom - rect.top, SWP_NOMOVE);
 
-
-		ShowWindow((HWND)m_WindowHandle, SW_SHOW);
+		if (m_Properties.StartMaximized)
+		{
+			ShowWindow((HWND)m_WindowHandle, SW_MAXIMIZE);
+		}
+		else
+		{
+			ShowWindow((HWND)m_WindowHandle, SW_SHOW);
+		}
 	}
 
 	void Window::HandleMessages()

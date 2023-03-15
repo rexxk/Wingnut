@@ -147,12 +147,6 @@ void MainLayer::OnAttach()
 	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
 	m_TexturePanel = CreateRef<TexturePanel>();
 
-	Ref<VirtualFileSystem> virtualFileSystem = Application::Get().GetVirtualFileSystem();
-
-
-	LOG_TRACE("Virtual file system structure:")
-
-	virtualFileSystem->PrintDirectoryStructure(virtualFileSystem->GetRootDirectory());
 }
 
 void MainLayer::OnDetach()
