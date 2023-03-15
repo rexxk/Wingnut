@@ -7,6 +7,8 @@
 #include "LayerStack.h"
 #include "Window.h"
 
+#include "File/VirtualFileSystem.h"
+
 #include "ImGui/ImGuiContext.h"
 
 #include "Input/KeyboardInput.h"
@@ -69,6 +71,8 @@ namespace Wingnut
 		Ref<Window> GetWindow() { return m_MainWindow; }
 		Ref<ImGuiContext> GetUIContext() { return m_ImGuiContext; }
 
+		Ref<VirtualFileSystem> GetVirtualFileSystem() { return m_VirtualFileSystem; }
+
 		ApplicationMetrics& GetMetrics();
 
 		static Application& Get() { return *s_Instance; }
@@ -94,6 +98,8 @@ namespace Wingnut
 
 		Ref<KeyboardInput> m_KeyboardInput = nullptr;
 		Ref<MouseInput> m_MouseInput = nullptr;
+
+		Ref<VirtualFileSystem> m_VirtualFileSystem = nullptr;
 
 		inline static Application* s_Instance = nullptr;
 

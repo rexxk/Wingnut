@@ -116,6 +116,7 @@
     <ClInclude Include="src\Event\UIEvents.h" />
     <ClInclude Include="src\Event\WindowEvents.h" />
     <ClInclude Include="src\File\Serializer.h" />
+    <ClInclude Include="src\File\VirtualFileSystem.h" />
     <ClInclude Include="src\ImGui\Controls\UIImageButton.h" />
     <ClInclude Include="src\ImGui\Controls\UIVector3.h" />
     <ClInclude Include="src\ImGui\ImGuiContext.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\Event\EventQueue.cpp" />
     <ClCompile Include="src\Event\EventUtils.cpp" />
     <ClCompile Include="src\File\Serializer.cpp" />
+    <ClCompile Include="src\File\VirtualFileSystem.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIImageButton.cpp" />
     <ClCompile Include="src\ImGui\Controls\UIVector3.cpp" />
     <ClCompile Include="src\ImGui\ImGuiContext.cpp" />

@@ -346,7 +346,7 @@ namespace Wingnut
 				sceneSerializer.Write<SerializerTag>((const char*)&tag);
 
 				sceneSerializer.Write<std::string>((const char*)texture.first.c_str(), (uint32_t)texture.first.size());
-
+				sceneSerializer.Write<std::string>((const char*)texture.second->GetTexturePath().c_str(), (uint32_t)texture.second->GetTexturePath().size());
 
 			}
 		}

@@ -86,6 +86,7 @@ namespace Wingnut
 		m_KeyboardInput = CreateRef<KeyboardInput>();
 		m_MouseInput = CreateRef<MouseInput>();
 
+		m_VirtualFileSystem = CreateRef<VirtualFileSystem>();
 	}
 
 	Application::~Application()
