@@ -72,7 +72,8 @@ namespace Wingnut
 		{
 			m_Device = Renderer::GetContext()->GetRendererData().Device;
 
-			VirtualFileSystem::AddFile(texturePath);
+//			VirtualFileSystem::AddFile(texturePath);
+			VirtualFileSystem::LoadFileFromDisk(texturePath);
 
 			stbi_set_flip_vertically_on_load(flip);
 

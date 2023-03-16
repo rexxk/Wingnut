@@ -245,7 +245,7 @@ namespace Wingnut
 			newEntity.AddComponent<MaterialComponent>(ResourceManager::GetMaterialByName(mesh.MaterialName)->GetID());
 		}
 
-		VirtualFileSystem::PrintDirectoryStructure(VirtualFileSystem::GetRootDirectory());
+		VirtualFileSystem::PrintStructure();
 	}
 
 	void Scene::SaveScene(const std::string& sceneFilepath)

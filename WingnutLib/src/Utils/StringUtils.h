@@ -8,6 +8,7 @@ namespace Wingnut
 
 	std::string RemoveCharacters(const std::string& str, const std::string& charactersToRemove);
 
+	std::string ConvertFilePathToAssetPath(const std::string& str);
 }
 
 

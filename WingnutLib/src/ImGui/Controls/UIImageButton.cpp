@@ -77,6 +77,8 @@ namespace Wingnut
 					m_Material->SetTexture(m_MaterialTextureType, newTexture);
 
 					ResourceManager::AddTexture(newTexture);
+
+					VirtualFileSystem::PrintStructure();
 				}
 
 			}
