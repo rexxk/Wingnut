@@ -24,11 +24,11 @@ namespace Wingnut
 		class Texture2D
 		{
 		public:
-			static Ref<Texture2D> Create(const std::string& texturePath, TextureFormat format, bool flip = false, bool createDescriptor = false);
-			static Ref<Texture2D> Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, bool createDescriptor = false);
+			static Ref<Texture2D> Create(const std::string& texturePath, TextureFormat format, bool flip = false, bool createDescriptor = false, bool systemFile = false);
+			static Ref<Texture2D> Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, bool createDescriptor = false, bool systemFile = false);
 
-			Texture2D(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor);
-			Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, bool createDescriptor);
+			Texture2D(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor, bool systemFile);
+			Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, bool createDescriptor, bool systemFile);
 			~Texture2D();
 
 			void Release();
@@ -43,7 +43,7 @@ namespace Wingnut
 			std::string GetTexturePath() const { return m_TexturePath; }
 
 		private:
-			void CreateTextureFromFile(const std::string& texturePath, bool flip, bool createDescriptor);
+			void CreateTextureFromFile(const std::string& texturePath, bool flip, bool createDescriptor, bool systemFile);
 			void CreateTexture(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, bool createDescriptor);
 
 			void CreateDescriptor();

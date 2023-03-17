@@ -20,10 +20,10 @@ namespace Wingnut
 	{
 		m_ActiveDirectory = &VirtualFileSystem::GetRootDirectory();
 
-		m_FileUpTexture = Vulkan::Texture2D::Create("assets/textures/file_up.png", Vulkan::TextureFormat::R8G8B8A8_Normalized, false, true);
-		m_FileModelTexture = Vulkan::Texture2D::Create("assets/textures/file_model.png", Vulkan::TextureFormat::R8G8B8A8_Normalized, false, true);
-		m_FileSceneTexture = Vulkan::Texture2D::Create("assets/textures/file_scene.png", Vulkan::TextureFormat::R8G8B8A8_Normalized, false, true);
-		m_FileDirectoryTexture = Vulkan::Texture2D::Create("assets/textures/file_directory.png", Vulkan::TextureFormat::R8G8B8A8_Normalized, false, true);
+		m_FileUpTexture = Vulkan::Texture2D::Create("assets/textures/file_up.png", Vulkan::TextureFormat::R8G8B8A8_Normalized, false, true, true);
+		m_FileModelTexture = Vulkan::Texture2D::Create("assets/textures/file_model.png", Vulkan::TextureFormat::R8G8B8A8_Normalized, false, true, true);
+		m_FileSceneTexture = Vulkan::Texture2D::Create("assets/textures/file_scene.png", Vulkan::TextureFormat::R8G8B8A8_Normalized, false, true, true);
+		m_FileDirectoryTexture = Vulkan::Texture2D::Create("assets/textures/file_directory.png", Vulkan::TextureFormat::R8G8B8A8_Normalized, false, true, true);
 	}
 
 	ResourcePanel::~ResourcePanel()
@@ -62,38 +62,6 @@ namespace Wingnut
 		float textureSize = 64.0f;
 
 		ImGui::Begin("Resources");
-
-//			ImGui::Text("Texture panel (%d)", m_HorizontalTextureCount);
-
-			if (ImGui::Button("Load resource"))
-			{
-#ifdef _WIN32
-				wchar_t directory[MAX_PATH];
-				std::mbstowcs(directory, Application::Get().GetBaseDirectory().c_str(), MAX_PATH);
-				SetCurrentDirectory(directory);
-#endif
-
-				std::string filename = FileDialog::Load(L"All files\0*.*\0\0", "assets/textures/");
-
-				if (!filename.empty())
-				{
-					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, m_FlipHorizontal);
-//					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ShaderStore::GetShader(ShaderType::Default), SamplerStore::GetSampler(SamplerType::Default), TextureDescriptor, AlbedoTextureBinding, newTexture);
-					Ref<Vulkan::Descriptor> newDescriptor = Vulkan::Descriptor::Create(rendererData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
-					newDescriptor->SetImageBinding(0, newTexture, ResourceManager::GetSampler(SamplerType::Default));
-					newDescriptor->UpdateBindings();
-
-					ResourceManager::AddTexture(newTexture);
-
-//					ResourceManager::AddTextureData(newTexture, newDescriptor);
-				}
-			}
-
-			ImGui::SameLine();
-
-			ImGui::Checkbox("Flip Horizontal", &m_FlipHorizontal);
-
-			ImGui::Separator();
 
 			ImGui::Text("Active directory: %s", m_ActiveDirectory->Name.c_str());
 
@@ -164,6 +132,11 @@ namespace Wingnut
 
 			for (auto& file : m_ActiveDirectory->Files)
 			{
+				if (file.SystemFile)
+				{
+					continue;
+				}
+
 				ImGui::BeginGroup();
 
 				if (file.Type == FileItemType::Model)

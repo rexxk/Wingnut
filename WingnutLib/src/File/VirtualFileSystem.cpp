@@ -23,7 +23,7 @@ namespace Wingnut
 
 	}
 
-	void VirtualFileSystem::AddFile(const std::string& filepath, const std::vector<uint8_t>& data, uint32_t dataSize, FileItemType type)
+	void VirtualFileSystem::AddFile(const std::string& filepath, const std::vector<uint8_t>& data, uint32_t dataSize, FileItemType type, bool systemFile)
 	{
 		std::vector<std::string> tokens = Tokenize(filepath, '/');
 
@@ -51,6 +51,9 @@ namespace Wingnut
 			newFile.Data = data;
 			newFile.DataSize = dataSize;
 			newFile.Type = type;
+
+			newFile.SystemFile = systemFile;
+
 //			workingDirectory->Files.emplace_back(tokens[tokens.size() - 1]);
 			workingDirectory->Files.emplace_back(newFile);
 
@@ -66,7 +69,7 @@ namespace Wingnut
 
 	}
 
-	void VirtualFileSystem::LoadFileFromDisk(const std::string& filepath, FileItemType type)
+	void VirtualFileSystem::LoadFileFromDisk(const std::string& filepath, FileItemType type, bool systemFile)
 	{
 		std::string assetPath = ConvertFilePathToAssetPath(filepath);
 
@@ -94,7 +97,7 @@ namespace Wingnut
 
 		file.close();
 
-		AddFile(assetPath, fileData, (uint32_t)fileSize, type);
+		AddFile(assetPath, fileData, (uint32_t)fileSize, type, systemFile);
 	}
 
 	bool VirtualFileSystem::FindFile(const std::string& filepath)

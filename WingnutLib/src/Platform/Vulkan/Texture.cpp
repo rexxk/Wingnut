@@ -8,6 +8,8 @@
 
 #include "File/VirtualFileSystem.h"
 
+#include "Utils/StringUtils.h"
+
 #include <stb_image.h>
 
 #include <vulkan/vulkan.h>
@@ -30,24 +32,24 @@ namespace Wingnut
 		}
 
 
-		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor)
+		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor, bool systemFile)
 		{
-			return CreateRef<Texture2D>(texturePath, format, flip, createDescriptor);
+			return CreateRef<Texture2D>(texturePath, format, flip, createDescriptor, systemFile);
 		}
 
-		Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, bool createDescriptor)
+		Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, bool createDescriptor, bool systemFile)
 		{
-			return CreateRef<Texture2D>(width, height, bitsPerPixel, pixels, format, createDescriptor);
+			return CreateRef<Texture2D>(width, height, bitsPerPixel, pixels, format, createDescriptor, systemFile);
 		}
 
 
-		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor)
+		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor, bool systemFile)
 			: m_Format(format), m_TexturePath(texturePath)
 		{
-			CreateTextureFromFile(texturePath, flip, createDescriptor);
+			CreateTextureFromFile(texturePath, flip, createDescriptor, systemFile);
 		}
 		
-		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, TextureFormat format, bool createDescriptor)
+		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, TextureFormat format, bool createDescriptor, bool systemFile)
 			: m_Format(format)
 		{
 			CreateTexture(width, height, bitsPerPixel, data, createDescriptor);
@@ -58,27 +60,28 @@ namespace Wingnut
 			Release();
 		}
 
-		void Texture2D::CreateTextureFromFile(const std::string& texturePath, bool flip, bool createDescriptor)
+		void Texture2D::CreateTextureFromFile(const std::string& texturePath, bool flip, bool createDescriptor, bool systemFile)
 		{
+			std::string textureFilename = ConvertFilePathToAssetPath(texturePath);
 			m_Device = Renderer::GetContext()->GetRendererData().Device;
 
 //			VirtualFileSystem::AddFile(texturePath);
-			VirtualFileSystem::LoadFileFromDisk(texturePath, FileItemType::Texture);
+			VirtualFileSystem::LoadFileFromDisk(textureFilename, FileItemType::Texture, systemFile);
 
 			stbi_set_flip_vertically_on_load(flip);
 
 			int width, height, channels;
-			stbi_uc* pixels = stbi_load(texturePath.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+			stbi_uc* pixels = stbi_load(textureFilename.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 
 			if (pixels == nullptr)
 			{
-				LOG_CORE_ERROR("[Texture] Failed to load file {}", texturePath);
+				LOG_CORE_ERROR("[Texture] Failed to load file {}", textureFilename);
 				return;
 			}
 
-			m_TextureName = texturePath.substr(texturePath.find_last_of("/\\") + 1);
+			m_TextureName = textureFilename.substr(textureFilename.find_last_of("/\\") + 1);
 
-			LOG_CORE_TRACE("{} - {}", texturePath, m_TextureName);
+			LOG_CORE_TRACE("{} - {}", textureFilename, m_TextureName);
 
 			CreateTexture((uint32_t)width, (uint32_t)height, (uint32_t)channels, (void*)pixels, createDescriptor);
 
@@ -86,7 +89,7 @@ namespace Wingnut
 
 			if (m_Descriptor != nullptr)
 			{
-				VirtualFileSystem::SetItemLink(texturePath, (void*)m_Descriptor->GetDescriptor());
+				VirtualFileSystem::SetItemLink(textureFilename, (void*)m_Descriptor->GetDescriptor());
 			}
 		}
 
