@@ -145,7 +145,7 @@ void MainLayer::OnAttach()
 	m_MetricsPanel = CreateRef<MetricsPanel>();
 	m_PropertyPanel = CreateRef<PropertyPanel>();
 	m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene);
-	m_TexturePanel = CreateRef<TexturePanel>();
+	m_ResourcePanel = CreateRef<ResourcePanel>();
 
 }
 
@@ -155,6 +155,8 @@ void MainLayer::OnDetach()
 
 	ResourceManager::ClearMaterials();
 	ResourceManager::ClearTextures();
+
+	m_ResourcePanel->Release();
 
 	m_Scene->Release();
 }
@@ -247,7 +249,7 @@ void MainLayer::OnUIRender()
 	m_MetricsPanel->Draw();
 	m_SceneHierarchyPanel->Draw();
 	m_PropertyPanel->Draw();
-	m_TexturePanel->Draw();
+	m_ResourcePanel->Draw();
 
 
 //	ImGui::ShowDemoWindow();

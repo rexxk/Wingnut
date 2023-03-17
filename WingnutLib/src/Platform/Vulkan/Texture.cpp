@@ -44,23 +44,13 @@ namespace Wingnut
 		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor)
 			: m_Format(format), m_TexturePath(texturePath)
 		{
-			CreateTextureFromFile(texturePath, flip);
-
-			if (createDescriptor)
-			{
-				CreateDescriptor();
-			}
+			CreateTextureFromFile(texturePath, flip, createDescriptor);
 		}
 		
 		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, TextureFormat format, bool createDescriptor)
 			: m_Format(format)
 		{
-			CreateTexture(width, height, bitsPerPixel, data);
-
-			if (createDescriptor)
-			{
-				CreateDescriptor();
-			}
+			CreateTexture(width, height, bitsPerPixel, data, createDescriptor);
 		}
 
 		Texture2D::~Texture2D()
@@ -68,12 +58,12 @@ namespace Wingnut
 			Release();
 		}
 
-		void Texture2D::CreateTextureFromFile(const std::string& texturePath, bool flip)
+		void Texture2D::CreateTextureFromFile(const std::string& texturePath, bool flip, bool createDescriptor)
 		{
 			m_Device = Renderer::GetContext()->GetRendererData().Device;
 
 //			VirtualFileSystem::AddFile(texturePath);
-			VirtualFileSystem::LoadFileFromDisk(texturePath);
+			VirtualFileSystem::LoadFileFromDisk(texturePath, FileItemType::Texture);
 
 			stbi_set_flip_vertically_on_load(flip);
 
@@ -90,12 +80,17 @@ namespace Wingnut
 
 			LOG_CORE_TRACE("{} - {}", texturePath, m_TextureName);
 
-			CreateTexture((uint32_t)width, (uint32_t)height, (uint32_t)channels, (void*)pixels);
+			CreateTexture((uint32_t)width, (uint32_t)height, (uint32_t)channels, (void*)pixels, createDescriptor);
 
 			stbi_image_free(pixels);
+
+			if (m_Descriptor != nullptr)
+			{
+				VirtualFileSystem::SetItemLink(texturePath, (void*)m_Descriptor->GetDescriptor());
+			}
 		}
 
-		void Texture2D::CreateTexture(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels)
+		void Texture2D::CreateTexture(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, bool createDescriptor)
 		{
 			m_Device = Renderer::GetContext()->GetRendererData().Device;
 
@@ -140,6 +135,12 @@ namespace Wingnut
 
 			vkFreeMemory(m_Device->GetDevice(), stagingBufferMemory, nullptr);
 			vkDestroyBuffer(m_Device->GetDevice(), stagingBuffer, nullptr);
+
+			if (createDescriptor)
+			{
+				CreateDescriptor();
+			}
+
 		}
 
 		void Texture2D::Release()

@@ -29,6 +29,6 @@ private:
 	Ref<Wingnut::MetricsPanel> m_MetricsPanel = nullptr;
 	Ref<Wingnut::PropertyPanel> m_PropertyPanel = nullptr;
 	Ref<Wingnut::SceneHierarchyPanel> m_SceneHierarchyPanel = nullptr;
-	Ref<Wingnut::TexturePanel> m_TexturePanel = nullptr;
+	Ref<Wingnut::ResourcePanel> m_ResourcePanel = nullptr;
 
 };

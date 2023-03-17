@@ -135,7 +135,7 @@
     <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h">
       <Filter>ImGui\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGui\Panels\TexturePanel.h">
+    <ClInclude Include="src\ImGui\Panels\ResourcePanel.h">
       <Filter>ImGui\Panels</Filter>
     </ClInclude>
     <ClInclude Include="src\Input\KeyDefs.h">
@@ -300,7 +300,7 @@
     <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp">
       <Filter>ImGui\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGui\Panels\TexturePanel.cpp">
+    <ClCompile Include="src\ImGui\Panels\ResourcePanel.cpp">
       <Filter>ImGui\Panels</Filter>
     </ClCompile>
     <ClCompile Include="src\Input\KeyboardInput.cpp">

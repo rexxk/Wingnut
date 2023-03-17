@@ -26,7 +26,7 @@
 #include "ImGui/Panels/MetricsPanel.h"
 #include "ImGui/Panels/PropertyPanel.h"
 #include "ImGui/Panels/SceneHierarchyPanel.h"
-#include "ImGui/Panels/TexturePanel.h"
+#include "ImGui/Panels/ResourcePanel.h"
 
 #include "Platform/Vulkan/Buffer.h"
 #include "Platform/Vulkan/Image.h"
