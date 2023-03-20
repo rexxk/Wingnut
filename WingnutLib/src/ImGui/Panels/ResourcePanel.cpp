@@ -106,6 +106,7 @@ namespace Wingnut
 			for (auto& directory : m_ActiveDirectory->Subdirectories)
 			{
 				ImGui::BeginGroup();
+				ImGui::PushID(directory.Name.c_str());
 
 				if (ImGui::ImageButton((ImTextureID)m_FileDirectoryTexture->GetDescriptor(), ImVec2(textureSize, textureSize)))
 				{
@@ -118,6 +119,7 @@ namespace Wingnut
 				ImGui::PopTextWrapPos();
 				ImGui::PopItemWidth();
 
+				ImGui::PopID();
 				ImGui::EndGroup();
 
 				if ((itemCount++ + 1) % m_HorizontalTextureCount != 0)
@@ -138,6 +140,7 @@ namespace Wingnut
 				}
 
 				ImGui::BeginGroup();
+				ImGui::PushID(file.Name.c_str());
 
 				if (file.Type == FileItemType::Model)
 				{
@@ -162,6 +165,7 @@ namespace Wingnut
 				ImGui::PopTextWrapPos();
 				ImGui::PopItemWidth();
 
+				ImGui::PopID();
 				ImGui::EndGroup();
 
 				if ((itemCount++ + 1) % m_HorizontalTextureCount != 0)
