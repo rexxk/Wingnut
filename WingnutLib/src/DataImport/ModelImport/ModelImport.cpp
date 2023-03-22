@@ -101,7 +101,13 @@ namespace Wingnut
 
 				if (material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) > 0)
 				{
-					LOG_CORE_TRACE(" Found DIFFUSE ROUGHNESS texture: {}", material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS));
+					for (uint32_t textureIndex = 0; textureIndex < material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS); textureIndex++)
+					{
+						aiString textureName;
+						material->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE_ROUGHNESS, textureIndex), textureName);
+
+						LOG_CORE_TRACE(" DIFFUSE ROUGHNESS filename: {}", textureName.C_Str());
+					}
 				}
 
 				if (material->GetTextureCount(aiTextureType_NORMALS) > 0)
