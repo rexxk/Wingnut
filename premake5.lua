@@ -12,6 +12,7 @@ workspace "Wingnut"
 	IncludeDir["imgui"] = "vendor/imgui"
 	IncludeDir["stbimage"] = "vendor/stb-image"
 	IncludeDir["vulkan"] = "vendor/vulkan/1.3.231.1/Include"
+	IncludeDir["assimp"] = "vendor/assimp/include"
 
 	targetdir "%{wks.location}/bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
 	objdir "%{wks.location}/bin-int/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
@@ -44,6 +45,7 @@ project "WingnutLib"
 		"%{prj.location}/%{IncludeDir.imgui}",
 		"%{prj.location}/%{IncludeDir.stbimage}",
 		"%{prj.location}/%{IncludeDir.vulkan}",
+		"%{prj.location}/%{IncludeDir.assimp}",
 	}
 
 	links
@@ -73,6 +75,7 @@ project "WingnutLib"
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Toolsd.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-optd.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-sharedd.lib",
+			"WingnutLib/vendor/assimp/lib/assimp-vc142-mtd.lib",
 		}
 	
 	filter "configurations:Release"
@@ -87,6 +90,7 @@ project "WingnutLib"
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-opt.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-shared.lib",
+			"WingnutLib/vendor/assimp/lib/assimp-vc142-mt.lib",
 		}
 	
 
@@ -128,15 +132,5 @@ project "Sandbox"
 		defines "NUT_DEBUG"
 		symbols "on"
 
-		postbuildcommands
-		{
---			'{COPY} "../NutLib/vendor/assimp/bin/assimp-vc142-mtd.dll" "%{cfg.targetdir}"'
-		}
-	
 	filter "configurations:Release"
 		optimize "on"
-
-		postbuildcommands
-		{
---			'{COPY} "../NutLib/vendor/assimp/bin/assimp-vc142-mt.dll" "%{cfg.targetdir}"'
-		}

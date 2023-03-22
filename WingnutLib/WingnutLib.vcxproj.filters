@@ -19,6 +19,9 @@
     <Filter Include="Event">
       <UniqueIdentifier>{E70B220D-5320-4ABE-1CA2-ED1D887546EF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File">
+      <UniqueIdentifier>{053F857C-F175-860D-9A62-6C108678020F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ImGui">
       <UniqueIdentifier>{C0FF640D-2C14-8DBE-F595-301E616989EF}</UniqueIdentifier>
     </Filter>
@@ -111,6 +114,15 @@
     <ClInclude Include="src\Event\WindowEvents.h">
       <Filter>Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\File\FileDialog.h">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="src\File\Serializer.h">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="src\File\VirtualFileSystem.h">
+      <Filter>File</Filter>
+    </ClInclude>
     <ClInclude Include="src\ImGui\Controls\UIImageButton.h">
       <Filter>ImGui\Controls</Filter>
     </ClInclude>
@@ -132,10 +144,10 @@
     <ClInclude Include="src\ImGui\Panels\PropertyPanel.h">
       <Filter>ImGui\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h">
+    <ClInclude Include="src\ImGui\Panels\ResourcePanel.h">
       <Filter>ImGui\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGui\Panels\ResourcePanel.h">
+    <ClInclude Include="src\ImGui\Panels\SceneHierarchyPanel.h">
       <Filter>ImGui\Panels</Filter>
     </ClInclude>
     <ClInclude Include="src\Input\KeyDefs.h">
@@ -231,16 +243,11 @@
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\File\FileDialog.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utils\StringUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Wingnut.h" />
     <ClInclude Include="src\wingnut_pch.h" />
-    <ClInclude Include="src\File\Serializer.h" />
-    <ClInclude Include="src\File\VirtualFileSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Assets\ResourceManager.cpp">
@@ -276,6 +283,15 @@
     <ClCompile Include="src\Event\EventUtils.cpp">
       <Filter>Event</Filter>
     </ClCompile>
+    <ClCompile Include="src\File\FileDialog.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File\Serializer.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File\VirtualFileSystem.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
     <ClCompile Include="src\ImGui\Controls\UIImageButton.cpp">
       <Filter>ImGui\Controls</Filter>
     </ClCompile>
@@ -297,10 +313,10 @@
     <ClCompile Include="src\ImGui\Panels\PropertyPanel.cpp">
       <Filter>ImGui\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp">
+    <ClCompile Include="src\ImGui\Panels\ResourcePanel.cpp">
       <Filter>ImGui\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGui\Panels\ResourcePanel.cpp">
+    <ClCompile Include="src\ImGui\Panels\SceneHierarchyPanel.cpp">
       <Filter>ImGui\Panels</Filter>
     </ClCompile>
     <ClCompile Include="src\Input\KeyboardInput.cpp">
@@ -387,9 +403,6 @@
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\File\FileDialog.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utils\StringUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -397,7 +410,5 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\wingnut_pch.cpp" />
-    <ClCompile Include="src\File\Serializer.cpp" />
-    <ClCompile Include="src\File\VirtualFileSystem.cpp" />
   </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@ class MainLayer : public Wingnut::Layer
 public:
 	MainLayer(const std::string& name);
 	virtual ~MainLayer();
-
+	
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
 	virtual void OnUpdate(Wingnut::Timestep ts) override;
