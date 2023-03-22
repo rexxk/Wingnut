@@ -68,6 +68,7 @@ namespace Wingnut
 
 		void EnableCamera(bool enable) { m_SceneCamera->Enable(enable);	}
 
+		void ImportModel(const std::string& filepath);
 		void ImportOBJModel(const std::string& filepath);
 
 		void SaveScene(const std::string& sceneFilepath);

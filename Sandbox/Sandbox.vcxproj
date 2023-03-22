@@ -66,7 +66,11 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>..\WingnutLib\vendor\assimp\lib\assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>IF EXIST "..\WingnutLib\vendor\assimp\bin\assimp-vc143-mtd.dll"\ (xcopy /Q /E /Y /I "..\WingnutLib\vendor\assimp\bin\assimp-vc143-mtd.dll" "..\bin\Debug-windows-x86_64\Sandbox" &gt; nul) ELSE (xcopy /Q /Y /I "..\WingnutLib\vendor\assimp\bin\assimp-vc143-mtd.dll" "..\bin\Debug-windows-x86_64\Sandbox" &gt; nul)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Win64|x64'">
     <ClCompile>
@@ -84,7 +88,11 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>..\WingnutLib\vendor\assimp\lib\assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>IF EXIST "..\WingnutLib\vendor\assimp\bin\assimp-vc143-mt.dll"\ (xcopy /Q /E /Y /I "..\WingnutLib\vendor\assimp\bin\assimp-vc143-mt.dll" "..\bin\Release-windows-x86_64\Sandbox" &gt; nul) ELSE (xcopy /Q /Y /I "..\WingnutLib\vendor\assimp\bin\assimp-vc143-mt.dll" "..\bin\Release-windows-x86_64\Sandbox" &gt; nul)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\MainLayer.h" />

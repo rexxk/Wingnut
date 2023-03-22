@@ -75,7 +75,7 @@ project "WingnutLib"
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Toolsd.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-optd.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-sharedd.lib",
-			"WingnutLib/vendor/assimp/lib/assimp-vc142-mtd.lib",
+			"WingnutLib/vendor/assimp/lib/assimp-vc143-mtd.lib",
 		}
 	
 	filter "configurations:Release"
@@ -90,7 +90,7 @@ project "WingnutLib"
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-opt.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-shared.lib",
-			"WingnutLib/vendor/assimp/lib/assimp-vc142-mt.lib",
+			"WingnutLib/vendor/assimp/lib/assimp-vc143-mt.lib",
 		}
 	
 
@@ -132,5 +132,25 @@ project "Sandbox"
 		defines "NUT_DEBUG"
 		symbols "on"
 
+		links
+		{
+			"%{wks.location}/WingnutLib/vendor/assimp/lib/assimp-vc143-mtd.lib",
+		}
+
+		postbuildcommands
+		{
+			'{COPY} "../WingnutLib/vendor/assimp/bin/assimp-vc143-mtd.dll" "%{cfg.targetdir}"'
+		}
+
 	filter "configurations:Release"
 		optimize "on"
+
+		links
+		{
+			"%{wks.location}/WingnutLib/vendor/assimp/lib/assimp-vc143-mt.lib",
+		}
+		
+		postbuildcommands
+		{
+			'{COPY} "../WingnutLib/vendor/assimp/bin/assimp-vc143-mt.dll" "%{cfg.targetdir}"'
+		}

@@ -7,6 +7,7 @@
 #include "Core/Application.h"
 #include "Core/Timestep.h"
 
+#include "DataImport/ModelImport/ModelImport.h"
 #include "DataImport/Obj/ObjLoader.h"
 
 #include "Event/EventBroker.h"

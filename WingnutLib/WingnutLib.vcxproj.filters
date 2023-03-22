@@ -10,6 +10,9 @@
     <Filter Include="DataImport">
       <UniqueIdentifier>{1A0F8556-06C7-C6A3-6FCE-9FFF5BA56194}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataImport\ModelImport">
+      <UniqueIdentifier>{F535C3A3-E12F-ECF5-CA9C-8206B6355262}</UniqueIdentifier>
+    </Filter>
     <Filter Include="DataImport\Obj">
       <UniqueIdentifier>{042F6622-F0FC-5928-D990-CA4EC5FD358D}</UniqueIdentifier>
     </Filter>
@@ -83,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="src\Core\Window.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataImport\ModelImport\ModelImport.h">
+      <Filter>DataImport\ModelImport</Filter>
     </ClInclude>
     <ClInclude Include="src\DataImport\Obj\ObjLoader.h">
       <Filter>DataImport\Obj</Filter>
@@ -270,6 +276,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\Window.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataImport\ModelImport\ModelImport.cpp">
+      <Filter>DataImport\ModelImport</Filter>
     </ClCompile>
     <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp">
       <Filter>DataImport\Obj</Filter>

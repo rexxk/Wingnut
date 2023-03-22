@@ -5,6 +5,7 @@
 
 #include "Core/Timer.h"
 
+#include "DataImport/ModelImport/ModelImport.h"
 #include "DataImport/Obj/ObjLoader.h"
 
 #include "Event/EventUtils.h"
@@ -220,6 +221,10 @@ namespace Wingnut
 		m_SceneCamera->Update(ts);
 	}
 
+	void Scene::ImportModel(const std::string& filepath)
+	{
+		ModelImport::ImportFBX(filepath);
+	}
 
 	void Scene::ImportOBJModel(const std::string& filepath)
 	{

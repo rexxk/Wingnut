@@ -67,7 +67,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>vendor\vulkan\1.3.231.1\Lib\vulkan-1.lib;vendor\Vulkan\1.3.231.1\Lib\shaderc_combinedd.lib;vendor\Vulkan\1.3.231.1\Lib\MachineIndependentd.lib;vendor\Vulkan\1.3.231.1\Lib\OSDependentd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRVd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Toolsd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-optd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-sharedd.lib;vendor\assimp\lib\assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vendor\vulkan\1.3.231.1\Lib\vulkan-1.lib;vendor\Vulkan\1.3.231.1\Lib\shaderc_combinedd.lib;vendor\Vulkan\1.3.231.1\Lib\MachineIndependentd.lib;vendor\Vulkan\1.3.231.1\Lib\OSDependentd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRVd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Toolsd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-optd.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-sharedd.lib;vendor\assimp\lib\assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Win64|x64'">
@@ -90,7 +90,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>vendor\vulkan\1.3.231.1\Lib\vulkan-1.lib;vendor\Vulkan\1.3.231.1\Lib\shaderc_combined.lib;vendor\Vulkan\1.3.231.1\Lib\MachineIndependent.lib;vendor\Vulkan\1.3.231.1\Lib\OSDependent.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-opt.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-shared.lib;vendor\assimp\lib\assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vendor\vulkan\1.3.231.1\Lib\vulkan-1.lib;vendor\Vulkan\1.3.231.1\Lib\shaderc_combined.lib;vendor\Vulkan\1.3.231.1\Lib\MachineIndependent.lib;vendor\Vulkan\1.3.231.1\Lib\OSDependent.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-opt.lib;vendor\Vulkan\1.3.231.1\Lib\SPIRV-Tools-shared.lib;vendor\assimp\lib\assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -105,6 +105,7 @@
     <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\Core\UUID.h" />
     <ClInclude Include="src\Core\Window.h" />
+    <ClInclude Include="src\DataImport\ModelImport\ModelImport.h" />
     <ClInclude Include="src\DataImport\Obj\ObjLoader.h" />
     <ClInclude Include="src\ECS\ECS.h" />
     <ClInclude Include="src\Event\Event.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="src\Core\Log.cpp" />
     <ClCompile Include="src\Core\UUID.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />
+    <ClCompile Include="src\DataImport\ModelImport\ModelImport.cpp" />
     <ClCompile Include="src\DataImport\Obj\ObjLoader.cpp" />
     <ClCompile Include="src\Event\EventBroker.cpp" />
     <ClCompile Include="src\Event\EventQueue.cpp" />
