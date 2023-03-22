@@ -15,6 +15,7 @@ namespace Wingnut
 	{
 
 		auto importer = Assimp::Importer();
+		importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS, false);
 		const aiScene* scene = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace | aiProcess_ValidateDataStructure);
 
 		if (!scene)

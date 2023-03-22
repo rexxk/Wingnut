@@ -6,12 +6,11 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
+Pr 0.500000
 Pm 1.000000
 Ps 0.000000
 Pc 0.000000
 Pcr 0.030000
-aniso 0.000000
-anisor 0.000000
 map_Kd assets/textures/LeeEnfieldMk1/lee_enfield_mk1_Albedo.png
 map_Ks assets/textures/LeeEnfieldMk1/lee_enfield_mk1_Metalness.png
 map_Pr assets/textures/LeeEnfieldMk1/lee_enfield_mk1_Roughness.png
