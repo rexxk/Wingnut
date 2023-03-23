@@ -37,6 +37,11 @@ namespace Wingnut
 			return CreateRef<Texture2D>(texturePath, format, flip, createDescriptor, systemFile);
 		}
 
+		Ref<Texture2D> Texture2D::Create(const std::string& texturePath, TextureFormat format, uint32_t width, uint32_t height, const char* data, uint32_t texelSize)
+		{
+			return CreateRef<Texture2D>(texturePath, format, width, height, data, texelSize);
+		}
+
 		Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* pixels, TextureFormat format, bool createDescriptor, bool systemFile)
 		{
 			return CreateRef<Texture2D>(width, height, bitsPerPixel, pixels, format, createDescriptor, systemFile);
@@ -49,6 +54,12 @@ namespace Wingnut
 			CreateTextureFromFile(texturePath, flip, createDescriptor, systemFile);
 		}
 		
+		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, uint32_t width, uint32_t height, const char* data, uint32_t texelSize)
+			: m_Format(format), m_TexturePath(texturePath)
+		{
+			CreateTextureFromMemory(texturePath, width, height, data, texelSize);
+		}
+
 		Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t bitsPerPixel, void* data, TextureFormat format, bool createDescriptor, bool systemFile)
 			: m_Format(format)
 		{
@@ -84,6 +95,47 @@ namespace Wingnut
 			LOG_CORE_TRACE("{} - {}", textureFilename, m_TextureName);
 
 			CreateTexture((uint32_t)width, (uint32_t)height, (uint32_t)channels, (void*)pixels, createDescriptor);
+
+			stbi_image_free(pixels);
+
+			if (m_Descriptor != nullptr)
+			{
+				VirtualFileSystem::SetItemLink(textureFilename, (void*)m_Descriptor->GetDescriptor());
+			}
+		}
+
+		void Texture2D::CreateTextureFromMemory(const std::string& texturePath, uint32_t width, uint32_t height, const char* data, uint32_t texelSize)
+		{
+			std::string textureFilename = ConvertFilePathToAssetPath("assets/textures/" + texturePath);
+//			VirtualFileSystem::LoadFileFromDisk(textureFilename, FileItemType::Texture, false);
+
+			uint32_t dataSize = 0;
+
+			if (height == 0)
+			{
+				dataSize = width;
+			}
+			else
+			{
+				dataSize = width * height * texelSize;
+			}
+
+			std::vector<uint8_t> fileData(dataSize);
+			memcpy(fileData.data(), data, dataSize);
+
+			VirtualFileSystem::AddFile(textureFilename, fileData, (uint32_t)fileData.size(), FileItemType::Texture);
+
+			m_TextureName = texturePath;
+
+			stbi_set_flip_vertically_on_load(true);
+
+			int textureWidth = 0;
+			int textureHeight = 0;
+			int channels = 0;
+
+			stbi_uc* pixels = stbi_load_from_memory((const stbi_uc*)data, dataSize, &textureWidth, &textureHeight, &channels, 4);
+
+			CreateTexture((uint32_t)textureWidth, (uint32_t)textureHeight, (uint32_t)4, pixels, true);
 
 			stbi_image_free(pixels);
 

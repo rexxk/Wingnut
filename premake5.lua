@@ -76,7 +76,6 @@ project "WingnutLib"
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-optd.lib",
 			"WingnutLib/vendor/Vulkan/1.3.231.1/Lib/SPIRV-Tools-sharedd.lib",
 			"WingnutLib/vendor/assimp/lib/assimp-vc143-mtd.lib",
-			"WingnutLib/vendor/assimp/lib/zlibstaticd.lib",
 		}
 	
 	filter "configurations:Release"

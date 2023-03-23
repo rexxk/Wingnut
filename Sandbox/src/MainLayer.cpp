@@ -218,7 +218,7 @@ void MainLayer::OnUIRender()
 
 			if (ImGui::MenuItem("Import model..."))
 			{
-				std::string filename = FileDialog::Load(L"Wavefront OBJ file\0*.obj\0Autodesk FBX file\0*.fbx\0\0", "assets/models/");
+				std::string filename = FileDialog::Load(L"Wavefront OBJ file\0*.obj\0Autodesk FBX file\0*.fbx\0gl Transmission Format file\0*.gltf\0\0", "assets/models/");
 
 				if (!filename.empty())
 				{

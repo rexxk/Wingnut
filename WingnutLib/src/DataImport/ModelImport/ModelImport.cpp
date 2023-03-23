@@ -7,6 +7,11 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
+#include "Assets/ResourceManager.h"
+
+#include "Platform/Vulkan/Texture.h"
+
+
 namespace Wingnut
 {
 
@@ -43,8 +48,6 @@ namespace Wingnut
 
 				if (material->GetTextureCount(aiTextureType_BASE_COLOR) > 0)
 				{
-					LOG_CORE_TRACE(" Found BASE COLOR texture: {}", material->GetTextureCount(aiTextureType_BASE_COLOR));
-
 					for (uint32_t baseColorIndex = 0; baseColorIndex < material->GetTextureCount(aiTextureType_DIFFUSE); baseColorIndex++)
 					{
 						aiString textureName;
@@ -57,8 +60,6 @@ namespace Wingnut
 
 				if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 				{
-					LOG_CORE_TRACE(" Found DIFFUSE texture: {}", material->GetTextureCount(aiTextureType_DIFFUSE));
-
 					for (uint32_t diffuseIndex = 0; diffuseIndex < material->GetTextureCount(aiTextureType_DIFFUSE); diffuseIndex++)
 					{
 						aiString textureName;
@@ -71,7 +72,13 @@ namespace Wingnut
 
 				if (material->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION) > 0)
 				{
-					LOG_CORE_TRACE(" Found AMBIENT OCCLUSION texture: {}", material->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION));
+					for (uint32_t textureIndex = 0; textureIndex < material->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION); textureIndex++)
+					{
+						aiString textureName;
+						material->Get(AI_MATKEY_TEXTURE(aiTextureType_AMBIENT_OCCLUSION, textureIndex), textureName);
+
+						LOG_CORE_TRACE(" AMBIENT OCCLUSION filename: {}", textureName.C_Str());
+					}
 				}
 
 				if (material->GetTextureCount(aiTextureType_SPECULAR) > 0)
@@ -87,7 +94,13 @@ namespace Wingnut
 
 				if (material->GetTextureCount(aiTextureType_UNKNOWN) > 0)
 				{
-					LOG_CORE_TRACE(" Found UNKNOWN texture: {}", material->GetTextureCount(aiTextureType_UNKNOWN));
+					for (uint32_t textureIndex = 0; textureIndex < material->GetTextureCount(aiTextureType_UNKNOWN); textureIndex++)
+					{
+						aiString textureName;
+						material->Get(AI_MATKEY_TEXTURE(aiTextureType_UNKNOWN, textureIndex), textureName);
+
+						LOG_CORE_TRACE(" UNKNOWN filename: {}", textureName.C_Str());
+					}
 				}
 
 				if (material->GetTextureCount(aiTextureType_REFLECTION) > 0)
@@ -97,7 +110,13 @@ namespace Wingnut
 
 				if (material->GetTextureCount(aiTextureType_METALNESS) > 0)
 				{
-					LOG_CORE_TRACE(" Found METALNESS texture: {}", material->GetTextureCount(aiTextureType_METALNESS));
+					for (uint32_t textureIndex = 0; textureIndex < material->GetTextureCount(aiTextureType_METALNESS); textureIndex++)
+					{
+						aiString textureName;
+						material->Get(AI_MATKEY_TEXTURE(aiTextureType_METALNESS, textureIndex), textureName);
+
+						LOG_CORE_TRACE(" METALNESS filename: {}", textureName.C_Str());
+					}
 				}
 
 				if (material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) > 0)
@@ -144,25 +163,6 @@ namespace Wingnut
 					}
 				}
 
-//				for (uint32_t propertyIndex = 0; propertyIndex < material->mNumProperties; propertyIndex++)
-//				{
-//					aiMaterialProperty* property = material->mProperties[propertyIndex];
-
-//					LOG_CORE_TRACE(" - Property: {}", material->mProperties[propertyIndex]->mKey.C_Str());
-
-
-
-/*					if (!std::strcmp(material->mProperties[propertyIndex]->mKey.C_Str(), "$tex.file"))
-//					if (!std::strcmp(material->mProperties[propertyIndex]->mKey.C_Str(), "$tex.uvwsrc"))
-					{
-						aiString texturePath;
-						material->Get("$tex.file", aiTextureType_NONE, propertyIndex, texturePath);
-//						material->Get("$tex.uvwsrc", aiTextureType_DIFFUSE, propertyIndex, texturePath);
-
-						LOG_CORE_TRACE(" - Name: {}", texturePath.C_Str());
-					}
-*/
-//				}
 			}
 		}
 
@@ -172,6 +172,10 @@ namespace Wingnut
 			{
 				auto* texture = scene->mTextures[i];
 				LOG_CORE_TRACE("Texture: {}", texture->mFilename.C_Str());
+
+				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(texture->mFilename.C_Str(), Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
+
+				ResourceManager::AddTexture(newTexture);
 			}
 		}
 
