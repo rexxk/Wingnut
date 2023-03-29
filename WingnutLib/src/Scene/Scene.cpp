@@ -223,12 +223,27 @@ namespace Wingnut
 
 	void Scene::ImportModel(const std::string& filepath)
 	{
-		ModelImport::ImportFBX(filepath);
+		ImportResult importResult = ModelImport::ImportFBX(filepath);
+
+		for (auto& material : importResult.Materials)
+		{
+			Ref<Material> newMaterial = PBRMaterial::Create(material, ResourceManager::GetShader(ShaderType::Default), ResourceManager::GetSampler(SamplerType::LinearRepeat));
+			ResourceManager::StoreMaterial(newMaterial);
+		}
+
+		for (auto& mesh : importResult.Meshes)
+		{
+			Entity newEntity = CreateEntity(mesh.ObjectName);
+			newEntity.AddComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f));
+
+			newEntity.AddComponent<MeshComponent>(mesh.VertexList, mesh.IndexList);
+			newEntity.AddComponent<MaterialComponent>(ResourceManager::GetMaterialByName(mesh.MaterialName)->GetID());
+		}
 	}
 
 	void Scene::ImportOBJModel(const std::string& filepath)
 	{
-		ObjImportResult importResult = ObjLoader::Import(filepath);
+		ImportResult importResult = ObjLoader::Import(filepath);
 
 		if (!importResult.HasMeshData)
 		{

@@ -48,7 +48,7 @@ namespace Wingnut
 		~VirtualFileSystem();
 
 		static void LoadFileFromResource();
-		static void LoadFileFromDisk(const std::string& filepath, FileItemType type, bool systemFile = false);
+		static bool LoadFileFromDisk(const std::string& filepath, FileItemType type, bool systemFile = false);
 
 		static void AddFile(const std::string& filepath, const std::vector<uint8_t>& data, uint32_t dataSize, FileItemType type, bool systemFile = false);
 		static bool FindFile(const std::string& filepath);

@@ -38,7 +38,7 @@ namespace Wingnut
 
 
 
-	ObjImportResult ObjLoader::Import(const std::string& filename)
+	ImportResult ObjLoader::Import(const std::string& filename)
 	{
 		std::string filePath;
 		std::string materialFilename = "";
@@ -55,7 +55,7 @@ namespace Wingnut
 
 		std::ifstream file(filename, std::ios::in | std::ios::binary);
 
-		ObjImportResult importResult;
+		ImportResult importResult;
 
 		if (!file.is_open())
 		{
@@ -67,7 +67,7 @@ namespace Wingnut
 		std::vector<glm::vec2> texCoords;
 		std::vector<glm::vec3> normals;
 
-		ObjMesh newObjMesh;
+		ImportMesh newObjMesh;
 
 		uint32_t meshMaterialCount = 0;
 
@@ -98,7 +98,7 @@ namespace Wingnut
 				{
 					importResult.Meshes.emplace_back(newObjMesh);
 
-					newObjMesh = ObjMesh();
+					newObjMesh = ImportMesh();
 
 					index = 0;
 					meshMaterialCount = 0;
@@ -199,7 +199,7 @@ namespace Wingnut
 				{
 					importResult.Meshes.emplace_back(newObjMesh);
 
-					newObjMesh = ObjMesh();
+					newObjMesh = ImportMesh();
 					newObjMesh.ObjectName = objectName + "_" + std::to_string(meshMaterialCount);
 
 					index = 0;
@@ -227,7 +227,7 @@ namespace Wingnut
 		return importResult;
 	}
 
-	void ObjLoader::LoadMaterialFile(const std::string& filename, ObjImportResult& importResult)
+	void ObjLoader::LoadMaterialFile(const std::string& filename, ImportResult& importResult)
 	{
 		std::ifstream file(filename, std::ios::in | std::ios::binary);
 
@@ -237,7 +237,7 @@ namespace Wingnut
 			return;
 		}
 
-		ObjMaterial newMaterial;
+		ImportMaterial newMaterial;
 
 		while (!file.eof())
 		{
@@ -258,7 +258,7 @@ namespace Wingnut
 
 				}
 
-				newMaterial = ObjMaterial();
+				newMaterial = ImportMaterial();
 				ss >> newMaterial.MaterialName;
 
 			}
@@ -492,7 +492,7 @@ namespace Wingnut
 		importResult.Materials.emplace_back(newMaterial);
 	}
 
-	void ObjLoader::CalculateTangentAndBitangent(ObjMesh& mesh, uint32_t index0, uint32_t index1, uint32_t index2)
+	void ObjLoader::CalculateTangentAndBitangent(ImportMesh& mesh, uint32_t index0, uint32_t index1, uint32_t index2)
 	{
 		Vertex& v1 = mesh.VertexList[index0];
 		Vertex& v2 = mesh.VertexList[index1];

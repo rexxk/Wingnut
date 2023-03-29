@@ -3,11 +3,13 @@
 
 #include "Assets/ResourceManager.h"
 
+#include "File/VirtualFileSystem.h"
+
 
 namespace Wingnut
 {
 
-	Ref<Material> PBRMaterial::Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
+	Ref<Material> PBRMaterial::Create(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 	{
 		return CreateRef<PBRMaterial>(objMaterial, shader, sampler);
 	}
@@ -17,7 +19,7 @@ namespace Wingnut
 		return CreateRef<PBRMaterial>(name, shader);
 	}
 
-	PBRMaterial::PBRMaterial(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
+	PBRMaterial::PBRMaterial(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 		: Material(objMaterial.MaterialName, shader), m_Shader(shader)
 	{
 		CreateUniformBuffer();
@@ -41,7 +43,17 @@ namespace Wingnut
 				flipTexture = false;
 			}
 
-			m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			FileSystemItem* item = VirtualFileSystem::GetItem(objMaterial.DiffuseTexture.TextureName);
+
+			if (item != nullptr)
+			{
+				m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+			}
+			else
+			{
+				m_MaterialData.AlbedoTexture.Texture = Vulkan::Texture2D::Create(objMaterial.DiffuseTexture.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			}
+
 			ResourceManager::AddTexture(m_MaterialData.AlbedoTexture.Texture);
 
 			m_MaterialData.Properties.UseAlbedoTexture = true;
@@ -56,7 +68,17 @@ namespace Wingnut
 				flipTexture = false;
 			}
 
-			m_MaterialData.NormalMap.Texture = Vulkan::Texture2D::Create(objMaterial.NormalMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			FileSystemItem* item = VirtualFileSystem::GetItem(objMaterial.NormalMap.TextureName);
+
+			if (item != nullptr)
+			{
+				m_MaterialData.NormalMap.Texture = Vulkan::Texture2D::Create(objMaterial.NormalMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+			}
+			else
+			{
+				m_MaterialData.NormalMap.Texture = Vulkan::Texture2D::Create(objMaterial.NormalMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			}
+
 			ResourceManager::AddTexture(m_MaterialData.NormalMap.Texture);
 
 			m_MaterialData.Properties.UseNormalMap = true;
@@ -71,7 +93,17 @@ namespace Wingnut
 				flipTexture = false;
 			}
 
-			m_MaterialData.MetalnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.MetalnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			FileSystemItem* item = VirtualFileSystem::GetItem(objMaterial.MetalnessMap.TextureName);
+
+			if (item != nullptr)
+			{
+				m_MaterialData.MetalnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.MetalnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+			}
+			else
+			{
+				m_MaterialData.MetalnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.MetalnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			}
+
 			ResourceManager::AddTexture(m_MaterialData.MetalnessMap.Texture);
 
 			m_MaterialData.Properties.UseMetalnessMap = true;
@@ -86,7 +118,17 @@ namespace Wingnut
 				flipTexture = false;
 			}
 
-			m_MaterialData.RoughnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.RoughnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			FileSystemItem* item = VirtualFileSystem::GetItem(objMaterial.RoughnessMap.TextureName);
+
+			if (item != nullptr)
+			{
+				m_MaterialData.RoughnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.RoughnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+			}
+			else
+			{
+				m_MaterialData.RoughnessMap.Texture = Vulkan::Texture2D::Create(objMaterial.RoughnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			}
+
 			ResourceManager::AddTexture(m_MaterialData.RoughnessMap.Texture);
 
 			m_MaterialData.Properties.UseRoughnessMap = true;
@@ -101,7 +143,17 @@ namespace Wingnut
 				flipTexture = false;
 			}
 
-			m_MaterialData.AmbientOcclusionMap.Texture = Vulkan::Texture2D::Create(objMaterial.AmbientOcclusionMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			FileSystemItem* item = VirtualFileSystem::GetItem(objMaterial.AmbientOcclusionMap.TextureName);
+
+			if (item != nullptr)
+			{
+				m_MaterialData.AmbientOcclusionMap.Texture = Vulkan::Texture2D::Create(objMaterial.AmbientOcclusionMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+			}
+			else
+			{
+				m_MaterialData.AmbientOcclusionMap.Texture = Vulkan::Texture2D::Create(objMaterial.AmbientOcclusionMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, flipTexture, true);
+			}
+
 			ResourceManager::AddTexture(m_MaterialData.AmbientOcclusionMap.Texture);
 
 			m_MaterialData.Properties.UseAmbientOcclusionMap = true;

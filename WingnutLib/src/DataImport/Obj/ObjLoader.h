@@ -1,82 +1,22 @@
 #pragma once
 
+#include "DataImport/ImportResult.h"
+
 #include "Renderer/Renderer.h"
 
 
 namespace Wingnut
 {
 
-	struct ObjMesh
-	{
-		std::string ObjectName = "";
-
-		std::vector<Vertex> VertexList;
-		std::vector<uint32_t> IndexList;
-
-		std::string MaterialName = "material";
-	};
-
-	struct ObjTexture
-	{
-		std::string TextureName = "";
-
-		glm::vec3 OriginOffset = glm::vec3(0.0f);
-		glm::vec3 Scale = glm::vec3(1.0f);
-		
-		float BumpMultiplier = 1.0f;
-	};
-
-	struct ObjMaterial
-	{
-		std::string MaterialName = "";
-
-		glm::vec3 Ambient;
-		glm::vec3 Diffuse;
-		glm::vec3 Specular;
-
-		float Transparency = 1.0f;
-		float OpticalDensity = 0.0f;
-
-		bool HasPBRValues = false;
-
-		float Roughness = 1.0f;
-		float Metalness = 0.04f;
-		float AmbientOcclusion = 1.0f;
-
-
-		// Texture paths
-		bool HasDiffuseTexture = false;
-		ObjTexture DiffuseTexture;
-		bool HasNormalMap = false;
-		ObjTexture NormalMap;
-		bool HasMetalnessMap = false;
-		ObjTexture MetalnessMap;
-		bool HasRoughnessMap = false;
-		ObjTexture RoughnessMap;
-		bool HasAmbientOcclusionMap = false;
-		ObjTexture AmbientOcclusionMap;
-	};
-
-	struct ObjImportResult
-	{
-		bool HasMeshData = false;
-		std::vector<ObjMesh> Meshes;
-
-		// Material data
-		bool HasMaterial = false;
-		std::vector<ObjMaterial> Materials;
-	};
-
-
 	class ObjLoader
 	{
 	public:
-		static ObjImportResult Import(const std::string& filename);
+		static ImportResult Import(const std::string& filename);
 
 	private:
-		static void CalculateTangentAndBitangent(ObjMesh& mesh, uint32_t index0, uint32_t index1, uint32_t index2);
+		static void CalculateTangentAndBitangent(ImportMesh& mesh, uint32_t index0, uint32_t index1, uint32_t index2);
 
-		static void LoadMaterialFile(const std::string& filename, ObjImportResult& importResult);
+		static void LoadMaterialFile(const std::string& filename, ImportResult& importResult);
 	};
 
 

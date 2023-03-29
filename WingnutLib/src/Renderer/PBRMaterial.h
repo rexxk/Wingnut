@@ -37,10 +37,10 @@ namespace Wingnut
 	class PBRMaterial : public Material
 	{
 	public:
-		static Ref<Material> Create(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
+		static Ref<Material> Create(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader);
 
-		PBRMaterial(const ObjMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
+		PBRMaterial(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		PBRMaterial(const std::string& name, Ref<Vulkan::Shader> shader);
 		virtual ~PBRMaterial();
 

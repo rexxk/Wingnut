@@ -74,6 +74,12 @@ namespace Wingnut
 		void Texture2D::CreateTextureFromFile(const std::string& texturePath, bool flip, bool createDescriptor, bool systemFile)
 		{
 			std::string textureFilename = ConvertFilePathToAssetPath(texturePath);
+
+			if (textureFilename == "")
+			{
+				textureFilename = texturePath;
+			}
+
 			m_Device = Renderer::GetContext()->GetRendererData().Device;
 
 //			VirtualFileSystem::AddFile(texturePath);
@@ -106,7 +112,8 @@ namespace Wingnut
 
 		void Texture2D::CreateTextureFromMemory(const std::string& texturePath, uint32_t width, uint32_t height, const char* data, uint32_t texelSize)
 		{
-			std::string textureFilename = ConvertFilePathToAssetPath("assets/textures/" + texturePath);
+//			std::string textureFilename = ConvertFilePathToAssetPath("assets/textures/" + texturePath);
+			std::string textureFilename = ConvertFilePathToAssetPath(texturePath);
 //			VirtualFileSystem::LoadFileFromDisk(textureFilename, FileItemType::Texture, false);
 
 			uint32_t dataSize = 0;

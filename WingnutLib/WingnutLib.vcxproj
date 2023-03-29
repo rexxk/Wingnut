@@ -105,6 +105,7 @@
     <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\Core\UUID.h" />
     <ClInclude Include="src\Core\Window.h" />
+    <ClInclude Include="src\DataImport\ImportResult.h" />
     <ClInclude Include="src\DataImport\ModelImport\ModelImport.h" />
     <ClInclude Include="src\DataImport\Obj\ObjLoader.h" />
     <ClInclude Include="src\ECS\ECS.h" />

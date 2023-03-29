@@ -55,12 +55,16 @@ namespace Wingnut
 	{
 		auto assetLocation = str.find("assets");
 
+		std::string assetString = "";
+
 		if (assetLocation == std::string::npos)
 		{
-			return "";
+//			return "";
+			assetString = "assets/";
+			assetLocation = 0;
 		}
 
-		std::string assetString = str.substr(assetLocation);
+		assetString += str.substr(assetLocation);
 
 		size_t location = assetString.find("\\");
 
@@ -73,6 +77,22 @@ namespace Wingnut
 		}
 
 		return assetString;
+	}
+
+	std::string ConvertFilePath(const std::string& str)
+	{
+		std::string convertedString = str;
+
+		size_t location = convertedString.find("\\");
+
+		while (location != std::string::npos)
+		{
+			convertedString[location] = '/';
+
+			location = convertedString.find("\\");
+		}
+
+		return convertedString;
 	}
 
 }
