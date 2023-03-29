@@ -49,13 +49,13 @@ namespace Wingnut
 
 
 		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, bool flip, bool createDescriptor, bool systemFile)
-			: m_Format(format), m_TexturePath(texturePath)
+			: m_Format(format), m_TexturePath(ConvertFilePath(texturePath))
 		{
 			CreateTextureFromFile(texturePath, flip, createDescriptor, systemFile);
 		}
 		
 		Texture2D::Texture2D(const std::string& texturePath, TextureFormat format, uint32_t width, uint32_t height, const char* data, uint32_t texelSize)
-			: m_Format(format), m_TexturePath(texturePath)
+			: m_Format(format), m_TexturePath(ConvertFilePath(texturePath))
 		{
 			CreateTextureFromMemory(texturePath, width, height, data, texelSize);
 		}

@@ -87,6 +87,9 @@
     <ClInclude Include="src\Core\Window.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\DataImport\ImportResult.h">
+      <Filter>DataImport</Filter>
+    </ClInclude>
     <ClInclude Include="src\DataImport\ModelImport\ModelImport.h">
       <Filter>DataImport\ModelImport</Filter>
     </ClInclude>
@@ -254,7 +257,6 @@
     </ClInclude>
     <ClInclude Include="src\Wingnut.h" />
     <ClInclude Include="src\wingnut_pch.h" />
-    <ClInclude Include="src\DataImport\ImportResult.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Assets\ResourceManager.cpp">

@@ -313,8 +313,8 @@ namespace Wingnut
 			{
 				auto* texture = scene->mTextures[i];
 				LOG_CORE_TRACE("Texture: {}", texture->mFilename.C_Str());
-
-				std::string filename = "assets/textures/" + sceneName + "/" + texture->mFilename.C_Str();
+				
+				std::string filename = "assets/textures/" + sceneName + "/" + ConvertFilePath(texture->mFilename.C_Str());
 
 				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
 //				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(texture->mFilename.C_Str(), Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));

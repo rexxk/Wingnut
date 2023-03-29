@@ -219,15 +219,15 @@ namespace Wingnut
 
 	void ResourceManager::AddTexture(Ref<Vulkan::Texture2D> texture)
 	{
-		if (m_Textures.find(texture->GetTextureID()) == m_Textures.end())
+		if (s_Textures.find(texture->GetTextureID()) == s_Textures.end())
 		{
-			m_Textures[texture->GetTextureID()] = texture;
+			s_Textures[texture->GetTextureID()] = texture;
 		}
 	}
 
 	bool ResourceManager::FindTexture(const std::string& textureName)
 	{
-		for (auto& containerIterator : m_Textures)
+		for (auto& containerIterator : s_Textures)
 		{
 			if (containerIterator.second->GetTextureName() == textureName)
 			{
@@ -241,9 +241,22 @@ namespace Wingnut
 
 	Ref<Vulkan::Texture2D> ResourceManager::GetTexture(UUID textureID)
 	{
-		if (m_Textures.find(textureID) != m_Textures.end())
+		if (s_Textures.find(textureID) != s_Textures.end())
 		{
-			return m_Textures[textureID];
+			return s_Textures[textureID];
+		}
+
+		return nullptr;
+	}
+	
+	Ref<Vulkan::Texture2D> ResourceManager::GetTextureByName(const std::string& textureName)
+	{
+		for (auto containerIterator : s_Textures)
+		{
+			if (containerIterator.second->GetTextureName() == textureName)
+			{
+				return containerIterator.second;
+			}
 		}
 
 		return nullptr;
@@ -251,12 +264,12 @@ namespace Wingnut
 
 	void ResourceManager::ClearTextures()
 	{
-		for (auto& texture : m_Textures)
+		for (auto& texture : s_Textures)
 		{
 			texture.second->Release();
 		}
 
-		m_Textures.clear();
+		s_Textures.clear();
 	}
 
 

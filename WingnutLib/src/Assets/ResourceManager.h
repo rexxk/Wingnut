@@ -51,8 +51,9 @@ namespace Wingnut
 		static bool FindTexture(const std::string& textureName);
 
 		static Ref<Vulkan::Texture2D> GetTexture(UUID textureID);
+		static Ref<Vulkan::Texture2D> GetTextureByName(const std::string& textureName);
 
-		static std::unordered_map<UUID, Ref<Vulkan::Texture2D>>& GetTextureContainer() { return m_Textures; }
+		static std::unordered_map<UUID, Ref<Vulkan::Texture2D>>& GetTextureContainer() { return s_Textures; }
 
 		static void ClearTextures();
 
@@ -66,7 +67,7 @@ namespace Wingnut
 
 		inline static std::unordered_map<ShaderType, Ref<Vulkan::Shader>> s_Shaders;
 
-		inline static std::unordered_map<UUID, Ref<Vulkan::Texture2D>> m_Textures;
+		inline static std::unordered_map<UUID, Ref<Vulkan::Texture2D>> s_Textures;
 
 	};
 
