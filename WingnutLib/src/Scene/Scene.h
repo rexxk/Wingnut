@@ -54,7 +54,7 @@ namespace Wingnut
 
 		void ClearScene();
 
-		Entity CreateEntity(const std::string& tag);
+		Entity CreateEntity(const std::string& tag, UUID entityID = 0);
 		std::vector<Entity>& GetEntities() { return m_SceneEntities; }
 
 		Ref<Vulkan::Shader> GetShader() { return m_SceneRenderer->GetShader(); }
@@ -72,6 +72,7 @@ namespace Wingnut
 		void ImportOBJModel(const std::string& filepath);
 
 		void SaveScene(const std::string& sceneFilepath);
+		void LoadScene(const std::string& sceneFilepath);
 
 	private:
 

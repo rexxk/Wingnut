@@ -206,9 +206,15 @@ namespace Wingnut
 	}
 
 
-	Entity Scene::CreateEntity(const std::string& tag)
+	Entity Scene::CreateEntity(const std::string& tag, UUID entityID)
 	{
 		Entity entity(ECS::EntitySystem::Create(m_EntityRegistry));
+
+		if (entityID != 0)
+		{
+			entity.SetID(entityID);
+		}
+
 		entity.AddComponent<TagComponent>(tag);
 
 		m_SceneEntities.emplace_back(entity);
@@ -284,6 +290,9 @@ namespace Wingnut
 				SerializerTag tag = SerializerTag::Entity;
 				sceneSerializer.Write<SerializerTag>((const char*)&tag);
 
+				UUID entityID = entity.ID();
+				sceneSerializer.Write<UUID>((const char*)&entityID);
+
 				TagComponent& tagComponent = entity.GetComponent<TagComponent>();
 				sceneSerializer.Write<std::string>(tagComponent.Tag.c_str(), (uint32_t)tagComponent.Tag.size());
 
@@ -320,6 +329,197 @@ namespace Wingnut
 					materialsToWrite[materialComponent.MaterialID] = ResourceManager::GetMaterial(materialComponent.MaterialID);
 				}
 
+				if (entity.HasComponent<MeshComponent>())
+				{
+					tag = SerializerTag::MeshComponent;
+					sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+					MeshComponent& meshComponent = entity.GetComponent<MeshComponent>();
+
+					uint32_t vertexCount = (uint32_t)meshComponent.VertexList.size();
+					sceneSerializer.Write<uint32_t>((const char*)&vertexCount);
+					sceneSerializer.WriteVector<std::vector<Vertex>>((const char*)meshComponent.VertexList.data(), (uint32_t)meshComponent.VertexList.size() * sizeof(Vertex));
+
+					uint32_t indexCount = (uint32_t)meshComponent.IndexList.size();
+					sceneSerializer.Write<uint32_t>((const char*)&indexCount);
+					sceneSerializer.WriteVector<std::vector<uint32_t>>((const char*)meshComponent.IndexList.data(), (uint32_t)meshComponent.IndexList.size() * sizeof(uint32_t));
+				}
+			}
+
+
+		}
+
+
+		{
+
+			for (auto& material : materialsToWrite)
+			{
+				LOG_CORE_TRACE("Writing material {}", material.second->GetName());
+
+				SerializerTag tag = SerializerTag::Material;
+				sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+				UUID materialID = material.second->GetID();
+				sceneSerializer.Write<UUID>((const char*)&materialID);
+
+				std::string materialName = material.second->GetName();
+				sceneSerializer.Write<std::string>(materialName.data(), (uint32_t)materialName.size());
+
+				material.second->Serialize(sceneSerializer);
+
+				if (material.second->GetType() == MaterialType::StaticPBR)
+				{
+					PBRMaterialData* materialData = (PBRMaterialData*)material.second->GetMaterialData();
+
+					texturesToWrite[materialData->AlbedoTexture.TextureName] = materialData->AlbedoTexture.Texture;
+					texturesToWrite[materialData->NormalMap.TextureName] = materialData->NormalMap.Texture;
+					texturesToWrite[materialData->MetalnessMap.TextureName] = materialData->MetalnessMap.Texture;
+					texturesToWrite[materialData->RoughnessMap.TextureName] = materialData->RoughnessMap.Texture;
+					texturesToWrite[materialData->AmbientOcclusionMap.TextureName] = materialData->AmbientOcclusionMap.Texture;
+				}
+			}
+		}
+
+		{
+			for (auto& texture : texturesToWrite)
+			{
+				LOG_CORE_TRACE("Writing texture {}  ({})", texture.second->GetTextureName(), texture.second->GetTexturePath());
+
+				SerializerTag tag = SerializerTag::Texture;
+				sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+				sceneSerializer.Write<std::string>((const char*)texture.first.c_str(), (uint32_t)texture.first.size());
+				sceneSerializer.Write<std::string>((const char*)texture.second->GetTexturePath().c_str(), (uint32_t)texture.second->GetTexturePath().size());
+
+				FileSystemItem* item = VirtualFileSystem::GetItem(texture.second->GetTexturePath());
+
+				if (item != nullptr)
+				{
+					sceneSerializer.Write<std::string>((const char*)item->Name.c_str(), (uint32_t)item->Name.size());
+					sceneSerializer.Write<FileItemType>((const char*)&item->Type);
+					sceneSerializer.Write<bool>((const char*)&item->SystemFile);
+					sceneSerializer.Write<uint32_t>((const char*)&item->DataSize);
+					sceneSerializer.WriteVector<std::vector<uint8_t>>((const char*)item->Data.data(), item->DataSize * sizeof(uint8_t));
+				}
+			}
+		}
+
+
+		SerializerTag tag = SerializerTag::EndOfFile;
+		sceneSerializer.Write<SerializerTag>((const char*)&tag);
+	}
+
+
+	void Scene::LoadScene(const std::string& sceneFilepath)
+	{
+//		std::unordered_map<UUID, Ref<Material>> materialsToWrite;
+//		std::unordered_map<std::string, Ref<Vulkan::Texture2D>> texturesToWrite;
+
+		Deserializer sceneDeserializer(sceneFilepath);
+
+		SerializerMagic magic = sceneDeserializer.Read<SerializerMagic>();
+
+		if (magic != SerializerMagic::Scene)
+		{
+			LOG_CORE_ERROR("[Scene] {} is not a valid scene file", sceneFilepath);
+			return;
+		}
+
+		SerializerTag tag;
+		UUID activeEntityID = 0;
+
+		std::vector<Ref<PBRMaterial>> pbrMaterials;
+
+		while ((tag = sceneDeserializer.Read<SerializerTag>()) != SerializerTag::EndOfFile)
+		{
+			if (tag == SerializerTag::Entity)
+			{
+				activeEntityID = sceneDeserializer.Read<UUID>();
+				std::string tagComponentTag = sceneDeserializer.Read<std::string>();
+
+				m_SceneEntities.emplace_back(activeEntityID);
+				ECS::EntitySystem::AddComponent<TagComponent>(activeEntityID, tagComponentTag);
+			}
+
+			if (tag == SerializerTag::TransformComponent)
+			{
+				TransformComponent transformComponent;
+				transformComponent.Translation = sceneDeserializer.Read<glm::vec3>();
+				transformComponent.Rotation = sceneDeserializer.Read<glm::vec3>();
+				transformComponent.Scale = sceneDeserializer.Read<glm::vec3>();
+				transformComponent.CalculateTransform();
+
+				ECS::EntitySystem::AddComponent<TransformComponent>(activeEntityID, transformComponent);
+			}
+
+			if (tag == SerializerTag::LightComponent)
+			{
+				LightComponent lightComponent;
+				lightComponent.Position = sceneDeserializer.Read<glm::vec3>();
+				lightComponent.Color = sceneDeserializer.Read<glm::vec3>();
+
+				ECS::EntitySystem::AddComponent<LightComponent>(activeEntityID, lightComponent);
+			}
+
+			if (tag == SerializerTag::MaterialComponent)
+			{
+				MaterialComponent materialComponent;
+				materialComponent.Type = sceneDeserializer.Read<MaterialType>();
+				materialComponent.MaterialID = sceneDeserializer.Read<UUID>();
+
+				ECS::EntitySystem::AddComponent<MaterialComponent>(activeEntityID, materialComponent);
+			}
+
+			if (tag == SerializerTag::MeshComponent)
+			{
+				MeshComponent meshComponent;
+
+				uint32_t vertexCount = sceneDeserializer.Read<uint32_t>();
+				meshComponent.VertexList = sceneDeserializer.ReadVector<std::vector<Vertex>>(vertexCount, sizeof(Vertex));
+
+				uint32_t indexCount = sceneDeserializer.Read<uint32_t>();
+				meshComponent.IndexList = sceneDeserializer.ReadVector<std::vector<uint32_t>>(indexCount, sizeof(uint32_t));
+
+				ECS::EntitySystem::AddComponent<MeshComponent>(activeEntityID, meshComponent);
+			}
+
+			if (tag == SerializerTag::Material)
+			{
+				UUID materialID = sceneDeserializer.Read<UUID>();
+				std::string materialName = sceneDeserializer.Read<std::string>();
+
+				Ref<PBRMaterial> newMaterial = CreateRef<PBRMaterial>(materialID, materialName, ResourceManager::GetShader(ShaderType::Default));
+				newMaterial->Deserialize(sceneDeserializer);
+
+				pbrMaterials.emplace_back(newMaterial);
+//				ResourceManager::StoreMaterial(newMaterial);
+
+			}
+
+			if (tag == SerializerTag::Texture)
+			{
+				std::string textureName = sceneDeserializer.Read<std::string>();
+				std::string texturePath = sceneDeserializer.Read<std::string>();
+
+				FileSystemItem newItem;
+
+				newItem.Name = sceneDeserializer.Read<std::string>();
+				newItem.Type = sceneDeserializer.Read<FileItemType>();
+				newItem.SystemFile = sceneDeserializer.Read<bool>();
+				newItem.DataSize = sceneDeserializer.Read<uint32_t>();
+				newItem.Data = sceneDeserializer.ReadVector<std::vector<uint8_t>>(newItem.DataSize);
+
+
+
+//				FileSystemItem* item = VirtualFileSystem::GetItem(texture.second->GetTexturePath());
+			}
+		}
+
+
+
+/*		{
+			for (auto& entity : m_SceneEntities)
+			{
 				if (entity.HasComponent<MeshComponent>())
 				{
 					tag = SerializerTag::Mesh;
@@ -370,12 +570,24 @@ namespace Wingnut
 				sceneSerializer.Write<std::string>((const char*)texture.first.c_str(), (uint32_t)texture.first.size());
 				sceneSerializer.Write<std::string>((const char*)texture.second->GetTexturePath().c_str(), (uint32_t)texture.second->GetTexturePath().size());
 
+				FileSystemItem* item = VirtualFileSystem::GetItem(texture.second->GetTexturePath());
+
+				if (item != nullptr)
+				{
+					sceneSerializer.Write<std::string>((const char*)item->Name.c_str(), (uint32_t)item->Name.size());
+					sceneSerializer.Write<FileItemType>((const char*)&item->Type);
+					sceneSerializer.Write<bool>((const char*)&item->SystemFile);
+					sceneSerializer.Write<uint32_t>((const char*)&item->DataSize);
+					sceneSerializer.Write<uint8_t>((const char*)item->Data.data(), item->DataSize);
+				}
 			}
 		}
 
 
 		SerializerTag tag = SerializerTag::EndOfFile;
 		sceneSerializer.Write<SerializerTag>((const char*)&tag);
+
+*/
 	}
 
 }

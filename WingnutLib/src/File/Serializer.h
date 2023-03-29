@@ -85,6 +85,8 @@ namespace Wingnut
 			str.resize(strLength);
 
 			m_Stream.read(str.data(), strLength);
+
+			return str;
 		}
 
 		template<typename T>
@@ -92,7 +94,7 @@ namespace Wingnut
 		{
 			T data;
 			data.resize(count);
-			m_Stream.read((char*)data.data(), size);
+			m_Stream.read((char*)data.data(), count * size);
 
 			return data;
 		}

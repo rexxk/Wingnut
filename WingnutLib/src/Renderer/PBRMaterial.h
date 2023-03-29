@@ -40,6 +40,7 @@ namespace Wingnut
 		static Ref<Material> Create(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader);
 
+		PBRMaterial(UUID materialID, const std::string& materialName, Ref<Vulkan::Shader> shader);
 		PBRMaterial(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
 		PBRMaterial(const std::string& name, Ref<Vulkan::Shader> shader);
 		virtual ~PBRMaterial();

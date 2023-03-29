@@ -201,7 +201,12 @@ void MainLayer::OnUIRender()
 
 			if (ImGui::MenuItem("Load scene"))
 			{
-//				m_Scene->LoadScene();
+				std::string filename = FileDialog::Load(L"Wingnut Scene file\0*.wscene\0\0", "assets/scenes/");
+
+				if (!filename.empty())
+				{
+					m_Scene->LoadScene(filename);
+				}
 			}
 
 			if (ImGui::MenuItem("Save scene"))

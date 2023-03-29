@@ -21,6 +21,7 @@ namespace Wingnut
 
 		}
 
+		void SetID(UUID entityID) { m_EntityID = entityID; }
 		UUID ID() const { return m_EntityID; }
 
 		operator uint64_t() { return m_EntityID; }

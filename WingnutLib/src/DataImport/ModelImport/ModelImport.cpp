@@ -303,6 +303,19 @@ namespace Wingnut
 					}
 				}
 
+				aiColor3D diffuseColor;
+				material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
+
+				newMaterial.Diffuse.r = diffuseColor.r;
+				newMaterial.Diffuse.g = diffuseColor.g;
+				newMaterial.Diffuse.b = diffuseColor.b;
+
+				aiColor3D transparency;
+				material->Get(AI_MATKEY_COLOR_TRANSPARENT, transparency);
+
+				newMaterial.Transparency = transparency.r;
+
+
 				importResult.Materials.emplace_back(newMaterial);
 			}
 		}

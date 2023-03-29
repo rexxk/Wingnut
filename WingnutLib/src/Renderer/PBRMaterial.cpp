@@ -19,6 +19,13 @@ namespace Wingnut
 		return CreateRef<PBRMaterial>(name, shader);
 	}
 
+	PBRMaterial::PBRMaterial(UUID materialID, const std::string& materialName, Ref<Vulkan::Shader> shader)
+		: Material(materialName, shader)
+	{
+		m_MaterialID = materialID;
+	}
+
+
 	PBRMaterial::PBRMaterial(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
 		: Material(objMaterial.MaterialName, shader), m_Shader(shader)
 	{
@@ -311,7 +318,22 @@ namespace Wingnut
 
 	void PBRMaterial::Deserialize(Deserializer& deserializer)
 	{
-		
+		m_MaterialData.Properties.AlbedoColor = deserializer.Read<glm::vec4>();
+		m_MaterialData.Properties.Metallic = deserializer.Read<float>();
+		m_MaterialData.Properties.Roughness = deserializer.Read<float>();
+		m_MaterialData.Properties.AmbientOcclusion = deserializer.Read<float>();
+
+		m_MaterialData.Properties.UseAlbedoTexture = deserializer.Read<uint32_t>();
+		m_MaterialData.Properties.UseNormalMap = deserializer.Read<uint32_t>();
+		m_MaterialData.Properties.UseMetalnessMap = deserializer.Read<uint32_t>();
+		m_MaterialData.Properties.UseRoughnessMap = deserializer.Read<uint32_t>();
+		m_MaterialData.Properties.UseAmbientOcclusionMap = deserializer.Read<uint32_t>();
+
+		m_MaterialData.AlbedoTexture.TextureName = deserializer.Read<std::string>();
+		m_MaterialData.NormalMap.TextureName = deserializer.Read<std::string>();
+		m_MaterialData.MetalnessMap.TextureName = deserializer.Read<std::string>();
+		m_MaterialData.RoughnessMap.TextureName = deserializer.Read<std::string>();
+		m_MaterialData.AmbientOcclusionMap.TextureName = deserializer.Read<std::string>();
 	}
 
 }
