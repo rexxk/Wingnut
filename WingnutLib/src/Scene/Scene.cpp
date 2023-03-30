@@ -499,7 +499,11 @@ namespace Wingnut
 				Ref<PBRMaterial> newMaterial = CreateRef<PBRMaterial>(materialID, materialName, ResourceManager::GetShader(ShaderType::Default), samplerType);
 				newMaterial->Deserialize(sceneDeserializer);
 
-				pbrMaterials.emplace_back(newMaterial);
+				if (ResourceManager::GetMaterialByName(materialName) == nullptr)
+				{
+					pbrMaterials.emplace_back(newMaterial);
+				}
+
 			}
 
 			if (tag == SerializerTag::Texture)
@@ -515,10 +519,10 @@ namespace Wingnut
 				newItem.DataSize = sceneDeserializer.Read<uint32_t>();
 				newItem.Data = sceneDeserializer.ReadVector<std::vector<uint8_t>>(newItem.DataSize);
 
-				VirtualFileSystem::AddFile(texturePath, newItem);
-
-
-//				FileSystemItem* item = VirtualFileSystem::GetItem(texture.second->GetTexturePath());
+				if (!VirtualFileSystem::FindFile(texturePath))
+				{
+					VirtualFileSystem::AddFile(texturePath, newItem);
+				}
 			}
 		}
 
@@ -527,78 +531,6 @@ namespace Wingnut
 			pbrMaterial->SetupMaterial();
 			ResourceManager::StoreMaterial(pbrMaterial);
 		}
-
-/*		{
-			for (auto& entity : m_SceneEntities)
-			{
-				if (entity.HasComponent<MeshComponent>())
-				{
-					tag = SerializerTag::Mesh;
-					sceneSerializer.Write<SerializerTag>((const char*)&tag);
-
-					MeshComponent& meshComponent = entity.GetComponent<MeshComponent>();
-					sceneSerializer.WriteVector<std::vector<Vertex>>((const char*)meshComponent.VertexList.data(), (uint32_t)meshComponent.VertexList.size() * sizeof(Vertex));
-					sceneSerializer.WriteVector<std::vector<uint32_t>>((const char*)meshComponent.IndexList.data(), (uint32_t)meshComponent.IndexList.size() * sizeof(uint32_t));
-				}
-			}
-
-
-		}
-
-
-		{
-
-			for (auto& material : materialsToWrite)
-			{
-				LOG_CORE_TRACE("Writing material {}", material.second->GetName());
-
-				SerializerTag tag = SerializerTag::Material;
-				sceneSerializer.Write<SerializerTag>((const char*)&tag);
-
-				material.second->Serialize(sceneSerializer);
-
-				if (material.second->GetType() == MaterialType::StaticPBR)
-				{
-					PBRMaterialData* materialData = (PBRMaterialData*)material.second->GetMaterialData();
-
-					texturesToWrite[materialData->AlbedoTexture.TextureName] = materialData->AlbedoTexture.Texture;
-					texturesToWrite[materialData->NormalMap.TextureName] = materialData->NormalMap.Texture;
-					texturesToWrite[materialData->MetalnessMap.TextureName] = materialData->MetalnessMap.Texture;
-					texturesToWrite[materialData->RoughnessMap.TextureName] = materialData->RoughnessMap.Texture;
-					texturesToWrite[materialData->AmbientOcclusionMap.TextureName] = materialData->AmbientOcclusionMap.Texture;
-				}
-			}
-		}
-
-		{
-			for (auto& texture : texturesToWrite)
-			{
-				LOG_CORE_TRACE("Writing texture {}  ({})", texture.second->GetTextureName(), texture.second->GetTexturePath());
-
-				SerializerTag tag = SerializerTag::Texture;
-				sceneSerializer.Write<SerializerTag>((const char*)&tag);
-
-				sceneSerializer.Write<std::string>((const char*)texture.first.c_str(), (uint32_t)texture.first.size());
-				sceneSerializer.Write<std::string>((const char*)texture.second->GetTexturePath().c_str(), (uint32_t)texture.second->GetTexturePath().size());
-
-				FileSystemItem* item = VirtualFileSystem::GetItem(texture.second->GetTexturePath());
-
-				if (item != nullptr)
-				{
-					sceneSerializer.Write<std::string>((const char*)item->Name.c_str(), (uint32_t)item->Name.size());
-					sceneSerializer.Write<FileItemType>((const char*)&item->Type);
-					sceneSerializer.Write<bool>((const char*)&item->SystemFile);
-					sceneSerializer.Write<uint32_t>((const char*)&item->DataSize);
-					sceneSerializer.Write<uint8_t>((const char*)item->Data.data(), item->DataSize);
-				}
-			}
-		}
-
-
-		SerializerTag tag = SerializerTag::EndOfFile;
-		sceneSerializer.Write<SerializerTag>((const char*)&tag);
-
-*/
 	}
 
 }

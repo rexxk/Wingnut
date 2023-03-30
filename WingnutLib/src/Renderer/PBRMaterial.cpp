@@ -233,10 +233,18 @@ namespace Wingnut
 
 			if (item)
 			{
-				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.AlbedoTexture.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
-				ResourceManager::AddTexture(texture);
+				if (ResourceManager::FindTexture(m_MaterialData.AlbedoTexture.TextureName))
+				{
+					m_MaterialData.AlbedoTexture.Texture = ResourceManager::GetTextureByName(m_MaterialData.AlbedoTexture.TextureName);
+				}
+				else
+				{
+					Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.AlbedoTexture.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+					ResourceManager::AddTexture(texture);
 
-				m_MaterialData.AlbedoTexture.Texture = texture;
+					m_MaterialData.AlbedoTexture.Texture = texture;
+				}
+
 			}
 		}
 
@@ -246,10 +254,17 @@ namespace Wingnut
 
 			if (item)
 			{
-				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.NormalMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
-				ResourceManager::AddTexture(texture);
+				if (ResourceManager::FindTexture(m_MaterialData.NormalMap.TextureName))
+				{
+					m_MaterialData.NormalMap.Texture = ResourceManager::GetTextureByName(m_MaterialData.NormalMap.TextureName);
+				}
+				else
+				{
+					Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.NormalMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+					ResourceManager::AddTexture(texture);
 
-				m_MaterialData.NormalMap.Texture = texture;
+					m_MaterialData.NormalMap.Texture = texture;
+				}
 			}
 		}
 
@@ -259,10 +274,17 @@ namespace Wingnut
 
 			if (item)
 			{
-				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.MetalnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
-				ResourceManager::AddTexture(texture);
+				if (ResourceManager::FindTexture(m_MaterialData.MetalnessMap.TextureName))
+				{
+					m_MaterialData.MetalnessMap.Texture = ResourceManager::GetTextureByName(m_MaterialData.MetalnessMap.TextureName);
+				}
+				else
+				{
+					Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.MetalnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+					ResourceManager::AddTexture(texture);
 
-				m_MaterialData.MetalnessMap.Texture = texture;
+					m_MaterialData.MetalnessMap.Texture = texture;
+				}
 			}
 		}
 
@@ -272,10 +294,17 @@ namespace Wingnut
 
 			if (item)
 			{
-				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.RoughnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
-				ResourceManager::AddTexture(texture);
+				if (ResourceManager::FindTexture(m_MaterialData.RoughnessMap.TextureName))
+				{
+					m_MaterialData.RoughnessMap.Texture = ResourceManager::GetTextureByName(m_MaterialData.RoughnessMap.TextureName);
+				}
+				else
+				{
+					Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.RoughnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+					ResourceManager::AddTexture(texture);
 
-				m_MaterialData.RoughnessMap.Texture = texture;
+					m_MaterialData.RoughnessMap.Texture = texture;
+				}
 			}
 		}
 
@@ -285,10 +314,17 @@ namespace Wingnut
 
 			if (item)
 			{
-				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.AmbientOcclusionMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
-				ResourceManager::AddTexture(texture);
+				if (ResourceManager::FindTexture(m_MaterialData.AmbientOcclusionMap.TextureName))
+				{
+					m_MaterialData.AmbientOcclusionMap.Texture = ResourceManager::GetTextureByName(m_MaterialData.AmbientOcclusionMap.TextureName);
+				}
+				else
+				{
+					Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.AmbientOcclusionMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+					ResourceManager::AddTexture(texture);
 
-				m_MaterialData.AmbientOcclusionMap.Texture = texture;
+					m_MaterialData.AmbientOcclusionMap.Texture = texture;
+				}
 			}
 		}
 
