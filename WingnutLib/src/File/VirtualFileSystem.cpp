@@ -64,6 +64,40 @@ namespace Wingnut
 
 	}
 
+	void VirtualFileSystem::AddFile(const std::string& filepath, const FileSystemItem& item)
+	{
+		std::vector<std::string> tokens = Tokenize(filepath, '/');
+
+		if (FindFile(filepath))
+		{
+			LOG_CORE_WARN("[VFS] File {} already exists", filepath);
+			return;
+		}
+
+		if (tokens.empty())
+		{
+			return;
+		}
+
+		if (tokens.size() == 1)
+		{
+			s_Instance->m_RootDirectory.Files.emplace_back(item);
+			return;
+		}
+
+		if (!FindDirectory(s_Instance->m_RootDirectory, tokens, (uint32_t)tokens.size() - 1))
+		{
+			AddDirectories(s_Instance->m_RootDirectory, tokens, (uint32_t)tokens.size() - 1);
+		}
+
+		FileSystemDirectory* workingDirectory;
+
+		if (FindDirectory(s_Instance->m_RootDirectory, tokens, (uint32_t)tokens.size() - 1, &workingDirectory))
+		{
+			workingDirectory->Files.emplace_back(item);
+		}
+	}
+
 	void VirtualFileSystem::LoadFileFromResource()
 	{
 

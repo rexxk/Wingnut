@@ -196,7 +196,7 @@ void MainLayer::OnUIRender()
 		{
 			if (ImGui::MenuItem("New scene"))
 			{
-				m_Scene->ClearScene();
+				m_Scene->ClearScene(true);
 			}
 
 			if (ImGui::MenuItem("Load scene"))
@@ -206,6 +206,8 @@ void MainLayer::OnUIRender()
 				if (!filename.empty())
 				{
 					m_Scene->LoadScene(filename);
+
+					m_MaterialStorePanel->UpdateMaterialList();
 				}
 			}
 
@@ -227,7 +229,7 @@ void MainLayer::OnUIRender()
 
 				if (!filename.empty())
 				{
-					m_Scene->ClearScene();
+					m_Scene->ClearScene(true);
 
 					m_Scene->ImportModel(filename);
 //					m_Scene->ImportOBJModel(filename);

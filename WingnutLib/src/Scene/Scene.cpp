@@ -54,7 +54,7 @@ namespace Wingnut
 
 		m_EntityRegistry = CreateRef<ECS::Registry>();
 
-		ClearScene();
+		ClearScene(true);
 
 	}
 
@@ -83,7 +83,7 @@ namespace Wingnut
 
 	}
 
-	void Scene::ClearScene()
+	void Scene::ClearScene(bool withLight)
 	{
 		for (auto& entity : m_SceneEntities)
 		{
@@ -117,6 +117,7 @@ namespace Wingnut
 
 		m_SceneRenderer->Clear();
 
+		if (withLight)
 		{
 			Entity light = CreateEntity("Light");
 			light.AddComponent<LightComponent>(glm::vec3(0.0f, 15.0f, 0.0f), glm::vec3(210.0f, 235.0f, 205.0f));
@@ -365,6 +366,9 @@ namespace Wingnut
 				std::string materialName = material.second->GetName();
 				sceneSerializer.Write<std::string>(materialName.data(), (uint32_t)materialName.size());
 
+				SamplerType samplerType = material.second->GetSamplerType();
+				sceneSerializer.Write<SamplerType>((const char*)&samplerType);
+
 				material.second->Serialize(sceneSerializer);
 
 				if (material.second->GetType() == MaterialType::StaticPBR)
@@ -424,6 +428,8 @@ namespace Wingnut
 			LOG_CORE_ERROR("[Scene] {} is not a valid scene file", sceneFilepath);
 			return;
 		}
+
+		ClearScene(false);
 
 		SerializerTag tag;
 		UUID activeEntityID = 0;
@@ -488,12 +494,12 @@ namespace Wingnut
 				UUID materialID = sceneDeserializer.Read<UUID>();
 				std::string materialName = sceneDeserializer.Read<std::string>();
 
-				Ref<PBRMaterial> newMaterial = CreateRef<PBRMaterial>(materialID, materialName, ResourceManager::GetShader(ShaderType::Default));
+				SamplerType samplerType = sceneDeserializer.Read<SamplerType>();
+
+				Ref<PBRMaterial> newMaterial = CreateRef<PBRMaterial>(materialID, materialName, ResourceManager::GetShader(ShaderType::Default), samplerType);
 				newMaterial->Deserialize(sceneDeserializer);
 
 				pbrMaterials.emplace_back(newMaterial);
-//				ResourceManager::StoreMaterial(newMaterial);
-
 			}
 
 			if (tag == SerializerTag::Texture)
@@ -509,13 +515,18 @@ namespace Wingnut
 				newItem.DataSize = sceneDeserializer.Read<uint32_t>();
 				newItem.Data = sceneDeserializer.ReadVector<std::vector<uint8_t>>(newItem.DataSize);
 
+				VirtualFileSystem::AddFile(texturePath, newItem);
 
 
 //				FileSystemItem* item = VirtualFileSystem::GetItem(texture.second->GetTexturePath());
 			}
 		}
 
-
+		for (auto& pbrMaterial : pbrMaterials)
+		{
+			pbrMaterial->SetupMaterial();
+			ResourceManager::StoreMaterial(pbrMaterial);
+		}
 
 /*		{
 			for (auto& entity : m_SceneEntities)

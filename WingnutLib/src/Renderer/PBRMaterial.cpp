@@ -14,20 +14,22 @@ namespace Wingnut
 		return CreateRef<PBRMaterial>(objMaterial, shader, sampler);
 	}
 
-	Ref<Material> PBRMaterial::Create(const std::string& name, Ref<Vulkan::Shader> shader)
+	Ref<Material> PBRMaterial::Create(const std::string& name, Ref<Vulkan::Shader> shader, SamplerType samplerType)
 	{
-		return CreateRef<PBRMaterial>(name, shader);
+		return CreateRef<PBRMaterial>(name, shader, samplerType);
 	}
 
-	PBRMaterial::PBRMaterial(UUID materialID, const std::string& materialName, Ref<Vulkan::Shader> shader)
+	PBRMaterial::PBRMaterial(UUID materialID, const std::string& materialName, Ref<Vulkan::Shader> shader, SamplerType samplerType)
 		: Material(materialName, shader)
 	{
 		m_MaterialID = materialID;
+
+		m_SamplerType = samplerType;
 	}
 
 
 	PBRMaterial::PBRMaterial(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler)
-		: Material(objMaterial.MaterialName, shader), m_Shader(shader)
+		: Material(objMaterial.MaterialName, shader)
 	{
 		CreateUniformBuffer();
 
@@ -182,10 +184,12 @@ namespace Wingnut
 		Update();
 	}
 
-	PBRMaterial::PBRMaterial(const std::string& name, Ref<Vulkan::Shader> shader)
+	PBRMaterial::PBRMaterial(const std::string& name, Ref<Vulkan::Shader> shader, SamplerType samplerType)
 		: Material(name, shader)
 	{
 		CreateUniformBuffer();
+
+		m_SamplerType = samplerType;
 
 		m_MaterialData.Properties.AlbedoColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 		m_MaterialData.Properties.UseAlbedoTexture = true;
@@ -219,6 +223,80 @@ namespace Wingnut
 		}
 	}
 
+	void PBRMaterial::SetupMaterial()
+	{
+		CreateUniformBuffer();
+
+		if (m_MaterialData.AlbedoTexture.Texture == nullptr)
+		{
+			FileSystemItem* item = VirtualFileSystem::GetItem(m_MaterialData.AlbedoTexture.TextureName);
+
+			if (item)
+			{
+				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.AlbedoTexture.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+				ResourceManager::AddTexture(texture);
+
+				m_MaterialData.AlbedoTexture.Texture = texture;
+			}
+		}
+
+		if (m_MaterialData.NormalMap.Texture == nullptr)
+		{
+			FileSystemItem* item = VirtualFileSystem::GetItem(m_MaterialData.NormalMap.TextureName);
+
+			if (item)
+			{
+				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.NormalMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+				ResourceManager::AddTexture(texture);
+
+				m_MaterialData.NormalMap.Texture = texture;
+			}
+		}
+
+		if (m_MaterialData.MetalnessMap.Texture == nullptr)
+		{
+			FileSystemItem* item = VirtualFileSystem::GetItem(m_MaterialData.MetalnessMap.TextureName);
+
+			if (item)
+			{
+				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.MetalnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+				ResourceManager::AddTexture(texture);
+
+				m_MaterialData.MetalnessMap.Texture = texture;
+			}
+		}
+
+		if (m_MaterialData.RoughnessMap.Texture == nullptr)
+		{
+			FileSystemItem* item = VirtualFileSystem::GetItem(m_MaterialData.RoughnessMap.TextureName);
+
+			if (item)
+			{
+				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.RoughnessMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+				ResourceManager::AddTexture(texture);
+
+				m_MaterialData.RoughnessMap.Texture = texture;
+			}
+		}
+
+		if (m_MaterialData.AmbientOcclusionMap.Texture == nullptr)
+		{
+			FileSystemItem* item = VirtualFileSystem::GetItem(m_MaterialData.AmbientOcclusionMap.TextureName);
+
+			if (item)
+			{
+				Ref<Vulkan::Texture2D> texture = Vulkan::Texture2D::Create(m_MaterialData.AmbientOcclusionMap.TextureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, item->DataSize, 0, (const char*)item->Data.data(), 0);
+				ResourceManager::AddTexture(texture);
+
+				m_MaterialData.AmbientOcclusionMap.Texture = texture;
+			}
+		}
+
+		CreateDescriptor(m_Shader);
+
+		Update();
+	}
+
 	void PBRMaterial::Update()
 	{
 		m_MaterialUB->Update(&m_MaterialData.Properties, sizeof(PBRMaterialProperties), Renderer::GetContext()->GetCurrentFrame());
@@ -233,6 +311,11 @@ namespace Wingnut
 	{
 		auto& rendererData = Renderer::GetContext()->GetRendererData();
 		m_Descriptor = Vulkan::Descriptor::Create(rendererData.Device, shader, MaterialDescriptor);
+
+		if (m_Sampler == nullptr)
+		{
+			m_Sampler = ResourceManager::GetSampler(m_SamplerType);
+		}
 
 		m_Descriptor->SetBufferBinding(PBRMaterialDataBinding, m_MaterialUB);
 		m_Descriptor->SetImageBinding(PBRAlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, m_Sampler);

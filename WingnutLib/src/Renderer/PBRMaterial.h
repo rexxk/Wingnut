@@ -38,11 +38,11 @@ namespace Wingnut
 	{
 	public:
 		static Ref<Material> Create(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
-		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader);
+		static Ref<Material> Create(const std::string& name, Ref<Vulkan::Shader> shader, SamplerType samplerType = SamplerType::Default);
 
-		PBRMaterial(UUID materialID, const std::string& materialName, Ref<Vulkan::Shader> shader);
+		PBRMaterial(UUID materialID, const std::string& materialName, Ref<Vulkan::Shader> shader, SamplerType samplerType = SamplerType::Default);
 		PBRMaterial(const ImportMaterial& objMaterial, Ref<Vulkan::Shader> shader, Ref<Vulkan::ImageSampler> sampler);
-		PBRMaterial(const std::string& name, Ref<Vulkan::Shader> shader);
+		PBRMaterial(const std::string& name, Ref<Vulkan::Shader> shader, SamplerType samplerType);
 		virtual ~PBRMaterial();
 
 		virtual void Release() override;
@@ -52,6 +52,8 @@ namespace Wingnut
 		virtual void SetTexture(MaterialTextureType type, Ref<Vulkan::Texture2D> texture) override;
 
 		virtual void CreateDescriptor(Ref<Vulkan::Shader> shader) override;
+
+		virtual void SetupMaterial() override;
 
 		void* GetMaterialData() { return (void*)&m_MaterialData; }
 
@@ -64,11 +66,7 @@ namespace Wingnut
 	private:
 		PBRMaterialData m_MaterialData;
 
-		SamplerType m_SamplerType = SamplerType::LinearRepeat;
-
 		Ref<Vulkan::UniformBuffer> m_MaterialUB = nullptr;
-
-		Ref<Vulkan::Shader> m_Shader = nullptr;
 
 	};
 

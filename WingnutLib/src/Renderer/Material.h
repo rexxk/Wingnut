@@ -52,6 +52,8 @@ namespace Wingnut
 
 		virtual void SetTexture(MaterialTextureType type, Ref<Vulkan::Texture2D> texture);
 
+		virtual void SetupMaterial() {}
+
 		void SetName(const std::string& name) { m_Name = name; }
 		std::string& GetName() { return m_Name; }
 		UUID GetID() const { return m_MaterialID; }

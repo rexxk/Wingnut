@@ -96,7 +96,9 @@ namespace Wingnut
 				return;
 			}
 
-			m_TextureName = textureFilename.substr(textureFilename.find_last_of("/\\") + 1);
+			m_TextureName = textureFilename;
+			m_TexturePath = textureFilename;
+//			m_TextureName = textureFilename.substr(textureFilename.find_last_of("/\\") + 1);
 
 			LOG_CORE_TRACE("{} - {}", textureFilename, m_TextureName);
 
@@ -130,7 +132,10 @@ namespace Wingnut
 			std::vector<uint8_t> fileData(dataSize);
 			memcpy(fileData.data(), data, dataSize);
 
-			VirtualFileSystem::AddFile(textureFilename, fileData, (uint32_t)fileData.size(), FileItemType::Texture);
+			if (!VirtualFileSystem::FindFile(textureFilename))
+			{
+				VirtualFileSystem::AddFile(textureFilename, fileData, (uint32_t)fileData.size(), FileItemType::Texture);
+			}
 
 			m_TextureName = texturePath;
 

@@ -9,6 +9,8 @@
 
 #include "File/FileDialog.h"
 
+#include "Utils/StringUtils.h"
+
 #include "imgui.h"
 
 
@@ -68,7 +70,8 @@ namespace Wingnut
 
 			if (!filename.empty())
 			{
-				std::string textureName = filename.substr(filename.find_last_of("/\\") + 1);
+//				std::string textureName = filename.substr(filename.find_last_of("/\\") + 1);
+				std::string textureName = ConvertFilePathToAssetPath(filename);
 
 				if (!ResourceManager::FindTexture(textureName))
 				{
