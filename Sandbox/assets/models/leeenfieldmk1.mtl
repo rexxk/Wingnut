@@ -11,7 +11,7 @@ Pm 1.000000
 Ps 0.000000
 Pc 0.000000
 Pcr 0.030000
-map_Kd assets/textures/LeeEnfieldMk1/lee_enfield_mk1_Albedo.png
-map_Ks assets/textures/LeeEnfieldMk1/lee_enfield_mk1_Metalness.png
-map_Pr assets/textures/LeeEnfieldMk1/lee_enfield_mk1_Roughness.png
-map_Bump -bm 1.000000 assets/textures/LeeEnfieldMk1/lee_enfield_mk1_Normal.png
+map_Kd LeeEnfieldMk1/lee_enfield_mk1_Albedo.png
+map_Ks LeeEnfieldMk1/lee_enfield_mk1_Metalness.png
+map_Pr LeeEnfieldMk1/lee_enfield_mk1_Roughness.png
+map_Bump -bm 1.000000 LeeEnfieldMk1/lee_enfield_mk1_Normal.png

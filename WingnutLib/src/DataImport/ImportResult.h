@@ -17,6 +17,8 @@ namespace Wingnut
 		std::vector<Vertex> VertexList;
 		std::vector<uint32_t> IndexList;
 
+		glm::mat4 Transform;
+
 		std::string MaterialName = "material";
 	};
 

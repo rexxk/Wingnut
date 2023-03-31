@@ -241,7 +241,8 @@ namespace Wingnut
 		for (auto& mesh : importResult.Meshes)
 		{
 			Entity newEntity = CreateEntity(mesh.ObjectName);
-			newEntity.AddComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f));
+//			newEntity.AddComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f));
+			newEntity.AddComponent<TransformComponent>(mesh.Transform);
 
 			newEntity.AddComponent<MeshComponent>(mesh.VertexList, mesh.IndexList);
 			newEntity.AddComponent<MaterialComponent>(ResourceManager::GetMaterialByName(mesh.MaterialName)->GetID());

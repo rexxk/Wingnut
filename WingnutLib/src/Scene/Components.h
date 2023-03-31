@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 
 namespace Wingnut
@@ -66,7 +67,13 @@ namespace Wingnut
 		TransformComponent(const glm::mat4& transform)
 			: Transform(transform)
 		{
+			glm::quat orientation;
+			glm::vec3 skew;
+			glm::vec4 perspective;
 
+			glm::decompose(transform, Scale, orientation, Translation, skew, perspective);
+
+			Rotation = glm::eulerAngles(orientation);
 		}
 
 		TransformComponent(const TransformComponent& other)

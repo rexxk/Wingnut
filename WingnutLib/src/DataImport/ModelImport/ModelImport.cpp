@@ -13,9 +13,24 @@
 
 #include "Utils/StringUtils.h"
 
+#include <glm/glm.hpp>
+
 
 namespace Wingnut
 {
+
+
+	glm::mat4 aiMatrix4x4ToGlmMat4(const aiMatrix4x4& from)
+	{
+		glm::mat4 to;
+
+		to[0][0] = (float)from.a1; to[0][1] = (float)from.b1; to[0][2] = (float)from.c1; to[0][3] = (float)from.d1;
+		to[1][0] = (float)from.a2; to[1][1] = (float)from.b2; to[1][2] = (float)from.c2; to[1][3] = (float)from.d2;
+		to[2][0] = (float)from.a3; to[2][1] = (float)from.b3; to[2][2] = (float)from.c3; to[2][3] = (float)from.d3;
+		to[3][0] = (float)from.a4; to[3][1] = (float)from.b4; to[3][2] = (float)from.c4; to[3][3] = (float)from.d4;
+
+		return to;
+	}
 
 
 	ImportResult ModelImport::ImportFBX(const std::string& filepath)
@@ -25,7 +40,7 @@ namespace Wingnut
 		importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS, false);
 		const aiScene* scene = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace | aiProcess_ValidateDataStructure); // | aiProcess_FlipUVs);
 
-		if (!scene)
+		if (!scene || scene->mRootNode == nullptr)
 		{
 			LOG_CORE_ERROR("[ModelImport] Failed to load model {}", filepath);
 
@@ -37,100 +52,17 @@ namespace Wingnut
 		ImportResult importResult;
 
 		std::string sceneName = scene->mName.C_Str();
-
+		
 		if (sceneName == "")
 		{
 			sceneName = "scene";
 		}
 
-		if (scene->HasMeshes())
-		{
-			for (uint32_t i = 0; i < scene->mNumMeshes; i++)
-			{
-				auto* mesh = scene->mMeshes[i];
+		aiNode* rootNode = scene->mRootNode;
 
-				ImportMesh newMesh;
-				newMesh.ObjectName = mesh->mName.C_Str();
-				newMesh.MaterialName = scene->mMaterials[mesh->mMaterialIndex]->GetName().C_Str();
-
-				if (newMesh.MaterialName == "")
-				{
-					newMesh.MaterialName = "Material_" + std::to_string(mesh->mMaterialIndex);
-				}
-
-				LOG_CORE_TRACE("Mesh found: {} (material: {})", newMesh.ObjectName, newMesh.MaterialName);
-
-				for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; vertexIndex++)
-				{
-					Vertex newVertex;
-
-					if (mesh->HasPositions())
-					{
-						newVertex.Position.x = mesh->mVertices[vertexIndex].x;
-						newVertex.Position.y = mesh->mVertices[vertexIndex].y;
-						newVertex.Position.z = mesh->mVertices[vertexIndex].z;
-					}
-
-					if (mesh->HasNormals())
-					{
-						newVertex.Normal.x = mesh->mNormals[vertexIndex].x;
-						newVertex.Normal.y = mesh->mNormals[vertexIndex].y;
-						newVertex.Normal.z = mesh->mNormals[vertexIndex].z;
-					}
-
-					if (mesh->HasTextureCoords(0))
-					{
-						newVertex.TexCoord.x = mesh->mTextureCoords[0][vertexIndex].x;
-						newVertex.TexCoord.y = mesh->mTextureCoords[0][vertexIndex].y;
-					}
-
-					if (mesh->HasVertexColors(vertexIndex))
-					{
-						newVertex.Color.r = mesh->mColors[vertexIndex]->r;
-						newVertex.Color.g = mesh->mColors[vertexIndex]->g;
-						newVertex.Color.b = mesh->mColors[vertexIndex]->b;
-						newVertex.Color.a = mesh->mColors[vertexIndex]->a;
-					}
-				
-					if (mesh->HasTangentsAndBitangents())
-					{
-						newVertex.Tangent.x = mesh->mTangents[vertexIndex].x;
-						newVertex.Tangent.y = mesh->mTangents[vertexIndex].y;
-						newVertex.Tangent.z = mesh->mTangents[vertexIndex].z;
-
-						newVertex.Bitangent.x = mesh->mBitangents[vertexIndex].x;
-						newVertex.Bitangent.y = mesh->mBitangents[vertexIndex].y;
-						newVertex.Bitangent.z = mesh->mBitangents[vertexIndex].z;
-					}
-
-					newMesh.VertexList.emplace_back(newVertex);
-				}
-
-				for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; faceIndex++)
-				{
-					aiFace face = mesh->mFaces[faceIndex];
-
-					for (uint32_t j = 0; j < face.mNumIndices; j++)
-					{
-						newMesh.IndexList.emplace_back(face.mIndices[j]);
-					}
-
-				}
-
-				if (!mesh->HasTangentsAndBitangents())
-				{
-					for (uint32_t triangleIndex = 0; triangleIndex < (uint32_t)newMesh.IndexList.size(); triangleIndex += 3)
-					{
-						CalculateTangentAndBitangent(newMesh.VertexList, newMesh.IndexList[triangleIndex], newMesh.IndexList[triangleIndex + 1], newMesh.IndexList[triangleIndex + 2]);
-					}
-				}
+		GetNodeData(scene, rootNode, importResult, glm::mat4(1.0f));
 
 
-				LOG_CORE_WARN("Imported: {} vertices, {} indices", (uint32_t)newMesh.VertexList.size(), (uint32_t)newMesh.IndexList.size());
-
-				importResult.Meshes.emplace_back(newMesh);
-			}
-		}
 
 		if (scene->HasLights())
 		{
@@ -341,6 +273,109 @@ namespace Wingnut
 		importer.FreeScene();
 
 		return importResult;
+	}
+
+
+	void ModelImport::GetNodeData(const aiScene* scene, aiNode* node, ImportResult& importResult, glm::mat4 transform)
+	{
+		for (uint32_t i = 0; i < node->mNumMeshes; i++)
+		{
+			auto* mesh = scene->mMeshes[node->mMeshes[i]];
+
+//			transform = aiMatrix4x4ToGlmMat4(node->mTransformation) * transform;
+//			transform = transform * aiMatrix4x4ToGlmMat4(node->mTransformation);
+
+			ImportMesh newMesh;
+			newMesh.ObjectName = mesh->mName.C_Str();
+			newMesh.MaterialName = scene->mMaterials[mesh->mMaterialIndex]->GetName().C_Str();
+
+//			newMesh.Transform = aiMatrix4x4ToGlmMat4(node->mTransformation) * transform;
+			newMesh.Transform = transform * aiMatrix4x4ToGlmMat4(node->mTransformation);
+
+			if (newMesh.MaterialName == "")
+			{
+				newMesh.MaterialName = "Material_" + std::to_string(mesh->mMaterialIndex);
+			}
+
+			LOG_CORE_TRACE("Mesh found: {} (material: {})", newMesh.ObjectName, newMesh.MaterialName);
+
+			for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; vertexIndex++)
+			{
+				Vertex newVertex;
+
+				if (mesh->HasPositions())
+				{
+					newVertex.Position.x = mesh->mVertices[vertexIndex].x;
+					newVertex.Position.y = mesh->mVertices[vertexIndex].y;
+					newVertex.Position.z = mesh->mVertices[vertexIndex].z;
+				}
+
+				if (mesh->HasNormals())
+				{
+					newVertex.Normal.x = mesh->mNormals[vertexIndex].x;
+					newVertex.Normal.y = mesh->mNormals[vertexIndex].y;
+					newVertex.Normal.z = mesh->mNormals[vertexIndex].z;
+				}
+
+				if (mesh->HasTextureCoords(0))
+				{
+					newVertex.TexCoord.x = mesh->mTextureCoords[0][vertexIndex].x;
+					newVertex.TexCoord.y = mesh->mTextureCoords[0][vertexIndex].y;
+				}
+
+				if (mesh->HasVertexColors(vertexIndex))
+				{
+					newVertex.Color.r = mesh->mColors[vertexIndex]->r;
+					newVertex.Color.g = mesh->mColors[vertexIndex]->g;
+					newVertex.Color.b = mesh->mColors[vertexIndex]->b;
+					newVertex.Color.a = mesh->mColors[vertexIndex]->a;
+				}
+
+				if (mesh->HasTangentsAndBitangents())
+				{
+					newVertex.Tangent.x = mesh->mTangents[vertexIndex].x;
+					newVertex.Tangent.y = mesh->mTangents[vertexIndex].y;
+					newVertex.Tangent.z = mesh->mTangents[vertexIndex].z;
+
+					newVertex.Bitangent.x = mesh->mBitangents[vertexIndex].x;
+					newVertex.Bitangent.y = mesh->mBitangents[vertexIndex].y;
+					newVertex.Bitangent.z = mesh->mBitangents[vertexIndex].z;
+				}
+
+				newMesh.VertexList.emplace_back(newVertex);
+			}
+
+			for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; faceIndex++)
+			{
+				aiFace face = mesh->mFaces[faceIndex];
+
+				for (uint32_t j = 0; j < face.mNumIndices; j++)
+				{
+					newMesh.IndexList.emplace_back(face.mIndices[j]);
+				}
+
+			}
+
+			if (!mesh->HasTangentsAndBitangents())
+			{
+				for (uint32_t triangleIndex = 0; triangleIndex < (uint32_t)newMesh.IndexList.size(); triangleIndex += 3)
+				{
+					CalculateTangentAndBitangent(newMesh.VertexList, newMesh.IndexList[triangleIndex], newMesh.IndexList[triangleIndex + 1], newMesh.IndexList[triangleIndex + 2]);
+				}
+			}
+
+
+			LOG_CORE_WARN("Imported: {} vertices, {} indices", (uint32_t)newMesh.VertexList.size(), (uint32_t)newMesh.IndexList.size());
+
+			importResult.Meshes.emplace_back(newMesh);
+
+		}
+
+		for (uint32_t i = 0; i < node->mNumChildren; i++)
+		{
+			GetNodeData(scene, node->mChildren[i], importResult, transform * aiMatrix4x4ToGlmMat4(node->mTransformation));
+		}
+		
 	}
 
 
