@@ -35,6 +35,25 @@ namespace Wingnut
 
 	ImportResult ModelImport::ImportFBX(const std::string& filepath)
 	{
+		ImportResult importResult;
+
+		// Extract model name from filepath (strip extension)
+		auto startLocation = filepath.find_last_of('/');
+		auto endLocation = filepath.find('.');
+
+		if (startLocation == std::string::npos)
+		{
+			startLocation = 0;
+		}
+
+		if (endLocation == std::string::npos)
+		{
+			importResult.ModelName = filepath.substr(startLocation + 1);
+		}
+		else
+		{
+			importResult.ModelName = filepath.substr(startLocation + 1, (endLocation - (startLocation + 1)));
+		}
 
 		auto importer = Assimp::Importer();
 		importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS, false);
@@ -43,25 +62,14 @@ namespace Wingnut
 		if (!scene || scene->mRootNode == nullptr)
 		{
 			LOG_CORE_ERROR("[ModelImport] Failed to load model {}", filepath);
-
 			LOG_CORE_ERROR("[ModelImport] {}", aiGetErrorString());
 
 			return ImportResult();
 		}
 
-		ImportResult importResult;
-
-		std::string sceneName = scene->mName.C_Str();
-		
-		if (sceneName == "")
-		{
-			sceneName = "scene";
-		}
-
 		aiNode* rootNode = scene->mRootNode;
 
 		GetNodeData(scene, rootNode, importResult, glm::mat4(1.0f));
-
 
 
 		if (scene->HasLights())
@@ -89,6 +97,130 @@ namespace Wingnut
 				{
 					aiMaterialProperty* property = material->mProperties[propertyIndex];
 					LOG_CORE_TRACE(" Property: {}", property->mKey.C_Str());
+
+					if (std::string(property->mKey.C_Str()) == "$clr.ambient")
+					{
+						aiColor3D color;
+						material->Get(AI_MATKEY_COLOR_AMBIENT, color);
+
+						newMaterial.Ambient.r = color.r;
+						newMaterial.Ambient.g = color.g;
+						newMaterial.Ambient.b = color.b;
+
+						LOG_CORE_TRACE(" {} : {},{},{}", property->mKey.C_Str(), color.r, color.g, color.b);
+					}
+
+					if (std::string(property->mKey.C_Str()) == "$clr.diffuse")
+					{
+						aiColor3D color;
+						material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+
+						newMaterial.Diffuse.r = color.r;
+						newMaterial.Diffuse.g = color.g;
+						newMaterial.Diffuse.b = color.b;
+
+						LOG_CORE_TRACE(" {} : {},{},{}", property->mKey.C_Str(), color.r, color.g, color.b);
+					}
+
+					if (std::string(property->mKey.C_Str()) == "$clr.base")
+					{
+						aiColor3D color;
+						material->Get(AI_MATKEY_BASE_COLOR, color);
+
+						LOG_CORE_TRACE(" {} : {},{},{}", property->mKey.C_Str(), color.r, color.g, color.b);
+					}
+
+					if (std::string(property->mKey.C_Str()) == "$clr.specular")
+					{
+						aiColor3D color;
+						material->Get(AI_MATKEY_COLOR_SPECULAR, color);
+
+						LOG_CORE_TRACE(" {} : {},{},{}", property->mKey.C_Str(), color.r, color.g, color.b);
+					}
+
+					if (std::string(property->mKey.C_Str()) == "$clr.reflective")
+					{
+						aiColor3D color;
+						material->Get(AI_MATKEY_COLOR_REFLECTIVE, color);
+
+						LOG_CORE_TRACE(" {} : {},{},{}", property->mKey.C_Str(), color.r, color.g, color.b);
+					}
+
+					if (std::string(property->mKey.C_Str()) == "$clr.emissive")
+					{
+						aiColor3D color;
+						material->Get(AI_MATKEY_COLOR_EMISSIVE, color);
+
+						LOG_CORE_TRACE(" {} : {},{},{}", property->mKey.C_Str(), color.r, color.g, color.b);
+					}
+
+					if (std::string(property->mKey.C_Str()) == "$clr.transparent")
+					{
+						aiColor3D transparency;
+						material->Get(AI_MATKEY_COLOR_TRANSPARENT, transparency);
+
+						newMaterial.Transparency = transparency.r;
+
+						LOG_CORE_TRACE(" {} : {},{},{}", property->mKey.C_Str(), transparency.r, transparency.g, transparency.b);
+					}
+
+//					if (std::string(property->mKey.C_Str()) == "$mat.metallicFactor")
+					if (std::string(property->mKey.C_Str()) == "$mat.reflectivity")
+					{
+						float factor;
+//						material->Get(AI_MATKEY_METALLIC_FACTOR, factor);
+						material->Get(AI_MATKEY_REFLECTIVITY, factor);
+
+						newMaterial.Metalness = factor;
+						newMaterial.HasPBRValues = true;
+
+						LOG_CORE_TRACE(" {} : {}", property->mKey.C_Str(), factor);
+					}
+
+					if (std::string(property->mKey.C_Str()) == "$mat.roughnessFactor")
+					{
+						float factor;
+						material->Get(AI_MATKEY_ROUGHNESS_FACTOR, factor);
+
+						newMaterial.Roughness = factor;
+						newMaterial.HasPBRValues = true;
+
+						LOG_CORE_TRACE(" {} : {}", property->mKey.C_Str(), factor);
+					}
+
+					if (std::string(property->mKey.C_Str()) == "$mat.transparencyfactor")
+					{
+						float factor;
+						material->Get(AI_MATKEY_TRANSPARENCYFACTOR, factor);
+
+						LOG_CORE_TRACE(" {} : {}", property->mKey.C_Str(), factor);
+					}
+
+					if (std::string(property->mKey.C_Str()) == "$mat.bumpscaling")
+					{
+						float factor;
+						material->Get(AI_MATKEY_BUMPSCALING, factor);
+
+						LOG_CORE_TRACE(" {} : {}", property->mKey.C_Str(), factor);
+					}
+
+/*					if (std::string(property->mKey.C_Str()) == "$mat.shininess")
+					{
+						float value;
+						material->Get(AI_MATKEY_SHININESS, value);
+
+						newMaterial.Metalness = value;
+
+						LOG_CORE_TRACE(" {} : {}", property->mKey.C_Str(), value);
+					}
+*/
+					if (std::string(property->mKey.C_Str()) == "$mat.opacity")
+					{
+						float value;
+						material->Get(AI_MATKEY_OPACITY, value);
+
+						LOG_CORE_TRACE(" {} : {}", property->mKey.C_Str(), value);
+					}
 				}
 
 				if (material->GetTextureCount(aiTextureType_BASE_COLOR) > 0)
@@ -98,10 +230,22 @@ namespace Wingnut
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE(aiTextureType_BASE_COLOR, baseColorIndex), textureName);
 
-						LOG_CORE_TRACE(" BASE COLOR filename: {}", textureName.C_Str());
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+						LOG_CORE_TRACE(" BASE COLOR filename: {}", newMaterial.DiffuseTexture.TextureName);
 
 						newMaterial.HasDiffuseTexture = true;
-						newMaterial.DiffuseTexture.TextureName = "assets/textures/" + sceneName + "/" + ConvertFilePath(textureName.C_Str());
+
 					}
 
 				}
@@ -113,10 +257,21 @@ namespace Wingnut
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE_DIFFUSE(diffuseIndex), textureName);
 
-						LOG_CORE_TRACE(" DIFFUSE filename: {}", textureName.C_Str());
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+						LOG_CORE_TRACE(" DIFFUSE filename: {}", newMaterial.DiffuseTexture.TextureName);
 
 						newMaterial.HasDiffuseTexture = true;
-						newMaterial.DiffuseTexture.TextureName = "assets/textures/" + sceneName + "/" + ConvertFilePath(textureName.C_Str());
 					}
 
 				}
@@ -128,10 +283,21 @@ namespace Wingnut
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE(aiTextureType_AMBIENT_OCCLUSION, textureIndex), textureName);
 
-						LOG_CORE_TRACE(" AMBIENT OCCLUSION filename: {}", textureName.C_Str());
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+							newMaterial.AmbientOcclusionMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+							newMaterial.AmbientOcclusionMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+						LOG_CORE_TRACE(" AMBIENT OCCLUSION filename: {}", newMaterial.AmbientOcclusionMap.TextureName);
 
 						newMaterial.HasAmbientOcclusionMap = true;
-						newMaterial.AmbientOcclusionMap.TextureName = "assets/textures/" + sceneName + "/" + ConvertFilePath(textureName.C_Str());
 					}
 				}
 
@@ -142,10 +308,21 @@ namespace Wingnut
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE_SPECULAR(specularIndex), textureName);
 
-						LOG_CORE_TRACE(" SPECULAR filename: {}", textureName.C_Str());
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+							newMaterial.MetalnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+							newMaterial.MetalnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+						LOG_CORE_TRACE(" SPECULAR filename: {}", newMaterial.MetalnessMap.TextureName);
 
 						newMaterial.HasMetalnessMap = true;
-						newMaterial.MetalnessMap.TextureName = "assets/textures/" + sceneName + "/" + ConvertFilePath(textureName.C_Str());
 					}
 				}
 
@@ -155,6 +332,18 @@ namespace Wingnut
 					{
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE(aiTextureType_UNKNOWN, textureIndex), textureName);
+
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+//							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+//							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
 
 						LOG_CORE_TRACE(" UNKNOWN filename: {}", textureName.C_Str());
 					}
@@ -172,10 +361,21 @@ namespace Wingnut
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE(aiTextureType_METALNESS, textureIndex), textureName);
 
-						LOG_CORE_TRACE(" METALNESS filename: {}", textureName.C_Str());
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+							newMaterial.MetalnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+							newMaterial.MetalnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+						LOG_CORE_TRACE(" METALNESS filename: {}", newMaterial.MetalnessMap.TextureName);
 
 						newMaterial.HasMetalnessMap = true;
-						newMaterial.MetalnessMap.TextureName = "assets/textures/" + sceneName + "/" + ConvertFilePath(textureName.C_Str());
 					}
 				}
 
@@ -186,10 +386,21 @@ namespace Wingnut
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE_ROUGHNESS, textureIndex), textureName);
 
-						LOG_CORE_TRACE(" DIFFUSE ROUGHNESS filename: {}", textureName.C_Str());
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+						LOG_CORE_TRACE(" DIFFUSE ROUGHNESS filename: {}", newMaterial.RoughnessMap.TextureName);
 
 						newMaterial.HasRoughnessMap = true;
-						newMaterial.RoughnessMap.TextureName = "assets/textures/" + sceneName + "/" + ConvertFilePath(textureName.C_Str());
 					}
 				}
 
@@ -200,10 +411,21 @@ namespace Wingnut
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE_NORMALS(normalsIndex), textureName);
 
-						LOG_CORE_TRACE(" NORMALS filename: {}", textureName.C_Str());
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+							newMaterial.NormalMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+							newMaterial.NormalMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+						LOG_CORE_TRACE(" NORMALS filename: {}", newMaterial.NormalMap.TextureName);
 
 						newMaterial.HasNormalMap = true;
-						newMaterial.NormalMap.TextureName = "assets/textures/" + sceneName + "/" + ConvertFilePath(textureName.C_Str());
 					}
 				}
 
@@ -214,10 +436,21 @@ namespace Wingnut
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE_HEIGHT(heightIndex), textureName);
 
-						LOG_CORE_TRACE(" HEIGHT filename: {}", textureName.C_Str());
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+							newMaterial.NormalMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+							newMaterial.NormalMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+						LOG_CORE_TRACE(" HEIGHT filename: {}", newMaterial.NormalMap.TextureName);
 
 						newMaterial.HasNormalMap = true;
-						newMaterial.NormalMap.TextureName = "assets/textures/" + sceneName + "/" + ConvertFilePath(textureName.C_Str());
 					}
 				}
 
@@ -228,45 +461,50 @@ namespace Wingnut
 						aiString textureName;
 						material->Get(AI_MATKEY_TEXTURE_SHININESS(shininessIndex), textureName);
 
-						LOG_CORE_TRACE(" SHININESS filename: {}", textureName.C_Str());
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+						}
+						else
+						{
+							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+						LOG_CORE_TRACE(" SHININESS filename: {}", newMaterial.RoughnessMap.TextureName);
 
 						newMaterial.HasRoughnessMap = true;
-						newMaterial.RoughnessMap.TextureName = "assets/textures/" + sceneName + "/" + ConvertFilePath(textureName.C_Str());
 					}
 				}
 
+				if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0)
 				{
-					aiColor3D diffuseColor;
-					material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
+					for (uint32_t index = 0; index < material->GetTextureCount(aiTextureType_EMISSIVE); index++)
+					{
+						aiString textureName;
+						material->Get(AI_MATKEY_TEXTURE_EMISSIVE(index), textureName);
 
-					newMaterial.Diffuse.r = diffuseColor.r;
-					newMaterial.Diffuse.g = diffuseColor.g;
-					newMaterial.Diffuse.b = diffuseColor.b;
+						std::string texName = textureName.C_Str();
+
+						if (texName.find('*') != std::string::npos)
+						{
+							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
+//							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							LOG_CORE_TRACE(" EMISSIVE filename: {}", embeddedTexture->mFilename.C_Str());
+						}
+						else
+						{
+							LOG_CORE_TRACE(" EMISSIVE filename: {}", textureName.C_Str());
+
+//							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+						}
+
+//						newMaterial.HasRoughnessMap = true;
+					}
 				}
 
-				{
-					aiColor3D transparency;
-					material->Get(AI_MATKEY_COLOR_TRANSPARENT, transparency);
-
-					newMaterial.Transparency = transparency.r;
-				}
-
-				{
-					float roughnessFactor;
-					material->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughnessFactor);
-
-					newMaterial.Roughness = roughnessFactor;
-				}
-
-				{
-					aiColor3D ambientColor;
-					material->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor);
-
-					newMaterial.Ambient.r = ambientColor.r;
-					newMaterial.Ambient.g = ambientColor.g;
-					newMaterial.Ambient.b = ambientColor.b;
-
-				}
 
 				importResult.Materials.emplace_back(newMaterial);
 			}
@@ -279,7 +517,7 @@ namespace Wingnut
 				auto* texture = scene->mTextures[i];
 				LOG_CORE_TRACE("Texture: {}", texture->mFilename.C_Str());
 				
-				std::string filename = "assets/textures/" + sceneName + "/" + ConvertFilePath(texture->mFilename.C_Str());
+				std::string filename = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(texture->mFilename.C_Str());
 
 				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
 //				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(texture->mFilename.C_Str(), Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));

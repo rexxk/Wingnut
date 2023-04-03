@@ -71,6 +71,8 @@ namespace Wingnut
 		// Material data
 		bool HasMaterial = false;
 		std::vector<ImportMaterial> Materials;
+
+		std::string ModelName;
 	};
 
 

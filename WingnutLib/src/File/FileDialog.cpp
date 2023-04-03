@@ -3,6 +3,9 @@
 
 #include "Core/Application.h"
 
+#include "Utils/StringUtils.h"
+
+
 #ifdef _WIN32
 #include <commdlg.h>
 #endif
@@ -40,7 +43,7 @@ namespace Wingnut
 
 #endif
 
-		return filename;
+		return ConvertFilePath(filename);
 	}
 
 	std::string FileDialog::Save(const TCHAR* filter, const std::string& path, const TCHAR* extension)
@@ -75,7 +78,7 @@ namespace Wingnut
 
 #endif
 
-		return filename;
+		return ConvertFilePath(filename);
 	}
 
 }
