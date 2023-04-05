@@ -235,11 +235,11 @@ namespace Wingnut
 						if (texName.find('*') != std::string::npos)
 						{
 							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
-							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							newMaterial.DiffuseTexture.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(embeddedTexture->mFilename.C_Str());
 						}
 						else
 						{
-							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+							newMaterial.DiffuseTexture.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(textureName.C_Str());
 						}
 
 						LOG_CORE_TRACE(" BASE COLOR filename: {}", newMaterial.DiffuseTexture.TextureName);
@@ -262,11 +262,11 @@ namespace Wingnut
 						if (texName.find('*') != std::string::npos)
 						{
 							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
-							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							newMaterial.DiffuseTexture.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(embeddedTexture->mFilename.C_Str());
 						}
 						else
 						{
-							newMaterial.DiffuseTexture.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+							newMaterial.DiffuseTexture.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(textureName.C_Str());
 						}
 
 						LOG_CORE_TRACE(" DIFFUSE filename: {}", newMaterial.DiffuseTexture.TextureName);
@@ -288,11 +288,11 @@ namespace Wingnut
 						if (texName.find('*') != std::string::npos)
 						{
 							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
-							newMaterial.AmbientOcclusionMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							newMaterial.AmbientOcclusionMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(embeddedTexture->mFilename.C_Str());
 						}
 						else
 						{
-							newMaterial.AmbientOcclusionMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+							newMaterial.AmbientOcclusionMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(textureName.C_Str());
 						}
 
 						LOG_CORE_TRACE(" AMBIENT OCCLUSION filename: {}", newMaterial.AmbientOcclusionMap.TextureName);
@@ -313,11 +313,11 @@ namespace Wingnut
 						if (texName.find('*') != std::string::npos)
 						{
 							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
-							newMaterial.MetalnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							newMaterial.MetalnessMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(embeddedTexture->mFilename.C_Str());
 						}
 						else
 						{
-							newMaterial.MetalnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+							newMaterial.MetalnessMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(textureName.C_Str());
 						}
 
 						LOG_CORE_TRACE(" SPECULAR filename: {}", newMaterial.MetalnessMap.TextureName);
@@ -366,11 +366,11 @@ namespace Wingnut
 						if (texName.find('*') != std::string::npos)
 						{
 							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
-							newMaterial.MetalnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							newMaterial.MetalnessMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(embeddedTexture->mFilename.C_Str());
 						}
 						else
 						{
-							newMaterial.MetalnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+							newMaterial.MetalnessMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(textureName.C_Str());
 						}
 
 						LOG_CORE_TRACE(" METALNESS filename: {}", newMaterial.MetalnessMap.TextureName);
@@ -391,11 +391,11 @@ namespace Wingnut
 						if (texName.find('*') != std::string::npos)
 						{
 							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
-							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							newMaterial.RoughnessMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(embeddedTexture->mFilename.C_Str());
 						}
 						else
 						{
-							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+							newMaterial.RoughnessMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(textureName.C_Str());
 						}
 
 						LOG_CORE_TRACE(" DIFFUSE ROUGHNESS filename: {}", newMaterial.RoughnessMap.TextureName);
@@ -416,11 +416,11 @@ namespace Wingnut
 						if (texName.find('*') != std::string::npos)
 						{
 							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
-							newMaterial.NormalMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							newMaterial.NormalMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(embeddedTexture->mFilename.C_Str());
 						}
 						else
 						{
-							newMaterial.NormalMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+							newMaterial.NormalMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(textureName.C_Str());
 						}
 
 						LOG_CORE_TRACE(" NORMALS filename: {}", newMaterial.NormalMap.TextureName);
@@ -441,11 +441,11 @@ namespace Wingnut
 						if (texName.find('*') != std::string::npos)
 						{
 							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
-							newMaterial.NormalMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							newMaterial.NormalMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(embeddedTexture->mFilename.C_Str());
 						}
 						else
 						{
-							newMaterial.NormalMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+							newMaterial.NormalMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(textureName.C_Str());
 						}
 
 						LOG_CORE_TRACE(" HEIGHT filename: {}", newMaterial.NormalMap.TextureName);
@@ -466,11 +466,11 @@ namespace Wingnut
 						if (texName.find('*') != std::string::npos)
 						{
 							const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texName.c_str());
-							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + embeddedTexture->mFilename.C_Str();
+							newMaterial.RoughnessMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(embeddedTexture->mFilename.C_Str());
 						}
 						else
 						{
-							newMaterial.RoughnessMap.TextureName = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(textureName.C_Str());
+							newMaterial.RoughnessMap.TextureName = "assets/" + std::string(material->GetName().C_Str()) + "/textures/" + GetFilenameFromPath(textureName.C_Str());
 						}
 
 						LOG_CORE_TRACE(" SHININESS filename: {}", newMaterial.RoughnessMap.TextureName);
@@ -517,9 +517,10 @@ namespace Wingnut
 				auto* texture = scene->mTextures[i];
 				LOG_CORE_TRACE("Texture: {}", texture->mFilename.C_Str());
 				
-				std::string filename = "assets/textures/" + importResult.ModelName + "/" + ConvertFilePath(texture->mFilename.C_Str());
+				std::string virtualFilename = "assets/" + importResult.ModelName + "/textures/" + GetFilenameFromPath(texture->mFilename.C_Str());
 
-				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
+				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(virtualFilename, Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
+//				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_SRGB, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
 //				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(texture->mFilename.C_Str(), Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
 
 				ResourceManager::AddTexture(newTexture);

@@ -95,4 +95,18 @@ namespace Wingnut
 		return convertedString;
 	}
 
+	std::string GetFilenameFromPath(const std::string& str)
+	{
+		std::string filename = ConvertFilePath(str);
+
+		size_t location = filename.find_last_of('/');
+
+		if (location != std::string::npos)
+		{
+			filename = filename.substr(location + 1);
+		}
+
+		return filename;
+	}
+
 }

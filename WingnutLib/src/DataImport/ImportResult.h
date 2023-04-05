@@ -25,6 +25,7 @@ namespace Wingnut
 	struct ImportTexture
 	{
 		std::string TextureName = "";
+		std::string TextureFilepath = "";
 
 		glm::vec3 OriginOffset = glm::vec3(0.0f);
 		glm::vec3 Scale = glm::vec3(1.0f);
