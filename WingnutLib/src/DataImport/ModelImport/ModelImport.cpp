@@ -246,6 +246,7 @@ namespace Wingnut
 
 						newMaterial.HasDiffuseTexture = true;
 
+						LoadTexture(scene, newMaterial.DiffuseTexture.TextureName);
 					}
 
 				}
@@ -272,6 +273,8 @@ namespace Wingnut
 						LOG_CORE_TRACE(" DIFFUSE filename: {}", newMaterial.DiffuseTexture.TextureName);
 
 						newMaterial.HasDiffuseTexture = true;
+
+						LoadTexture(scene, newMaterial.DiffuseTexture.TextureName);
 					}
 
 				}
@@ -298,6 +301,8 @@ namespace Wingnut
 						LOG_CORE_TRACE(" AMBIENT OCCLUSION filename: {}", newMaterial.AmbientOcclusionMap.TextureName);
 
 						newMaterial.HasAmbientOcclusionMap = true;
+
+						LoadTexture(scene, newMaterial.AmbientOcclusionMap.TextureName);
 					}
 				}
 
@@ -323,6 +328,8 @@ namespace Wingnut
 						LOG_CORE_TRACE(" SPECULAR filename: {}", newMaterial.MetalnessMap.TextureName);
 
 						newMaterial.HasMetalnessMap = true;
+
+						LoadTexture(scene, newMaterial.MetalnessMap.TextureName);
 					}
 				}
 
@@ -376,6 +383,8 @@ namespace Wingnut
 						LOG_CORE_TRACE(" METALNESS filename: {}", newMaterial.MetalnessMap.TextureName);
 
 						newMaterial.HasMetalnessMap = true;
+
+						LoadTexture(scene, newMaterial.MetalnessMap.TextureName);
 					}
 				}
 
@@ -401,6 +410,8 @@ namespace Wingnut
 						LOG_CORE_TRACE(" DIFFUSE ROUGHNESS filename: {}", newMaterial.RoughnessMap.TextureName);
 
 						newMaterial.HasRoughnessMap = true;
+
+						LoadTexture(scene, newMaterial.RoughnessMap.TextureName);
 					}
 				}
 
@@ -426,6 +437,8 @@ namespace Wingnut
 						LOG_CORE_TRACE(" NORMALS filename: {}", newMaterial.NormalMap.TextureName);
 
 						newMaterial.HasNormalMap = true;
+
+						LoadTexture(scene, newMaterial.NormalMap.TextureName);
 					}
 				}
 
@@ -451,6 +464,8 @@ namespace Wingnut
 						LOG_CORE_TRACE(" HEIGHT filename: {}", newMaterial.NormalMap.TextureName);
 
 						newMaterial.HasNormalMap = true;
+
+						LoadTexture(scene, newMaterial.NormalMap.TextureName);
 					}
 				}
 
@@ -476,6 +491,8 @@ namespace Wingnut
 						LOG_CORE_TRACE(" SHININESS filename: {}", newMaterial.RoughnessMap.TextureName);
 
 						newMaterial.HasRoughnessMap = true;
+
+						LoadTexture(scene, newMaterial.RoughnessMap.TextureName);
 					}
 				}
 
@@ -502,6 +519,8 @@ namespace Wingnut
 						}
 
 //						newMaterial.HasRoughnessMap = true;
+
+//						LoadTexture(scene, newMaterial.DiffuseTexture.TextureName, AssetTextureType::Emissive);
 					}
 				}
 
@@ -510,28 +529,34 @@ namespace Wingnut
 			}
 		}
 
-		if (scene->HasTextures())
-		{
-			for (uint32_t i = 0; i < scene->mNumTextures; i++)
-			{
-				auto* texture = scene->mTextures[i];
-				LOG_CORE_TRACE("Texture: {}", texture->mFilename.C_Str());
-				
-				std::string virtualFilename = "assets/" + importResult.ModelName + "/textures/" + GetFilenameFromPath(texture->mFilename.C_Str());
-
-				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(virtualFilename, Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
-//				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_SRGB, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
-//				Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(texture->mFilename.C_Str(), Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
-
-				ResourceManager::AddTexture(newTexture);
-			}
-		}
-
-
-//		aiReleaseImport(scene);
 		importer.FreeScene();
 
 		return importResult;
+	}
+
+
+	void ModelImport::LoadTexture(const aiScene* scene, const std::string& textureName)
+	{
+		aiTexture* texture = nullptr;
+
+		for (uint32_t i = 0; i < scene->mNumTextures; i++)
+		{
+			if (GetFilenameFromPath(scene->mTextures[i]->mFilename.C_Str()) == GetFilenameFromPath(textureName))
+			{
+				texture = scene->mTextures[i];
+				break;
+			}
+		}
+
+		if (texture == nullptr)
+		{
+			LOG_CORE_WARN("[ModelImport] Texture {} not embedded in file", textureName);
+			return;
+		}
+
+		Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(textureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, texture->mWidth, texture->mHeight, (const char*)texture->pcData, sizeof(aiTexel));
+
+		ResourceManager::AddTexture(newTexture);
 	}
 
 

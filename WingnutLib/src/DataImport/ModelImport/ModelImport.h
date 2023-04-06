@@ -13,7 +13,6 @@ namespace Wingnut
 {
 
 
-
 	class ModelImport
 	{
 	public:
@@ -22,6 +21,9 @@ namespace Wingnut
 		static void GetNodeData(const aiScene* scene, aiNode* node, ImportResult& importResult, glm::mat4 transform);
 
 	private:
+
+		static void LoadTexture(const aiScene* scene, const std::string& textureName);
+
 		static void CalculateTangentAndBitangent(std::vector<Vertex>& vertexList, uint32_t index0, uint32_t index1, uint32_t index2);
 	};
 
