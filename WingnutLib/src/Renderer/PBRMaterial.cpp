@@ -370,6 +370,7 @@ namespace Wingnut
 		case MaterialTextureType::AlbedoTexture:
 		{
 			m_MaterialData.AlbedoTexture.Texture = texture;
+			m_MaterialData.AlbedoTexture.TextureName = texture->GetTextureName();
 			m_Descriptor->SetImageBinding(PBRAlbedoTextureBinding, m_MaterialData.AlbedoTexture.Texture, m_Sampler);
 
 			break;
@@ -378,6 +379,7 @@ namespace Wingnut
 		case MaterialTextureType::NormalMap:
 		{
 			m_MaterialData.NormalMap.Texture = texture;
+			m_MaterialData.NormalMap.TextureName = texture->GetTextureName();
 			m_Descriptor->SetImageBinding(PBRNormalMapBinding, m_MaterialData.NormalMap.Texture, m_Sampler);
 
 			break;
@@ -386,6 +388,7 @@ namespace Wingnut
 		case MaterialTextureType::MetalnessMap:
 		{
 			m_MaterialData.MetalnessMap.Texture = texture;
+			m_MaterialData.MetalnessMap.TextureName = texture->GetTextureName();
 			m_Descriptor->SetImageBinding(PBRMetalnessMapBinding, m_MaterialData.MetalnessMap.Texture, m_Sampler);
 
 			break;
@@ -394,6 +397,7 @@ namespace Wingnut
 		case MaterialTextureType::RoughnessMap:
 		{
 			m_MaterialData.RoughnessMap.Texture = texture;
+			m_MaterialData.RoughnessMap.TextureName = texture->GetTextureName();
 			m_Descriptor->SetImageBinding(PBRRoughnessMapBinding, m_MaterialData.RoughnessMap.Texture, m_Sampler);
 
 			break;
@@ -402,6 +406,7 @@ namespace Wingnut
 		case MaterialTextureType::AmbientOcclusionMap:
 		{
 			m_MaterialData.AmbientOcclusionMap.Texture = texture;
+			m_MaterialData.AmbientOcclusionMap.TextureName = texture->GetTextureName();
 			m_Descriptor->SetImageBinding(PBRAmbientOcclusionMapBinding, m_MaterialData.AmbientOcclusionMap.Texture, m_Sampler);
 
 			break;

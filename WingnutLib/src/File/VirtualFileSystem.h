@@ -49,6 +49,7 @@ namespace Wingnut
 
 		static void LoadFileFromResource();
 		static bool LoadFileFromDisk(const std::string& filepath, FileItemType type, bool systemFile = false);
+		static bool LoadFileFromDisk(const std::string& filepath, const std::string& assetPath, FileItemType type, bool systemFile = false);
 
 		static void AddFile(const std::string& filepath, const std::vector<uint8_t>& data, uint32_t dataSize, FileItemType type, bool systemFile = false);
 		static void AddFile(const std::string& filepath, const FileSystemItem& item);

@@ -103,6 +103,37 @@ namespace Wingnut
 
 	}
 
+	bool VirtualFileSystem::LoadFileFromDisk(const std::string& filepath, const std::string& assetPath, FileItemType type, bool systemFile)
+	{
+		if (FindFile(assetPath))
+		{
+			LOG_CORE_TRACE("[VFS] File {} is already loaded", assetPath);
+			return false;
+		}
+
+		std::ifstream file(filepath, std::ios::in | std::ios::binary);
+
+		if (!file.is_open())
+		{
+			LOG_CORE_TRACE("[VFS] Unable to open file {} for loading", assetPath);
+			return false;
+		}
+
+		file.seekg(0, file.end);
+		size_t fileSize = file.tellg();
+		file.seekg(0, file.beg);
+
+		std::vector<uint8_t> fileData(fileSize);
+
+		file.read((char*)fileData.data(), fileSize);
+
+		file.close();
+
+		AddFile(assetPath, fileData, (uint32_t)fileSize, type, systemFile);
+
+		return true;
+	}
+
 	bool VirtualFileSystem::LoadFileFromDisk(const std::string& filepath, FileItemType type, bool systemFile)
 	{
 		std::string assetPath = ConvertFilePathToAssetPath(filepath);

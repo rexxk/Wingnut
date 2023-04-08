@@ -71,11 +71,22 @@ namespace Wingnut
 			if (!filename.empty())
 			{
 //				std::string textureName = filename.substr(filename.find_last_of("/\\") + 1);
-				std::string textureName = ConvertFilePathToAssetPath(filename);
+//				std::string textureName = ConvertFilePathToAssetPath(filename);
+
+				std::string textureName = "assets/" + m_Material->GetName() + "/textures/" + GetFilenameFromPath(filename);
+
+				if (!VirtualFileSystem::FindFile(textureName))
+				{
+					VirtualFileSystem::LoadFileFromDisk(filename, textureName, FileItemType::Texture);
+				}
 
 				if (!ResourceManager::FindTexture(textureName))
 				{
-					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
+//					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(filename, Vulkan::TextureFormat::R8G8B8A8_Normalized, true, true);
+
+					FileSystemItem* fileItem = VirtualFileSystem::GetItem(textureName);
+
+					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(textureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, fileItem->DataSize, 0, (const char*)fileItem->Data.data(), 4);
 
 					m_Material->SetTexture(m_MaterialTextureType, newTexture);
 
