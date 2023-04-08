@@ -60,6 +60,8 @@ namespace Wingnut
 
 		static void PrintStructure();
 	
+		static bool IsSystemFile(const std::string& filepath);
+
 		static FileSystemDirectory* GetDirectory(const std::string& filepath);
 		static FileSystemDirectory& GetRootDirectory() { return s_Instance->m_RootDirectory; }
 		

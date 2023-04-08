@@ -285,6 +285,19 @@ namespace Wingnut
 		return nullptr;
 	}
 
+	bool VirtualFileSystem::IsSystemFile(const std::string& filepath)
+	{
+		if (FindFile(filepath))
+		{
+			FileSystemItem* item = GetItem(filepath);
+
+			return item->SystemFile;
+		}
+
+		return false;
+	}
+
+
 	void VirtualFileSystem::PrintStructure()
 	{
 		PrintDirectoryStructure(s_Instance->m_RootDirectory);

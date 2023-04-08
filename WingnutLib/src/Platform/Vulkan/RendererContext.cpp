@@ -282,15 +282,9 @@ namespace Wingnut
 				s_VulkanData.UIFramebuffer = Vulkan::Framebuffer::Create(s_VulkanData.Device, s_VulkanData.UIRenderPass, m_CurrentExtent, imageViews, s_VulkanData.DepthStencilImage->GetImageView());
 			}
 
-			s_VulkanData.DefaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat(Vulkan::TextureFormat::R8G8B8A8_Normalized), true, true);
+			s_VulkanData.DefaultTexture = Vulkan::Texture2D::Create("assets/textures/checkerboard.png", Vulkan::TextureFormat(Vulkan::TextureFormat::R8G8B8A8_Normalized), true, true, true);
 
 			ResourceManager::AddTexture(s_VulkanData.DefaultTexture);
-
-//			s_VulkanData.DefaultTextureDescriptor = Vulkan::Descriptor::Create(s_VulkanData.Device, ResourceManager::GetShader(ShaderType::ImGui), ImGuiTextureDescriptor);
-//			s_VulkanData.DefaultTextureDescriptor->SetImageBinding(0, s_VulkanData.DefaultTexture, ResourceManager::GetSampler(SamplerType::Default));
-//			s_VulkanData.DefaultTextureDescriptor->UpdateBindings();
-
-//			ResourceManager::AddTextureData(s_VulkanData.DefaultTexture, s_VulkanData.DefaultTextureDescriptor);
 		}
 
 		bool VulkanContext::CreateInstance()

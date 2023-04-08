@@ -117,6 +117,9 @@ namespace Wingnut
 
 		m_SceneRenderer->Clear();
 
+		ResourceManager::ClearMaterials();
+		ResourceManager::ClearTextures();
+
 		if (withLight)
 		{
 			Entity light = CreateEntity("Light");

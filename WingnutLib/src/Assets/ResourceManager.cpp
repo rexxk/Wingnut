@@ -1,6 +1,7 @@
 #include "wingnut_pch.h"
 #include "ResourceManager.h"
 
+#include "File/VirtualFileSystem.h"
 
 
 namespace Wingnut
@@ -264,12 +265,18 @@ namespace Wingnut
 
 	void ResourceManager::ClearTextures()
 	{
-		for (auto& texture : s_Textures)
+		for (auto textureIterator = s_Textures.begin(); textureIterator != s_Textures.end(); )
 		{
-			texture.second->Release();
+			if (!VirtualFileSystem::IsSystemFile(textureIterator->second->GetTextureName()))
+			{
+				textureIterator->second->Release();
+				textureIterator = s_Textures.erase(textureIterator);
+			}
+			else
+			{
+				textureIterator++;
+			}
 		}
-
-		s_Textures.clear();
 	}
 
 
