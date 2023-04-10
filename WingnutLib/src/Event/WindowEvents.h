@@ -38,4 +38,16 @@ namespace Wingnut
 		uint32_t m_Height;
 	};
 
+
+	class RendererCompletedEvent : public Event
+	{
+	public:
+		RendererCompletedEvent()
+			: Event(EventType::RendererCompleted)
+		{
+
+		}
+
+	};
+
 }

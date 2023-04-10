@@ -114,6 +114,7 @@ namespace Wingnut
 	void SceneRenderer::Clear()
 	{
 		s_SceneData.DrawList.clear();
+		s_SceneData.DrawCache.clear();
 
 		Application::Get().GetMetrics().PolygonCount = 0;
 	}

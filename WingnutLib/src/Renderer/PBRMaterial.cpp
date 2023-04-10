@@ -221,6 +221,34 @@ namespace Wingnut
 		{
 			m_MaterialUB->Release();
 		}
+
+//		LOG_CORE_TRACE("[Material] Releasing PBR material");
+
+		if (m_MaterialData.AlbedoTexture.Texture != nullptr)
+		{
+			m_MaterialData.AlbedoTexture.Texture->Release();
+		}
+
+		if (m_MaterialData.NormalMap.Texture != nullptr)
+		{
+			m_MaterialData.NormalMap.Texture->Release();
+		}
+
+		if (m_MaterialData.MetalnessMap.Texture != nullptr)
+		{
+			m_MaterialData.MetalnessMap.Texture->Release();
+		}
+
+		if (m_MaterialData.RoughnessMap.Texture != nullptr)
+		{
+			m_MaterialData.RoughnessMap.Texture->Release();
+		}
+
+		if (m_MaterialData.AmbientOcclusionMap.Texture != nullptr)
+		{
+			m_MaterialData.AmbientOcclusionMap.Texture->Release();
+		}
+
 	}
 
 	void PBRMaterial::SetupMaterial()

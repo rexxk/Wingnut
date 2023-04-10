@@ -31,4 +31,6 @@ private:
 	Ref<Wingnut::SceneHierarchyPanel> m_SceneHierarchyPanel = nullptr;
 	Ref<Wingnut::ResourcePanel> m_ResourcePanel = nullptr;
 
+	bool m_NewScene = false;
+
 };

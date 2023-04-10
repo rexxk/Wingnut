@@ -164,7 +164,6 @@ namespace Wingnut
 
 				Renderer::Present();
 
-
 				framesPerSecond++;
 
 				if (fpsTimer.ElapsedTime() > 1000.0f)

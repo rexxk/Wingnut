@@ -449,6 +449,10 @@ namespace Wingnut
 			Renderer::GetContext()->GetRendererData().Device->WaitForIdle();
 
 			Application::Get().GetMetrics().GPUTime = (float)gpuMetrics.ElapsedTime();
+
+
+			Ref<RendererCompletedEvent> event = CreateRef<RendererCompletedEvent>();
+			AddEventToQueue(event);
 		}
 
 		void VulkanContext::BeginScene()

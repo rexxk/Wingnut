@@ -31,6 +31,8 @@ namespace Wingnut
 
 			case EventType::WindowClosed:	EventCallback<WindowClosedEvent>::Execute(std::dynamic_pointer_cast<WindowClosedEvent>(event)); return;
 			case EventType::WindowResized:	EventCallback<WindowResizedEvent>::Execute(std::dynamic_pointer_cast<WindowResizedEvent>(event)); return;
+
+			case EventType::RendererCompleted: EventCallback<RendererCompletedEvent>::Execute(std::dynamic_pointer_cast<RendererCompletedEvent>(event)); return;
 		}
 	}
 

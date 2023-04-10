@@ -13,6 +13,7 @@ namespace Wingnut
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseWheel,
 		KeyPressed, KeyReleased, KeyTyped,
 		UIViewportResized, EntitySelected, MaterialSelected,
+		RendererCompleted,
 	};
 
 

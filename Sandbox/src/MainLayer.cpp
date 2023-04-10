@@ -15,6 +15,21 @@ MainLayer::MainLayer(const std::string& name)
 	: Layer(name)
 {
 
+	SubscribeToEvent<RendererCompletedEvent>([&](RendererCompletedEvent& event)
+		{
+			if (m_NewScene)
+			{
+				LOG_TRACE("New scene called");
+
+				m_Scene->ClearScene(true);
+				m_MaterialStorePanel->UpdateMaterialList();
+
+				m_NewScene = false;
+			}
+
+			return false;
+		});
+
 }
 
 MainLayer::~MainLayer()
@@ -196,7 +211,7 @@ void MainLayer::OnUIRender()
 		{
 			if (ImGui::MenuItem("New scene"))
 			{
-				m_Scene->ClearScene(true);
+				m_NewScene = true;
 			}
 
 			if (ImGui::MenuItem("Load scene"))

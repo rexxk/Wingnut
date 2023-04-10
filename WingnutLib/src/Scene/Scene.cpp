@@ -115,10 +115,10 @@ namespace Wingnut
 
 		m_SceneEntities.clear();
 
-		m_SceneRenderer->Clear();
-
 		ResourceManager::ClearMaterials();
 		ResourceManager::ClearTextures();
+
+//		m_SceneRenderer->Clear();
 
 		if (withLight)
 		{
