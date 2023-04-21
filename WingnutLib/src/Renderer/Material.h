@@ -51,6 +51,7 @@ namespace Wingnut
 		virtual void Update();
 
 		virtual void SetTexture(MaterialTextureType type, Ref<Vulkan::Texture2D> texture);
+		virtual void QueueTextureUpdate(MaterialTextureType type, Ref<Vulkan::Texture2D> texture);
 
 		virtual void SetupMaterial() {}
 

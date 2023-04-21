@@ -50,4 +50,10 @@ namespace Wingnut
 
 	}
 
+	void Material::QueueTextureUpdate(MaterialTextureType type, Ref<Vulkan::Texture2D> texture)
+	{
+
+	}
+
+
 }

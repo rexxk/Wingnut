@@ -50,6 +50,7 @@ namespace Wingnut
 		virtual void Update() override;
 
 		virtual void SetTexture(MaterialTextureType type, Ref<Vulkan::Texture2D> texture) override;
+		virtual void QueueTextureUpdate(MaterialTextureType type, Ref<Vulkan::Texture2D> texture) override;
 
 		virtual void CreateDescriptor(Ref<Vulkan::Shader> shader) override;
 
@@ -63,10 +64,14 @@ namespace Wingnut
 	private:
 		void CreateUniformBuffer();
 
+		void UpdateDescriptorWithQueuedTextures();
+
 	private:
 		PBRMaterialData m_MaterialData;
 
 		Ref<Vulkan::UniformBuffer> m_MaterialUB = nullptr;
+
+		std::unordered_map<MaterialTextureType, Ref<Vulkan::Texture2D>> m_UpdateTextureMap;
 
 	};
 

@@ -3,7 +3,11 @@
 
 #include "Assets/ResourceManager.h"
 
+#include "Event/EventUtils.h"
+#include "Event/WindowEvents.h"
+
 #include "File/VirtualFileSystem.h"
+
 
 
 namespace Wingnut
@@ -25,6 +29,14 @@ namespace Wingnut
 		m_MaterialID = materialID;
 
 		m_SamplerType = samplerType;
+
+
+		SubscribeToEvent<RendererCompletedEvent>([&](RendererCompletedEvent& event)
+			{
+				UpdateDescriptorWithQueuedTextures();
+				return false;
+			});
+		
 	}
 
 
@@ -182,6 +194,13 @@ namespace Wingnut
 		CreateDescriptor(m_Shader);
 
 		Update();
+
+
+		SubscribeToEvent<RendererCompletedEvent>([&](RendererCompletedEvent& event)
+			{
+				UpdateDescriptorWithQueuedTextures();
+				return false;
+			});
 	}
 
 	PBRMaterial::PBRMaterial(const std::string& name, Ref<Vulkan::Shader> shader, SamplerType samplerType)
@@ -208,6 +227,13 @@ namespace Wingnut
 		CreateDescriptor(shader);
 
 		Update();
+
+
+		SubscribeToEvent<RendererCompletedEvent>([&](RendererCompletedEvent& event)
+			{
+				UpdateDescriptorWithQueuedTextures();
+				return false;
+			});
 	}
 
 	PBRMaterial::~PBRMaterial()
@@ -391,6 +417,17 @@ namespace Wingnut
 		m_Descriptor->UpdateBindings();
 	}
 
+	void PBRMaterial::UpdateDescriptorWithQueuedTextures()
+	{
+		for (auto& iterator : m_UpdateTextureMap)
+		{
+			LOG_CORE_TRACE("Updating texture");
+			SetTexture(iterator.first, iterator.second);
+		}
+
+		m_UpdateTextureMap.clear();
+	}
+
 	void PBRMaterial::SetTexture(MaterialTextureType type, Ref<Vulkan::Texture2D> texture)
 	{
 		switch (type)
@@ -444,6 +481,11 @@ namespace Wingnut
 
 		m_Descriptor->UpdateBindings();
 
+	}
+
+	void PBRMaterial::QueueTextureUpdate(MaterialTextureType type, Ref<Vulkan::Texture2D> texture)
+	{
+		m_UpdateTextureMap[type] = texture;
 	}
 
 

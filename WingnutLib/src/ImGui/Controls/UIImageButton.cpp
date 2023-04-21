@@ -88,7 +88,8 @@ namespace Wingnut
 
 					Ref<Vulkan::Texture2D> newTexture = Vulkan::Texture2D::Create(textureName, Vulkan::TextureFormat::R8G8B8A8_Normalized, fileItem->DataSize, 0, (const char*)fileItem->Data.data(), 4);
 
-					m_Material->SetTexture(m_MaterialTextureType, newTexture);
+//					m_Material->SetTexture(m_MaterialTextureType, newTexture);
+					m_Material->QueueTextureUpdate(m_MaterialTextureType, newTexture);
 
 					ResourceManager::AddTexture(newTexture);
 
